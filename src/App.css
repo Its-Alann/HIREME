@@ -1,0 +1,26 @@
+:root {
+  --yellow: #f5c32c;
+  --orange: #fca61f;
+  --white: #ffffff;
+  --gray: #c7c8cc;
+  --whiteGrey: #f0f0f0;
+  --blueCard: #ddf8fe;
+  --purple: rgb(238 210 255);
+  --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
+  --orangeCard: rgba(252, 166, 31, 0.45);
+  --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
+  --black: #060e26;
+}
+
+.App {
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  border-radius: 34px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+}
