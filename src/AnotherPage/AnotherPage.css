@@ -1,0 +1,41 @@
+.AnotherPage {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+.AnotherPage .content {
+  position: relative;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.AnotherPage .content .title {
+  color: var(--orange);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  font-family: "Vollkorn", sans-serif;
+}
+
+.AnotherPage .content .subtitle {
+  color: (--black);
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: "Vollkorn", sans-serif;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.AnotherPage .content .subtext {
+  color: (--black);
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: "Cairo", sans-serif;
+  text-align: justify;
+  text-justify: inter-word;
+}
