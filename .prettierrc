@@ -1,0 +1,12 @@
+{
+  "singleQuote": false,
+  "semi": true,
+  "endOfLine": "auto",
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "singleQuote": false,
+    "semi": true,
+    "endOfLine": "auto"
+  },
+  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"]
+}
