@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   getRedirectResult,
   GoogleAuthProvider,
@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { IconButton } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
+import { useNavigate } from "react-router-dom";
 import { auth, provider } from "../Firebase/firebase";
 
 const signInWithFirebaseRedirect = () => {
@@ -22,10 +23,22 @@ const signInWithFirebaseRedirect = () => {
   });
 };
 
-const SignInButton = () => (
-  <IconButton onClick={signInWithFirebaseRedirect}>
-    <GoogleIcon />
-  </IconButton>
-);
+const SignInButton = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getRedirectResult(auth).then((result) => {
+      if (result) {
+        navigate("/");
+      }
+    });
+  }, []);
+
+  return (
+    <IconButton onClick={signInWithFirebaseRedirect}>
+      <GoogleIcon />
+    </IconButton>
+  );
+};
 
 export default SignInButton;
