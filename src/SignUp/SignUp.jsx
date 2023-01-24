@@ -10,6 +10,8 @@ import NameForm from "./NameForm";
 import ContactInfo from "./ContactInfo";
 import Education from "./Education";
 import Experience from "./Experience";
+import Skills from "./Skills";
+import Languages from "./Languages";
 
 const steps = [
   "Name",
@@ -23,7 +25,14 @@ const steps = [
   "Awards",
 ];
 
-const forms = [<NameForm />, <ContactInfo />, <Education />, <Experience />];
+const forms = [
+  <NameForm />,
+  <ContactInfo />,
+  <Education />,
+  <Experience />,
+  <Skills />,
+  <Languages />,
+];
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = React.useState(0);
