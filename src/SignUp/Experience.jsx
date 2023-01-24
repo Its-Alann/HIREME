@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { FormControlLabel, Checkbox } from "@mui/material";
 
-const Education = () => (
+const Experience = () => (
   <Grid
     container
     spacing={0}
@@ -70,4 +70,4 @@ const Education = () => (
   </Grid>
 );
 
-export default Education;
+export default Experience;
