@@ -11,7 +11,7 @@ const NameForm = () => (
     justifyContent="center"
     style={{ minHeight: "15vh" }}
   >
-    <Grid xs={8}>
+    <Grid item xs={8}>
       <TextField
         required
         id="standard-required"
@@ -20,7 +20,7 @@ const NameForm = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={8}>
+    <Grid item xs={8}>
       <TextField
         required
         id="standard-required"

@@ -22,7 +22,7 @@ const Awards = () => (
       />
     </Grid>
 
-    <Grid xs={6}>
+    <Grid item xs={6}>
       <TextField
         required
         id="standard-required"
@@ -39,7 +39,7 @@ const Awards = () => (
       />
     </Grid>
 
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         id="outlined-multiline-static"
         label="Description"

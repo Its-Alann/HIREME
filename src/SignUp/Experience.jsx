@@ -13,7 +13,7 @@ const Experience = () => (
     style={{ minHeight: "50vh" }}
     rowSpacing={1}
   >
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -22,7 +22,7 @@ const Experience = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -31,7 +31,7 @@ const Experience = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -40,7 +40,7 @@ const Experience = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -59,7 +59,7 @@ const Experience = () => (
 
       <FormControlLabel control={<Checkbox />} label="Currently working here" />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         id="outlined-multiline-static"
         label="Description"

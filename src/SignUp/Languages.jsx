@@ -13,7 +13,7 @@ const Languages = () => (
     style={{ minHeight: "20vh" }}
     rowSpacing={1}
   >
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -24,7 +24,7 @@ const Languages = () => (
     </Grid>
 
     <Grid>
-      <p> Language proficiency</p>
+      <div> Language proficiency </div>
       <FormGroup row>
         <FormControlLabel control={<Checkbox />} label="Fluent" />
         <FormControlLabel control={<Checkbox />} label="Intermediate" />
