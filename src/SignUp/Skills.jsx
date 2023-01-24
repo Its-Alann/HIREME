@@ -9,7 +9,7 @@ const Skills = () => (
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "15vh" }}
+    style={{ minHeight: "20vh" }}
     rowSpacing={1}
   >
     <Grid xs={12}>
