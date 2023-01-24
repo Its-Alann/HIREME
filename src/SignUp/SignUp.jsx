@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import NameForm from "./NameForm";
 import ContactInfo from "./ContactInfo";
+import Education from "./Education";
 
 const steps = [
   "Name",
@@ -21,7 +22,7 @@ const steps = [
   "Awards",
 ];
 
-const forms = [<NameForm />, <ContactInfo />];
+const forms = [<NameForm />, <ContactInfo />, <Education />];
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = React.useState(0);
