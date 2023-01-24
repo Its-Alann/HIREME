@@ -7,6 +7,9 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import NameForm from "./NameForm";
+import ContactInfo from "./ContactInfo";
+import Education from "./Education";
+import Experience from "./Experience";
 
 const steps = [
   "Name",
@@ -19,6 +22,8 @@ const steps = [
   "Volunteering",
   "Awards",
 ];
+
+const forms = [<NameForm />, <ContactInfo />, <Education />, <Experience />];
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -96,7 +101,7 @@ const SignUp = () => {
       ) : (
         <>
           <Typography sx={{ mt: 2, mb: 1 }}>
-            Step {activeStep + 1} <NameForm />{" "}
+            Step {activeStep + 1} {forms[activeStep]}{" "}
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button

@@ -1,15 +1,16 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import { FormControlLabel, Checkbox } from "@mui/material";
 
-const ContactInfo = () => (
+const Education = () => (
   <Grid
     container
     spacing={0}
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "35vh" }}
+    style={{ minHeight: "50vh" }}
     rowSpacing={1}
   >
     <Grid xs={12}>
@@ -17,7 +18,7 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="Phone number"
+        defaultValue="Company"
         variant="standard"
       />
     </Grid>
@@ -26,7 +27,7 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="Address"
+        defaultValue="Job Position"
         variant="standard"
       />
     </Grid>
@@ -35,7 +36,16 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="City"
+        defaultValue="Location"
+        variant="standard"
+      />
+    </Grid>
+    <Grid xs={12}>
+      <TextField
+        required
+        id="standard-required"
+        label="Required"
+        defaultValue="Start Date"
         variant="standard"
       />
 
@@ -43,28 +53,21 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="Country"
-        variant="standard"
-      />
-    </Grid>
-    <Grid xs={12}>
-      <TextField
-        required
-        id="standard-required"
-        label="Required"
-        defaultValue="Postal Code"
+        defaultValue="End Date"
         variant="standard"
       />
 
+      <FormControlLabel control={<Checkbox />} label="Currently working here" />
+    </Grid>
+    <Grid xs={12}>
       <TextField
-        required
-        id="standard-required"
-        label="Required"
-        defaultValue="Date of birth"
-        variant="standard"
+        id="outlined-multiline-static"
+        label="Description"
+        multiline
+        rows={6}
       />
     </Grid>
   </Grid>
 );
 
-export default ContactInfo;
+export default Education;

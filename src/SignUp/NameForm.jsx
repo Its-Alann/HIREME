@@ -1,5 +1,5 @@
 import React from "react";
-import Grid from "@mui/material/Grid"; // Grid version 1
+import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
 const NameForm = () => (
