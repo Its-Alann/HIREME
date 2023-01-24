@@ -10,8 +10,7 @@ const Home = () => (
     <video src={mainVideo} autoPlay loop muted playsInline />
     <div className="content">
       <h1>Welcome</h1>
-      <a href="#">Enter</a>
-      <SignInGoogleButton />
+      <a href="/signin">Sign In</a>
     </div>
   </div>
 );

@@ -21,7 +21,7 @@ import { auth, provider } from "../Firebase/firebase";
 const theme = createTheme();
 
 const SignIn = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,7 +41,7 @@ const SignIn = () => {
       const { user } = userCredential;
       console.log(user);
 
-      // navigate("/");
+      navigate("/");
     } catch (err) {
       console.log("Something went wrong with email/password Sign In");
       console.error(err.code, err.message);
@@ -117,12 +117,12 @@ const SignIn = () => {
               </Grid>
             </Grid>
             <Stack container justifyContent="center">
-              <Stack item lg={12}>
+              <Stack item>
                 <Typography variant="subtitle2" align="center">
                   or you can sign in with
                 </Typography>
               </Stack>
-              <Stack item xs={2}>
+              <Stack item margin="auto">
                 <SignInGoogleButton />
               </Stack>
             </Stack>
