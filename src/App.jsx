@@ -12,9 +12,10 @@ const App = () => {
 
   return (
     <div className="App">
-      <Home />
+      <SignIn />
+      {/* <Home />
       <Background />
-      <AnotherPage />
+      <AnotherPage /> */}
     </div>
   );
 };

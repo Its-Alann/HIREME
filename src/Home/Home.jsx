@@ -2,7 +2,7 @@
 import React from "react";
 import "./Home.css";
 import mainVideo from "../Assets/AdobeStock_Video1.mov";
-import SignIn from "../SignIn/SignIn";
+import SignInGoogleButton from "../SignInGoogleButton/SignInGoogleButton";
 
 const Home = () => (
   <div className="Home" id="Home">
@@ -11,7 +11,7 @@ const Home = () => (
     <div className="content">
       <h1>Welcome</h1>
       <a href="#">Enter</a>
-      <SignIn />
+      <SignInGoogleButton />
     </div>
   </div>
 );
