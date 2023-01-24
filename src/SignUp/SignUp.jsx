@@ -13,6 +13,7 @@ import Experience from "./Experience";
 import Skills from "./Skills";
 import Languages from "./Languages";
 import Projects from "./Projects";
+import Volunteering from "./Volunteering";
 
 const steps = [
   "Name",
@@ -34,6 +35,7 @@ const forms = [
   <Skills />,
   <Languages />,
   <Projects />,
+  <Volunteering />,
 ];
 
 const SignUp = () => {
