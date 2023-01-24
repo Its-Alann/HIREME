@@ -2,14 +2,14 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
-const ContactInfo = () => (
+const Education = () => (
   <Grid
     container
     spacing={0}
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "35vh" }}
+    style={{ minHeight: "50vh" }}
     rowSpacing={1}
   >
     <Grid xs={12}>
@@ -17,7 +17,7 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="Phone number"
+        defaultValue="School"
         variant="standard"
       />
     </Grid>
@@ -26,7 +26,7 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="Address"
+        defaultValue="Degree"
         variant="standard"
       />
     </Grid>
@@ -35,7 +35,16 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="City"
+        defaultValue="Program"
+        variant="standard"
+      />
+    </Grid>
+    <Grid xs={12}>
+      <TextField
+        required
+        id="standard-required"
+        label="Required"
+        defaultValue="Start Date"
         variant="standard"
       />
 
@@ -43,28 +52,20 @@ const ContactInfo = () => (
         required
         id="standard-required"
         label="Required"
-        defaultValue="Country"
+        defaultValue="End Date (Expected)"
         variant="standard"
       />
     </Grid>
     <Grid xs={12}>
       <TextField
-        required
-        id="standard-required"
-        label="Required"
-        defaultValue="Postal Code"
-        variant="standard"
-      />
-
-      <TextField
-        required
-        id="standard-required"
-        label="Required"
-        defaultValue="Date of birth"
-        variant="standard"
+        id="outlined-multiline-static"
+        label="Courses"
+        multiline
+        rows={6}
+        defaultValue="Default Value"
       />
     </Grid>
   </Grid>
 );
 
-export default ContactInfo;
+export default Education;
