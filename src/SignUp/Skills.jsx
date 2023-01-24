@@ -12,7 +12,7 @@ const Skills = () => (
     style={{ minHeight: "20vh" }}
     rowSpacing={1}
   >
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         id="outlined-multiline-static"
         label="Description"

@@ -12,7 +12,7 @@ const Education = () => (
     style={{ minHeight: "50vh" }}
     rowSpacing={1}
   >
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -21,7 +21,7 @@ const Education = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -30,7 +30,7 @@ const Education = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -39,7 +39,7 @@ const Education = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -56,7 +56,7 @@ const Education = () => (
         variant="standard"
       />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         id="outlined-multiline-static"
         label="Courses"

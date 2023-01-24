@@ -12,7 +12,7 @@ const Volunteering = () => (
     style={{ minHeight: "30vh" }}
     rowSpacing={1}
   >
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
@@ -22,7 +22,7 @@ const Volunteering = () => (
       />
     </Grid>
 
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <TextField
         required
         id="standard-required"
