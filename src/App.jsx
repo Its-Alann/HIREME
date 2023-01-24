@@ -1,4 +1,11 @@
 import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import Background from "./Background/Background";
 import Home from "./Home/Home";
@@ -12,10 +19,14 @@ const App = () => {
 
   return (
     <div className="App">
-      <SignIn />
-      {/* <Home />
-      <Background />
-      <AnotherPage /> */}
+      <Router>
+        <Routes>
+          <Route path="/" exact element={<Home />} />
+          <Route path="/" exact element={<Background />} />
+          <Route path="/" exact element={<AnotherPage />} />
+          <Route path="/signin" exact element={<SignIn />} />
+        </Routes>
+      </Router>
     </div>
   );
 };
