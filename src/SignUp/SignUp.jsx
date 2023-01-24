@@ -14,6 +14,7 @@ import Skills from "./Skills";
 import Languages from "./Languages";
 import Projects from "./Projects";
 import Volunteering from "./Volunteering";
+import Awards from "./Awards";
 
 const steps = [
   "Name",
@@ -36,6 +37,7 @@ const forms = [
   <Languages />,
   <Projects />,
   <Volunteering />,
+  <Awards />,
 ];
 
 const SignUp = () => {
@@ -113,8 +115,8 @@ const SignUp = () => {
         </>
       ) : (
         <>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            Step {activeStep + 1} {forms[activeStep]}{" "}
+          <Typography sx={{ mt: 2, mb: 1 }} textAlign="center">
+            {steps[activeStep]} {forms[activeStep]}{" "}
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button
