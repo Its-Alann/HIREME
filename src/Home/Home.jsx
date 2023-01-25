@@ -1,15 +1,29 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./Home.css";
-import mainVideo from "../Assets/AdobeStock_Video1.mov";
+import Typewriter from "typewriter-effect";
 import SignInGoogleButton from "../SignInGoogleButton/SignInGoogleButton";
+import mainVideo from "../Assets/videos/AdobeStock_Video1.mov";
 
 const Home = () => (
   <div className="Home" id="Home">
     <div className="overlay" />
     <video src={mainVideo} autoPlay loop muted playsInline />
     <div className="content">
-      <h1>Welcome</h1>
+      <h1>
+        HIRE<span style={{ color: "#2B2F90" }}>ME</span>
+      </h1>
+      <h2>
+        Connect with
+        <Typewriter
+          options={{
+            strings: ["Peers", "Potential Employers", "Partners", "Clients"],
+            autoStart: true,
+            loop: true,
+            deleteSpeed: 50,
+          }}
+        />
+      </h2>
       <a href="/signin">Sign In</a>
     </div>
   </div>
