@@ -26,9 +26,9 @@ const App = () => {
           <Route path="/" exact element={<Background />} />
           <Route path="/" exact element={<AnotherPage />} />
           <Route path="/signin" exact element={<SignIn />} />
+          <Route path="/signup" exact element={<SignUp />} />
         </Routes>
       </Router>
-      <SignUp />
     </div>
   );
 };
