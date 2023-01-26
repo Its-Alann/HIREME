@@ -24,7 +24,9 @@ const Home = () => (
           }}
         />
       </h2>
-      <a href="/signin">Sign In</a>
+      <a href="/signin" data-testid="homeLink">
+        Sign In
+      </a>
     </div>
   </div>
 );
