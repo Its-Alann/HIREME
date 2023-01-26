@@ -1,7 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { toBeInTheDocument, toContain } from "@testing-library/jest-dom";
 import React from "react";
 import Home from "../Home/Home";
+
+afterEach(() => {
+  cleanup();
+});
 
 test("Sign in link exists", () => {
   render(<Home />);

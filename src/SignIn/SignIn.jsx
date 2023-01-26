@@ -22,18 +22,23 @@ import { auth, provider } from "../Firebase/firebase";
 const theme = createTheme();
 
 const SignIn = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
-    console.log({
-      email,
-      password,
-    });
+
+    if (!emailError && email && password) {
+      console.log({
+        email,
+        password,
+      });
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -43,7 +48,7 @@ const SignIn = () => {
       const { user } = userCredential;
       console.log(user);
 
-      navigate("/");
+      //navigate("/");
     } catch (err) {
       console.log("Something went wrong with email/password Sign In");
       console.error(err.code, err.message);
@@ -75,6 +80,7 @@ const SignIn = () => {
             sx={{ mt: 1 }}
           >
             <TextField
+              type="text"
               margin="normal"
               required
               fullWidth
@@ -83,13 +89,15 @@ const SignIn = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              inputProps={{
+                "aria-label": "email",
+              }}
               onBlur={(e) => {
                 setEmailError(
                   e.target.value === ""
                     ? false
                     : !EmailValidator.validate(e.target.value)
                 );
-                console.log(emailError);
               }}
               error={emailError}
               helperText={!emailError ? "" : "Please enter a valid email"}
@@ -113,6 +121,8 @@ const SignIn = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              name="signIn"
+              inputProps={{ "aria-label": "signIn" }}
             >
               Sign In
             </Button>
@@ -135,7 +145,9 @@ const SignIn = () => {
                 </Typography>
               </Stack>
               <Stack item margin="auto">
-                <SignInGoogleButton />
+                {
+                  //<SignInGoogleButton />
+                }
               </Stack>
             </Stack>
           </Box>
