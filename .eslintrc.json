@@ -5,6 +5,14 @@
     "Airbnb",
     "prettier"
   ],
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.jsx"],
+      "env": {
+        "jest": true
+      }
+    }
+  ],
   "env": {
     "browser": true
   },

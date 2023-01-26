@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Stack } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import * as EmailValidator from "email-validator";
 import SignInGoogleButton from "../SignInGoogleButton/SignInGoogleButton";
 import { auth, provider } from "../Firebase/firebase";
 
@@ -22,6 +23,7 @@ const theme = createTheme();
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [emailError, setEmailError] = React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -81,6 +83,16 @@ const SignIn = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              onBlur={(e) => {
+                setEmailError(
+                  e.target.value === ""
+                    ? false
+                    : !EmailValidator.validate(e.target.value)
+                );
+                console.log(emailError);
+              }}
+              error={emailError}
+              helperText={!emailError ? "" : "Please enter a valid email"}
             />
             <TextField
               margin="normal"
