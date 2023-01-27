@@ -99,6 +99,7 @@ const SignUp = () => {
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
                   label="I want to receive inspiration, marketing promotions and updates via email."
+                  name="updates"
                 />
               </Grid>
             </Grid>

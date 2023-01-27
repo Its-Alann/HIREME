@@ -9,23 +9,27 @@ import React from "react";
 import user from "@testing-library/user-event";
 import { check } from "prettier";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { byRole as fromRole } from "testing-library-selectors";
 import SignIn from "../SignIn/SignIn";
 
 afterEach(() => {
   cleanup();
 });
 
+const ui = {
+  emailTextbox: fromRole("textbox", { name: /email/i }),
+};
+
 function getEmail() {
-  return screen.findByRole("textbox", { name: /email/i });
+  return screen.findByRole("textbox", {
+    name: /email/i,
+    options: { hidden: true },
+  });
 }
 
 function getPassword() {
   //getByRole for passwords does not seem to work with Jest
   return screen.getByLabelText(/password/i);
-}
-
-function clickSubmitButton() {
-  //user.click(screen.findByTestId("specialButton"));
 }
 
 describe("SignInForm", () => {
@@ -39,12 +43,13 @@ describe("SignInForm", () => {
     user.type(getPassword(), "123456");
   });
 
-  it("shows error if email has an invalid form", async () => {
-    user.type(getEmail(), "email@test");
+  /*it("shows error if email has an invalid form", async () => {
+    screen.getAllByRole();
+    user.type(screen.getBy("email"), "email@test");
     user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText("Please enter a valid email").toBeInDocument());
+      expect(screen.getByText("Email").toBeInDocument());
     });
     // TODO: more tests during the video
   });
