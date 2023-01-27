@@ -3,7 +3,8 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "Airbnb",
-    "prettier"
+    "prettier",
+    "plugin:cypress/recommended"
   ],
   "overrides": [
     {
