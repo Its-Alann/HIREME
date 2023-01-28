@@ -13,10 +13,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import * as EmailValidator from "email-validator";
 
 const theme = createTheme();
 
 const SignUp = () => {
+  const [emailError, setEmailError] = React.useState(false);
+  const [firstNameError, setFirstNameError] = React.useState(false);
+  const [lastNameError, setLastNameError] = React.useState(false);
+  const [passwordError, setPasswordError] = React.useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -60,6 +66,19 @@ const SignUp = () => {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onBlur={(e) => {
+                    setFirstNameError(
+                      e.target.value === ""
+                        ? false
+                        : !/^[a-zA-Z]+$/.test(e.target.value)
+                    );
+                  }}
+                  error={firstNameError}
+                  helperText={
+                    !firstNameError
+                      ? ""
+                      : "Please enter a valid name (letters only)"
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -69,6 +88,19 @@ const SignUp = () => {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
+                  onBlur={(e) => {
+                    setLastNameError(
+                      e.target.value === ""
+                        ? false
+                        : !/^[a-zA-Z]+$/.test(e.target.value)
+                    );
+                  }}
+                  error={lastNameError}
+                  helperText={
+                    !lastNameError
+                      ? ""
+                      : "Please enter a valid name (letters only)"
+                  }
                   autoComplete="family-name"
                 />
               </Grid>
@@ -80,6 +112,15 @@ const SignUp = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onBlur={(e) => {
+                    setEmailError(
+                      e.target.value === ""
+                        ? false
+                        : !EmailValidator.validate(e.target.value)
+                    );
+                  }}
+                  error={emailError}
+                  helperText={!emailError ? "" : "Please enter a valid email"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -91,6 +132,21 @@ const SignUp = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onBlur={(e) => {
+                    setPasswordError(
+                      e.target.value === ""
+                        ? false
+                        : !e.target.value.match(
+                            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
+                          )
+                    );
+                  }}
+                  error={passwordError}
+                  helperText={
+                    !passwordError
+                      ? ""
+                      : "Please enter a password of six characters with, at least one letter, one number and one special character"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
