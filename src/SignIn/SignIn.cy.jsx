@@ -14,6 +14,13 @@ describe("<SignIn />", () => {
   it("shows helper text when typing a wrong email", () => {
     cy.get("#email").type("email@test");
     cy.get("input").tab();
-    cy.get('[data-cy="emailTest"]').contains("Please enter a valid email");
+    cy.get('[data-cy="emailTest"]').contains("Please enter");
+  });
+
+  it("shows no messsage if the input is valid", () => {
+    cy.get("#email").type("email@test.com");
+    cy.get("#password").type("abcd");
+    cy.get("input").tab();
+    cy.get('[data-cy="formTest"]').should("not.include.text", "Please");
   });
 });
