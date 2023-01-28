@@ -22,7 +22,7 @@ import { auth, provider } from "../Firebase/firebase";
 const theme = createTheme();
 
 const SignIn = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
 
   const handleSubmit = async (event) => {
@@ -33,25 +33,26 @@ const SignIn = () => {
     const password = data.get("password");
 
     if (!emailError && email && password) {
+      setEmailError(true);
       console.log({
         email,
         password,
       });
-    }
+    } else {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const { user } = userCredential;
+        console.log(user);
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const { user } = userCredential;
-      console.log(user);
-
-      //navigate("/");
-    } catch (err) {
-      console.log("Something went wrong with email/password Sign In");
-      console.error(err.code, err.message);
+        //navigate("/");
+      } catch (err) {
+        console.log("Something went wrong with email/password Sign In");
+        console.error(err.code, err.message);
+      }
     }
   };
 
@@ -101,7 +102,7 @@ const SignIn = () => {
                 );
               }}
               error={emailError}
-              helperText={!emailError ? "" : "Please enter a valid email"}
+              helperText={!emailError ? "" : "Please enter valid credentials"}
             />
             <TextField
               margin="normal"
@@ -146,9 +147,7 @@ const SignIn = () => {
                 </Typography>
               </Stack>
               <Stack item margin="auto">
-                {
-                  //<SignInGoogleButton />
-                }
+                <SignInGoogleButton />
               </Stack>
             </Stack>
           </Box>
