@@ -1,14 +1,14 @@
 import React from "react";
-import SignUp from "./SignUp";
+import SignIn from "./SignIn";
 
-describe("<SignUp />", () => {
+describe("<SignIn />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<SignUp />);
+    cy.mount(<SignIn />);
   });
 
   beforeEach(() => {
-    cy.mount(<SignUp />);
+    cy.mount(<SignIn />);
   });
 
   it("shows helper text when typing a wrong email", () => {

@@ -89,6 +89,7 @@ const SignIn = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              data-cy="emailTest"
               inputProps={{
                 "aria-label": "email",
               }}
