@@ -79,6 +79,7 @@ const SignIn = () => {
             onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
+            data-cy="formTest"
           >
             <TextField
               type="text"

@@ -55,6 +55,7 @@ const SignUp = () => {
             noValidate
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
+            data-cy="formTest"
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -65,6 +66,7 @@ const SignUp = () => {
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  data-cy="firstNameTest"
                   autoFocus
                   onBlur={(e) => {
                     setFirstNameError(
@@ -88,6 +90,7 @@ const SignUp = () => {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
+                  data-cy="lastNameTest"
                   onBlur={(e) => {
                     setLastNameError(
                       e.target.value === ""
@@ -111,6 +114,7 @@ const SignUp = () => {
                   id="email"
                   label="Email Address"
                   name="email"
+                  data-cy="emailTest"
                   autoComplete="email"
                   onBlur={(e) => {
                     setEmailError(
@@ -131,6 +135,7 @@ const SignUp = () => {
                   label="Password"
                   type="password"
                   id="password"
+                  data-cy="passwordTest"
                   autoComplete="new-password"
                   onBlur={(e) => {
                     setPasswordError(
