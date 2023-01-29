@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -83,6 +84,30 @@ const AccountCreation = () => {
     setActiveStep(0);
   };
 
+  const [data, setData] = useState({
+    dataPacket: "User Form",
+  });
+
+  const handleChange = (e) => {
+    const { type, name } = e.target;
+    const value = type === "checkbox" ? e.tartget.checked : e.target.value;
+
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    // e.preventDefault();
+    console.log(JSON.stringify(data));
+  };
+
+  const handleFinalSubmit = () => {
+    handleSubmit();
+    handleNext();
+  };
+
   return (
     <Box className="AccountCreation">
       <div id="content">
@@ -136,7 +161,13 @@ const AccountCreation = () => {
                 </Button>
               )}
 
-              <Button onClick={handleNext}>
+              <Button
+                onClick={
+                  activeStep === steps.length - 1
+                    ? handleFinalSubmit
+                    : handleNext
+                }
+              >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>
             </Box>

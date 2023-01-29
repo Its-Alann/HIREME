@@ -12,6 +12,7 @@ import Home from "./Home/Home";
 import AnotherPage from "./AnotherPage/AnotherPage";
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
+import AccountCreation from "./AccountCreation/AccountCreation";
 
 const App = () => {
   const hello = "hello";
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/" exact element={<AnotherPage />} />
           <Route path="/signin" exact element={<SignIn />} />
           <Route path="/signup" exact element={<SignUp />} />
+          <Route path="/accountCreation" exact element={<AccountCreation />} />
         </Routes>
       </Router>
     </div>
