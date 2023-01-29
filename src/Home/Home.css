@@ -1,3 +1,8 @@
+@font-face {
+  font-family: CaviarDreams;
+  src: url(../Assets/fonts/CaviarDreams.ttf);
+}
+
 .Home {
   width: 100%;
   height: 100vh;
@@ -21,12 +26,33 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #fff;
 }
 
 .Home .content h1 {
   font-size: 120px;
   color: #fff;
   font-weight: 600;
+  margin-bottom: 0;
+  font-family: Helvetica;
+  margin-bottom: 50px;
+}
+
+.Home .content h2 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 0;
+  font-family: CaviarDreams;
+}
+
+.Home .content h1:hover {
+  letter-spacing: 15px;
+  transition: letter-spacing 0.15s ease-out;
+}
+
+.Home .content h1:not(:hover) {
+  letter-spacing: 3px;
+  transition: letter-spacing 0.15s ease-in;
 }
 
 .Home .content a {
@@ -37,7 +63,8 @@
   border: 2px solid #fff;
   padding: 14px 70px;
   border-radius: 50px;
-  margin-top: 50px;
+  margin-top: 40px;
+  font-family: CaviarDreams;
 }
 
 /*Modify black overlay with rgba value*/
@@ -47,6 +74,5 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.6);
 }
-

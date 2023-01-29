@@ -3,10 +3,20 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "Airbnb",
-    "prettier"
+    "prettier",
+    "plugin:cypress/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.jsx"],
+      "env": {
+        "jest": true
+      }
+    }
   ],
   "env": {
-    "browser": true
+    "browser": true,
+    "jest": true
   },
   "settings": {
     "import/resolver": {
