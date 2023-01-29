@@ -60,6 +60,7 @@ const Home = () => {
           >
             Sign Out
           </button>
+          <a href="/accountCreation"> Create your profile</a>
         ) : (
           <a href="/signin" data-testid="homeLink">
             Sign In
