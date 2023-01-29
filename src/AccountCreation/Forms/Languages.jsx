@@ -25,7 +25,7 @@ const Languages = () => (
 
     <Grid>
       <div> Language proficiency </div>
-      <FormGroup row>
+      <FormGroup row style={{ color: "black" }}>
         <FormControlLabel control={<Checkbox />} label="Fluent" />
         <FormControlLabel control={<Checkbox />} label="Intermediate" />
         <FormControlLabel control={<Checkbox />} label="Beginner" />

@@ -132,7 +132,7 @@ const AccountCreation = () => {
         </Stepper>
         {activeStep === steps.length ? (
           <>
-            <Typography sx={{ mt: 2, mb: 1 }}>
+            <Typography style={{ color: "black" }} sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -142,7 +142,11 @@ const AccountCreation = () => {
           </>
         ) : (
           <>
-            <Typography sx={{ mt: 2, mb: 1 }} textAlign="center">
+            <Typography
+              style={{ color: "black" }}
+              sx={{ mt: 2, mb: 1 }}
+              textAlign="center"
+            >
               {steps[activeStep]} {forms[activeStep]}{" "}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -151,6 +155,7 @@ const AccountCreation = () => {
                 disabled={activeStep === 0}
                 onClick={handleBack}
                 sx={{ mr: 1 }}
+                style={{ color: "black" }}
               >
                 Back
               </Button>
