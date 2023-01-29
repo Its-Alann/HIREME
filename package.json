@@ -3,15 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bahmutov/cypress-code-coverage": "^1.3.2",
+    "@cypress/code-coverage": "^3.10.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.6",
+    "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "babel-plugin-istanbul": "^6.1.1",
+    "cypress": "^12.4.0",
+    "cypress-plugin-tab": "^1.0.5",
+    "email-validator": "^2.0.4",
+    "eslint-plugin-cypress": "^2.12.1",
+    "firebase": "^9.16.0",
+    "formik": "^2.2.9",
+    "nyc": "^15.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
     "react-scroll": "^1.8.8",
     "react-vanilla-tilt": "^1.0.0",
-    "web-vitals": "^2.1.4"
+    "testing-library-selectors": "^0.1.0",
+    "typewriter-effect": "^2.19.0",
+    "web-vitals": "^2.1.4",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/cypress": "^9.0.0",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-node": "^4.1.0",
@@ -48,6 +68,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "prettier": "^2.7.1"
+    "jest-dom": "^4.0.0",
+    "prettier": "^2.7.1",
+    "testing-library-selector": "^0.2.1"
   }
 }
