@@ -27,6 +27,7 @@ const Home = () => (
       <a href="/signin" data-testid="homeLink">
         Sign In
       </a>
+      <a href="/accountCreation"> Create your profile</a>
     </div>
   </div>
 );
