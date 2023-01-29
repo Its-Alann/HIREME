@@ -57,7 +57,11 @@ const Experience = () => (
         variant="standard"
       />
 
-      <FormControlLabel control={<Checkbox />} label="Currently working here" />
+      <FormControlLabel
+        style={{ color: "black" }}
+        control={<Checkbox />}
+        label="Currently working here"
+      />
     </Grid>
     <Grid item xs={12}>
       <TextField
