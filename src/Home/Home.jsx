@@ -52,15 +52,17 @@ const Home = () => {
           />
         </h2>
         {user ? (
-          <button
-            id="signout"
-            type="button"
-            data-testid="homeLink"
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </button>
-          <a href="/accountCreation"> Create your profile</a>
+          <div style={{ display: "grid" }}>
+            <button
+              id="signout"
+              type="button"
+              data-testid="homeLink"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </button>
+            <a href="/accountCreation"> Create your profile</a>
+          </div>
         ) : (
           <a href="/signin" data-testid="homeLink">
             Sign In
