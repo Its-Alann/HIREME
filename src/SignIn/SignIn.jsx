@@ -33,12 +33,10 @@ const SignIn = () => {
     const password = data.get("password");
 
     if (!emailError && email && password) {
-      setEmailError(true);
       console.log({
         email,
         password,
       });
-    } else {
       try {
         const userCredential = await signInWithEmailAndPassword(
           auth,
@@ -48,7 +46,7 @@ const SignIn = () => {
         const { user } = userCredential;
         console.log(user);
 
-        //navigate("/");
+        navigate("/");
       } catch (err) {
         console.log("Something went wrong with email/password Sign In");
         console.error(err.code, err.message);
