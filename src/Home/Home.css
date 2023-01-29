@@ -67,6 +67,20 @@
   font-family: CaviarDreams;
 }
 
+.Home .content #signout {
+  cursor: pointer;
+  background-color: transparent;
+  text-decoration: none;
+  display: inline-block;
+  color: #fff;
+  font-size: 24px;
+  border: 2px solid #fff;
+  padding: 14px 70px;
+  border-radius: 50px;
+  margin-top: 40px;
+  font-family: CaviarDreams;
+}
+
 /*Modify black overlay with rgba value*/
 .Home .overlay {
   position: absolute;
