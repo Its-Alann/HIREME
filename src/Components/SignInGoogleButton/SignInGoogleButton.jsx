@@ -7,7 +7,7 @@ import {
 import { IconButton } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
-import { auth, provider } from "../Firebase/firebase";
+import { auth, provider } from "../../Firebase/firebase";
 
 const signInWithFirebaseRedirect = () => {
   getRedirectResult(auth).then((result) => {
