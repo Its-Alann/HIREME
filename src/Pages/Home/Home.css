@@ -3,6 +3,16 @@
   src: url(../../Assets/fonts/CaviarDreams/CaviarDreams.ttf);
 }
 
+@font-face {
+  font-family: OkineBold;
+  src: url(../../Assets/fonts/Okine/MADEOkineSansPERSONALUSE-Bold.otf);
+}
+
+@font-face {
+  font-family: OkineOutlinedBold;
+  src: url(../../Assets/fonts/Okine/MADEOkineSansPERSONALUSE-BoldOutline.otf);
+}
+
 .Home {
   width: 100%;
   height: 100vh;
@@ -29,45 +39,11 @@
   color: #fff;
 }
 
-.Home .content h1 {
-  font-size: 120px;
-  color: #fff;
-  font-weight: 600;
-  margin-bottom: 0;
-  font-family: Helvetica;
-  margin-bottom: 50px;
-}
-
 .Home .content h2 {
   color: #fff;
   font-weight: 600;
   margin-bottom: 0;
   font-family: CaviarDreams;
-}
-
-.Home .content h1:hover {
-  letter-spacing: 8px;
-  transition: all 0.14s ease-out;
-}
-
-.Home .content h1:not(:hover) {
-  letter-spacing: 2px;
-  transition: all 0.14s ease-in;
-}
-
-.Home .content h1:hover > #titleME {
-  margin-left: 15px;
-  transition: all 0.14s ease-out;
-}
-
-.Home .content h1:not(:hover) > #titleME {
-  margin-left: 0px;
-  transition: all 0.14s ease-in;
-}
-
-.Home .content h1:hover > #titleHire {
-  margin-right: 15px;
-  transition: all 0.14s ease-out;
 }
 
 .Home .content h1:not(:hover) > #titleHire {
@@ -110,3 +86,108 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
 }
+
+#title {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#titleHire {
+  font-size: 120px;
+  font-weight: 600;
+  font-family: OkineBold;
+}
+
+#titleME {
+  color: #fff;
+  font-weight: 600;
+  font-family: OkineOutlinedBold;
+  margin-bottom: 50px;
+  font-size: 120px;
+  padding-right: 25px;
+  border-right: 5px solid rgba(120, 120, 120, 0.428);
+}
+
+#glass-btn {
+  /*Glass effect*/
+  background: white;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.065),
+    rgba(255, 255, 255, 0.065)
+  );
+  border-radius: 1rem;
+  backdrop-filter: blur(2rem);
+  z-index: 2;
+  border: 0.5px solid white;
+  display: inline-block;
+  margin-left: 80%;
+  margin-top: -6%;
+}
+
+#card {
+  box-shadow: 20px 20px 50px rgb(0, 0, 0, 0.5);
+  padding: 25px;
+  padding-left: 10%;
+  padding-right: 10%;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.052);
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
+  border-left: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  min-width: 850px;
+  min-height: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+#gradient {
+  background-color: rgba(7, 3, 53, 1);
+  background-image: radial-gradient(
+    circle 610px at 50.2% 51.6%,
+    rgba(5, 8, 114, 0.2) 0%,
+    rgb(0, 0, 0) 97.5%
+  );
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  display: inline-block;
+}
+
+#businessInfo {
+  padding-top: 40px;
+}
+
+#businessInfo table {
+  border-spacing: 12px;
+}
+
+#businessInfo table tr td {
+  text-align: left;
+  font-family: CaviarDreams;
+  font-weight: 400;
+  font-size: 19px;
+}
+
+#type {
+  position: absolute;
+  font-family: CaviarDreams;
+  display: block;
+  overflow: hidden;
+  text-overflow: clip;
+  font-size: 18px;
+  display: flex;
+  padding-left: 10rem;
+}
+
+/*
+table,
+th,
+td {
+  border: 1px solid black;
+}
+*/
