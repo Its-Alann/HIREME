@@ -46,13 +46,33 @@
 }
 
 .Home .content h1:hover {
-  letter-spacing: 15px;
-  transition: letter-spacing 0.15s ease-out;
+  letter-spacing: 8px;
+  transition: all 0.14s ease-out;
 }
 
 .Home .content h1:not(:hover) {
-  letter-spacing: 3px;
-  transition: letter-spacing 0.15s ease-in;
+  letter-spacing: 2px;
+  transition: all 0.14s ease-in;
+}
+
+.Home .content h1:hover > #titleME {
+  margin-left: 15px;
+  transition: all 0.14s ease-out;
+}
+
+.Home .content h1:not(:hover) > #titleME {
+  margin-left: 0px;
+  transition: all 0.14s ease-in;
+}
+
+.Home .content h1:hover > #titleHire {
+  margin-right: 15px;
+  transition: all 0.14s ease-out;
+}
+
+.Home .content h1:not(:hover) > #titleHire {
+  margin-right: 0px;
+  transition: all 0.14s ease-in;
 }
 
 .Home .content a {

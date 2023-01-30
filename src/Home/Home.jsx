@@ -38,7 +38,10 @@ const Home = () => {
       <video src={mainVideo} autoPlay loop muted playsInline />
       <div className="content">
         <h1>
-          HIRE<span style={{ color: "#2B2F90" }}>ME</span>
+          <span id="titleHire">HIRE</span>
+          <span id="titleME" style={{ color: "#2B2F90" }}>
+            ME
+          </span>
         </h1>
         <h2>
           Connect with
