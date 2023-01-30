@@ -106,7 +106,8 @@
   margin-bottom: 50px;
   font-size: 120px;
   padding-right: 25px;
-  border-right: 5px solid rgba(120, 120, 120, 0.428);
+  border-right: 5px solid rgb(150, 150, 150);
+  margin-right: 250px;
 }
 
 #glass-btn {
@@ -123,7 +124,7 @@
   border: 0.5px solid white;
   display: inline-block;
   margin-left: 80%;
-  margin-top: -6%;
+  margin-top: -7%;
 }
 
 #card {
@@ -131,8 +132,8 @@
   padding: 25px;
   padding-left: 10%;
   padding-right: 10%;
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.052);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.7);
   border-left: 1px solid rgba(255, 255, 255, 0.7);
