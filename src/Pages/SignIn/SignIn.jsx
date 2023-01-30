@@ -16,8 +16,8 @@ import { Stack } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
-import SignInGoogleButton from "../SignInGoogleButton/SignInGoogleButton";
-import { auth, provider } from "../Firebase/firebase";
+import SignInGoogleButton from "../../SignInGoogleButton/SignInGoogleButton";
+import { auth, provider } from "../../Firebase/firebase";
 
 const theme = createTheme();
 

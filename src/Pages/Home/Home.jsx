@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import "./Home.css";
 import Typewriter from "typewriter-effect";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import SignInGoogleButton from "../SignInGoogleButton/SignInGoogleButton";
-import mainVideo from "../Assets/videos/AdobeStock_Video1.mov";
-import { auth } from "../Firebase/firebase";
+import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
+import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
+import { auth } from "../../Firebase/firebase";
 
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
