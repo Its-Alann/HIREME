@@ -7,12 +7,12 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import Background from "./Background/Background";
-import Home from "./Home/Home";
-import AnotherPage from "./AnotherPage/AnotherPage";
-import SignIn from "./SignIn/SignIn";
-import SignUp from "./SignUp/SignUp";
-import AccountCreation from "./AccountCreation/AccountCreation";
+import Background from "./Pages/Background/Background";
+import Home from "./Pages/Home/Home";
+import AnotherPage from "./Pages/AnotherPage/AnotherPage";
+import SignIn from "./Pages/SignIn/SignIn";
+import SignUp from "./Pages/SignUp/SignUp";
+import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 
 const App = () => {
   const hello = "hello";
