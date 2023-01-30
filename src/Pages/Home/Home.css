@@ -184,6 +184,79 @@
   padding-left: 10rem;
 }
 
+@media only screen and (max-width: 1280px) {
+  .Home {
+    width: 100%;
+    height: auto;
+    display: flex;
+  }
+
+  .Home video {
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .Home .content {
+    font-size: medium;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
+
+  #title {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  #titleHire {
+    font-size: medium;
+  }
+
+  #titleME {
+    font-size: medium;
+  }
+
+  #card {
+    width: 75%;
+    min-width: 75%;
+    height: auto;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    font-size: medium;
+  }
+
+  #businessInfo table tr td {
+    text-align: left;
+    font-family: CaviarDreams;
+    font-weight: 400;
+    font-size: medium;
+  }
+
+  .Home .overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  #glass-btn {
+    margin-left: 0%;
+    margin-top: 5%;
+    font-size: medium;
+  }
+
+  #type {
+    display: none;
+  }
+}
 /*
 table,
 th,
