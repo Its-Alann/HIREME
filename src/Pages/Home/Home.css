@@ -164,13 +164,12 @@
 }
 
 #businessInfo table {
-  border-spacing: 12px;
+  border-spacing: 15px;
 }
 
 #businessInfo table tr td {
   text-align: left;
   font-family: CaviarDreams;
-  font-weight: 400;
   font-size: 19px;
 }
 
