@@ -149,7 +149,7 @@ const SignIn = () => {
                 </Typography>
               </Stack>
               <Stack item margin="auto">
-                <SignInGoogleButton />
+                <SignInGoogleButton data-cy="GoogleTest" />
               </Stack>
             </Stack>
           </Box>
