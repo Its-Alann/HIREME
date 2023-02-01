@@ -1,0 +1,266 @@
+@font-face {
+  font-family: CaviarDreams;
+  src: url(../../Assets/fonts/CaviarDreams/CaviarDreams.ttf);
+}
+
+@font-face {
+  font-family: OkineBold;
+  src: url(../../Assets/fonts/Okine/MADEOkineSansPERSONALUSE-Bold.otf);
+}
+
+@font-face {
+  font-family: OkineOutlinedBold;
+  src: url(../../Assets/fonts/Okine/MADEOkineSansPERSONALUSE-BoldOutline.otf);
+}
+
+.Home {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+.Home video {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.Home .content {
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.Home .content h2 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 0;
+  font-family: CaviarDreams;
+}
+
+.Home .content h1:not(:hover) > #titleHire {
+  margin-right: 0px;
+  transition: all 0.14s ease-in;
+}
+
+.Home .content a {
+  text-decoration: none;
+  display: inline-block;
+  color: #fff;
+  font-size: 24px;
+  border: 2px solid #fff;
+  padding: 14px 70px;
+  border-radius: 50px;
+  margin-top: 40px;
+  font-family: CaviarDreams;
+}
+
+.Home .content #signout {
+  cursor: pointer;
+  background-color: transparent;
+  text-decoration: none;
+  display: inline-block;
+  color: #fff;
+  font-size: 24px;
+  border: 2px solid #fff;
+  padding: 14px 70px;
+  border-radius: 50px;
+  margin-top: 40px;
+  font-family: CaviarDreams;
+}
+
+/*Modify black overlay with rgba value*/
+.Home .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#title {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#titleHire {
+  font-size: 120px;
+  font-weight: 600;
+  font-family: OkineBold;
+}
+
+#titleME {
+  color: #fff;
+  font-weight: 600;
+  font-family: OkineOutlinedBold;
+  margin-bottom: 50px;
+  font-size: 120px;
+  padding-right: 25px;
+  border-right: 5px solid rgb(150, 150, 150);
+  margin-right: 250px;
+}
+
+#glass-btn {
+  /*Glass effect*/
+  background: white;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.065),
+    rgba(255, 255, 255, 0.065)
+  );
+  border-radius: 1rem;
+  backdrop-filter: blur(2rem);
+  z-index: 2;
+  border: 0.5px solid white;
+  display: inline-block;
+  margin-left: 80%;
+  margin-top: -7%;
+}
+
+#card {
+  box-shadow: 20px 20px 50px rgb(0, 0, 0, 0.5);
+  padding: 25px;
+  padding-left: 10%;
+  padding-right: 10%;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
+  border-left: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  min-width: 850px;
+  min-height: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+#gradient {
+  background-color: rgba(7, 3, 53, 1);
+  background-image: radial-gradient(
+    circle 610px at 50.2% 51.6%,
+    rgba(5, 8, 114, 0.2) 0%,
+    rgb(0, 0, 0) 97.5%
+  );
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  display: inline-block;
+}
+
+#businessInfo {
+  padding-top: 40px;
+}
+
+#businessInfo table {
+  border-spacing: 15px;
+}
+
+#businessInfo table tr td {
+  text-align: left;
+  font-family: CaviarDreams;
+  font-size: 19px;
+}
+
+#type {
+  position: absolute;
+  font-family: CaviarDreams;
+  display: block;
+  overflow: hidden;
+  text-overflow: clip;
+  font-size: 18px;
+  display: flex;
+  padding-left: 10rem;
+}
+
+@media only screen and (max-width: 1280px) {
+  .Home {
+    width: 100%;
+    height: auto;
+    display: flex;
+  }
+
+  .Home video {
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .Home .content {
+    font-size: medium;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
+
+  #title {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  #titleHire {
+    font-size: medium;
+  }
+
+  #titleME {
+    font-size: medium;
+  }
+
+  #card {
+    width: 75%;
+    min-width: 75%;
+    height: auto;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    font-size: medium;
+  }
+
+  #businessInfo table tr td {
+    text-align: left;
+    font-family: CaviarDreams;
+    font-weight: 400;
+    font-size: medium;
+  }
+
+  .Home .overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  #glass-btn {
+    margin-left: 0%;
+    margin-top: 5%;
+    font-size: medium;
+  }
+
+  #type {
+    display: none;
+  }
+}
+/*
+table,
+th,
+td {
+  border: 1px solid black;
+}
+*/
