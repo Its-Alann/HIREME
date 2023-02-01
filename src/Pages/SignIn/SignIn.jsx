@@ -16,8 +16,9 @@ import { Stack } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
-import SignInGoogleButton from "../SignInGoogleButton/SignInGoogleButton";
-import { auth, provider } from "../Firebase/firebase";
+import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
+import { auth, provider } from "../../Firebase/firebase";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const theme = createTheme();
 
@@ -56,6 +57,7 @@ const SignIn = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Navbar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -66,6 +68,7 @@ const SignIn = () => {
             alignItems: "center",
           }}
         >
+          {" "}
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -146,7 +149,7 @@ const SignIn = () => {
                 </Typography>
               </Stack>
               <Stack item margin="auto">
-                <SignInGoogleButton />
+                <SignInGoogleButton data-cy="GoogleTest" />
               </Stack>
             </Stack>
           </Box>

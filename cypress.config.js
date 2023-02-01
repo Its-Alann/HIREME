@@ -1,6 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  chromeWebSecurity: false,
   component: {
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
