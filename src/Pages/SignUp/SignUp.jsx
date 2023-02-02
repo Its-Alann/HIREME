@@ -17,7 +17,6 @@ import * as EmailValidator from "email-validator";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
-import useSignUp from "./useSignUp";
 
 const theme = createTheme();
 
@@ -26,7 +25,6 @@ const SignUp = () => {
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
-  const { signup, isPending, error } = useSignUp();
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -37,10 +35,6 @@ const SignUp = () => {
       password: data.get("password"),
       name: data.get("firstName"),
     };
-    signup(email, password, name);
-    navigate("/");
-
-    console.log(email, password, name);
   };
 
   return (
@@ -176,18 +170,16 @@ const SignUp = () => {
                 />
               </Grid>
             </Grid>
-            {isPending ? (
-              <CircularProgress sx={{ mt: 3, mb: 2, ml: 20 }} />
-            ) : (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign Up
-              </Button>
-            )}
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
