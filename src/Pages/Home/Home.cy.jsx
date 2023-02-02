@@ -13,6 +13,6 @@ describe("<Home />", () => {
 
   it("changes route when clicking on the sign in button", () => {
     cy.get('[data-testid="homeLink"]').click();
-    cy.url().should("be.equal", "http://localhost:8080/signin");
+    cy.url().should("be.equal", "http://localhost:8080/login");
   });
 });

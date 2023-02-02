@@ -22,7 +22,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 
 const theme = createTheme();
 
-const SignIn = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
 
@@ -68,7 +68,6 @@ const SignIn = () => {
             alignItems: "center",
           }}
         >
-          {" "}
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -159,4 +158,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Login;

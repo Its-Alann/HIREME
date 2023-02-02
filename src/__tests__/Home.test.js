@@ -13,8 +13,8 @@ test("Sign in link exists", () => {
   expect(signInLink).toBeInTheDocument();
 });
 
-test("Sign in link should change link of the page to '/signin'", () => {
+test("Sign in link should change link of the page to '/login'", () => {
   render(<Home />);
   const link = screen.getByRole("link", { name: /Sign In/i });
-  expect(link.getAttribute("href")).toBe("/signin");
+  expect(link.getAttribute("href")).toBe("/login");
 });
