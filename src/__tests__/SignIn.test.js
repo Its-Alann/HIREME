@@ -10,7 +10,7 @@ import user from "@testing-library/user-event";
 import { check } from "prettier";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import { byRole as fromRole } from "testing-library-selectors";
-import SignIn from "../SignIn/SignIn";
+import Login from "../Login/Login";
 
 afterEach(() => {
   cleanup();
@@ -35,7 +35,7 @@ function getPassword() {
 describe("SignInForm", () => {
   render(
     <BrowserRouter>
-      <SignIn />
+      <Login />
     </BrowserRouter>
   );
   it("call onSubmit after form validation", () => {
