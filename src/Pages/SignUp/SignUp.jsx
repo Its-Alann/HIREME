@@ -14,7 +14,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as EmailValidator from "email-validator";
+import CircularProgress from "@mui/material/CircularProgress";
 import Navbar from "../../Components/Navbar/Navbar";
+import useSignUp from "./useSignUp";
 
 const theme = createTheme();
 
@@ -23,14 +25,18 @@ const SignUp = () => {
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const { signup, isPending, error } = useSignUp();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const { email, password, name } = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+      name: data.get("firstName"),
+    };
+    signup(email, password, name);
+    console.log(email, password, name);
   };
 
   return (
@@ -166,14 +172,18 @@ const SignUp = () => {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
+            {isPending ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+            )}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
