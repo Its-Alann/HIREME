@@ -26,7 +26,7 @@ describe("<Login />", () => {
     cy.get('[data-cy="emailTest"]').contains("Please enter");
   });
 
-  it("shows no messsage if the input is valid and tests the submit button", () => {
+  it("shows no messsage if the input is valid and tests the google button", () => {
     cy.get("#email").type("email@test.com");
     cy.get("#password").type("abcd");
     cy.get("input").tab();
