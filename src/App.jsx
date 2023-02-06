@@ -13,6 +13,7 @@ import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
+import Messaging from "./Pages/Messaging/Messaging";
 
 const App = () => {
   const hello = "hello";
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/signin" exact element={<SignIn />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
+          <Route path="/messaging" export element={<Messaging />} />
         </Routes>
       </Router>
     </div>
