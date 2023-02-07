@@ -15,6 +15,7 @@ import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../../Components/Navbar/Navbar";
+import SendChatButton from "../../Components/SendChatButton/SendChatButton";
 
 const theme = createTheme();
 
@@ -154,9 +155,7 @@ const Messaging = () => {
               />
             </Grid>
             <Grid xs={1} align="right">
-              <Fab color="primary" aria-label="add">
-                <SendIcon />
-              </Fab>
+              <SendChatButton />
             </Grid>
           </Grid>
         </Grid>
