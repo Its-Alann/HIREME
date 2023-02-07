@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import { RestaurantRounded } from "@material-ui/icons";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
 import { app } from "../../Firebase/firebase";
 
@@ -19,9 +20,11 @@ const aliID = "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1";
 const database = getFirestore(app);
 //const messagesRef = doc(database, 'messages', '')
 
+const auth = getAuth();
+
 const handleClick = async () => {
   // Format a new message
-  const content = "Biubiubiu";
+  const content = "OMG";
   const timestamp = Date().toLocaleUpperCase();
   const sender = bobId;
   const newMessage = {
@@ -30,10 +33,17 @@ const handleClick = async () => {
     sender,
   };
 
+  let uuid = bobId;
+
+  if (auth.currentUser) {
+    uuid = auth.currentUser.uid;
+    console.log("uuid:", uuid);
+  }
+
   // In <messages> the documents' id is of format <user_1_ID>-<user_2_ID>
   //                                                         * here is dash
   // If a document with such id exist, perform an update.
-  let docRef = doc(database, "messages", `${bobId}-${aliID}`);
+  let docRef = doc(database, "messages", `${uuid}-${aliID}`);
   let docSnapshot = await getDoc(docRef);
   if (docSnapshot.exists()) {
     console.log("Found doc on first try");
@@ -42,7 +52,7 @@ const handleClick = async () => {
   }
 
   // The id could also be <user_2_ID>-<user_1_ID>
-  docRef = doc(database, "messages", `${aliID}-${bobId}`);
+  docRef = doc(database, "messages", `${aliID}-${uuid}`);
   docSnapshot = await getDoc(docRef);
   if (docSnapshot.exists()) {
     console.log("Found doc on second try");
@@ -54,8 +64,8 @@ const handleClick = async () => {
   }
 
   // Other wise, we create a new document with the id of both users
-  await setDoc(doc(database, "messages", `${bobId}-${aliID}`), {
-    authors: [bobId, aliID],
+  await setDoc(doc(database, "messages", `${uuid}-${aliID}`), {
+    authors: [uuid, aliID],
     messages: [newMessage],
   });
   console.log("Not found, create new");
@@ -65,7 +75,7 @@ const Temp = () => (
   <ThemeProvider theme={theme}>
     <Navbar />
     <Button type="button" onClick={handleClick}>
-      Add message from Bob to Ali
+      Add message( from Bob to Ali)
     </Button>
   </ThemeProvider>
 );
