@@ -1,8 +1,18 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import PropTypes from "prop-types";
 
-const Awards = () => (
+const Awards = ({
+  setAwardTitle,
+  setIssuer,
+  setDateAward,
+  setAwardDesc,
+  values,
+}) => (
   <Grid
     container
     spacing={0}
@@ -14,29 +24,33 @@ const Awards = () => (
   >
     <Grid xs={12}>
       <TextField
-        required
         id="standard-required"
-        label="Required"
-        defaultValue="Title"
+        placeholder="Title"
         variant="standard"
+        value={values.awardTitle}
+        onChange={(e) => setAwardTitle(e.target.value)}
       />
     </Grid>
 
     <Grid item xs={6}>
       <TextField
-        required
         id="standard-required"
-        label="Required"
-        defaultValue="Issuer"
+        placeholder="Issuer"
         variant="standard"
+        value={values.issuer}
+        onChange={(e) => setIssuer(e.target.value)}
       />
-      <TextField
-        required
-        id="standard-required"
-        label="Required"
-        defaultValue="Date"
-        variant="standard"
-      />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Date"
+          value={values.dateAward}
+          onChange={(newValue) => {
+            setDateAward(newValue);
+          }}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </LocalizationProvider>
     </Grid>
 
     <Grid item xs={12}>
@@ -45,9 +59,23 @@ const Awards = () => (
         label="Description"
         multiline
         rows={6}
+        value={values.awardDesc}
+        onChange={(e) => setAwardDesc(e.target.value)}
       />
     </Grid>
   </Grid>
 );
 
+Awards.propTypes = {
+  setAwardTitle: PropTypes.func,
+  setIssuer: PropTypes.func,
+  setDateAward: PropTypes.func,
+  setAwardDesc: PropTypes.func,
+  values: PropTypes.shape({
+    awardTitle: PropTypes.string,
+    issuer: PropTypes.string,
+    dateAward: PropTypes.string,
+    awardDesc: PropTypes.string,
+  }),
+};
 export default Awards;
