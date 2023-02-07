@@ -3,6 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import Navbar from "../../../Components/Navbar/Navbar";
 import NetworkCards from "../../../Components/Network/NetworkCards";
 
@@ -14,7 +15,9 @@ const ViewNetwork = () => (
     <Navbar />
     <Container component="main" maxWidth="lg">
       <CssBaseline />
-      <div>View Network</div>
+      <Typography variant="h3" gutterBottom>
+        My Network
+      </Typography>
       {/*The array will contain all the connected users*/}
       <Grid container spacing={3}>
         {Array.from(test).map((_, index) => (

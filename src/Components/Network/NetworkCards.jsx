@@ -5,9 +5,12 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
+import { styled } from "@mui/material/styles";
+import Stack from "@mui/material/Stack";
+import { blue } from "@mui/material/colors";
+import "./NetworkCards.css";
 
 const bull = (
   <Box
@@ -17,6 +20,22 @@ const bull = (
     •
   </Box>
 );
+
+const ColorButtonBlue = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(blue[600]),
+  backgroundColor: blue[600],
+  "&:hover": {
+    backgroundColor: blue[700],
+  },
+}));
+
+const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(blue[800]),
+  backgroundColor: blue[800],
+  "&:hover": {
+    backgroundColor: blue[900],
+  },
+}));
 
 const card = (
   <>
@@ -36,8 +55,8 @@ const card = (
     </CardContent>*/}
     <CardActions>
       {/*view profile will go to the user's profile and message will be sent to the */}
-      <Button size="large">View Profile</Button>
-      <Button size="large">Message</Button>
+      <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
+      <ColorButtonLightBlue size="medium">Message</ColorButtonLightBlue>
     </CardActions>
   </>
 );
