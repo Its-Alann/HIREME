@@ -11,7 +11,9 @@ import {
 import Button from "@mui/material/Button";
 import { RestaurantRounded } from "@material-ui/icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Navbar from "../../Components/Navbar/Navbar";
+import Fab from "@material-ui/core/Fab";
+import SendIcon from "@material-ui/icons/Send";
+import Navbar from "../Navbar/Navbar";
 import { app } from "../../Firebase/firebase";
 
 const theme = createTheme();
@@ -24,26 +26,19 @@ const auth = getAuth();
 
 const handleClick = async () => {
   // Format a new message
-  const content = "OMG";
+  const content = "Scarlett";
   const timestamp = Date().toLocaleUpperCase();
-  const sender = bobId;
+  const sender = auth.currentUser ? auth.currentUser.uid : bobId;
   const newMessage = {
     content,
     timestamp,
     sender,
   };
 
-  let uuid = bobId;
-
-  if (auth.currentUser) {
-    uuid = auth.currentUser.uid;
-    console.log("uuid:", uuid);
-  }
-
   // In <messages> the documents' id is of format <user_1_ID>-<user_2_ID>
   //                                                         * here is dash
   // If a document with such id exist, perform an update.
-  let docRef = doc(database, "messages", `${uuid}-${aliID}`);
+  let docRef = doc(database, "messages", `${sender}-${aliID}`);
   let docSnapshot = await getDoc(docRef);
   if (docSnapshot.exists()) {
     console.log("Found doc on first try");
@@ -52,7 +47,7 @@ const handleClick = async () => {
   }
 
   // The id could also be <user_2_ID>-<user_1_ID>
-  docRef = doc(database, "messages", `${aliID}-${uuid}`);
+  docRef = doc(database, "messages", `${aliID}-${sender}`);
   docSnapshot = await getDoc(docRef);
   if (docSnapshot.exists()) {
     console.log("Found doc on second try");
@@ -64,20 +59,19 @@ const handleClick = async () => {
   }
 
   // Other wise, we create a new document with the id of both users
-  await setDoc(doc(database, "messages", `${uuid}-${aliID}`), {
-    authors: [uuid, aliID],
+  await setDoc(doc(database, "messages", `${sender}-${aliID}`), {
+    authors: [sender, aliID],
     messages: [newMessage],
   });
   console.log("Not found, create new");
 };
 
-const Temp = () => (
-  <ThemeProvider theme={theme}>
-    <Navbar />
+const SendChatButton = () => (
+  <Fab color="secondary" aria-label="add">
     <Button type="button" onClick={handleClick}>
-      Add message( from Bob to Ali)
+      <SendIcon />
     </Button>
-  </ThemeProvider>
+  </Fab>
 );
 
-export default Temp;
+export default SendChatButton;
