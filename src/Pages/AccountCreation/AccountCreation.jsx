@@ -30,19 +30,145 @@ const steps = [
   "Awards",
 ];
 
-const forms = [
-  <NameForm />,
-  <ContactInfo />,
-  <Education />,
-  <Experience />,
-  <Skills />,
-  <Languages />,
-  <Projects />,
-  <Volunteering />,
-  <Awards />,
-];
-
 const AccountCreation = () => {
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+
+  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [city, setCity] = React.useState("");
+  const [country, setCountry] = React.useState("");
+  const [postalCode, setPostalCode] = React.useState("");
+  const [dob, setDob] = React.useState();
+
+  const [school, setSchool] = React.useState("");
+  const [degree, setDegree] = React.useState("");
+  const [program, setProgram] = React.useState("");
+  const [startDateEdu, setStartDateEdu] = React.useState(null);
+  const [endDateEdu, setEndDateEdu] = React.useState(null);
+  const [courses, setCourses] = React.useState("");
+
+  const [company, setCompany] = React.useState("");
+  const [jobPosition, setjobPosition] = React.useState("");
+  const [location, setLocation] = React.useState("");
+  const [startDateExp, setStartDateExp] = React.useState(null);
+  const [endDateExp, setEndDateExp] = React.useState(null);
+  const [workingHere, setWorkingHere] = React.useState(false);
+  const [description, setDescription] = React.useState("");
+
+  const [skills, setSkills] = React.useState("");
+
+  const [language, setLanguage] = React.useState("");
+  const [proficiency, setProficiency] = React.useState("");
+
+  const [project, setProject] = React.useState("");
+  const [projectDesc, setProjectDesc] = React.useState("");
+
+  const [organization, setOrganization] = React.useState("");
+  const [dateVolunt, setDateVolunt] = React.useState(null);
+  const [voluntDesc, setVoluntDesc] = React.useState("");
+
+  const [awardTitle, setAwardTitle] = React.useState("");
+  const [issuer, setIssuer] = React.useState("");
+  const [dateAward, setDateAward] = React.useState(null);
+  const [awardDesc, setAwardDesc] = React.useState("");
+
+  const values = {
+    firstName,
+    lastName,
+    phoneNumber,
+    address,
+    city,
+    country,
+    postalCode,
+    dob,
+    school,
+    degree,
+    program,
+    startDateEdu,
+    endDateEdu,
+    courses,
+    company,
+    jobPosition,
+    location,
+    startDateExp,
+    endDateExp,
+    workingHere,
+    description,
+    skills,
+    language,
+    proficiency,
+    project,
+    projectDesc,
+    organization,
+    dateVolunt,
+    voluntDesc,
+    awardTitle,
+    issuer,
+    dateAward,
+    awardDesc,
+  };
+
+  const forms = [
+    <NameForm
+      setFirstName={setFirstName}
+      setLastName={setLastName}
+      values={values}
+    />,
+    <ContactInfo
+      setPhoneNumber={setPhoneNumber}
+      setAddress={setAddress}
+      setCity={setCity}
+      setCountry={setCountry}
+      setPostalCode={setPostalCode}
+      setDob={setDob}
+      values={values}
+    />,
+    <Education
+      setSchool={setSchool}
+      setDegree={setDegree}
+      setProgram={setProgram}
+      setStartDateEdu={setStartDateEdu}
+      setEndDateEdu={setEndDateEdu}
+      setCourses={setCourses}
+      values={values}
+    />,
+    <Experience
+      setCompany={setCompany}
+      setjobPosition={setjobPosition}
+      setLocation={setLocation}
+      setStartDateExp={setStartDateExp}
+      setEndDateExp={setEndDateExp}
+      setWorkingHere={setWorkingHere}
+      setDescription={setDescription}
+      values={values}
+    />,
+    <Skills setSkills={setSkills} values={values} />,
+    <Languages
+      setLanguage={setLanguage}
+      setProficiency={setProficiency}
+      values={values}
+    />,
+    <Projects
+      setProject={setProject}
+      setProjectDesc={setProjectDesc}
+      values={values}
+    />,
+    <Volunteering
+      setOrganization={setOrganization}
+      setDateVolunt={setDateVolunt}
+      setVoluntDesc={setVoluntDesc}
+      values={values}
+    />,
+    <Awards
+      setAwardTitle={setAwardTitle}
+      setIssuer={setIssuer}
+      setDateAward={setDateAward}
+      setAwardDesc={setAwardDesc}
+      values={values}
+    />,
+  ];
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
@@ -84,23 +210,9 @@ const AccountCreation = () => {
     setActiveStep(0);
   };
 
-  const [data, setData] = useState({
-    dataPacket: "User Form",
-  });
-
-  const handleChange = (e) => {
-    const { type, name } = e.target;
-    const value = type === "checkbox" ? e.tartget.checked : e.target.value;
-
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = () => {
     // e.preventDefault();
-    console.log(JSON.stringify(data));
+    console.log(JSON.stringify(values));
   };
 
   const handleFinalSubmit = () => {
