@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -14,8 +13,6 @@ import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
-import ViewNetwork from "./Pages/Network/ViewNetwork";
-import AcceptInvitation from "./Pages/Network/Invitations/AcceptInvitation";
 
 const App = () => {
   const hello = "hello";
@@ -32,8 +29,6 @@ const App = () => {
           <Route path="/signin" exact element={<SignIn />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
-          <Route path="/viewNetwork" exact element={<ViewNetwork />} />
-          <Route path="/acceptinvitation" exact element={<AcceptInvitation />} />
         </Routes>
       </Router>
     </div>
