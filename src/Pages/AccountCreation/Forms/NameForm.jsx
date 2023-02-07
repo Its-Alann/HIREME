@@ -1,8 +1,9 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import PropTypes from "prop-types";
 
-const NameForm = () => (
+const NameForm = ({ setFirstName, setLastName, values }) => (
   <Grid
     container
     spacing={0}
@@ -15,21 +16,32 @@ const NameForm = () => (
       <TextField
         required
         id="standard-required"
-        label="Required"
-        defaultValue="First Name"
+        placeholder="First Name"
         variant="standard"
+        value={values.firstName}
+        onChange={(e) => setFirstName(e.target.value)}
       />
     </Grid>
     <Grid item xs={8}>
       <TextField
         required
         id="standard-required"
-        label="Required"
-        defaultValue="Last Name"
+        placeholder="Last Name"
         variant="standard"
+        value={values.lastName}
+        onChange={(e) => setLastName(e.target.value)}
       />
     </Grid>
   </Grid>
 );
+
+NameForm.propTypes = {
+  setFirstName: PropTypes.func.isRequired,
+  setLastName: PropTypes.func.isRequired,
+  values: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default NameForm;

@@ -1,8 +1,9 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import PropTypes from "prop-types";
 
-const Projects = () => (
+const Projects = ({ setProject, setProjectDesc, values }) => (
   <Grid
     container
     spacing={0}
@@ -14,11 +15,11 @@ const Projects = () => (
   >
     <Grid item xs={12}>
       <TextField
-        required
         id="standard-required"
-        label="Required"
-        defaultValue="Project Title"
+        placeholder="Project Title"
         variant="standard"
+        value={values.project}
+        onChange={(e) => setProject(e.target.value)}
       />
     </Grid>
 
@@ -28,9 +29,20 @@ const Projects = () => (
         label="Description"
         multiline
         rows={6}
+        value={values.projectDesc}
+        onChange={(e) => setProjectDesc(e.target.value)}
       />
     </Grid>
   </Grid>
 );
+
+Projects.propTypes = {
+  setProject: PropTypes.func,
+  setProjectDesc: PropTypes.func,
+  values: PropTypes.shape({
+    project: PropTypes.string,
+    projectDesc: PropTypes.string,
+  }),
+};
 
 export default Projects;
