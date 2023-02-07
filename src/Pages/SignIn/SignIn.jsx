@@ -83,6 +83,7 @@ const SignIn = () => {
             data-cy="formTest"
           >
             <TextField
+              className="TextField"
               type="text"
               margin="normal"
               required
@@ -105,8 +106,10 @@ const SignIn = () => {
               }}
               error={emailError}
               helperText={!emailError ? "" : "Please enter valid credentials"}
+              variant="standard"
             />
             <TextField
+              className="TextField"
               margin="normal"
               required
               fullWidth
@@ -115,6 +118,7 @@ const SignIn = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              variant="standard"
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -130,19 +134,12 @@ const SignIn = () => {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/" variant="body2">
+            <Stack container justifyContent="center" spacing={2}>
+              <Stack item xs align="center">
+                <Link href="/" variant="subtitle2">
                   Forgot password?
                 </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/SignUp" variant="body2">
-                  Don&apos;t have an account? Sign Up
-                </Link>
-              </Grid>
-            </Grid>
-            <Stack container justifyContent="center">
+              </Stack>
               <Stack item>
                 <Typography variant="subtitle2" align="center">
                   or you can sign in with
@@ -151,6 +148,12 @@ const SignIn = () => {
               <Stack item margin="auto">
                 <SignInGoogleButton data-cy="GoogleTest" />
               </Stack>
+            </Stack>
+            <Stack container justifyContent="center" alignItems="center">
+              <Typography>Don&apos;t have an account?</Typography>
+              <Button href="/SignUp" variant="outlined" fullWidth>
+                Sign Up
+              </Button>
             </Stack>
           </Box>
         </Box>
