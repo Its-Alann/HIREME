@@ -9,7 +9,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
-import { blue } from "@mui/material/colors";
+import { blueGrey, blue } from "@mui/material/colors";
 
 const bull = (
   <Box
@@ -28,11 +28,11 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
   },
 }));
 
-const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(blue[800]),
-  backgroundColor: blue[800],
+const ColorButtonBlueGray = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(blueGrey[400]),
+  backgroundColor: blueGrey[400],
   "&:hover": {
-    backgroundColor: blue[900],
+    backgroundColor: blueGrey[500],
   },
 }));
 
@@ -51,8 +51,8 @@ const card = (
     <Box display="flex" justifyContent="flex-end">
       <CardActions>
         {/*view profile will go to the user's profile and message will be sent to the */}
-        <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
-        <ColorButtonLightBlue size="medium">Message</ColorButtonLightBlue>
+        <ColorButtonBlueGray size="medium">Ignore</ColorButtonBlueGray>
+        <ColorButtonBlue size="medium">Accept</ColorButtonBlue>
       </CardActions>
     </Box>
   </>
