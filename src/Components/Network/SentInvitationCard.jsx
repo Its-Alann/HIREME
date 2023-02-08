@@ -21,14 +21,6 @@ const bull = (
 );
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(blue[600]),
-  backgroundColor: blue[600],
-  "&:hover": {
-    backgroundColor: blue[700],
-  },
-}));
-
-const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(blue[800]),
   backgroundColor: blue[800],
   "&:hover": {
@@ -48,11 +40,10 @@ const card = (
       subheader="The next Elon Musk"
     />
     {/*moves the buttons to the right*/}
-    <Box display="flex" justifyContent="flex-end">
+    <Box display="flex" textAlign="center">
       <CardActions>
         {/*view profile will go to the user's profile and message will be sent to the */}
-        <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
-        <ColorButtonLightBlue size="medium">Message</ColorButtonLightBlue>
+        <ColorButtonBlue size="medium">Withdraw</ColorButtonBlue>
       </CardActions>
     </Box>
   </>

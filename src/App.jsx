@@ -14,6 +14,8 @@ import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import ViewNetwork from "./Pages/Network/MyConnections/ViewNetwork";
+import AcceptInvitation from "./Pages/Network/Invitation/AcceptInvitation";
+import SentInvitation from "./Pages/Network/Invitation/SentInvitation";
 
 const App = () => {
   const hello = "hello";
@@ -31,6 +33,8 @@ const App = () => {
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
           <Route path="/viewnetwork" exact element={<ViewNetwork />} />
+          <Route path="acceptinvitation" exact element={<AcceptInvitation />} />
+          <Route path="sentinvitation" exact element={<SentInvitation />} />
         </Routes>
       </Router>
     </div>
