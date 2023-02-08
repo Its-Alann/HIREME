@@ -32,9 +32,9 @@ const App = () => {
           <Route path="/signin" exact element={<SignIn />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
-          <Route path="/viewnetwork" exact element={<ViewNetwork />} />
-          <Route path="acceptinvitation" exact element={<AcceptInvitation />} />
-          <Route path="sentinvitation" exact element={<SentInvitation />} />
+          <Route path="/viewNetwork" exact element={<ViewNetwork />} />
+          <Route path="acceptInvitation" exact element={<AcceptInvitation />} />
+          <Route path="sentInvitation" exact element={<SentInvitation />} />
         </Routes>
       </Router>
     </div>
