@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -40,6 +40,7 @@ const useStyles = makeStyles({
 });
 
 const Messaging = () => {
+  const [messageContent, setMessageContent] = useState("");
   const classes = useStyles();
 
   return (
@@ -152,10 +153,11 @@ const Messaging = () => {
                 id="outlined-basic-email"
                 label="Type Something"
                 fullWidth
+                onChange={(e) => setMessageContent(e.target.value)}
               />
             </Grid>
             <Grid xs={1} align="right">
-              <SendChatButton />
+              <SendChatButton messageContent={messageContent} />
             </Grid>
           </Grid>
         </Grid>

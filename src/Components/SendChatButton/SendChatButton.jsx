@@ -24,9 +24,9 @@ const database = getFirestore(app);
 
 const auth = getAuth();
 
-const handleClick = async () => {
+const handleClick = async (content) => {
   // Format a new message
-  const content = "Scarlett";
+  // const content = "twitter<3";
   const timestamp = Date().toLocaleUpperCase();
   const sender = auth.currentUser ? auth.currentUser.uid : bobId;
   const newMessage = {
@@ -66,9 +66,14 @@ const handleClick = async () => {
   console.log("Not found, create new");
 };
 
-const SendChatButton = () => (
+const SendChatButton = (messageContent) => (
   <Fab color="secondary" aria-label="add">
-    <Button type="button" onClick={handleClick}>
+    <Button
+      type="button"
+      onClick={() => {
+        handleClick(messageContent);
+      }}
+    >
       <SendIcon />
     </Button>
   </Fab>
