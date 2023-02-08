@@ -14,7 +14,12 @@ const test = [1, 2, 3, 4];
 const SentInvitation = () => (
   <ThemeProvider theme={theme}>
     <Navbar />
-    <Box alignItems="center" minHeight="60vh">
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="60vh"
+    >
       <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
         <CssBaseline />
         <Typography variant="h4" gutterBottom>
