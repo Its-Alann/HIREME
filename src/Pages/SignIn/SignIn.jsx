@@ -27,7 +27,7 @@ const theme = createTheme({
     gray: { main: "#757575" },
   },
   typography: {
-    fontFamily: ["ABeeZee"],
+    fontFamily: ["Proxima Nova"],
   },
 });
 
