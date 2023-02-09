@@ -1,14 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import {
-  doc,
-  collection,
-  addDoc,
-  setDoc,
-  getFirestore,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import * as React from "react";
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -92,18 +85,18 @@ const AccountCreation = () => {
     city,
     country,
     postalCode,
-    dob,
+    dob: dob && dob.$d,
     school,
     degree,
     program,
-    startDateEdu,
-    endDateEdu,
+    startDateEdu: startDateEdu && startDateEdu.$d,
+    endDateEdu: endDateEdu && endDateEdu.$d,
     courses,
     company,
     jobPosition,
     location,
-    startDateExp,
-    endDateExp,
+    startDateExp: startDateExp && startDateExp.$d,
+    endDateExp: endDateExp && endDateExp.$d,
     workingHere,
     description,
     skills,
@@ -112,11 +105,11 @@ const AccountCreation = () => {
     project,
     projectDesc,
     organization,
-    dateVolunt,
+    dateVolunt: dateVolunt && dateVolunt.$d,
     voluntDesc,
     awardTitle,
     issuer,
-    dateAward,
+    dateAward: dateAward && dateAward.$d,
     awardDesc,
   };
 
@@ -180,7 +173,7 @@ const AccountCreation = () => {
     />,
   ];
 
-  const [activeStep, setActiveStep] = React.useState(8);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
   const isStepOptional = (step) => step === null;
@@ -221,12 +214,7 @@ const AccountCreation = () => {
     setActiveStep(0);
   };
 
-  // const [userID, setUserID] = React.useState();
-
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // console.log(JSON.stringify(values));
-
     try {
       const auth = getAuth();
       const user = auth.currentUser;
