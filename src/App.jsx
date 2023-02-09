@@ -10,7 +10,7 @@ import "./App.css";
 import Background from "./Pages/Background/Background";
 import Home from "./Pages/Home/Home";
 import AnotherPage from "./Pages/AnotherPage/AnotherPage";
-import SignIn from "./Pages/SignIn/SignIn";
+import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 
@@ -26,7 +26,7 @@ const App = () => {
           <Route path="/" exact element={<Home />} />
           <Route path="/" exact element={<Background />} />
           <Route path="/" exact element={<AnotherPage />} />
-          <Route path="/signin" exact element={<SignIn />} />
+          <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
         </Routes>
