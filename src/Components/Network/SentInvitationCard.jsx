@@ -40,7 +40,7 @@ const card = (
       subheader="The next Elon Musk"
     />
     {/*moves the buttons to the right*/}
-    <Box display="flex" textAlign="center">
+    <Box display="flex" justifyContent="center">
       <CardActions>
         {/*view profile will go to the user's profile and message will be sent to the */}
         <ColorButtonBlue size="medium">Withdraw</ColorButtonBlue>

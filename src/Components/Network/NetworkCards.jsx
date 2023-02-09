@@ -41,7 +41,11 @@ const card = (
     <CardHeader
       avatar={
         //source will be the user's image
-        <Avatar aria-label="user" sx={{ width: 56, height: 56 }} src="" />
+        <Avatar
+          aria-label="user"
+          sx={{ width: 56, height: 56 }}
+          src="https://plus.unsplash.com/premium_photo-1664303625239-cd96985b1ae4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+        />
       }
       //title will be the user's name and subheader is their bio
       title="Jane Doe"

@@ -14,17 +14,12 @@ const test = [1, 2, 3, 4, 5, 6, 7, 8];
 const AcceptInvitation = () => (
   <ThemeProvider theme={theme}>
     <Navbar />
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="60vh"
-    >
-      <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
-        <CssBaseline />
-        <Typography variant="h4" gutterBottom>
-          Accept Invitation
-        </Typography>
+    <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
+      <CssBaseline />
+      <Typography variant="h4" gutterBottom>
+        Accept Invitation
+      </Typography>
+      <Box justifyContent="center" alignItems="center" minHeight="60vh">
         {/*The array will contain all the connected users*/}
         <Grid container spacing={3}>
           {Array.from(test).map((_, index) => (
@@ -33,8 +28,8 @@ const AcceptInvitation = () => (
             </Grid>
           ))}
         </Grid>
-      </Container>
-    </Box>
+      </Box>
+    </Container>
   </ThemeProvider>
 );
 
