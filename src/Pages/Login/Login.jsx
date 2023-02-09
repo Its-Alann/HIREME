@@ -39,9 +39,18 @@ const Login = () => {
         password,
       });
       try {
-        console.log(email, password);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const { user } = userCredential;
+        console.log(user);
+
+        navigate("/");
       } catch (err) {
-        console.log(err);
+        console.log("Something went wrong with email/password Sign In");
+        console.error(err.code, err.message);
       }
     }
   };
