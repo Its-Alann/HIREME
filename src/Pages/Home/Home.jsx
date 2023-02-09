@@ -107,7 +107,7 @@ const Home = () => {
             <a href="/accountCreation"> Create your profile</a>
           </div>
         ) : (
-          <a href="/signin" data-testid="homeLink" id="glass-btn">
+          <a href="/login" data-testid="homeLink" id="glass-btn">
             Sign In
           </a>
         )}
