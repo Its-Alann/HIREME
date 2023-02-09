@@ -35,7 +35,7 @@ const SignInButton = () => {
   }, []);
 
   return (
-    <IconButton onClick={signInWithFirebaseRedirect}>
+    <IconButton xs onClick={signInWithFirebaseRedirect}>
       <GoogleIcon />
     </IconButton>
   );
