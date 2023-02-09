@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import SignUp from "./SignUp";
+import SignUp from "../Pages/SignUp/SignUp";
 
 describe("<SignUp />", () => {
   it("renders", () => {
