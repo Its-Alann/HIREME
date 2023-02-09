@@ -102,7 +102,7 @@ ContactInfo.propTypes = {
     country: PropTypes.string,
     postalCode: PropTypes.string,
     address: PropTypes.string,
-    dob: PropTypes.string,
+    dob: PropTypes.instanceOf(Date),
   }),
 };
 
