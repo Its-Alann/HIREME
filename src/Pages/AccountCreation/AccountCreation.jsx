@@ -1,4 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import {
+  doc,
+  collection,
+  addDoc,
+  setDoc,
+  getFirestore,
+} from "firebase/firestore";
 import * as React from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
@@ -17,6 +24,9 @@ import Skills from "./Forms/Skills";
 import Volunteering from "./Forms/Volunteering";
 import Awards from "./Forms/Awards";
 import "./AccountCreation.css";
+import { auth, app } from "../../Firebase/firebase";
+
+const db = getFirestore(app);
 
 const steps = [
   "Name",
@@ -39,7 +49,7 @@ const AccountCreation = () => {
   const [city, setCity] = React.useState("");
   const [country, setCountry] = React.useState("");
   const [postalCode, setPostalCode] = React.useState("");
-  const [dob, setDob] = React.useState();
+  const [dob, setDob] = React.useState(null);
 
   const [school, setSchool] = React.useState("");
   const [degree, setDegree] = React.useState("");
@@ -169,7 +179,7 @@ const AccountCreation = () => {
     />,
   ];
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(8);
   const [skipped, setSkipped] = React.useState(new Set());
 
   const isStepOptional = (step) => step === null;
@@ -210,9 +220,15 @@ const AccountCreation = () => {
     setActiveStep(0);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
     // e.preventDefault();
-    console.log(JSON.stringify(values));
+    // console.log(JSON.stringify(values));
+    try {
+      const userProfiles = doc(collection(db, "userProfiles"));
+      await setDoc(userProfiles, values);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleFinalSubmit = () => {
