@@ -64,7 +64,7 @@ Volunteering.propTypes = {
   setVoluntDesc: PropTypes.func,
   values: PropTypes.shape({
     organization: PropTypes.string,
-    dateVolunt: PropTypes.string,
+    dateVolunt: PropTypes.instanceOf(Date),
     voluntDesc: PropTypes.string,
   }),
 };

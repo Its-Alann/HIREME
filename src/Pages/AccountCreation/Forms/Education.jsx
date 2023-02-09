@@ -105,8 +105,8 @@ Education.propTypes = {
     degree: PropTypes.string,
     program: PropTypes.string,
     courses: PropTypes.string,
-    startDateEdu: PropTypes.func,
-    endDateEdu: PropTypes.func,
+    startDateEdu: PropTypes.instanceOf(Date),
+    endDateEdu: PropTypes.instanceOf(Date),
   }),
 };
 

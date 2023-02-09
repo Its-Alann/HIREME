@@ -74,7 +74,7 @@ Awards.propTypes = {
   values: PropTypes.shape({
     awardTitle: PropTypes.string,
     issuer: PropTypes.string,
-    dateAward: PropTypes.string,
+    dateAward: PropTypes.instanceOf(Date),
     awardDesc: PropTypes.string,
   }),
 };

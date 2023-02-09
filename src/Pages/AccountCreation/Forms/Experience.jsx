@@ -118,8 +118,8 @@ Experience.propTypes = {
   setWorkingHere: PropTypes.func,
   setDescription: PropTypes.func,
   values: PropTypes.shape({
-    startDateExp: PropTypes.func,
-    endDateExp: PropTypes.func,
+    startDateExp: PropTypes.instanceOf(Date),
+    endDateExp: PropTypes.instanceOf(Date),
     company: PropTypes.string,
     jobPosition: PropTypes.string,
     location: PropTypes.string,
