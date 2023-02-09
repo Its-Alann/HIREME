@@ -6,6 +6,7 @@ import {
   setDoc,
   getFirestore,
 } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as React from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
@@ -24,7 +25,7 @@ import Skills from "./Forms/Skills";
 import Volunteering from "./Forms/Volunteering";
 import Awards from "./Forms/Awards";
 import "./AccountCreation.css";
-import { auth, app } from "../../Firebase/firebase";
+import { app } from "../../Firebase/firebase";
 
 const db = getFirestore(app);
 
@@ -220,12 +221,18 @@ const AccountCreation = () => {
     setActiveStep(0);
   };
 
+  // const [userID, setUserID] = React.useState();
+
   const handleSubmit = async (e) => {
     // e.preventDefault();
     // console.log(JSON.stringify(values));
+
     try {
-      const userProfiles = doc(collection(db, "userProfiles"));
-      await setDoc(userProfiles, values);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      await setDoc(doc(db, "userProfiles", user.email), {
+        values,
+      });
     } catch (error) {
       console.log(error);
     }
