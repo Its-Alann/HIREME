@@ -5,8 +5,26 @@ import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { getDocs, collection } from "firebase/firestore";
 import Navbar from "../../../Components/Navbar/Navbar";
 import NetworkCards from "../../../Components/Network/NetworkCards";
+import { db } from "../../../Firebase/firebase";
+
+//Not working_____________________________________
+// export const findAll = async () => {
+//   const docRefs = await getDocs(collection(db, "userProfiles"));
+
+//   const res = [];
+
+//   docRefs.forEach((user) => {
+//     res.push({
+//       id: user.id,
+//       firstName: user.firstName,
+//     });
+//   });
+
+//   return res;
+// };
 
 const theme = createTheme();
 const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
