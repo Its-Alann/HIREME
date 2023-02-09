@@ -16,6 +16,28 @@ import Navbar from "../../Components/Navbar/Navbar";
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
 
+  onAuthStateChanged(auth, (authUser) => {
+    if (authUser) {
+      const { uid } = authUser;
+      console.log("uid", uid);
+      setUser(uid);
+    } else {
+      setUser(null);
+    }
+  });
+
+  const handleSignOut = async () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        console.log("signed out");
+      })
+      .catch((error) => {
+        // An error happened.
+        console.log(error);
+      });
+  };
+
   return (
     <div className="Home" id="Home">
       <div className="overlay" />
@@ -74,7 +96,12 @@ const Home = () => {
 
         {user ? (
           <div style={{ display: "grid" }}>
-            <button id="signout" type="button" data-testid="homeLink">
+            <button
+              id="signout"
+              type="button"
+              data-testid="homeLink"
+              onClick={handleSignOut}
+            >
               Sign Out
             </button>
             <a href="/accountCreation"> Create your profile</a>
