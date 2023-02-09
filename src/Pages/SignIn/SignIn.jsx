@@ -20,7 +20,16 @@ import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogle
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["ABeeZee"],
+  },
+});
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -62,18 +71,15 @@ const SignIn = () => {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            mx: 2,
           }}
         >
-          {" "}
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign In
+          <Typography component="h1" variant="h5" color="primary">
+            HIRE<em>ME</em> account Sign In
           </Typography>
           <Box
             component="form"
@@ -107,6 +113,7 @@ const SignIn = () => {
               error={emailError}
               helperText={!emailError ? "" : "Please enter valid credentials"}
               variant="standard"
+              color="primary"
             />
             <TextField
               className="TextField"
@@ -119,6 +126,7 @@ const SignIn = () => {
               id="password"
               autoComplete="current-password"
               variant="standard"
+              color="primary"
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -128,17 +136,25 @@ const SignIn = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, py: 1 }}
+              color="primary"
               name="signIn"
               inputProps={{ "aria-label": "signIn" }}
             >
               Sign In
             </Button>
-            <Stack container justifyContent="center" spacing={1.5}>
+            <Stack container justifyContent="center" spacing={1}>
               <Link item xs align="center" href="/" variant="subtitle2">
                 Forgot password?
               </Link>
-              <Typography variant="subtitle2" align="center">
+            </Stack>
+            <Stack container justifyContent="center" spacing={0} sx={{ mt: 3 }}>
+              <Typography
+                variant="subtitle1"
+                align="center"
+                color="gray"
+                sx={{ fontSize: ".9rem" }}
+              >
                 or you can sign in with
               </Typography>
               <div align="center">
@@ -152,8 +168,16 @@ const SignIn = () => {
               justifyContent="center"
               alignItems="center"
             >
-              <Typography>Don&apos;t have an account?</Typography>
-              <Button href="/SignUp" variant="outlined" fullWidth>
+              <Typography color="primary">
+                Don&apos;t have an account?
+              </Typography>
+              <Button
+                href="/SignUp"
+                variant="outlined"
+                fullWidth
+                color="primary"
+                sx={{ mt: 3, mb: 2, py: 1 }}
+              >
                 Sign Up
               </Button>
             </Stack>
