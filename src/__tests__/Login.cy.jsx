@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import Login from "./Login";
+import Login from "../Pages/Login/Login";
 
 describe("<Login />", () => {
   it("renders", () => {
@@ -26,7 +26,7 @@ describe("<Login />", () => {
     cy.get('[data-cy="emailTest"]').contains("Please enter");
   });
 
-  it("shows no messsage if the input is valid and tests the submit button", () => {
+  it("shows no messsage if the input is valid and tests the google button", () => {
     cy.get("#email").type("email@test.com");
     cy.get("#password").type("abcd");
     cy.get("input").tab();
