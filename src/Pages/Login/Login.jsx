@@ -31,7 +31,7 @@ const theme = createTheme({
   },
 });
 
-const SignIn = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
 
@@ -188,4 +188,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Login;
