@@ -134,22 +134,24 @@ const SignIn = () => {
             >
               Sign In
             </Button>
-            <Stack container justifyContent="center" spacing={2}>
-              <Stack item xs align="center">
-                <Link href="/" variant="subtitle2">
-                  Forgot password?
-                </Link>
-              </Stack>
-              <Stack item>
-                <Typography variant="subtitle2" align="center">
-                  or you can sign in with
-                </Typography>
-              </Stack>
-              <Stack item margin="auto">
-                <SignInGoogleButton data-cy="GoogleTest" />
-              </Stack>
+            <Stack container justifyContent="center" spacing={1.5}>
+              <Link item xs align="center" href="/" variant="subtitle2">
+                Forgot password?
+              </Link>
+              <Typography variant="subtitle2" align="center">
+                or you can sign in with
+              </Typography>
+              <div align="center">
+                <SignInGoogleButton sx={{ m: "auto" }} data-cy="GoogleTest" />
+              </div>
             </Stack>
-            <Stack container justifyContent="center" alignItems="center">
+            <Stack
+              sx={{ pt: 4 }}
+              spacing={1}
+              container
+              justifyContent="center"
+              alignItems="center"
+            >
               <Typography>Don&apos;t have an account?</Typography>
               <Button href="/SignUp" variant="outlined" fullWidth>
                 Sign Up
