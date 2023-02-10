@@ -1,5 +1,5 @@
 import React from "react";
-import AccountCreation from "./AccountCreation";
+import AccountCreation from "../Pages/AccountCreation/AccountCreation";
 
 describe("<AccountCreation />", () => {
   it("renders", () => {
