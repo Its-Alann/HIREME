@@ -1,30 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import Fab from "@material-ui/core/Fab";
-import SendIcon from "@material-ui/icons/Send";
+// import { makeStyles } from "@material-ui/core/styles";
+// import Paper from "@material-ui/core/Paper";
+// import Grid from "@material-ui/core/Grid";
+// import Box from "@material-ui/core/Box";
+// import Divider from "@material-ui/core/Divider";
+// import TextField from "@material-ui/core/TextField";
+// import Typography from "@material-ui/core/Typography";
+// import List from "@material-ui/core/List";
+// import ListItem from "@material-ui/core/ListItem";
+// import ListItemIcon from "@material-ui/core/ListItemIcon";
+// import ListItemText from "@material-ui/core/ListItemText";
+// import Avatar from "@material-ui/core/Avatar";
+// import Fab from "@material-ui/core/Fab";
+// import SendIcon from "@material-ui/icons/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  collection,
-  addDoc,
-  where,
-  serverTimestamp,
-  onSnapshot,
-  query,
-  orderBy,
-} from "firebase/firestore";
+import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
 import Navbar from "../../Components/Navbar/Navbar";
-import SendChatButton from "../../Components/SendChatButton/SendChatButton";
 import { db, auth } from "../../Firebase/firebase";
 
 const theme = createTheme();
@@ -32,83 +23,69 @@ const theme = createTheme();
 //const user = auth.currentUser.email;
 //
 const user = "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1";
-console.log(user);
+const messagesRefProfile = collection(db, "userProfiles");
+const messagesRef = collection(db, "messages");
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
+  const [dmList, setDmList] = useState([]);
   const [profiles, setProfiles] = useState([]);
-  const messagesRefProfile = collection(db, "userProfiles");
-  const messagesRef = collection(db, "messages");
-  const receivers = [];
+  // const messagesRefProfile = collection(db, "userProfiles");
 
-  const [userToPrint, setUserToPrint] = useState([]);
+  const getAllReceivers = async () => {
+    const querySnapshot = await getDocs(collection(db, "messages"));
+    const allAuthors = [];
+    querySnapshot.forEach((doc) => {
+      // If the user is a participant in the conversation
+      //  then add the rest of the participants
+      if (doc.data().authors.includes(user)) {
+        const recipients = doc
+          .data()
+          .authors.filter((author) => author !== user);
 
-  useEffect(() => {
-    // get receiver's email from messages collection
-
-    const queryMessages = query(messagesRef);
-    let unsuscribe = onSnapshot(queryMessages, (snapshot) => {
-      const msgs = [];
-      snapshot.forEach((doc) => {
-        msgs.push({ ...doc.data(), id: doc.id });
-      });
-
-      //console.log(msgs.length);
-
-      //for (let i = 0; i < msgs.length; ) {
-      //msgs.forEach((el, index, array) => {});
-      setMessages(msgs[0].id);
-      console.log(messages);
-
-      if (messages.includes(user)) {
-        const arrayOfIds = messages.split("-");
-        console.log(arrayOfIds[1]);
-        setUserToPrint(messages);
-        console.log("The search string  was found in ");
-      } else {
-        console.log(messages);
-        const arrayOfIds = messages.split("-");
-        console.log(arrayOfIds[0]);
-
-        if (arrayOfIds[0] === user) {
-          setUserToPrint(arrayOfIds[1]);
-        } else {
-          //console.log(arrayOfIds[0]);
-          setUserToPrint(arrayOfIds[0]);
-          //console.log(userToPrint);
-        }
-        //
-        console.log(userToPrint);
+        allAuthors.push(recipients);
       }
-      //i += 1;
-      console.log(1);
-      //}
-    });
-    console.log(userToPrint);
-    // get receiver's name from userProfile collection
-    const queryUser = query(messagesRefProfile);
-    unsuscribe = onSnapshot(queryUser, (snapshot) => {
-      const profs = [];
-      snapshot.forEach((doc) => {
-        profs.push({ ...doc.data(), id: doc.id });
-      });
-      console.log(profs[3].values.firstName);
 
-      setProfiles(profs[3].values.firstName);
+      setDmList(allAuthors);
     });
+  };
 
-    return () => unsuscribe();
-  }, []);
+  const queryMessages = query(messagesRef);
+  let unsuscribe = onSnapshot(queryMessages, (snapshot) => {
+    const msgs = [];
+    snapshot.forEach((doc) => {
+      msgs.push({ ...doc.data(), id: doc.id });
+    });
+  });
+
+  const queryUser = query(messagesRefProfile);
+  unsuscribe = onSnapshot(queryUser, (snapshot) => {
+    const profs = [];
+    snapshot.forEach((doc) => {
+      profs.push({ ...doc.data(), id: doc.id });
+    });
+    // const names = profs.map((el) => {
+    //   // console.log(el.values);
+    //   return el.values;
+    // });
+    // setProfiles(names);
+  });
 
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
       <div>
-        {receivers}
+        <p>
+          {" "}
+          {dmList.map((el) => (
+            <p> {el} </p>
+          ))}{" "}
+        </p>
         {/* <p>hello {messages}</p>
         <p>hello {user}</p>
         <p>hello {userToPrint}</p> */}
-        <p>{profiles}</p>
+        <button type="button" onClick={getAllReceivers}>
+          Cool
+        </button>
       </div>
     </ThemeProvider>
   );
