@@ -12,7 +12,7 @@ import NetworkCards from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
 
 const theme = createTheme();
-const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+//const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 export const ViewNetwork = () => {
   const usersRef = collection(db, "userProfiles");
