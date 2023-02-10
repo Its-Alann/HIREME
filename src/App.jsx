@@ -13,7 +13,7 @@ import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
-import ViewNetwork from "./Pages/Network/MyConnections/ViewNetwork";
+import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import AcceptInvitation from "./Pages/Network/Invitation/AcceptInvitation";
 import SentInvitation from "./Pages/Network/Invitation/SentInvitation";
 
