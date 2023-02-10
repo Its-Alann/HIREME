@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -12,9 +14,12 @@ const firebaseConfig = {
   measurementId: "G-PJ6PRNK71S",
 };
 
+//init firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+//init firestore
+const appFireStore = getFirestore();
+
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, db, app };
+export { auth, provider, app };

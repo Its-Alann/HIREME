@@ -14,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as EmailValidator from "email-validator";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 
 const theme = createTheme();
@@ -23,14 +25,16 @@ const SignUp = () => {
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const { email, password, name } = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+      name: data.get("firstName"),
+    };
   };
 
   return (
@@ -166,6 +170,7 @@ const SignUp = () => {
                 />
               </Grid>
             </Grid>
+
             <Button
               type="submit"
               fullWidth
@@ -174,6 +179,7 @@ const SignUp = () => {
             >
               Sign Up
             </Button>
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
