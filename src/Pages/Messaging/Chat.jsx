@@ -29,7 +29,6 @@ const messagesRef = collection(db, "messages");
 const Chat = () => {
   const [dmList, setDmList] = useState([]);
   const [profiles, setProfiles] = useState([]);
-  // const messagesRefProfile = collection(db, "userProfiles");
 
   const getAllReceivers = async () => {
     const querySnapshot = await getDocs(collection(db, "messages"));
@@ -49,26 +48,21 @@ const Chat = () => {
     });
   };
 
-  const queryMessages = query(messagesRef);
-  let unsuscribe = onSnapshot(queryMessages, (snapshot) => {
-    const msgs = [];
-    snapshot.forEach((doc) => {
-      msgs.push({ ...doc.data(), id: doc.id });
+  const getAllNames = async () => {
+    const querySnapshot = await getDocs(collection(db, "userProfiles"));
+    const allUsers = [];
+    querySnapshot.forEach((doc) => {
+      // If the user is a participant in the conversation
+      //  then add the name of the participants
+      const userID = doc.id;
+      dmList.forEach((el) => {
+        if (el[0] === userID) {
+          allUsers.push(doc.data().values.firstName);
+        }
+        setProfiles(allUsers);
+      });
     });
-  });
-
-  const queryUser = query(messagesRefProfile);
-  unsuscribe = onSnapshot(queryUser, (snapshot) => {
-    const profs = [];
-    snapshot.forEach((doc) => {
-      profs.push({ ...doc.data(), id: doc.id });
-    });
-    // const names = profs.map((el) => {
-    //   // console.log(el.values);
-    //   return el.values;
-    // });
-    // setProfiles(names);
-  });
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -80,11 +74,20 @@ const Chat = () => {
             <p> {el} </p>
           ))}{" "}
         </p>
+        <p>
+          {" "}
+          {profiles.map((el) => (
+            <p> {el} </p>
+          ))}{" "}
+        </p>
         {/* <p>hello {messages}</p>
         <p>hello {user}</p>
         <p>hello {userToPrint}</p> */}
         <button type="button" onClick={getAllReceivers}>
-          Cool
+          1st
+        </button>
+        <button type="button" onClick={getAllNames}>
+          2nd
         </button>
       </div>
     </ThemeProvider>
