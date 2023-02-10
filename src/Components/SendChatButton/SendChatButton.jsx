@@ -28,6 +28,11 @@ const handleClick = async (content) => {
   // Format a new message
   // const content = "twitter<3";
   const timestamp = Date().toLocaleUpperCase();
+  if (auth.currentUser) {
+    console.log(auth.currentUser.uid);
+  } else {
+    console.log("Not exist current user");
+  }
   const sender = auth.currentUser ? auth.currentUser.uid : bobId;
   const newMessage = {
     content,
@@ -67,15 +72,14 @@ const handleClick = async (content) => {
 };
 
 const SendChatButton = (messageContent) => (
-  <Fab color="secondary" aria-label="add">
-    <Button
-      type="button"
-      onClick={() => {
-        handleClick(messageContent);
-      }}
-    >
-      <SendIcon />
-    </Button>
+  <Fab
+    color="secondary"
+    aria-label="add"
+    onClick={() => {
+      handleClick(messageContent);
+    }}
+  >
+    <SendIcon />
   </Fab>
 );
 
