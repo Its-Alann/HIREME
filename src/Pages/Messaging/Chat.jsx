@@ -30,8 +30,9 @@ const Chat = () => {
   const [dmList, setDmList] = useState([]);
   const [profiles, setProfiles] = useState([]);
 
+  // get all names of user's receivers
   const getAllReceivers = async () => {
-    const querySnapshot = await getDocs(collection(db, "messages"));
+    let querySnapshot = await getDocs(collection(db, "messages"));
     const allAuthors = [];
     querySnapshot.forEach((doc) => {
       // If the user is a participant in the conversation
@@ -46,16 +47,14 @@ const Chat = () => {
 
       setDmList(allAuthors);
     });
-  };
 
-  const getAllNames = async () => {
-    const querySnapshot = await getDocs(collection(db, "userProfiles"));
+    querySnapshot = await getDocs(collection(db, "userProfiles"));
     const allUsers = [];
     querySnapshot.forEach((doc) => {
       // If the user is a participant in the conversation
       //  then add the name of the participants
       const userID = doc.id;
-      dmList.forEach((el) => {
+      allAuthors.forEach((el) => {
         if (el[0] === userID) {
           allUsers.push(doc.data().values.firstName);
         }
@@ -64,31 +63,27 @@ const Chat = () => {
     });
   };
 
+  useEffect(() => {
+    // display automatically the names of the user's receivers
+    getAllReceivers();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
       <div>
-        <p>
+        {/* <p>
           {" "}
           {dmList.map((el) => (
             <p> {el} </p>
           ))}{" "}
-        </p>
+        </p> */}
         <p>
           {" "}
           {profiles.map((el) => (
             <p> {el} </p>
           ))}{" "}
         </p>
-        {/* <p>hello {messages}</p>
-        <p>hello {user}</p>
-        <p>hello {userToPrint}</p> */}
-        <button type="button" onClick={getAllReceivers}>
-          1st
-        </button>
-        <button type="button" onClick={getAllNames}>
-          2nd
-        </button>
       </div>
     </ThemeProvider>
   );

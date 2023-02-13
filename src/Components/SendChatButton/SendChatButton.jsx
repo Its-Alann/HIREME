@@ -7,6 +7,8 @@ import {
   getDoc,
   updateDoc,
   arrayUnion,
+  collection,
+  addDoc,
 } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import { RestaurantRounded } from "@material-ui/icons";
@@ -24,16 +26,29 @@ const database = getFirestore(app);
 
 const auth = getAuth();
 
-const handleClick = async (content) => {
+/*
+props = {
+  messageContent,
+  conversationID, (the document to write to)
+}
+*/
+
+const handleClick = async (props) => {
   // Format a new message
   // const content = "twitter<3";
   const timestamp = Date().toLocaleUpperCase();
-  const sender = auth.currentUser ? auth.currentUser.uid : bobId;
+  // const sender = auth.currentUser ? auth.currentUser.email : bobId;
+  const sender = auth.currentUser.email;
+  // const sender = billybob@gmail.com; //for testing
   const newMessage = {
-    content,
+    content: props.messageContent,
     timestamp,
     sender,
   };
+
+  console.log("currentUser", auth.currentUser.email);
+  console.log("content", props.messageContent);
+  console.log("newMessage", newMessage);
 
   // In <messages> the documents' id is of format <user_1_ID>-<user_2_ID>
   //                                                         * here is dash
@@ -58,20 +73,25 @@ const handleClick = async (content) => {
     return;
   }
 
-  // Other wise, we create a new document with the id of both users
-  await setDoc(doc(database, "messages", `${sender}-${aliID}`), {
-    authors: [sender, aliID],
-    messages: [newMessage],
-  });
+  // // Other wise, we create a new document with the id of both users inside the "messages" collection
+  // const newConversationRef = await addDoc(collection(database, "messages"), {
+  //   authors: [], ///whos in the conversation
+  //   messages: arrayUnion(newMessage),
+  // });
+
+  // await setDoc(doc(database, "messages", `${sender}-${aliID}`), {
+  //   authors: [sender, aliID],
+  //   messages: [newMessage],
+  // });
   console.log("Not found, create new");
 };
 
-const SendChatButton = (messageContent) => (
+const SendChatButton = (props) => (
   <Fab color="secondary" aria-label="add">
     <Button
       type="button"
       onClick={() => {
-        handleClick(messageContent);
+        handleClick(props);
       }}
     >
       <SendIcon />
