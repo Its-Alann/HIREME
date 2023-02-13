@@ -46,9 +46,20 @@ export const SentInvitation = () => {
           <Typography variant="h4" gutterBottom>
             Sent Invitation
           </Typography>
-          <Box justifyContent="center" alignItems="center" minHeight="60vh">
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            minHeight="60vh"
+            display="flex"
+          >
             {/*The array will contain all the connected users*/}
-            <Grid container spacing={3}>
+            <Grid
+              container
+              spacing={3}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
               {Array.from(allUsers).map((user, index) => (
                 <Grid item>
                   <SentInvitationCard
