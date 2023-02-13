@@ -1,8 +1,8 @@
 {
   "extends": [
+    "plugin:import/recommended",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:import/recommended",
     "airbnb-base",
     "prettier",
     "plugin:cypress/recommended"
@@ -58,5 +58,12 @@
     "no-nested-ternary": "off",
     "default-param-last": "off",
     "react/jsx-key": "off"
-  }
+  },
+  "use": [
+    {
+      "options": {
+        "emitWarning": true
+      }
+    }
+  ]
 }
