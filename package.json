@@ -19,9 +19,7 @@
     "cypress": "^12.4.0",
     "cypress-plugin-tab": "^1.0.5",
     "email-validator": "^2.0.4",
-    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-import": "^2.27.5",
     "firebase": "^9.16.0",
     "formik": "^2.2.9",
     "nyc": "^15.1.0",
@@ -65,12 +63,8 @@
   "devDependencies": {
     "@testing-library/cypress": "^9.0.0",
     "eslint": "^8.34.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
     "jest-dom": "^4.0.0",
     "prettier": "^2.7.1",
     "testing-library-selector": "^0.2.1"
