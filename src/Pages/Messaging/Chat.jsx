@@ -14,7 +14,13 @@ import React, { useState, useEffect } from "react";
 // import Fab from "@material-ui/core/Fab";
 // import SendIcon from "@material-ui/icons/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 import Navbar from "../../Components/Navbar/Navbar";
 import { db, auth } from "../../Firebase/firebase";
 
@@ -22,9 +28,7 @@ const theme = createTheme();
 // get our sender s email
 //const user = auth.currentUser.email;
 //
-const user = "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1";
-const messagesRefProfile = collection(db, "userProfiles");
-const messagesRef = collection(db, "messages");
+const user = "billybob@gmail.com";
 
 const Chat = () => {
   const [dmList, setDmList] = useState([]);
@@ -53,9 +57,9 @@ const Chat = () => {
     querySnapshot.forEach((doc) => {
       // If the user is a participant in the conversation
       //  then add the name of the participants
-      const userID = doc.id;
+      const userID = doc.id; //currentuser
       allAuthors.forEach((el) => {
-        if (el[0] === userID) {
+        if (el[0] !== userID) {
           allUsers.push(doc.data().values.firstName);
         }
         setProfiles(allUsers);
