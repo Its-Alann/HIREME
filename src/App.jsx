@@ -16,6 +16,7 @@ import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import Messaging from "./Pages/Messaging/Messaging";
 import SendChatButton from "./Components/SendChatButton/SendChatButton";
 import TempMessages from "./Pages/TempMessages/TempMessages";
+import Chat from "./Pages/Messaging/Chat";
 
 const App = () => {
   const hello = "hello";
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/messaging" export element={<Messaging />} />
           <Route path="/temp" export element={<SendChatButton />} />
           <Route path="/tempMessages" export element={<TempMessages />} />
+          <Route path="/chat" export element={<Chat />} />
         </Routes>
       </Router>
     </div>
