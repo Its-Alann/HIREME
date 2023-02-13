@@ -16,6 +16,7 @@ import SendIcon from "@material-ui/icons/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChatButton from "../../Components/SendChatButton/SendChatButton";
+import NewChat from "../../Components/NewChat/NewChat";
 
 const theme = createTheme();
 
@@ -54,6 +55,7 @@ const Messaging = () => {
         </Grid>
       </Grid>
       <Grid container component={Paper} className={classes.chatSection}>
+        <NewChat />
         <Grid item xs={3} className={classes.borderRight500}>
           <List>
             <ListItem button key="RemySharp">
