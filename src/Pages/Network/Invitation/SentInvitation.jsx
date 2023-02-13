@@ -28,7 +28,7 @@ export const SentInvitation = () => {
           id: doc.id,
         }));
         setAllUsers(users);
-        console.log(users);
+        // console.log(users);
       } catch (err) {
         console.error(err);
       }
