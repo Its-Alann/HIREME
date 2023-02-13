@@ -15,7 +15,7 @@ import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 
 const App = () => {
-  const hello = "hello";
+  const hello = "helloo";
 
   //asds//
 
