@@ -36,7 +36,10 @@ const App = () => {
           <Route path="/viewNetwork" exact element={<ViewNetwork />} />
           <Route path="acceptInvitation" exact element={<AcceptInvitation />} />
           <Route path="sentInvitation" exact element={<SentInvitation />} />
-          <Route path="network" exact element={<Network />} />
+          <Route path="/network" exact element={<Network />} />
+          <Route path="/myNetwork" exact element={<ViewNetwork />} />
+          <Route path="/invitations" exact element={<AcceptInvitation />} />
+          <Route path="/sentRequests" exact element={<SentInvitation />} />
         </Routes>
       </Router>
     </div>
