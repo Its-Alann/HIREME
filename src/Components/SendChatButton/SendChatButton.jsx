@@ -35,7 +35,7 @@ const handleClick = async (content) => {
   }
   const sender = auth.currentUser ? auth.currentUser.uid : bobId;
   const newMessage = {
-    content,
+    content: content.messageContent,
     timestamp,
     sender,
   };
