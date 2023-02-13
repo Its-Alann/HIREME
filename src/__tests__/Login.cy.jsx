@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import SignIn from "./SignIn";
+import Login from "../Pages/Login/Login";
 
-describe("<SignIn />", () => {
+describe("<Login />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-react
     cy.mount(
       <BrowserRouter>
-        <SignIn />
+        <Login />
       </BrowserRouter>
     );
   });
@@ -15,7 +15,7 @@ describe("<SignIn />", () => {
   beforeEach(() => {
     cy.mount(
       <BrowserRouter>
-        <SignIn />
+        <Login />
       </BrowserRouter>
     );
   });
@@ -26,7 +26,7 @@ describe("<SignIn />", () => {
     cy.get('[data-cy="emailTest"]').contains("Please enter");
   });
 
-  it("shows no messsage if the input is valid and tests the submit button", () => {
+  it("shows no messsage if the input is valid and tests the google button", () => {
     cy.get("#email").type("email@test.com");
     cy.get("#password").type("abcd");
     cy.get("input").tab();
