@@ -29,7 +29,7 @@ export const ViewNetwork = () => {
           id: doc.id,
         }));
         setAllUsers(users);
-        console.log(users);
+        // console.log(users);
       } catch (err) {
         console.error(err);
       }
@@ -47,9 +47,20 @@ export const ViewNetwork = () => {
           <Typography variant="h4" gutterBottom>
             My Network
           </Typography>
-          <Box justifyContent="center" alignItems="center" minHeight="60vh">
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            minHeight="60vh"
+            display="flex"
+          >
             {/*The array will contain all the connected users*/}
-            <Grid container spacing={3}>
+            <Grid
+              container
+              spacing={3}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
               {Array.from(allUsers).map((user, index) => (
                 <Grid item>
                   {/*pass in user's name, bio, image and ID*/}
