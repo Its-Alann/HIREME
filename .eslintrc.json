@@ -3,7 +3,7 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:import/recommended",
-    "Airbnb",
+    "airbnb-base",
     "prettier",
     "plugin:cypress/recommended"
   ],
