@@ -157,6 +157,7 @@ const Login = () => {
               >
                 or you can sign in with
               </Typography>
+              {/* eslint-disable-next-line*/}
               <div align="center">
                 <SignInGoogleButton sx={{ m: "auto" }} data-cy="GoogleTest" />
               </div>
