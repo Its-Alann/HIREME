@@ -20,6 +20,7 @@
     "cypress": "^12.4.0",
     "cypress-plugin-tab": "^1.0.5",
     "email-validator": "^2.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.12.1",
     "firebase": "^9.16.0",
     "formik": "^2.2.9",
