@@ -7,16 +7,16 @@ const EditProfile = () => {
   return (
     <div>
       <Grid container>
-        <Grid item>
-          <Grid container direction="column">
+        <Grid item md="3">
+          <Grid container my={5}>
             <Avatar
               alt="Remy Sharp"
               src="/static/images/avatar/1.jpg"
-              sx={{ width: 56, height: 56 }}
+              sx={{ width: 150, height: 150 }}
             />
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item md="9" margin="auto">
           <Grid container direction="column">
             <Grid container>
               <Grid container>
