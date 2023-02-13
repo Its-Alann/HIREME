@@ -1,14 +1,23 @@
 import React from "react";
-import SignUp from "./SignUp";
+import { BrowserRouter } from "react-router-dom";
+import SignUp from "../Pages/SignUp/SignUp";
 
 describe("<SignUp />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<SignUp />);
+    cy.mount(
+      <BrowserRouter>
+        <SignUp />
+      </BrowserRouter>
+    );
   });
 
   beforeEach(() => {
-    cy.mount(<SignUp />);
+    cy.mount(
+      <BrowserRouter>
+        <SignUp />
+      </BrowserRouter>
+    );
   });
 
   it("shows helper text when typing a wrong email", () => {
