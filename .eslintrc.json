@@ -57,8 +57,6 @@
     "react/require-default-props": "off",
     "no-nested-ternary": "off",
     "default-param-last": "off",
-    "import/extensions": "off",
-    "react/jsx-key": "off",
-    "jsx-a11y/anchor-is-valid": "off"
+    "react/jsx-key": "off"
   }
 }
