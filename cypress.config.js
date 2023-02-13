@@ -2,7 +2,9 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
+  video: false,
   component: {
+    specPattern: "src/**/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
 
@@ -14,7 +16,10 @@ module.exports = defineConfig({
       // eslint-disable-next-line global-require
       on("file:preprocessor", require("@cypress/code-coverage/use-babelrc"));
 
-      return config;
+      return {
+        close: () => {},
+        config,
+      };
     },
 
     env: {
