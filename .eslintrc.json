@@ -2,7 +2,6 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "airbnb",
     "prettier",
     "plugin:cypress/recommended"
   ],
