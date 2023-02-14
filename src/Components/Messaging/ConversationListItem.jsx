@@ -8,7 +8,7 @@ const MessageListItem = (props) => {
   const [alignment, setAlignment] = React.useState("left");
 
   React.useEffect(() => {
-    if (auth.currentUser.uid === props.sender) {
+    if (auth.currentUser.email === props.sender) {
       setAlignment("right");
     }
   }, [auth]);

@@ -5,6 +5,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  getDocs,
   updateDoc,
   arrayUnion,
   collection,
@@ -16,13 +17,14 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import Navbar from "../Navbar/Navbar";
-import { app } from "../../Firebase/firebase";
+import { app, db } from "../../Firebase/firebase";
 
 const theme = createTheme();
-const bobId = "CqtAL3huXbQyo0ZAHNcRkvWbfBc2";
-const aliID = "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1";
+const bobId = "billybob@gmail.com";
+const aliID = "aliceykchen01@gmail.com";
 const database = getFirestore(app);
 //const messagesRef = doc(database, 'messages', '')
+let conversationUser = "";
 
 const auth = getAuth();
 
@@ -34,15 +36,16 @@ props = {
 */
 
 const handleClick = async (content) => {
+  console.log(content);
   // Format a new message
   // const content = "twitter<3";
   const timestamp = Date().toLocaleUpperCase();
   if (auth.currentUser) {
-    console.log(auth.currentUser.uid);
+    console.log(auth.currentUser.email);
   } else {
     console.log("Not exist current user");
   }
-  const sender = auth.currentUser ? auth.currentUser.uid : bobId;
+  const sender = auth.currentUser ? auth.currentUser.email : bobId;
   const newMessage = {
     content: content.messageContent,
     timestamp,
@@ -69,7 +72,24 @@ const handleClick = async (content) => {
 
   // In <messages> the documents' id is of format <user_1_ID>-<user_2_ID>
   //                                                         * here is dash
+
   // If a document with such id exist, perform an update.
+
+  const querySnapshot = await getDocs(collection(db, "messages"));
+  querySnapshot.forEach((d) => {
+    // If the user is a participant in the conversation
+    //  then add the rest of the participants
+    if (
+      d.data().authors.includes(auth.CurrentUser.email) &&
+      d.data().authors.includes(content.user)
+    ) {
+      console.log(d.data());
+      conversationUser = d.data();
+      return conversationUser; //return this conversation
+    }
+    return 0;
+  });
+
   let docRef = doc(database, "messages", `${sender}-${aliID}`);
   let docSnapshot = await getDoc(docRef);
   if (docSnapshot.exists()) {
