@@ -16,7 +16,7 @@ import SendIcon from "@material-ui/icons/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChatButton from "../../Components/SendChatButton/SendChatButton";
-import NewChat from "../../Components/NewChat/NewChat";
+import NewConvo from "../../Components/NewConvo/NewConvo";
 
 const theme = createTheme();
 
@@ -55,7 +55,6 @@ const Messaging = () => {
         </Grid>
       </Grid>
       <Grid container component={Paper} className={classes.chatSection}>
-        <NewChat />
         <Grid item xs={3} className={classes.borderRight500}>
           <List>
             <ListItem button key="RemySharp">
@@ -68,15 +67,6 @@ const Messaging = () => {
               <ListItemText primary="John Wick" />
             </ListItem>
           </List>
-          <Divider />
-          <Grid item xs={12} style={{ padding: "10px" }}>
-            <TextField
-              id="outlined-basic-email"
-              label="Search"
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
           <Divider />
           <List>
             <ListItem button key="RemySharp">
@@ -111,57 +101,9 @@ const Messaging = () => {
         </Grid>
         <Grid item xs={9}>
           <List className={classes.messageArea}>
-            <ListItem key="1">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText align="right" primary="Hey man, What's up ?" />
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="right" secondary="09:30" />
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="2">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="left"
-                    primary="Hey, Iam Good! What about you ?"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="left" secondary="09:31" />
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="3">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="right"
-                    primary="Cool. i am good, let's catch up!"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="right" secondary="10:30" />
-                </Grid>
-              </Grid>
-            </ListItem>
+            <NewConvo />
           </List>
           <Divider />
-          <Grid container style={{ padding: "20px" }}>
-            <Grid item xs={11}>
-              <TextField
-                id="outlined-basic-email"
-                label="Type Something"
-                fullWidth
-                onChange={(e) => setMessageContent(e.target.value)}
-              />
-            </Grid>
-            <Grid xs={1} align="right">
-              <SendChatButton messageContent={messageContent} />
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
     </ThemeProvider>
