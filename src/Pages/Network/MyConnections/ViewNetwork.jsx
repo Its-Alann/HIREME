@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import Navbar from "../../../Components/Navbar/Navbar";
 import NetworkCards from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
@@ -16,9 +17,6 @@ const theme = createTheme();
 export const ViewNetwork = () => {
   const usersRef = collection(db, "userProfiles");
   const [allUsers, setAllUsers] = useState([]);
-
-  const { currentUser } = auth;
-  console.log(currentUser.email);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -44,7 +42,6 @@ export const ViewNetwork = () => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Navbar />
         <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
           <CssBaseline />
           <Typography variant="h4" gutterBottom>
