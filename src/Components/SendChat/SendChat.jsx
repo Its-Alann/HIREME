@@ -10,20 +10,18 @@ import {
   arrayUnion,
   collection,
   addDoc,
+  Timestamp,
 } from "firebase/firestore";
 import Button from "@mui/material/Button";
-import { RestaurantRounded } from "@material-ui/icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { Grid, TextField } from "@material-ui/core";
-import Navbar from "../Navbar/Navbar";
 import { app, db } from "../../Firebase/firebase";
 
 const theme = createTheme();
 const bobId = "billybob@gmail.com";
 const aliID = "aliceykchen01@gmail.com";
-const database = getFirestore(app);
 //const messagesRef = doc(database, 'messages', '')
 // let conversationUser = "";
 
@@ -51,12 +49,10 @@ const SendChat = (props) => {
     }
   });
 
-  const handleClick = async (content) => {
-    console.log("content:", content);
-    console.log("content user:", content.user);
+  const handleClick = async () => {
     // Format a new message
     // const content = "twitter<3";
-    const timestamp = Date().toLocaleUpperCase();
+    const timestamp = Timestamp.now();
     if (myUser) {
       console.log(myUser);
     } else {
@@ -68,6 +64,13 @@ const SendChat = (props) => {
       timestamp,
       sender,
     };
+
+    console.log(newMessage, newMessage.timestamp.toDate());
+
+    // SENDS TO THE DB
+    // await updateDoc(doc(db, "messages", "17k4dPDcymw3GcNjSCSG"), {
+    //   messages: arrayUnion(newMessage),
+    // });
 
     //line 84 doesn't work, error "ya" type ????????
     /*
@@ -121,7 +124,6 @@ const SendChat = (props) => {
     //   authors: [sender, aliID],
     //   messages: [newMessage],
     // });
-    console.log("Not found, create new");
   };
 
   return (
@@ -131,6 +133,7 @@ const SendChat = (props) => {
           id="outlined-basic-email"
           label="Type Something"
           fullWidth
+          multiline
           onChange={(e) => setMessageContent(e.target.value)}
         />
       </Grid>
@@ -139,7 +142,7 @@ const SendChat = (props) => {
           <Button
             type="button"
             onClick={() => {
-              handleClick(props);
+              handleClick();
             }}
           >
             <SendIcon />
