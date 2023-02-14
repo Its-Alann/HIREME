@@ -62,9 +62,7 @@ const ConnectionList = (props) => {
   return (
     <List>
       {profiles.map((el) => (
-        <ListItem button key={el}>
-          {el}
-        </ListItem>
+        <ListItem onmousedown="MakeBold()">{el}</ListItem>
       ))}
     </List>
   );
