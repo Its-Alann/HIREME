@@ -4,7 +4,7 @@ import AddBox from "@material-ui/icons/AddBox";
 import Button from "@mui/material/Button";
 import { getAuth } from "firebase/auth";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Grid, TextField } from "@mui/material";
 import { auth, db } from "../../Firebase/firebase";
 
 const messagesRef = collection(db, "messages");
@@ -69,33 +69,37 @@ const NewConvo = () => {
   //TODO make a form that allows the currentuser to select from a list of contacts (should be a multiselect to allow group chats)
   //TODO add the emails from the search bar to authors state
   return (
-    <>
-      <Autocomplete
-        autoComplete
-        multiple
-        options={["so", "wiz khalifa", "macklemore"]} //TODO get a list of contacts
-        size="small"
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...params}
-            variant="standard"
-            placeholder="Type a name or multiple names"
-          />
-        )}
-      />
-      <Fab aria-label="add">
-        <Button
-          type="button"
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          <AddBox />
-        </Button>
-      </Fab>
-    </>
+    <Grid container>
+      <Grid item xs={11}>
+        <Autocomplete
+          autoComplete
+          multiple
+          options={["so", "wiz khalifa", "macklemore"]} //TODO get a list of contacts
+          size="small"
+          filterSelectedOptions
+          renderInput={(params) => (
+            <TextField
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...params}
+              variant="standard"
+              placeholder="Type a name or multiple names"
+            />
+          )}
+        />
+      </Grid>
+      <Grid item align="right" xs={1}>
+        <Fab aria-label="add">
+          <Button
+            type="button"
+            onClick={() => {
+              handleClick();
+            }}
+          >
+            <AddBox />
+          </Button>
+        </Fab>
+      </Grid>
+    </Grid>
   );
 };
 

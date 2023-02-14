@@ -41,14 +41,15 @@ const useStyles = makeStyles({
 });
 
 const Messaging = () => {
-  const [messageContent, setMessageContent] = useState("");
+  const [conversationID, setConversationID] = useState("");
+
   const classes = useStyles();
 
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
       <Grid container>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant="h5" className="header-message">
             Chat
           </Typography>
@@ -98,13 +99,13 @@ const Messaging = () => {
               <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
             </ListItem>
           </List>
-        </Grid>
-        <Grid item xs={9}>
+        </Grid> */}
+        <Grid item xs={12}>
           <List className={classes.messageArea}>
             <NewConvo />
           </List>
           <Divider />
-          <SendChat />
+          <SendChat conversationID={conversationID} />
         </Grid>
       </Grid>
     </ThemeProvider>

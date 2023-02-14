@@ -17,24 +17,17 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { Grid, TextField } from "@material-ui/core";
+import PropTypes from "prop-types";
 import { app, db } from "../../Firebase/firebase";
 
 const theme = createTheme();
+
 const bobId = "billybob@gmail.com";
 const aliID = "aliceykchen01@gmail.com";
-//const messagesRef = doc(database, 'messages', '')
-// let conversationUser = "";
 
 const auth = getAuth();
 
-/*
-props = {
-  messageContent,
-  conversationID, (the document to write to)
-}
-*/
-
-const SendChat = (props) => {
+const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
 
   let myUser = "";
@@ -67,7 +60,8 @@ const SendChat = (props) => {
     console.log(newMessage, newMessage.timestamp.toDate());
 
     // SENDS TO THE DB
-    // await updateDoc(doc(db, "messages", "17k4dPDcymw3GcNjSCSG"), {
+    // ex id: "17k4dPDcymw3GcNjSCSG"
+    // await updateDoc(doc(db, "messages", conversationID), {
     //   messages: arrayUnion(newMessage),
     // });
 
@@ -136,7 +130,7 @@ const SendChat = (props) => {
           onChange={(e) => setMessageContent(e.target.value)}
         />
       </Grid>
-      <Grid xs={1} align="right">
+      <Grid item xs={1} align="right">
         <Fab color="secondary" aria-label="add">
           <Button
             type="button"
@@ -150,6 +144,10 @@ const SendChat = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+SendChat.propTypes = {
+  conversationID: PropTypes.string,
 };
 
 export default SendChat;
