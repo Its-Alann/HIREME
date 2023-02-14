@@ -45,10 +45,27 @@ export const Network = () => {
               onChange={handleChange}
               aria-label="nav tabs example"
             >
-              <LinkTab label="My Network" href="/myNetwork" component={Link} />
-              <LinkTab label="Invitations" href="/invitations" />
-              <LinkTab label="Sent Requests" href="/sentRequests" />
+              <LinkTab
+                label="My Network"
+                value={0}
+                href="/myNetwork"
+                component={Link}
+              />
+              <Tab label="Invitations" value={1} />
+              <Tab label="Sent Requests" value={2} />
             </Tabs>
+          </Box>
+
+          <Box sx={{ p: 3 }} hidden={value !== 0}>
+            <ViewNetwork />
+          </Box>
+
+          <Box sx={{ p: 3 }} hidden={value !== 1}>
+            <AcceptInvitation />
+          </Box>
+
+          <Box sx={{ p: 3 }} hidden={value !== 2}>
+            <SentInvitation />
           </Box>
         </Container>
       </ThemeProvider>

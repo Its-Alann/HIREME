@@ -40,7 +40,6 @@ export const AcceptInvitation = () => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Navbar />
         <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
           <CssBaseline />
           <Typography variant="h4" gutterBottom>
