@@ -14,5 +14,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4.1.0
         with:
-          build: npm run build
-          start: npm test
+          #build: npm run build
+          start: npx cypress run --component
