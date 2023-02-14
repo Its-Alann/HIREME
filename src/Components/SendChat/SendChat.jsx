@@ -25,7 +25,7 @@ const bobId = "billybob@gmail.com";
 const aliID = "aliceykchen01@gmail.com";
 const database = getFirestore(app);
 //const messagesRef = doc(database, 'messages', '')
-let conversationUser = "";
+// let conversationUser = "";
 
 const auth = getAuth();
 
@@ -36,96 +36,93 @@ props = {
 }
 */
 
-const handleClick = async (content) => {
-  console.log(content);
-  // Format a new message
-  // const content = "twitter<3";
-  const timestamp = Date().toLocaleUpperCase();
-  if (auth.currentUser) {
-    console.log(auth.currentUser.email);
-  } else {
-    console.log("Not exist current user");
-  }
-  const sender = auth.currentUser ? auth.currentUser.email : bobId;
-  const newMessage = {
-    content: content.messageContent,
-    timestamp,
-    sender,
-  };
-
-  //wong's code
-  // const handleClick = async (content) => {
-  // const timestamp = Date().toLocaleUpperCase();
-
-  // const sender = auth.currentUser ? auth.currentUser.email : bobId;
-
-  // const sender = auth.currentUser.email;
-  // // const sender = billybob@gmail.com; //for testing
-  // const newMessage = {
-  //   content: props.messageContent,
-  //   timestamp,
-  //   sender,
-  // };
-
-  // console.log("currentUser", auth.currentUser.email);
-  // console.log("content", props.messageContent);
-  // console.log("newMessage", newMessage);
-
-  // In <messages> the documents' id is of format <user_1_ID>-<user_2_ID>
-  //                                                         * here is dash
-
-  // If a document with such id exist, perform an update.
-
-  const querySnapshot = await getDocs(collection(db, "messages"));
-  querySnapshot.forEach((d) => {
-    // If the user is a participant in the conversation
-    //  then add the rest of the participants
-    if (
-      d.data().authors.includes(auth.CurrentUser.email) &&
-      d.data().authors.includes(content.user)
-    ) {
-      console.log(d.data());
-      conversationUser = d.data();
-      return conversationUser; //return this conversation
+const SendChat = (props) => {
+  const [messageContent, setMessageContent] = useState("");
+  let myUser = "";
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      myUser = user.email;
+    } else {
+      // User is signed out
+      // ...
+      console.log("user not found");
     }
-    return 0;
   });
 
-  let docRef = doc(database, "messages", `${sender}-${aliID}`);
-  let docSnapshot = await getDoc(docRef);
-  if (docSnapshot.exists()) {
-    console.log("Found doc on first try");
-    await updateDoc(docRef, { messages: arrayUnion(newMessage) });
-    return;
-  }
+  const handleClick = async (content) => {
+    console.log("content:", content);
+    console.log("content user:", content.user);
+    // Format a new message
+    // const content = "twitter<3";
+    const timestamp = Date().toLocaleUpperCase();
+    if (myUser) {
+      console.log(myUser);
+    } else {
+      console.log("Not exist current user");
+    }
+    const sender = myUser;
+    const newMessage = {
+      content: messageContent,
+      timestamp,
+      sender,
+    };
 
-  // The id could also be <user_2_ID>-<user_1_ID>
-  docRef = doc(database, "messages", `${aliID}-${sender}`);
-  docSnapshot = await getDoc(docRef);
-  if (docSnapshot.exists()) {
-    console.log("Found doc on second try");
-    // We found the document
-    // Inside the document, there is a list named "messages"
-    // Append our new message to the list
-    await updateDoc(docRef, { messages: arrayUnion(newMessage) });
-    return;
-  }
+    //line 84 doesn't work, error "ya" type ????????
+    /*
+    const querySnapshot = await getDocs(collection(db, "messages"));
+    querySnapshot.forEach(async (d) => {
+      console.log("ref???", d);
+      // If the user is a participant in the conversation
+      //  then add the rest of the participants
+      if (
+        d.data().authors.includes(myUser) &&
+        d.data().authors.includes(content.user)
+      ) {
+        console.log(newMessage);
+        //conversationUser = d.data();
+        await updateDoc(d, { messages: arrayUnion(newMessage) });
+      }
+      return 0;
+    });
+    */
 
-  // // Other wise, we create a new document with the id of both users inside the "messages" collection
-  // const newConversationRef = await addDoc(collection(database, "messages"), {
-  //   authors: [], ///whos in the conversation
-  //   messages: arrayUnion(newMessage),
-  // });
+    //yuchen code works, but we are trying to make it search authors
 
-  // await setDoc(doc(database, "messages", `${sender}-${aliID}`), {
-  //   authors: [sender, aliID],
-  //   messages: [newMessage],
-  // });
-  console.log("Not found, create new");
-};
+    // const docRef = doc(database, "messages", `${"u7McGqfpER62VLElKV6t"}`);
+    // const docSnapshot = await getDoc(docRef);
+    // if (docSnapshot.exists()) {
+    //   console.log("Found doc on first try");
+    //   await updateDoc(docRef, { messages: arrayUnion(newMessage) });
+    //   return;
+    // }
 
-const SendChatButton = (props) => {
-  const [messageContent, setMessageContent] = useState("");
+    //this is not neeeded
+    // The id could also be <user_2_ID>-<user_1_ID>
+    // docRef = doc(database, "messages", `${aliID}-${sender}`);
+    // docSnapshot = await getDoc(docRef);
+    // if (docSnapshot.exists()) {
+    //   console.log("Found doc on second try");
+    //   // We found the document
+    //   // Inside the document, there is a list named "messages"
+    //   // Append our new message to the list
+    //   await updateDoc(docRef, { messages: arrayUnion(newMessage) });
+    //   return;
+    // }
+
+    // // Other wise, we create a new document with the id of both users inside the "messages" collection
+    // const newConversationRef = await addDoc(collection(database, "messages"), {
+    //   authors: [], ///whos in the conversation
+    //   messages: arrayUnion(newMessage),
+    // });
+
+    // await setDoc(doc(database, "messages", `${sender}-${aliID}`), {
+    //   authors: [sender, aliID],
+    //   messages: [newMessage],
+    // });
+    console.log("Not found, create new");
+  };
+
   return (
     <Grid container style={{ padding: "20px" }}>
       <Grid item xs={11}>
@@ -166,4 +163,4 @@ const SendChatButton = (props) => {
 //   </Fab>
 // );
 
-export default SendChatButton;
+export default SendChat;

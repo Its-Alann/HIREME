@@ -25,7 +25,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
-import SendChatButton from "../../Components/SendChat/SendChat";
+import SendChat from "../../Components/SendChat/SendChat";
 import "./TempMessages.css";
 import MessageList from "../../Components/Messaging/ConversationList";
 import ConnectionList from "../../Components/Messaging/ConnectionList";
@@ -189,6 +189,7 @@ const TempMessages = () => {
                   setConversation(conversationUser);
                   setName(`${el.firstName} ${el.lastName}`);
                   SetEmail(el.email);
+                  console.log("el******", el);
                 }}
               >
                 <Typography
@@ -210,16 +211,16 @@ const TempMessages = () => {
           <MessageList messages={messages} />
           <Divider />
           <Grid container style={{ padding: "20px" }}>
-            <Grid item xs={11}>
+            {/* <Grid item xs={11}>
               <TextField
                 id="outlined-basic-email"
                 label="Type Something"
                 fullWidth
                 onChange={(e) => setMessageContent(e.target.value)}
               />
-            </Grid>
-            <Grid item xs={1} align="right">
-              <SendChatButton messageContent={messageContent} user={email} />
+            </Grid> */}
+            <Grid item xs={12} align="right">
+              <SendChat messageContent={messageContent} user={email} />
             </Grid>
           </Grid>
         </Grid>
