@@ -31,48 +31,61 @@ import { app, auth } from "../../Firebase/firebase";
 
 const theme = createTheme();
 const aliID = "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1";
+const user = auth.currentUser.email;
 
 const GetConversation = async () => {
-  const database = getFirestore(app);
-  let docRef = doc(database, "messages", `${auth.currentUser.uid}-${aliID}`);
-  let docSnapshot = await getDoc(docRef);
-  if (docSnapshot.exists()) {
-    console.log("Found doc on first try");
-  } else {
-    docRef = doc(database, "messages", `${aliID}-${auth.currentUser.uid}`);
-    docSnapshot = await getDoc(docRef);
-    if (docSnapshot.exists()) {
-      console.log("Found doc on second try");
-    } else {
-      console.log("Doc not found");
+  const otherUser = "ali@doe.com"; //ali's id should be passed through props
+  const querySnapshot = await getDocs(collection(db, "messages"));
+  querySnapshot.forEach((doc) => {
+    // If the user is a participant in the conversation
+    //  then add the rest of the participants
+    if (
+      doc.data().authors.includes(user) &&
+      doc.data().authors.includes(otherUser)
+    ) {
+      return doc.data();
     }
-  }
-  return docSnapshot.data();
+  });
+  // const database = getFirestore(app);
+  // let docRef = doc(database, "messages", `${auth.currentUser.uid}-${aliID}`);
+  // let docSnapshot = await getDoc(docRef);
+  // if (docSnapshot.exists()) {
+  //   console.log("Found doc on first try");
+  // } else {
+  //   docRef = doc(database, "messages", `${aliID}-${auth.currentUser.uid}`);
+  //   docSnapshot = await getDoc(docRef);
+  //   if (docSnapshot.exists()) {
+  //     console.log("Found doc on second try");
+  //   } else {
+  //     console.log("Doc not found");
+  //   }
+  // }
+  // return docSnapshot.data();
 };
 
-const GetConnectionList = () => {
-  console.log("Start get connection list");
-  // Here we are suppose to go to the User Profile of current user & retrive its connections.
-  const retrivedUID = [
-    "HFm3FoBnAeW40fI04pXgCwsP9nk1",
-    "IA2RAWWEsOZWFsYNNHdSaCBssuT2",
-    "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1",
-    "fZ54oR1iGTfwThreKpnuklsV5JC2",
-    "toUEyDaacZSbEwyc9PFuUGqJR2m2",
-    "uLDRf59LKoVKagD3aQJc4RiM8dV2",
-    "16BYjV1dM4XZh4MY3pwfc1jxUK62",
-    "8Th7kx7ZPKYzH4BOJqiaf8FZEBB3",
-    "HBqPYplhjbbJeZ3THsAbMvT07sm1",
-    "CqtAL3huXbQyo0ZAHNcRkvWbfBc2",
-    "wGMNhwcMnybAzbzSqx1dtZfolVR2",
-    "YIrMQaIg2eM1VqeS3rQK0cS0xOF3",
-    "SE6fjg0zbKb4X6KAVrOa2d8TFWi1",
-    "g7aTo5gtRCYjx3ggCJLOWnxVRFp2",
-    "Rba8dhh49IXPFG1BSnlAGpAFTe93",
-  ];
-  console.log("End get connection list");
-  return retrivedUID;
-};
+// const GetConnectionList = () => {
+//   console.log("Start get connection list");
+//   // Here we are suppose to go to the User Profile of current user & retrive its connections.
+//   const retrivedUID = [
+//     "HFm3FoBnAeW40fI04pXgCwsP9nk1",
+//     "IA2RAWWEsOZWFsYNNHdSaCBssuT2",
+//     "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1",
+//     "fZ54oR1iGTfwThreKpnuklsV5JC2",
+//     "toUEyDaacZSbEwyc9PFuUGqJR2m2",
+//     "uLDRf59LKoVKagD3aQJc4RiM8dV2",
+//     "16BYjV1dM4XZh4MY3pwfc1jxUK62",
+//     "8Th7kx7ZPKYzH4BOJqiaf8FZEBB3",
+//     "HBqPYplhjbbJeZ3THsAbMvT07sm1",
+//     "CqtAL3huXbQyo0ZAHNcRkvWbfBc2",
+//     "wGMNhwcMnybAzbzSqx1dtZfolVR2",
+//     "YIrMQaIg2eM1VqeS3rQK0cS0xOF3",
+//     "SE6fjg0zbKb4X6KAVrOa2d8TFWi1",
+//     "g7aTo5gtRCYjx3ggCJLOWnxVRFp2",
+//     "Rba8dhh49IXPFG1BSnlAGpAFTe93",
+//   ];
+//   console.log("End get connection list");
+//   return retrivedUID;
+// };
 
 const TempMessages = () => {
   // State for writing new messages
