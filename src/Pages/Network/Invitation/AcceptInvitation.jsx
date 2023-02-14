@@ -60,7 +60,7 @@ export const AcceptInvitation = () => {
               justifyContent="center"
               alignItems="center"
             >
-              {Array.from(allUsers).map((user, index) => (
+              {allUsers.map((user) => (
                 <Grid item>
                   <AcceptInvitationCard
                     userImage={user.values.image}
