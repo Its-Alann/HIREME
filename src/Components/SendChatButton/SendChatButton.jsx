@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   getFirestore,
@@ -15,6 +15,7 @@ import { RestaurantRounded } from "@material-ui/icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
+import { Grid, TextField } from "@material-ui/core";
 import Navbar from "../Navbar/Navbar";
 import { app } from "../../Firebase/firebase";
 
@@ -86,17 +87,32 @@ const handleClick = async (props) => {
   console.log("Not found, create new");
 };
 
-const SendChatButton = (props) => (
-  <Fab color="secondary" aria-label="add">
-    <Button
-      type="button"
-      onClick={() => {
-        handleClick(props);
-      }}
-    >
-      <SendIcon />
-    </Button>
-  </Fab>
-);
+const SendChatButton = (props) => {
+  const [messageContent, setMessageContent] = useState("");
+  return (
+    <Grid container style={{ padding: "20px" }}>
+      <Grid item xs={11}>
+        <TextField
+          id="outlined-basic-email"
+          label="Type Something"
+          fullWidth
+          onChange={(e) => setMessageContent(e.target.value)}
+        />
+      </Grid>
+      <Grid xs={1} align="right">
+        <Fab color="secondary" aria-label="add">
+          <Button
+            type="button"
+            onClick={() => {
+              handleClick(props);
+            }}
+          >
+            <SendIcon />
+          </Button>
+        </Fab>
+      </Grid>
+    </Grid>
+  );
+};
 
 export default SendChatButton;

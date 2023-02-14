@@ -4,6 +4,7 @@ import AddBox from "@material-ui/icons/AddBox";
 import Button from "@mui/material/Button";
 import { getAuth } from "firebase/auth";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { Autocomplete, TextField } from "@mui/material";
 import { auth, db } from "../../Firebase/firebase";
 
 const messagesRef = collection(db, "messages");
@@ -46,6 +47,7 @@ const findConversation = async (authorsList) => {
     "id:",
     querySnapshot.docs[0].id
   );
+  // technically an array, but I expect only one
   return querySnapshot.docs[0].id;
 };
 
@@ -61,23 +63,40 @@ const handleClick = async (authors) => {
   console.log(conversationID);
 };
 
-const NewChat = () => {
+const NewConvo = () => {
   // const [authors, setAuthors] = useState([auth.currentUser.email]);
   const antinos = "🖖";
   //TODO make a form that allows the currentuser to select from a list of contacts (should be a multiselect to allow group chats)
   //TODO add the emails from the search bar to authors state
   return (
-    <Fab color="orange" aria-label="add">
-      <Button
-        type="button"
-        onClick={() => {
-          handleClick();
-        }}
-      >
-        <AddBox />
-      </Button>
-    </Fab>
+    <>
+      <Autocomplete
+        autoComplete
+        multiple
+        options={["so", "wiz khalifa", "macklemore"]} //TODO get a list of contacts
+        size="small"
+        filterSelectedOptions
+        renderInput={(params) => (
+          <TextField
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...params}
+            variant="standard"
+            placeholder="Type a name or multiple names"
+          />
+        )}
+      />
+      <Fab aria-label="add">
+        <Button
+          type="button"
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          <AddBox />
+        </Button>
+      </Fab>
+    </>
   );
 };
 
-export default NewChat;
+export default NewConvo;
