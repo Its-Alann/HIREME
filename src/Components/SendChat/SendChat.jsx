@@ -51,7 +51,6 @@ const SendChat = (props) => {
 
   const handleClick = async () => {
     // Format a new message
-    // const content = "twitter<3";
     const timestamp = Timestamp.now();
     if (myUser) {
       console.log(myUser);
