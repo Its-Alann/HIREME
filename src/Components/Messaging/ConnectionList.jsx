@@ -4,15 +4,17 @@ import PropTypes from "prop-types";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { collection, getDocs } from "firebase/firestore";
+import { Button } from "@material-ui/core";
 import ConnectionListItem from "./ConnectionListItem";
 import { db, auth } from "../../Firebase/firebase";
 
 // get our sender s email
 //const user = auth.currentUser.email;
 //
-const user = "HMa7dZP4QoNZkpcl5Mpgi7vT5Vh1";
+const user = "billybob@gmail.com";
 const messagesRefProfile = collection(db, "userProfiles");
 const messagesRef = collection(db, "messages");
+// let conversationUser = "";
 
 const ConnectionList = (props) => {
   const [dmList, setDmList] = useState([]);
@@ -42,7 +44,9 @@ const ConnectionList = (props) => {
       // If the user is a participant in the conversation
       //  then add the name of the participants
       const userID = doc.id;
+      console.log(allAuthors);
       allAuthors.forEach((el) => {
+        console.log(el[0] === userID);
         if (el[0] === userID) {
           allUsers.push(
             `${doc.data().values.firstName} ${doc.data().values.lastName}`
@@ -56,13 +60,14 @@ const ConnectionList = (props) => {
   useEffect(() => {
     // display automatically the names of the user's receivers
     getAllReceivers();
+    console.log(profiles);
   }, []);
 
   const hello = "hello";
   return (
     <List>
       {profiles.map((el) => (
-        <ListItem onmousedown="MakeBold()">{el}</ListItem>
+        <ListItem>{el}</ListItem>
       ))}
     </List>
   );
