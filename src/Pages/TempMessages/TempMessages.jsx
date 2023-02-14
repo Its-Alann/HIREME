@@ -25,7 +25,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
-import SendChatButton from "../../Components/SendChatButton/SendChatButton";
+import SendChatButton from "../../Components/SendChat/SendChat";
 import "./TempMessages.css";
 import MessageList from "../../Components/Messaging/ConversationList";
 import ConnectionList from "../../Components/Messaging/ConnectionList";

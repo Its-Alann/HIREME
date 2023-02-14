@@ -14,7 +14,7 @@ import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import Messaging from "./Pages/Messaging/Messaging";
-import SendChatButton from "./Components/SendChatButton/SendChatButton";
+import SendChatButton from "./Components/SendChat/SendChat";
 import TempMessages from "./Pages/TempMessages/TempMessages";
 import Chat from "./Pages/Messaging/Chat";
 
