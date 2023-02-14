@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { collection, getDocs } from "firebase/firestore";
 import Navbar from "../../../Components/Navbar/Navbar";
 import NetworkCards from "../../../Components/Network/NetworkCards";
-import { db } from "../../../Firebase/firebase";
+import { db, auth } from "../../../Firebase/firebase";
 
 const theme = createTheme();
 
@@ -17,7 +17,8 @@ export const ViewNetwork = () => {
   const usersRef = collection(db, "userProfiles");
   const [allUsers, setAllUsers] = useState([]);
 
-  // currentUser = auth.currentUser;  //get the current user on the browser
+  const { currentUser } = auth;
+  console.log(currentUser.email);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -64,7 +65,7 @@ export const ViewNetwork = () => {
               alignItems="center"
             >
               {/* try allUsers.map */}
-              {Array.from(allUsers).map((user, index) => (
+              {allUsers.map((user) => (
                 <Grid item>
                   {/*pass in user's name, bio, image and ID*/}
                   <NetworkCards
