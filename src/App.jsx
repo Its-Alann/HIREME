@@ -13,6 +13,10 @@ import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
+import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
+import { AcceptInvitation } from "./Pages/Network/Invitation/AcceptInvitation";
+import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
+import { Network } from "./Pages/Network/Network";
 
 const App = () => {
   const hello = "hello";
@@ -29,6 +33,13 @@ const App = () => {
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
+          <Route path="/viewNetwork" exact element={<ViewNetwork />} />
+          <Route path="acceptInvitation" exact element={<AcceptInvitation />} />
+          <Route path="sentInvitation" exact element={<SentInvitation />} />
+          <Route path="/network" exact element={<Network />} />
+          <Route path="/myNetwork" exact element={<ViewNetwork />} />
+          <Route path="/invitations" exact element={<AcceptInvitation />} />
+          <Route path="/sentRequests" exact element={<SentInvitation />} />
         </Routes>
       </Router>
     </div>
