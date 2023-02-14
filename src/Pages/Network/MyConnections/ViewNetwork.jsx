@@ -17,6 +17,8 @@ export const ViewNetwork = () => {
   const usersRef = collection(db, "userProfiles");
   const [allUsers, setAllUsers] = useState([]);
 
+  // currentUser = auth.currentUser;  //get the current user on the browser
+
   useEffect(() => {
     const getUsers = async () => {
       // READ DATA
@@ -61,6 +63,7 @@ export const ViewNetwork = () => {
               justifyContent="center"
               alignItems="center"
             >
+              {/* try allUsers.map */}
               {Array.from(allUsers).map((user, index) => (
                 <Grid item>
                   {/*pass in user's name, bio, image and ID*/}
