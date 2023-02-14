@@ -34,6 +34,8 @@ const theme = createTheme({
 const Login = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
+  const [authError, setAuthError] = React.useState(false);
+  const [authErrorMsg, setAuthErrorMsg] = React.useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -58,8 +60,16 @@ const Login = () => {
 
         navigate("/");
       } catch (err) {
+        setAuthError(true);
         console.log("Something went wrong with email/password Sign In");
-        console.error(err.code, err.message);
+        console.log(err.code);
+        if (err.code.includes("user-not-found")) {
+          setAuthErrorMsg("An account with that email does not exist");
+        } else if (err.code.includes("wrong-password")) {
+          setAuthErrorMsg("Wrong password");
+        }
+        // setAuthErrorMsg(err.code);
+        // console.error(err.code, err.message);
       }
     }
   };
@@ -127,7 +137,11 @@ const Login = () => {
               autoComplete="current-password"
               variant="standard"
               color="primary"
+              onBlur={() => setAuthErrorMsg("")}
             />
+            <Typography color={theme.palette.error.main}>
+              {authError && authErrorMsg}
+            </Typography>
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
