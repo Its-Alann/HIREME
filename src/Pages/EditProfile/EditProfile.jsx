@@ -1,5 +1,13 @@
 import React from "react";
-import { Grid, Box, TextField, Avatar } from "@mui/material";
+import { Grid, Box, TextField, Avatar, Stack } from "@mui/material";
+import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
+import EducationCard from "../../Components/ProfileCards/EducationCard";
+import ExperienceCard from "../../Components/ProfileCards/ExperienceCard";
+import SkillsCard from "../../Components/ProfileCards/SkillsCard";
+import LanguagesCard from "../../Components/ProfileCards/LanguagesCard";
+import ProjectsCard from "../../Components/ProfileCards/ProjectsCard";
+import VolunteeringCard from "../../Components/ProfileCards/VolunteeringCard";
+import AwardsCard from "../../Components/ProfileCards/AwardsCard";
 
 const EditProfile = () => {
   const something = "";
@@ -64,6 +72,16 @@ const EditProfile = () => {
           </Grid>
         </Grid>
       </Grid>
+      <Stack spacing={2}>
+        <ContactInfoCard />
+        <EducationCard />
+        <ExperienceCard />
+        <SkillsCard />
+        <LanguagesCard />
+        <ProjectsCard />
+        <VolunteeringCard />
+        <AwardsCard />
+      </Stack>
     </div>
   );
 };
