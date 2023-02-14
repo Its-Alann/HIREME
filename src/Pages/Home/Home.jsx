@@ -18,8 +18,9 @@ const Home = () => {
 
   onAuthStateChanged(auth, (authUser) => {
     if (authUser) {
-      const { uid } = authUser;
+      const { uid, email } = authUser;
       console.log("uid", uid);
+      console.log("email", email);
       setUser(uid);
     } else {
       setUser(null);
