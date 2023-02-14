@@ -15,7 +15,7 @@ import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../../Components/Navbar/Navbar";
-import SendChatButton from "../../Components/SendChatButton/SendChatButton";
+import SendChat from "../../Components/SendChat/SendChat";
 import NewConvo from "../../Components/NewConvo/NewConvo";
 
 const theme = createTheme();
@@ -104,6 +104,7 @@ const Messaging = () => {
             <NewConvo />
           </List>
           <Divider />
+          <SendChat />
         </Grid>
       </Grid>
     </ThemeProvider>
