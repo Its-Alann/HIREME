@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import {
   Grid,
   Box,
@@ -10,7 +10,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 
 const ContactInfoCard = () => {
-  const something = "";
+  const [editButton, setEditButton] = useState(false);
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -21,14 +21,26 @@ const ContactInfoCard = () => {
               <Typography variant="h5"> Contact Information </Typography>{" "}
             </Grid>
             <Grid item>
-              <EditIcon />
+              <EditIcon
+                onClick={() => setEditButton(!editButton)}
+                style={{ cursor: "pointer" }}
+              />
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
               <Typography variant="body2">
-                {" "}
-                Email: something.something@gmail.com{" "}
+                {editButton === true ? (
+                  "something.something@gmail.com"
+                ) : (
+                  <TextField
+                    id="standard-basic"
+                    variant="standard"
+                    size="small"
+                    value="something.something@gmail.com"
+                  />
+                )}
+                {/* Email: something.something@gmail.com{" "} */}
               </Typography>
             </Grid>
             <Grid item>
