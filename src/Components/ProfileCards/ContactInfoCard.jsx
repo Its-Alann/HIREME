@@ -1,12 +1,5 @@
 import { React, useEffect, useState } from "react";
-import {
-  doc,
-  setDoc,
-  getFirestore,
-  getDoc,
-  onSnapshot,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import PropTypes from "prop-types";
 import {
   Grid,
   Box,
@@ -14,30 +7,18 @@ import {
   Card,
   CardContent,
   Typography,
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { app } from "../../Firebase/firebase";
 
-const ContactInfoCard = () => {
-  const [userData, setUserData] = useState();
-  const getCurrentUser = async () => {
-    const db = getFirestore(app);
-    const auth = getAuth();
-    const docRef = doc(db, "userProfiles", auth.currentUser.email);
-    const unsub = onSnapshot(docRef, (docu) => {
-      if (docu.exists()) {
-        setUserData(docu.data().values);
-      }
-    });
-    return unsub;
-  };
+const ContactInfoCard = ({ setProfile, profile }) => {
+  const [editButton, setEditButton] = useState(false);
 
   useEffect(() => {
-    getCurrentUser();
-    console.log("Here");
-  }, []);
+    console.log("props received");
+    console.log(profile);
+  }, [profile]);
 
-  const [editButton, setEditButton] = useState(false);
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -52,6 +33,11 @@ const ContactInfoCard = () => {
                 onClick={() => setEditButton(!editButton)}
                 style={{ cursor: "pointer" }}
               />
+              <Button
+                onClick={() => setProfile({ values: { city: "Los Angeles" } })}
+              >
+                Change state in child
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
@@ -82,7 +68,10 @@ const ContactInfoCard = () => {
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2"> City: Some City </Typography>
+              <Typography variant="body2">
+                {" "}
+                City: {profile.values.city}
+              </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body2"> Country: Canada </Typography>
@@ -98,6 +87,11 @@ const ContactInfoCard = () => {
       </Card>
     </Box>
   );
+};
+
+ContactInfoCard.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.any),
+  setProfile: PropTypes.func,
 };
 
 export default ContactInfoCard;
