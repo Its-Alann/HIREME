@@ -1,5 +1,13 @@
 import { React, useEffect, useState } from "react";
 import {
+  doc,
+  setDoc,
+  getFirestore,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import {
   Grid,
   Box,
   TextField,
@@ -8,8 +16,27 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { app } from "../../Firebase/firebase";
 
 const ContactInfoCard = () => {
+  const [userData, setUserData] = useState();
+  const getCurrentUser = async () => {
+    const db = getFirestore(app);
+    const auth = getAuth();
+    const docRef = doc(db, "userProfiles", auth.currentUser.email);
+    const unsub = onSnapshot(docRef, (docu) => {
+      if (docu.exists()) {
+        setUserData(docu.data().values);
+      }
+    });
+    return unsub;
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+    console.log("Here");
+  }, []);
+
   const [editButton, setEditButton] = useState(false);
   return (
     <Box>
@@ -31,7 +58,7 @@ const ContactInfoCard = () => {
             <Grid item>
               <Typography variant="body2">
                 {editButton === false ? (
-                  "something.something@gmail.com"
+                  "email"
                 ) : (
                   <TextField
                     id="standard-basic"

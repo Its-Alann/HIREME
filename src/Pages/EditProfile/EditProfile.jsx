@@ -1,4 +1,4 @@
-import React from "react";
+import { React } from "react";
 import { Grid, Box, TextField, Avatar, Stack } from "@mui/material";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
@@ -11,7 +11,6 @@ import AwardsCard from "../../Components/ProfileCards/AwardsCard";
 
 const EditProfile = () => {
   const something = "";
-
   return (
     <div>
       <Grid container>
