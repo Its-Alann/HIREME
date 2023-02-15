@@ -42,9 +42,6 @@ export const SentInvitation = () => {
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
           <CssBaseline />
-          <Typography variant="h4" gutterBottom>
-            Sent Invitation
-          </Typography>
           <Box
             justifyContent="center"
             alignItems="center"
