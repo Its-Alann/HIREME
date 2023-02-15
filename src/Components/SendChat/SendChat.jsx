@@ -65,16 +65,6 @@ const SendChat = ({ conversationID }) => {
     await updateDoc(doc(db, "messages", conversationID), {
       messages: arrayUnion(newMessage),
     });
-
-    //yuchen code works, but we are trying to make it search authors
-    // const id = content.conversationID;
-    // const docRef = doc(db, "messages", id);
-    // const docSnapshot = await getDoc(docRef);
-    // if (docSnapshot.exists()) {
-    //   console.log("Found doc on first try");
-    //   await updateDoc(docRef, { messages: arrayUnion(newMessage) });
-    //   return;
-    // }
   };
 
   return (
