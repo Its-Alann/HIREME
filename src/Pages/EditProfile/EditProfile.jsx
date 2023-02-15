@@ -1,4 +1,12 @@
-import { React } from "react";
+import { React, useState, useEffect } from "react";
+import {
+  doc,
+  setDoc,
+  getFirestore,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Box, TextField, Avatar, Stack } from "@mui/material";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
@@ -8,9 +16,55 @@ import LanguagesCard from "../../Components/ProfileCards/LanguagesCard";
 import ProjectsCard from "../../Components/ProfileCards/ProjectsCard";
 import VolunteeringCard from "../../Components/ProfileCards/VolunteeringCard";
 import AwardsCard from "../../Components/ProfileCards/AwardsCard";
+import { app, auth } from "../../Firebase/firebase";
 
 const EditProfile = () => {
   const something = "";
+  const [profile, setProfile] = useState({
+    values: {
+      city: "Night city",
+    },
+  });
+  const [currentUserEmail, setCurrentUserEmail] = useState();
+  const database = getFirestore(app);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserEmail(user.email);
+      } else {
+        console.log("No user currently loggd in");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (currentUserEmail != null) {
+        const userProfileDocRef = doc(
+          database,
+          "userProfiles",
+          currentUserEmail
+        );
+        const userProfileSnapShot = await getDoc(userProfileDocRef);
+        if (userProfileSnapShot.exists()) {
+          console.log("User profile Exist");
+          setProfile(userProfileSnapShot.data());
+        } else {
+          console.log("User Profile Not Exist");
+        }
+      }
+    }
+    console.log("current User Email");
+    console.log(currentUserEmail);
+    fetchData();
+  }, [currentUserEmail, database]);
+
+  useEffect(() => {
+    console.log("User Profile");
+    console.log(profile);
+  }, [profile]);
+
   return (
     <div>
       <Grid container>
@@ -72,14 +126,14 @@ const EditProfile = () => {
         </Grid>
       </Grid>
       <Stack spacing={2}>
-        <ContactInfoCard />
-        <EducationCard />
+        <ContactInfoCard setProfile={setProfile} profile={profile} />
+        {/* <EducationCard />
         <ExperienceCard />
         <SkillsCard />
         <LanguagesCard />
         <ProjectsCard />
         <VolunteeringCard />
-        <AwardsCard />
+        <AwardsCard /> */}
       </Stack>
     </div>
   );
