@@ -88,14 +88,14 @@ const SendChat = (props) => {
     */
 
     //yuchen code works, but we are trying to make it search authors
-
-    // const docRef = doc(database, "messages", `${"u7McGqfpER62VLElKV6t"}`);
-    // const docSnapshot = await getDoc(docRef);
-    // if (docSnapshot.exists()) {
-    //   console.log("Found doc on first try");
-    //   await updateDoc(docRef, { messages: arrayUnion(newMessage) });
-    //   return;
-    // }
+    const id = content.conversationID;
+    const docRef = doc(database, "messages", id);
+    const docSnapshot = await getDoc(docRef);
+    if (docSnapshot.exists()) {
+      console.log("Found doc on first try");
+      await updateDoc(docRef, { messages: arrayUnion(newMessage) });
+      return;
+    }
 
     //this is not neeeded
     // The id could also be <user_2_ID>-<user_1_ID>
