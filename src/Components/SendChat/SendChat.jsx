@@ -79,16 +79,16 @@ const SendChat = ({ conversationID }) => {
         />
       </Grid>
       <Grid item xs={1} align="right">
-        <Fab color="secondary" aria-label="add">
-          <Button
-            type="button"
-            onClick={() => {
-              handleClick();
-              setMessageContent("");
-            }}
-          >
-            <SendIcon />
-          </Button>
+        <Fab
+          color="secondary"
+          aria-label="add"
+          type="button"
+          onClick={() => {
+            handleClick();
+            setMessageContent("");
+          }}
+        >
+          <SendIcon />
         </Fab>
       </Grid>
     </Grid>

@@ -88,15 +88,14 @@ const NewConvo = () => {
         />
       </Grid>
       <Grid item align="right" xs={1}>
-        <Fab aria-label="add">
-          <Button
-            type="button"
-            onClick={() => {
-              handleClick();
-            }}
-          >
-            <AddBox />
-          </Button>
+        <Fab
+          aria-label="add"
+          type="button"
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          <AddBox />
         </Fab>
       </Grid>
     </Grid>
