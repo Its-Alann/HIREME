@@ -28,6 +28,7 @@ const aliID = "aliceykchen01@gmail.com";
 const auth = getAuth();
 
 const SendChat = ({ conversationID }) => {
+  // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
 
   let myUser = "";
@@ -61,62 +62,19 @@ const SendChat = ({ conversationID }) => {
 
     // SENDS TO THE DB
     // ex id: "17k4dPDcymw3GcNjSCSG"
-    // await updateDoc(doc(db, "messages", conversationID), {
-    //   messages: arrayUnion(newMessage),
-    // });
-
-    //line 84 doesn't work, error "ya" type ????????
-    /*
-    const querySnapshot = await getDocs(collection(db, "messages"));
-    querySnapshot.forEach(async (d) => {
-      console.log("ref???", d);
-      // If the user is a participant in the conversation
-      //  then add the rest of the participants
-      if (
-        d.data().authors.includes(myUser) &&
-        d.data().authors.includes(content.user)
-      ) {
-        console.log(newMessage);
-        //conversationUser = d.data();
-        await updateDoc(d, { messages: arrayUnion(newMessage) });
-      }
-      return 0;
+    await updateDoc(doc(db, "messages", conversationID), {
+      messages: arrayUnion(newMessage),
     });
-    */
 
     //yuchen code works, but we are trying to make it search authors
-
-    // const docRef = doc(database, "messages", `${"u7McGqfpER62VLElKV6t"}`);
+    // const id = content.conversationID;
+    // const docRef = doc(db, "messages", id);
     // const docSnapshot = await getDoc(docRef);
     // if (docSnapshot.exists()) {
     //   console.log("Found doc on first try");
     //   await updateDoc(docRef, { messages: arrayUnion(newMessage) });
     //   return;
     // }
-
-    //this is not neeeded
-    // The id could also be <user_2_ID>-<user_1_ID>
-    // docRef = doc(database, "messages", `${aliID}-${sender}`);
-    // docSnapshot = await getDoc(docRef);
-    // if (docSnapshot.exists()) {
-    //   console.log("Found doc on second try");
-    //   // We found the document
-    //   // Inside the document, there is a list named "messages"
-    //   // Append our new message to the list
-    //   await updateDoc(docRef, { messages: arrayUnion(newMessage) });
-    //   return;
-    // }
-
-    // // Other wise, we create a new document with the id of both users inside the "messages" collection
-    // const newConversationRef = await addDoc(collection(database, "messages"), {
-    //   authors: [], ///whos in the conversation
-    //   messages: arrayUnion(newMessage),
-    // });
-
-    // await setDoc(doc(database, "messages", `${sender}-${aliID}`), {
-    //   authors: [sender, aliID],
-    //   messages: [newMessage],
-    // });
   };
 
   return (
@@ -126,8 +84,8 @@ const SendChat = ({ conversationID }) => {
           id="outlined-basic-email"
           label="Type Something"
           fullWidth
-          multiline
           onChange={(e) => setMessageContent(e.target.value)}
+          value={messageContent}
         />
       </Grid>
       <Grid item xs={1} align="right">
@@ -136,6 +94,7 @@ const SendChat = ({ conversationID }) => {
             type="button"
             onClick={() => {
               handleClick();
+              setMessageContent("");
             }}
           >
             <SendIcon />
