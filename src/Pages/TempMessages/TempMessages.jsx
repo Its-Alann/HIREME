@@ -68,8 +68,11 @@ const TempMessages = () => {
         d.data().authors.includes(myUser) &&
         d.data().authors.includes(otherUser)
       ) {
-        console.log(d.data());
-        conversationUser = d.data();
+        console.log("d.data", d.data());
+        console.log("d.data.id", d.data().id);
+        console.log("d.id", d.id);
+        //conversationUser = d.data();
+        conversationUser = d;
         return conversationUser; //return this conversation
       }
       return 0;
@@ -82,6 +85,8 @@ const TempMessages = () => {
   // State for viewing existing messages
   const [conversation, setConversation] = useState();
   const [messages, setMessages] = useState([]);
+  // aded this
+  const [convoId, setConvoId] = useState([]);
 
   // State for viewing connections
   const [connectionList, setConnectionList] = useState([]);
@@ -130,12 +135,14 @@ const TempMessages = () => {
             // emails: document.data().values.email,
             // firstName: document.data().values.firstName,
             // lastName: document.data().values.lastName
+
             document.data().values
 
             // `${document.data().values.firstName} ${
             //   document.data().values.lastName
             // }`
           );
+          console.log("THE IDDDDD", document.id);
         }
         console.log("allUsers:/n", allUsers);
         setProfiles(allUsers);
@@ -146,7 +153,10 @@ const TempMessages = () => {
   React.useEffect(() => {
     // setConversation(GetConversation());
     if (conversation != null) {
-      setMessages(conversation.messages);
+      setMessages(conversation.data().messages);
+      setConvoId(conversation.id);
+      console.log("this should be the messages", conversation.data().messages);
+      console.log("this should be the document id", conversation.id);
     }
   }, [conversation]);
 
@@ -220,7 +230,11 @@ const TempMessages = () => {
               />
             </Grid> */}
             <Grid item xs={12} align="right">
-              <SendChat messageContent={messageContent} user={email} />
+              <SendChat
+                messageContent={messageContent}
+                user={email}
+                conversationID={convoId}
+              />
             </Grid>
           </Grid>
         </Grid>
