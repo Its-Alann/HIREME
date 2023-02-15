@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -14,7 +14,8 @@ import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import Messaging from "./Pages/Messaging/Messaging";
-import SendChatButton from "./Components/SendChatButton/SendChatButton";
+import SendChat from "./Components/SendChat/SendChat";
+import TempMessages from "./Pages/TempMessages/TempMessages";
 import Chat from "./Pages/Messaging/Chat";
 
 const App = () => {
@@ -33,7 +34,8 @@ const App = () => {
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
           <Route path="/messaging" export element={<Messaging />} />
-          <Route path="/temp" export element={<SendChatButton />} />
+          <Route path="/SendChat" export element={<SendChat />} />
+          <Route path="/tempMessages" export element={<TempMessages />} />
           <Route path="/chat" export element={<Chat />} />
         </Routes>
       </Router>
