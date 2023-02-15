@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Home.css";
 import Typewriter from "typewriter-effect";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -16,16 +16,18 @@ import Navbar from "../../Components/Navbar/Navbar";
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
 
-  onAuthStateChanged(auth, (authUser) => {
-    if (authUser) {
-      const { uid, email } = authUser;
-      console.log("uid", uid);
-      console.log("email", email);
-      setUser(uid);
-    } else {
-      setUser(null);
-    }
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const { uid, email } = authUser;
+        console.log("uid", uid);
+        console.log("email", email);
+        setUser(uid);
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
 
   const handleSignOut = async () => {
     signOut(auth)
