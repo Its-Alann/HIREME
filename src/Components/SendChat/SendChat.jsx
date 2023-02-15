@@ -17,8 +17,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { Grid, TextField } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import { app, db } from "../../Firebase/firebase";
+import MessageList from "../Messaging/ConversationList";
 
 const theme = createTheme();
 const bobId = "billybob@gmail.com";
@@ -37,6 +39,7 @@ props = {
 */
 
 const SendChat = (props) => {
+  const navigate = useNavigate();
   const [messageContent, setMessageContent] = useState("");
   let myUser = "";
   onAuthStateChanged(auth, (user) => {
@@ -129,6 +132,7 @@ const SendChat = (props) => {
         <TextField
           id="outlined-basic-email"
           label="Type Something"
+          value={messageContent}
           fullWidth
           onChange={(e) => setMessageContent(e.target.value)}
         />
@@ -139,6 +143,8 @@ const SendChat = (props) => {
             type="button"
             onClick={() => {
               handleClick(props);
+              setMessageContent("");
+              navigate(1);
             }}
           >
             <SendIcon />

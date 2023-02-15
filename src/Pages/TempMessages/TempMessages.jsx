@@ -22,6 +22,7 @@ import {
   updateDoc,
   arrayUnion,
   collection,
+  onSnapshot,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -42,7 +43,31 @@ let conversationUser = "";
 
 const TempMessages = () => {
   const [currentUser, setcurrentUser] = useState("");
+  const [currentDocRef, setCurrentDocRef] = useState("");
+  const [messages, setMessages] = useState([]);
+  // State for writing new messages
+  const [messageContent, setMessageContent] = useState("");
+
+  // State for viewing existing messages
+  const [conversation, setConversation] = useState();
+  // aded this
+  const [convoId, setConvoId] = useState("");
+
+  // State for viewing connections
+  const [connectionList, setConnectionList] = useState([]);
+
+  const [dmList, setDmList] = useState([]);
+  const [profiles, setProfiles] = useState([]);
+  //const [emails, setEmails] = useState([]);
+  const [name, setName] = useState([]);
+  const [email, SetEmail] = useState("");
+
   let myUser = "";
+
+  // const unSub = onSnapshot(doc(db, "messages", convoId), (document) => {
+  //   setMessages(document.data().messages);
+  // });
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -73,29 +98,12 @@ const TempMessages = () => {
         console.log("d.id", d.id);
         //conversationUser = d.data();
         conversationUser = d;
+        setCurrentDocRef(d.id);
         return conversationUser; //return this conversation
       }
       return 0;
     });
   };
-
-  // State for writing new messages
-  const [messageContent, setMessageContent] = useState("");
-
-  // State for viewing existing messages
-  const [conversation, setConversation] = useState();
-  const [messages, setMessages] = useState([]);
-  // aded this
-  const [convoId, setConvoId] = useState([]);
-
-  // State for viewing connections
-  const [connectionList, setConnectionList] = useState([]);
-
-  const [dmList, setDmList] = useState([]);
-  const [profiles, setProfiles] = useState([]);
-  //const [emails, setEmails] = useState([]);
-  const [name, setName] = useState([]);
-  const [email, SetEmail] = useState("");
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
@@ -170,6 +178,16 @@ const TempMessages = () => {
     getAllReceivers();
     console.log(profiles);
   }, []);
+
+  React.useEffect(() => {
+    console.log("convoId", convoId);
+    let unSub;
+    if (convoId) {
+      unSub = onSnapshot(doc(db, "messages", convoId), (document) => {
+        setMessages(document.data().messages);
+      });
+    }
+  }, [convoId]);
 
   return (
     <ThemeProvider theme={theme}>
