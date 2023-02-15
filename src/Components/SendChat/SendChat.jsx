@@ -27,21 +27,21 @@ const aliID = "aliceykchen01@gmail.com";
 
 const auth = getAuth();
 
-const SendChat = ({ conversationID }) => {
+const SendChat = ({ conversationID, myUser }) => {
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
 
-  let myUser = "";
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      myUser = user.email;
-    } else {
-      // User is signed out
-      // ...
-      console.log("user not found");
-    }
-  });
+  // let myUser = "";
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     // User is signed in, see docs for a list of available properties
+  //     myUser = user.email;
+  //   } else {
+  //     // User is signed out
+  //     // ...
+  //     console.log("user not found");
+  //   }
+  // });
 
   const handleClick = async () => {
     // Format a new message
@@ -97,6 +97,7 @@ const SendChat = ({ conversationID }) => {
 
 SendChat.propTypes = {
   conversationID: PropTypes.string,
+  myUser: PropTypes.string, //email
 };
 
 export default SendChat;
