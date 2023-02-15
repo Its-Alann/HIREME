@@ -30,7 +30,7 @@ const ContactInfoCard = () => {
           <Grid container spacing={3}>
             <Grid item>
               <Typography variant="body2">
-                {editButton === true ? (
+                {editButton === false ? (
                   "something.something@gmail.com"
                 ) : (
                   <TextField
