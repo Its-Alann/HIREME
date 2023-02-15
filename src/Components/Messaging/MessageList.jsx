@@ -3,7 +3,7 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import MessageListItem from "./ConversationListItem";
+import MessageListItem from "./MessageListItem";
 
 const MessageList = (props) => {
   // Very mysterious
