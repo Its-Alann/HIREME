@@ -61,15 +61,15 @@ const Login = () => {
         navigate("/");
       } catch (err) {
         setAuthError(true);
-        console.log("Something went wrong with email/password Sign In");
         console.log(err.code);
         if (err.code.includes("user-not-found")) {
           setAuthErrorMsg("An account with that email does not exist");
         } else if (err.code.includes("wrong-password")) {
           setAuthErrorMsg("Wrong password");
+        } else {
+          setAuthErrorMsg(err.code);
         }
-        // setAuthErrorMsg(err.code);
-        // console.error(err.code, err.message);
+        console.error(err.code, err.message);
       }
     }
   };
@@ -137,7 +137,7 @@ const Login = () => {
               autoComplete="current-password"
               variant="standard"
               color="primary"
-              onBlur={() => setAuthErrorMsg("")}
+              onFocus={() => setAuthErrorMsg("")}
             />
             <Typography color={theme.palette.error.main}>
               {authError && authErrorMsg}
