@@ -9,39 +9,41 @@ import Typography from "@mui/material/Typography";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import Navbar from "../../../Components/Navbar/Navbar";
-import NetworkCards from "../../../Components/Network/NetworkCards";
+import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
 
 const theme = createTheme();
 
 export const ViewNetwork = () => {
-  const usersRef = collection(db, "userProfiles");
   const connectionsRef = collection(db, "network");
-  const [allUsers, setAllUsers] = useState([]);
+  const [connectedUsersId, setConnectedUsersId] = useState([]);
 
   const user = auth.currentUser;
-  // console.log(user);
+  console.log(user);
 
   useEffect(() => {
-    const getUsers = async () => {
+    //get connected user IDs
+    const getConnectedUserIDs = async () => {
       // READ DATA
       try {
         // get data from reference collection
-        // const q = query(connectionsRef, where(, "==", userEmail));
-        const data = await getDocs(usersRef);
-        const users = data.docs.map((doc) => ({
+
+        const q = query(connectionsRef, where("user", "==", user.email));
+        //const data = await getDocs(connectionsRef);
+        const querySnapshot = await getDocs(q);
+        const users = querySnapshot.docs.map((doc) => ({
           // all users is an array of users
           ...doc.data(),
           id: doc.id,
         }));
-        setAllUsers(users);
-        // console.log(users);
+        setConnectedUsersId(users[0].connectedUsers);
+        console.log(connectedUsersId[0]);
       } catch (err) {
         console.error(err);
       }
     };
 
-    getUsers();
+    getConnectedUserIDs();
   }, []);
 
   return (
@@ -64,16 +66,17 @@ export const ViewNetwork = () => {
               alignItems="center"
             >
               {/* try allUsers.map */}
-              {allUsers.map((user) => (
+              {connectedUsersId.map((connectedUserID) => (
                 <Grid item>
                   {/*pass in user's name, bio, image and ID*/}
-                  <NetworkCards
+                  {/* <NetworkCards
                     userImage={user.values.image}
                     userFirstName={user.values.firstName}
                     userLastName={user.values.lastName}
                     userBio={user.values.description}
                     userid={user.id}
-                  />
+                  /> */}
+                  <NetworkCards connectedUserID={connectedUserID} />
                 </Grid>
               ))}
             </Grid>

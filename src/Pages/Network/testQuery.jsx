@@ -23,23 +23,9 @@ export const Test = () => {
   const [arrayOfConnectedUsers, updateArrayOfConnectedUsers] = useState([]);
 
   const user = auth.currentUser;
-  //console.log(user);
+  console.log(user);
 
   useEffect(() => {
-    const getConnectedUsers = async () => {
-      try {
-        connectedUsersId.forEach(async (userID) => {
-          //console.log(userID);
-          const docSnap = await getDoc(doc(db, "userProfiles", userID));
-          const userData = docSnap.data();
-          updateArrayOfConnectedUsers((arr) => [...arr, userData]);
-          console.log(arrayOfConnectedUsers);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     const getConnectedUserIDs = async () => {
       // READ DATA
       try {
@@ -54,7 +40,6 @@ export const Test = () => {
           id: doc.id,
         }));
         setConnectedUsersId(users[0].connectedUsers);
-        getConnectedUsers();
         //console.log(connectedUsersId[0]);
       } catch (err) {
         console.error(err);
@@ -71,7 +56,6 @@ export const Test = () => {
           <CssBaseline />
         </Container>
       </ThemeProvider>
-      ;
     </div>
   );
 };
