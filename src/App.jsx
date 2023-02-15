@@ -17,7 +17,6 @@ import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { AcceptInvitation } from "./Pages/Network/Invitation/AcceptInvitation";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { Network } from "./Pages/Network/Network";
-import { Test } from "./Pages/Network/testQuery";
 
 const App = () => {
   const hello = "hello";
@@ -41,7 +40,6 @@ const App = () => {
           <Route path="/myNetwork" exact element={<ViewNetwork />} />
           <Route path="/invitations" exact element={<AcceptInvitation />} />
           <Route path="/sentRequests" exact element={<SentInvitation />} />
-          <Route path="/testPath" exact element={<Test />} />
         </Routes>
       </Router>
     </div>
