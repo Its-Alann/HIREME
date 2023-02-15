@@ -70,15 +70,16 @@ const TempMessages = () => {
       });
     });
   };
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setMyUser(user.email);
-      getAllReceivers();
-    } else {
-      console.err("User must be signed in");
-    }
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setMyUser(user.email);
+        getAllReceivers();
+      } else {
+        console.err("User must be signed in");
+      }
+    });
+  }, []);
 
   // wong to fix it
   const getConversation = async (authorsList) => {
@@ -152,7 +153,7 @@ const TempMessages = () => {
           <Divider />
           <Grid container style={{ padding: "20px" }}>
             <Grid item xs={12} align="right">
-              <SendChat conversationID={convoId} />
+              <SendChat conversationID={convoId} myUser={myUser} />
             </Grid>
           </Grid>
         </Grid>
