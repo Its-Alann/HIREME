@@ -20,7 +20,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
 import "./TempMessages.css";
-import MessageList from "../../Components/Messaging/ConversationList";
+import MessageList from "../../Components/Messaging/MessageList";
 import { auth, db } from "../../Firebase/firebase";
 
 const theme = createTheme();
