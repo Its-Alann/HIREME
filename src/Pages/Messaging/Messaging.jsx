@@ -30,9 +30,7 @@ const Messaging = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
-  // State for viewing existing messages
-  const [conversation, setConversation] = useState();
-  // aded this
+  // State for the current conversation to display
   const [convoId, setConvoId] = useState("");
 
   const [profiles, setProfiles] = useState([]);
@@ -42,21 +40,24 @@ const Messaging = () => {
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
-    let querySnapshot = await getDocs(collection(db, "messages"));
+    const messagesRef = collection(db, "messages");
+
+    // Searches all converstations containing the currentUser
+    const convosQuery = query(
+      messagesRef,
+      where("authors", "array-contains", myUser)
+    );
     const allAuthors = [];
-    querySnapshot.forEach((document) => {
-      // If the user is a participant in the conversation
-      //  then add the rest of the participants
-      if (document.data().authors.includes(myUser)) {
-        const recipients = document
-          .data()
-          .authors.filter((author) => author !== myUser);
-        allAuthors.push(recipients);
-      }
+    const unSub = onSnapshot(convosQuery, (querySnapshot) => {
+      querySnapshot.forEach((document) => {
+        allAuthors.push(
+          document.data().authors.filter((author) => author !== myUser)
+        );
+      });
+      console.log("allAuthors", allAuthors);
     });
 
-    console.log("allAuthors", allAuthors);
-    querySnapshot = await getDocs(collection(db, "userProfiles"));
+    const querySnapshot = await getDocs(collection(db, "userProfiles"));
     const allUsers = []; //original for array of strings
 
     querySnapshot.forEach((document) => {
@@ -71,6 +72,7 @@ const Messaging = () => {
         }
       });
     });
+
     setProfiles(allUsers);
   };
 
@@ -87,10 +89,10 @@ const Messaging = () => {
   }, []);
 
   // wong to fix it
-  const getConversation = async (authorsList) => {
+  const getConversationId = async (authorsList) => {
     authorsList.sort();
-    const messagesRef = collection(db, "messages");
 
+    const messagesRef = collection(db, "messages");
     const convoQuery = query(messagesRef, where("authors", "==", authorsList));
     const querySnapshot = await getDocs(convoQuery);
 
@@ -100,20 +102,11 @@ const Messaging = () => {
         authors: authorsList,
         messages: [],
       });
-      setConversation(docRef);
-    } else {
-      setConversation(querySnapshot.docs[0]);
-      console.log("thing", querySnapshot.docs[0]);
+      return docRef.id;
     }
+    console.log("thing id", querySnapshot.docs[0].id);
+    return querySnapshot.docs[0].id;
   };
-
-  // Everytime conversation change
-  React.useEffect(() => {
-    if (conversation != null) {
-      setMessages(conversation.data().messages);
-      setConvoId(conversation.id);
-    }
-  }, [conversation]);
 
   React.useEffect(() => {
     let unSub;
@@ -140,7 +133,7 @@ const Messaging = () => {
                 key={i}
                 button
                 onClick={async () => {
-                  await getConversation([el.email, myUser]);
+                  setConvoId(await getConversationId([el.email, myUser]));
                   setName(`${el.values.firstName} ${el.values.lastName}`);
                 }}
               >
