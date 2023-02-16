@@ -41,6 +41,7 @@ const Messaging = () => {
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
+    setChatProfiles([]);
     const messagesRef = collection(db, "messages");
 
     // Searches all converstations containing the currentUser
@@ -48,9 +49,10 @@ const Messaging = () => {
       messagesRef,
       where("authors", "array-contains", myUser)
     );
-    //list of author lists
-    const allAuthorsList = [];
+
     const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
+      //list of author lists
+      const allAuthorsList = [];
       querySnapshot.forEach((document) => {
         allAuthorsList.push(
           document.data().authors.filter((author) => author !== myUser)
