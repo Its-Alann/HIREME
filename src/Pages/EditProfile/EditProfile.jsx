@@ -25,11 +25,11 @@ const EditProfile = () => {
   // Set default value, because otherwise UI glitch + warning
   const [profile, setProfile] = useState({
     values: {
-      city: "Night city",
-      firstName: "temp first name",
-      lastName: "temp last name",
-      school: "temp school",
-      country: "temp country",
+      city: "",
+      firstName: "",
+      lastName: "",
+      school: "",
+      country: "",
     },
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
@@ -41,7 +41,7 @@ const EditProfile = () => {
       if (user) {
         setCurrentUserEmail(user.email);
       } else {
-        console.log("No user currently loggd in");
+        console.log("No user currently logged in");
       }
     });
   }, []);
@@ -152,10 +152,27 @@ const EditProfile = () => {
         </Grid>
       </Grid>
       <Stack spacing={2}>
-        <ContactInfoCard setProfile={setProfile} profile={profile} />
-        {/* <EducationCard />
-        <ExperienceCard />
-        <SkillsCard />
+        <ContactInfoCard
+          setProfile={setProfile}
+          profile={profile}
+          currentUserEmail={currentUserEmail}
+        />
+        <EducationCard
+          setProfile={setProfile}
+          profile={profile}
+          currentUserEmail={currentUserEmail}
+        />
+        <ExperienceCard
+          setProfile={setProfile}
+          profile={profile}
+          currentUserEmail={currentUserEmail}
+        />
+        <SkillsCard
+          setProfile={setProfile}
+          profile={profile}
+          currentUserEmail={currentUserEmail}
+        />
+        {/*
         <LanguagesCard />
         <ProjectsCard />
         <VolunteeringCard />
