@@ -26,7 +26,7 @@ import NewConvo from "../../Components/NewConvo/NewConvo";
 
 const theme = createTheme();
 
-const TempMessages = () => {
+const Messaging = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
@@ -66,13 +66,12 @@ const TempMessages = () => {
       console.log("userID", userID);
       allAuthors.forEach((el) => {
         console.log("el", el);
-        if (el[0] === userID) {
-          allUsers.push(document.data().values);
+        if (el.includes(userID)) {
+          allUsers.push({ email: userID, values: document.data().values });
         }
       });
     });
     setProfiles(allUsers);
-    console.log("allUsers", allUsers);
   };
 
   useEffect(() => {
@@ -104,6 +103,7 @@ const TempMessages = () => {
       setConversation(docRef);
     } else {
       setConversation(querySnapshot.docs[0]);
+      console.log("thing", querySnapshot.docs[0]);
     }
   };
 
@@ -141,13 +141,13 @@ const TempMessages = () => {
                 button
                 onClick={async () => {
                   await getConversation([el.email, myUser]);
-                  setName(`${el.firstName} ${el.lastName}`);
+                  setName(`${el.values.firstName} ${el.values.lastName}`);
                 }}
               >
                 <Typography
                   sx={{ textTransform: "lowercase" }}
                   variant="body1"
-                >{`${el.firstName} ${el.lastName}`}</Typography>
+                >{`${el.values.firstName} ${el.values.lastName}`}</Typography>
               </ListItem>
             ))}
           </List>
@@ -172,4 +172,4 @@ const TempMessages = () => {
   );
 };
 
-export default TempMessages;
+export default Messaging;
