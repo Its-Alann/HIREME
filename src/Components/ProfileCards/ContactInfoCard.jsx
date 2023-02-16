@@ -11,12 +11,24 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
-const ContactInfoCard = ({ setProfile, profile }) => {
+const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
   const [editButton, setEditButton] = useState(false);
+  const [bday, setBday] = useState();
+
+  const getBday = async () => {
+    if (profile.values.dob)
+      setBday(
+        await profile.values.dob.toDate().toLocaleString("en-US", {
+          month: "long",
+          day: "2-digit",
+          year: "numeric",
+        })
+      );
+  };
 
   useEffect(() => {
-    console.log("props received");
-    console.log(profile);
+    // console.log("profile", profile);
+    getBday();
   }, [profile]);
 
   return (
@@ -33,7 +45,8 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                 onClick={() => setEditButton(!editButton)}
                 style={{ cursor: "pointer" }}
               />
-              <Button
+
+              {/* <Button
                 onClick={() =>
                   setProfile((previousState) => ({
                     values: { ...previousState.values, city: "Los Angeles" },
@@ -41,32 +54,34 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                 }
               >
                 Change state in child, Change City to LA
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
               <Typography variant="body2">
                 {editButton === false ? (
-                  "email"
+                  `Email: ${currentUserEmail}`
                 ) : (
                   <TextField
                     id="standard-basic"
                     variant="standard"
                     size="small"
-                    value="something.something@gmail.com"
+                    value={currentUserEmail}
                   />
                 )}
-                {/* Email: something.something@gmail.com{" "} */}
               </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2"> Phone: 123-456-7890 </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body2">
                 {" "}
-                Address: 123 Rue Somewhere{" "}
+                Phone: {profile.values.phoneNumber}{" "}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2">
+                {" "}
+                Address: {profile.values.address}
               </Typography>
             </Grid>
           </Grid>
@@ -78,14 +93,20 @@ const ContactInfoCard = ({ setProfile, profile }) => {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2"> Country: Canada </Typography>
+              <Typography variant="body2">
+                {" "}
+                Country: {profile.values.country}{" "}
+              </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2"> Postal Code: Y1X 2Z3 </Typography>
+              <Typography variant="body2">
+                {" "}
+                Postal Code: {profile.values.postalCode}{" "}
+              </Typography>
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="body2"> Date of Birth: January 1 </Typography>
+            <Typography variant="body2"> Birthday: {bday} </Typography>
           </Grid>
         </CardContent>
       </Card>
@@ -96,6 +117,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
 ContactInfoCard.propTypes = {
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  currentUserEmail: PropTypes.string,
 };
 
 export default ContactInfoCard;
