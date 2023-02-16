@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   getFirestore,
@@ -12,13 +12,22 @@ import {
   addDoc,
   Timestamp,
 } from "firebase/firestore";
-import Button from "@mui/material/Button";
+import { Button, Input } from "@mui/material";
+import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { Grid, TextField } from "@material-ui/core";
 import PropTypes from "prop-types";
-import { app, db } from "../../Firebase/firebase";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+  listAll,
+} from "firebase/storage";
+import { app, db, storage } from "../../Firebase/firebase";
 
 const theme = createTheme();
 
@@ -30,18 +39,63 @@ const auth = getAuth();
 const SendChat = ({ conversationID, myUser }) => {
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
+  const [url, setUrl] = useState();
 
-  // let myUser = "";
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     // User is signed in, see docs for a list of available properties
-  //     myUser = user.email;
-  //   } else {
-  //     // User is signed out
-  //     // ...
-  //     console.log("user not found");
-  //   }
-  // });
+  const [file, setFile] = useState();
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const onFileUpload = () => {
+    if (!file) return;
+    const storageRef = ref(storage, `/messages/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        setIsUploading(true);
+      },
+      (error) => {
+        console.log("error", error);
+      },
+      async () => {
+        const downloadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
+        setUrl(downloadedUrl);
+        setIsUploading(false);
+        setMessageContent(`${messageContent} ${downloadedUrl}`);
+        // const sender = myUser;
+        // const timestamp = Timestamp.now();
+
+        // const newMessage = {
+        //   content: downloadedUrl,
+        //   timestamp,
+        //   sender,
+        // };
+        // await updateDoc(doc(db, "messages", conversationID), {
+        //   messages: arrayUnion(newMessage),
+        // });
+      }
+    );
+  };
+
+  const onFileChange = (e) => {
+    setFile(e.target.files[0]);
+    e.preventDefault();
+  };
+
+  const handleUpload = async () => {
+    const sender = myUser;
+    const timestamp = Timestamp.now();
+
+    const newMessage = {
+      content: url,
+      timestamp,
+      sender,
+    };
+    await updateDoc(doc(db, "messages", conversationID), {
+      messages: arrayUnion(newMessage),
+    });
+  };
 
   const handleClick = async () => {
     // Format a new message
@@ -62,14 +116,26 @@ const SendChat = ({ conversationID, myUser }) => {
 
     // SENDS TO THE DB
     // ex id: "17k4dPDcymw3GcNjSCSG"
-    await updateDoc(doc(db, "messages", conversationID), {
-      messages: arrayUnion(newMessage),
-    });
+    if (newMessage.content) {
+      await updateDoc(doc(db, "messages", conversationID), {
+        messages: arrayUnion(newMessage),
+      });
+    }
   };
 
   return (
     <Grid container style={{ padding: "20px" }}>
       <Grid item xs={11}>
+        <>
+          <input type="file" onChange={onFileChange} />
+          <Button
+            onClick={() => {
+              onFileUpload();
+            }}
+          >
+            Upload!
+          </Button>
+        </>
         <TextField
           id="outlined-basic-email"
           label="Type Something"
@@ -83,6 +149,7 @@ const SendChat = ({ conversationID, myUser }) => {
           color="secondary"
           aria-label="add"
           type="button"
+          disabled={isUploading}
           onClick={() => {
             handleClick();
             setMessageContent("");
