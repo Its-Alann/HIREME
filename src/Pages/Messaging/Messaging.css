@@ -1,5 +1,29 @@
 @media only screen and (max-width: 800px) {
   #connection-list {
-   display: none;
+    display: none;
   }
+}
+
+/* .background-georgia {
+  background-color: #40c22f;
+} */
+
+.sidebar-full {
+  background-color: #fdfdfd;
+  padding-left: 10;
+}
+
+/* .sidebar-item {
+  background-color: #807e7e8c;
+} */
+
+.message-side-full {
+  background-color: #fdfdfd;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.message-side-title {
+  background-color: #2b2f90;
+  color: #fdfdfd;
 }

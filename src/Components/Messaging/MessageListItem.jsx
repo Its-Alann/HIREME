@@ -17,7 +17,11 @@ const MessageListItem = ({ content, sender, timestamp }) => {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <ListItemText align={alignment} primary={content} />
+        <ListItemText
+          align={alignment}
+          primary={content}
+          style={{ backgroundColor: "#D9D9D9" }}
+        />
       </Grid>
       <Grid item xs={12}>
         <ListItemText
