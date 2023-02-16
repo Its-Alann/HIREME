@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, deleteField } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
@@ -20,11 +20,7 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
   },
 }));
 
-function withdraw() {
-  // remove user from invitations.sentRequest
-}
-
-export const SentInvitationCard = ({ userID }) => {
+export const SentInvitationCard = ({ userID, currentUser }) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
 
   useEffect(() => {
@@ -33,7 +29,7 @@ export const SentInvitationCard = ({ userID }) => {
         const docSnap = await getDoc(doc(db, "userProfiles", userID));
         const userData = docSnap.data();
         setSentRequestedUser(userData);
-        console.log(userData);
+        //console.log(userData);
       } catch (err) {
         console.log(err);
       }
@@ -41,6 +37,17 @@ export const SentInvitationCard = ({ userID }) => {
 
     getSentRequestUsers();
   }, []);
+
+  const withdraw = async () => {
+    // 1. remove user from invitations.sentRequest
+    // 2. remove user card
+    const sentUserRequestRef = doc(db, "invitations", currentUser);
+    try {
+      console.log(5);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -89,6 +96,7 @@ export const SentInvitationCard = ({ userID }) => {
 
 SentInvitationCard.propTypes = {
   userID: PropTypes.string.isRequired,
+  currentUser: PropTypes.string.isRequired,
 };
 
 export default SentInvitationCard;

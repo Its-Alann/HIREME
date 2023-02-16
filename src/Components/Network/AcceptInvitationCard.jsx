@@ -35,17 +35,6 @@ const ColorButtonBlueGray = styled(Button)(({ theme }) => ({
   },
 }));
 
-function ignoreInvite() {
-  // 1. remove user from invitations.requestUsers collection
-  // 2. refresh page to remove user card
-}
-
-function acceptInvite() {
-  // 1. add user to network collection
-  // 2. remove them from the invitations.requestUsers collection
-  // 3. refresh the page to remove user card
-}
-
 export const AcceptInvitationCard = ({ requestedUserID }) => {
   const [requestedUser, setRequestedUser] = useState([]);
 
@@ -63,6 +52,17 @@ export const AcceptInvitationCard = ({ requestedUserID }) => {
 
     getAcceptInvitationUsers();
   }, []);
+
+  const ignoreInvite = async () => {
+    // 1. remove user from invitations.requestUsers collection
+    // 2. refresh page to remove user card
+  };
+
+  const acceptInvite = async () => {
+    // 1. add user to network collection
+    // 2. remove them from the invitations.requestUsers collection
+    // 3. refresh the page to remove user card
+  };
 
   return (
     <div>
