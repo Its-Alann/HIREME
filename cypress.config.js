@@ -60,7 +60,6 @@ module.exports = defineConfig({
   },
 
   e2e: {
-    specPattern: "src/**/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {},
   },
 });
