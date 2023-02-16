@@ -173,17 +173,16 @@ const EditProfile = () => {
           currentUserEmail={currentUserEmail}
         />
         <LanguagesCard profile={profile} />
-        {/*
-        <ProjectsCard />
-        <VolunteeringCard />
-        <AwardsCard /> */}
+        <ProjectsCard profile={profile} />
+        <VolunteeringCard profile={profile} />
+        <AwardsCard profile={profile} />
         <Button
           onClick={() => {
             console.log("Button Save Clicked");
             handleTempButton();
           }}
         >
-          Temp Button, click to save
+          Save Changes
         </Button>
       </Stack>
     </div>
