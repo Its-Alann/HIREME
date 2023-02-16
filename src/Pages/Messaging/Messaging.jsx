@@ -24,7 +24,16 @@ import MessageList from "../../Components/Messaging/MessageList";
 import { auth, db } from "../../Firebase/firebase";
 import NewConvo from "../../Components/NewConvo/NewConvo";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 const Messaging = () => {
   // State for writing messages
@@ -58,7 +67,6 @@ const Messaging = () => {
           document.data().authors.filter((author) => author !== myUser)
         );
       });
-      console.log("allAuthorsList", allAuthorsList);
 
       const allChatProfiles = await Promise.all(
         allAuthorsList.map(async (list) => {
@@ -81,10 +89,8 @@ const Messaging = () => {
       {
         names: "Billy Bob, Yodie Gang"
         emails: ["billybob@gmail.com", "yodiegang@ful.com"]
-      }
-      
+      }   
       */
-      console.log("allChatProfiles", allChatProfiles);
       setChatProfiles(allChatProfiles);
     });
   };
@@ -104,7 +110,6 @@ const Messaging = () => {
   // returns the ID of the currently selected conversation
   const getConversationId = async (authorsList) => {
     authorsList.sort();
-    console.log("authorsList", authorsList);
     const messagesRef = collection(db, "messages");
     const convoQuery = query(messagesRef, where("authors", "==", authorsList));
     const querySnapshot = await getDocs(convoQuery);
@@ -117,7 +122,6 @@ const Messaging = () => {
       });
       return docRef.id;
     }
-    console.log("thing id", querySnapshot.docs[0].id);
     return querySnapshot.docs[0].id;
   };
 
@@ -137,11 +141,23 @@ const Messaging = () => {
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
-      <Grid container component={Paper}>
-        <Grid item id="connection-list" style={{ flex: 1 }}>
-          <List>
+      <Grid
+        style={{ backgroundColor: "#EAEAEA" }}
+        className="background-georgia"
+        container
+        component={Paper}
+        color="background"
+      >
+        <Grid item id="connection-list" style={{ flex: 0.7, padding: 30 }}>
+          <List className="sidebar-full">
+            <Typography color="primary" variant="h6">
+              Messaging
+            </Typography>
+            <NewConvo />
             {chatProfiles.map((chat, i) => (
               <ListItem
+                style={{ backgroundColor: "#807e7e8c" }}
+                className="sidebar-item"
                 // eslint-disable-next-line react/no-array-index-key
                 key={i}
                 button
@@ -157,18 +173,27 @@ const Messaging = () => {
             ))}
           </List>
         </Grid>
-        <Grid item style={{ flex: 3 }}>
-          <NewConvo />
+        <Grid
+          className="message-side-full"
+          item
+          style={{ flex: 3, padding: 30 }}
+        >
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="h5">Chat With {name}</Typography>
+              <Typography className="message-side-title" variant="h5">
+                Chat With {name}
+              </Typography>
             </Grid>
           </Grid>
           <MessageList messages={messages} />
           <Divider />
           <Grid container style={{ padding: "20px" }}>
             <Grid item xs={12} align="right">
-              <SendChat conversationID={convoId} myUser={myUser} />
+              <SendChat
+                color="primary"
+                conversationID={convoId}
+                myUser={myUser}
+              />
             </Grid>
           </Grid>
         </Grid>

@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-  arrayUnion,
-  collection,
-  addDoc,
-  Timestamp,
-} from "firebase/firestore";
-import { Button, Input } from "@mui/material";
-import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
+import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
+import { Button } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
@@ -27,6 +15,7 @@ import {
   uploadBytesResumable,
   listAll,
 } from "firebase/storage";
+import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
 const theme = createTheme();
@@ -63,17 +52,6 @@ const SendChat = ({ conversationID, myUser }) => {
         setUrl(downloadedUrl);
         setIsUploading(false);
         setMessageContent(`${messageContent} ${downloadedUrl}`);
-        // const sender = myUser;
-        // const timestamp = Timestamp.now();
-
-        // const newMessage = {
-        //   content: downloadedUrl,
-        //   timestamp,
-        //   sender,
-        // };
-        // await updateDoc(doc(db, "messages", conversationID), {
-        //   messages: arrayUnion(newMessage),
-        // });
       }
     );
   };
@@ -81,20 +59,6 @@ const SendChat = ({ conversationID, myUser }) => {
   const onFileChange = (e) => {
     setFile(e.target.files[0]);
     e.preventDefault();
-  };
-
-  const handleUpload = async () => {
-    const sender = myUser;
-    const timestamp = Timestamp.now();
-
-    const newMessage = {
-      content: url,
-      timestamp,
-      sender,
-    };
-    await updateDoc(doc(db, "messages", conversationID), {
-      messages: arrayUnion(newMessage),
-    });
   };
 
   const handleClick = async () => {
@@ -125,17 +89,10 @@ const SendChat = ({ conversationID, myUser }) => {
 
   return (
     <Grid container style={{ padding: "20px" }}>
-      <Grid item xs={11}>
-        <>
-          <input type="file" onChange={onFileChange} />
-          <Button
-            onClick={() => {
-              onFileUpload();
-            }}
-          >
-            Upload!
-          </Button>
-        </>
+      <Grid item xs={1} align="center">
+        <FileUpload onFileChange={onFileChange} onFileUpload={onFileUpload} />
+      </Grid>
+      <Grid item xs={10}>
         <TextField
           id="outlined-basic-email"
           label="Type Something"
@@ -144,6 +101,7 @@ const SendChat = ({ conversationID, myUser }) => {
           value={messageContent}
         />
       </Grid>
+
       <Grid item xs={1} align="right">
         <Fab
           color="secondary"
