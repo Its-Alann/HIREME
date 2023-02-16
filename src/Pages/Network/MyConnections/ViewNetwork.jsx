@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../../Components/Navbar/Navbar";
 import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
@@ -19,31 +19,39 @@ export const ViewNetwork = () => {
   const [connectedUsersId, setConnectedUsersId] = useState([]);
 
   const user = auth.currentUser;
-  console.log(user);
+
+  //console.log("user: ", user);
 
   useEffect(() => {
-    //get connected user IDs
-    const getConnectedUserIDs = async () => {
-      // READ DATA
-      try {
-        // get data from reference collection
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        //get connected user IDs
+        const getConnectedUserIDs = async () => {
+          // READ DATA
+          try {
+            // get data from reference collection
 
-        const q = query(connectionsRef, where("user", "==", user.email));
-        //const data = await getDocs(connectionsRef);
-        const querySnapshot = await getDocs(q);
-        const users = querySnapshot.docs.map((doc) => ({
-          // all users is an array of users
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setConnectedUsersId(users[0].connectedUsers);
-        console.log(connectedUsersId[0]);
-      } catch (err) {
-        console.error(err);
+            const q = query(connectionsRef, where("user", "==", user.email));
+            //const data = await getDocs(connectionsRef);
+            const querySnapshot = await getDocs(q);
+            const users = querySnapshot.docs.map((doc) => ({
+              // all users is an array of users
+              ...doc.data(),
+              id: doc.id,
+            }));
+            setConnectedUsersId(users[0].connectedUsers);
+            console.log("connectedUser", connectedUsersId[0]);
+          } catch (err) {
+            console.error("err:", err);
+          }
+        };
+
+        getConnectedUserIDs();
+      } else {
+        //take you back to the homepage
+        //console.log("2:", user);
       }
-    };
-
-    getConnectedUserIDs();
+    });
   }, []);
 
   return (
