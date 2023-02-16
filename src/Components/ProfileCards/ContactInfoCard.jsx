@@ -34,9 +34,13 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                 style={{ cursor: "pointer" }}
               />
               <Button
-                onClick={() => setProfile({ values: { city: "Los Angeles" } })}
+                onClick={() =>
+                  setProfile((previousState) => ({
+                    values: { ...previousState.values, city: "Los Angeles" },
+                  }))
+                }
               >
-                Change state in child
+                Change state in child, Change City to LA
               </Button>
             </Grid>
           </Grid>
