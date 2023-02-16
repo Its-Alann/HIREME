@@ -13,22 +13,24 @@ const theme = createTheme();
 
 export const SentInvitation = () => {
   const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        setCurrentUser(user);
         const getSentRequestedUsers = async () => {
           // READ DATA
           try {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
             setSentRequestsUserID(userData.sentRequests);
-            console.log(userData.sentRequests);
+            //console.log(userData.sentRequests);
           } catch (err) {
             console.error(err);
           }
         };
-        console.log(sentRequestsUserID);
+        //console.log(sentRequestsUserID);
         getSentRequestedUsers();
       } else {
         //take you back to the homepage
@@ -53,7 +55,10 @@ export const SentInvitation = () => {
             >
               {sentRequestsUserID.map((userID) => (
                 <Grid item>
-                  <SentInvitationCard userID={userID} />
+                  <SentInvitationCard
+                    userID={userID}
+                    currentUser={currentUser}
+                  />
                 </Grid>
               ))}
             </Grid>
