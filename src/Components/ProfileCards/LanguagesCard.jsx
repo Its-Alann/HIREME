@@ -1,8 +1,9 @@
 import React from "react";
 import { Grid, Box, Card, CardContent, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import PropTypes from "prop-types";
 
-const LanguagesCard = () => {
+const LanguagesCard = ({ profile }) => {
   const something = "";
   return (
     <Box>
@@ -18,32 +19,26 @@ const LanguagesCard = () => {
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2"> English </Typography>
+              <Typography variant="body2">
+                {" "}
+                {profile.values.language}{" "}
+              </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2"> Proficienfy: Fluent </Typography>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item>
-              <Typography variant="body2"> French </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2"> Proficienfy: Fluent </Typography>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item>
-              <Typography variant="body2"> Creole </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2"> Proficienfy: Beginner </Typography>
+              <Typography variant="body2">
+                {" "}
+                Proficienfy: {profile.values.proficiency}{" "}
+              </Typography>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
     </Box>
   );
+};
+
+LanguagesCard.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.any),
 };
 
 export default LanguagesCard;
