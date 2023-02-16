@@ -32,8 +32,6 @@ const SkillsCard = ({ profile }) => {
 
 SkillsCard.propTypes = {
   profile: PropTypes.objectOf(PropTypes.any),
-  setProfile: PropTypes.func,
-  currentUserEmail: PropTypes.string,
 };
 
 export default SkillsCard;
