@@ -1,9 +1,26 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import { Grid, Box, Card, CardContent, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import PropTypes from "prop-types";
 
-const AwardsCard = () => {
-  const something = "";
+const AwardsCard = ({ profile }) => {
+  const [startDate, setStartYear] = useState("");
+
+  const getDates = async () => {
+    if (profile.values.dateAward) {
+      setStartYear(
+        await profile.values.dateAward.toDate().toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    // console.log("profile", profile);
+    getDates();
+  }, [profile]);
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -18,35 +35,24 @@ const AwardsCard = () => {
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2"> Greatest Human Alive </Typography>
+              <Typography variant="body2">
+                {" "}
+                {profile.values.awardTitle}{" "}
+              </Typography>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2"> Nobel Peace Prize </Typography>
+              <Typography variant="body2"> {profile.values.issuer} </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2"> May 2017 </Typography>
+              <Typography variant="body2"> {startDate} </Typography>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
               <Typography variant="body2">
-                {" "}
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-                maximus nibh nec massa convallis, quis bibendum neque fringilla.
-                Mauris et odio a sem malesuada fermentum. Nunc sed lacus sit
-                amet augue hendrerit tristique viverra non enim. Aliquam vitae
-                porta neque. Nullam sodales nibh at velit pulvinar, in fermentum
-                dolor dapibus. Donec efficitur metus ultricies magna mattis,
-                eget vulputate tortor hendrerit. In in tempus neque. Fusce urna
-                enim, faucibus quis bibendum ut, dictum quis urna. Aenean
-                viverra urna tellus, vel vestibulum nulla finibus quis. Sed
-                dolor tortor, iaculis ut purus id, dignissim sodales quam.
-                Aliquam consectetur vitae mi in lacinia. In in ante ac nisi
-                faucibus volutpat eu sed purus. Mauris commodo turpis ac augue
-                condimentum, id tempor nunc tincidunt. In scelerisque mi id
-                ullamcorper faucibus.{" "}
+                {profile.values.awardDesc}
               </Typography>
             </Grid>
           </Grid>
@@ -54,6 +60,10 @@ const AwardsCard = () => {
       </Card>
     </Box>
   );
+};
+
+AwardsCard.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.any),
 };
 
 export default AwardsCard;

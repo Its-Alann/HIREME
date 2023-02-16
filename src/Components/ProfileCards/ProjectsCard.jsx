@@ -1,8 +1,9 @@
 import React from "react";
 import { Grid, Box, Card, CardContent, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import PropTypes from "prop-types";
 
-const ProjectsCard = () => {
+const ProjectsCard = ({ profile }) => {
   const something = "";
   return (
     <Box>
@@ -18,27 +19,13 @@ const ProjectsCard = () => {
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2"> Project Title </Typography>
+              <Typography variant="body2"> {profile.values.project}</Typography>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
               <Typography variant="body2">
-                {" "}
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-                maximus nibh nec massa convallis, quis bibendum neque fringilla.
-                Mauris et odio a sem malesuada fermentum. Nunc sed lacus sit
-                amet augue hendrerit tristique viverra non enim. Aliquam vitae
-                porta neque. Nullam sodales nibh at velit pulvinar, in fermentum
-                dolor dapibus. Donec efficitur metus ultricies magna mattis,
-                eget vulputate tortor hendrerit. In in tempus neque. Fusce urna
-                enim, faucibus quis bibendum ut, dictum quis urna. Aenean
-                viverra urna tellus, vel vestibulum nulla finibus quis. Sed
-                dolor tortor, iaculis ut purus id, dignissim sodales quam.
-                Aliquam consectetur vitae mi in lacinia. In in ante ac nisi
-                faucibus volutpat eu sed purus. Mauris commodo turpis ac augue
-                condimentum, id tempor nunc tincidunt. In scelerisque mi id
-                ullamcorper faucibus.{" "}
+                {profile.values.projectDesc}
               </Typography>
             </Grid>
           </Grid>
@@ -46,6 +33,10 @@ const ProjectsCard = () => {
       </Card>
     </Box>
   );
+};
+
+ProjectsCard.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.any),
 };
 
 export default ProjectsCard;
