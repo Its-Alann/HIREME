@@ -5,11 +5,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { Timestamp } from "firebase/firestore";
 import { auth } from "../../Firebase/firebase";
 
-const MessageListItem = (props) => {
+const MessageListItem = ({ content, sender, timestamp }) => {
   const [alignment, setAlignment] = React.useState("left");
 
   React.useEffect(() => {
-    if (auth.currentUser.email === props.sender) {
+    if (auth.currentUser.email === sender) {
       setAlignment("right");
     }
   }, [auth]);
@@ -17,12 +17,12 @@ const MessageListItem = (props) => {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <ListItemText align={alignment} primary={props.content} />
+        <ListItemText align={alignment} primary={content} />
       </Grid>
       <Grid item xs={12}>
         <ListItemText
           align={alignment}
-          secondary={props.timestamp.toLocaleString()}
+          secondary={timestamp.toLocaleString()}
         />
       </Grid>
     </Grid>
@@ -31,7 +31,7 @@ const MessageListItem = (props) => {
 
 MessageListItem.propTypes = {
   content: PropTypes.string,
-  timestamp: PropTypes.string,
+  timestamp: PropTypes.instanceOf(Date),
   sender: PropTypes.string,
 };
 export default MessageListItem;
