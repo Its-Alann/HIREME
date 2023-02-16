@@ -269,9 +269,10 @@ const AccountCreation = () => {
         ) : (
           <>
             <Typography
-              style={{ color: "black" }}
+              id="title"
               sx={{ mt: 2, mb: 1 }}
               textAlign="center"
+              fontSize={30}
             >
               {steps[activeStep]} {forms[activeStep]}{" "}
             </Typography>
@@ -279,6 +280,7 @@ const AccountCreation = () => {
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
+                hidden={activeStep === 0}
                 onClick={handleBack}
                 sx={{ mr: 1 }}
                 style={{ color: "black" }}
@@ -293,6 +295,7 @@ const AccountCreation = () => {
               )}
 
               <Button
+                id="next"
                 onClick={
                   activeStep === steps.length - 1
                     ? handleFinalSubmit

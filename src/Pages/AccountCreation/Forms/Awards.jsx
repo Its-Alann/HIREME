@@ -14,13 +14,13 @@ const Awards = ({
   values,
 }) => (
   <Grid
+    id="formGrid"
     container
-    spacing={0}
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "40vh" }}
-    rowSpacing={1}
+    style={{ minHeight: "60vh", maxWidth: "60vh" }}
+    rowSpacing={2}
   >
     <Grid xs={12}>
       <TextField
@@ -29,28 +29,35 @@ const Awards = ({
         variant="standard"
         value={values.awardTitle}
         onChange={(e) => setAwardTitle(e.target.value)}
+        fullWidth
       />
     </Grid>
 
-    <Grid item xs={6}>
-      <TextField
-        id="standard-required"
-        placeholder="Issuer"
-        variant="standard"
-        value={values.issuer}
-        onChange={(e) => setIssuer(e.target.value)}
-      />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Date"
-          value={values.dateAward}
-          onChange={(newValue) => {
-            setDateAward(newValue);
-          }}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          renderInput={(params) => <TextField {...params} />}
+    <Grid item xs={18} container spacing={10}>
+      <Grid item xs={6}>
+        <TextField
+          id="standard-required"
+          placeholder="Issuer"
+          variant="standard"
+          value={values.issuer}
+          onChange={(e) => setIssuer(e.target.value)}
         />
-      </LocalizationProvider>
+      </Grid>
+      <Grid item xs={6}>
+        <Grid container direction="row-reverse">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Date"
+              value={values.dateAward}
+              onChange={(newValue) => {
+                setDateAward(newValue);
+              }}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </Grid>
+      </Grid>
     </Grid>
 
     <Grid item xs={12}>
@@ -61,6 +68,8 @@ const Awards = ({
         rows={6}
         value={values.awardDesc}
         onChange={(e) => setAwardDesc(e.target.value)}
+        style={{ backgroundColor: "white" }}
+        fullWidth
       />
     </Grid>
   </Grid>

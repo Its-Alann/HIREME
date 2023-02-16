@@ -16,3 +16,15 @@
   align-items: center;
   color: #fff;
 }
+
+#next {
+  background-color: blue;
+  color: white;
+  font-style: italic;
+}
+
+#title {
+  color: #3f51b5;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
