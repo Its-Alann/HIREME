@@ -33,7 +33,8 @@ const Messaging = () => {
   // State for the current conversation to display
   const [convoId, setConvoId] = useState("");
 
-  const [profiles, setProfiles] = useState([]);
+  // an array with info for displaying the convo info
+  const [chatProfiles, setChatProfiles] = useState([]);
   const [name, setName] = useState([]);
 
   const [myUser, setMyUser] = useState("");
@@ -47,33 +48,43 @@ const Messaging = () => {
       messagesRef,
       where("authors", "array-contains", myUser)
     );
-    const allAuthors = [];
-    const unSub = onSnapshot(convosQuery, (querySnapshot) => {
+    //list of author lists
+    const allAuthorsList = [];
+    const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
       querySnapshot.forEach((document) => {
-        allAuthors.push(
+        allAuthorsList.push(
           document.data().authors.filter((author) => author !== myUser)
         );
       });
-      console.log("allAuthors", allAuthors);
+      console.log("allAuthorsList", allAuthorsList);
+
+      const allChatProfiles = await Promise.all(
+        allAuthorsList.map(async (list) => {
+          const nameList = await Promise.all(
+            list.map(async (author) => {
+              const docSnap = await getDoc(doc(db, "userProfiles", author));
+              if (docSnap.exists()) {
+                return `${docSnap.data().values.firstName} ${
+                  docSnap.data().values.lastName
+                }`;
+              }
+              return null;
+            })
+          );
+          const names = nameList.filter(Boolean).join(", ");
+          return { names, emails: list };
+        })
+      );
+      /*
+      {
+        names: "Billy Bob, Yodie Gang"
+        emails: ["billybob@gmail.com", "yodiegang@ful.com"]
+      }
+      
+      */
+      console.log("allChatProfiles", allChatProfiles);
+      setChatProfiles(allChatProfiles);
     });
-
-    const querySnapshot = await getDocs(collection(db, "userProfiles"));
-    const allUsers = []; //original for array of strings
-
-    querySnapshot.forEach((document) => {
-      // If the user is a participant in the conversation
-      //  then add the name of the participants
-      const userID = document.id;
-      console.log("userID", userID);
-      allAuthors.forEach((el) => {
-        console.log("el", el);
-        if (el.includes(userID)) {
-          allUsers.push({ email: userID, values: document.data().values });
-        }
-      });
-    });
-
-    setProfiles(allUsers);
   };
 
   useEffect(() => {
@@ -88,10 +99,10 @@ const Messaging = () => {
     });
   }, []);
 
-  // wong to fix it
+  // returns the ID of the currently selected conversation
   const getConversationId = async (authorsList) => {
     authorsList.sort();
-
+    console.log("authorsList", authorsList);
     const messagesRef = collection(db, "messages");
     const convoQuery = query(messagesRef, where("authors", "==", authorsList));
     const querySnapshot = await getDocs(convoQuery);
@@ -127,20 +138,19 @@ const Messaging = () => {
       <Grid container component={Paper}>
         <Grid item id="connection-list" style={{ flex: 1 }}>
           <List>
-            {profiles.map((el, i) => (
+            {chatProfiles.map((chat, i) => (
               <ListItem
                 // eslint-disable-next-line react/no-array-index-key
                 key={i}
                 button
                 onClick={async () => {
-                  setConvoId(await getConversationId([el.email, myUser]));
-                  setName(`${el.values.firstName} ${el.values.lastName}`);
+                  setConvoId(await getConversationId([...chat.emails, myUser]));
+                  setName(chat.names);
                 }}
               >
-                <Typography
-                  sx={{ textTransform: "lowercase" }}
-                  variant="body1"
-                >{`${el.values.firstName} ${el.values.lastName}`}</Typography>
+                <Typography sx={{ textTransform: "lowercase" }} variant="body1">
+                  {chat.names}
+                </Typography>
               </ListItem>
             ))}
           </List>
