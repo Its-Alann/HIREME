@@ -1,9 +1,10 @@
 import React from "react";
 import { Grid, Box, Card, CardContent, Typography, Chip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import PropTypes from "prop-types";
 
-const SkillsCard = () => {
-  const skills = ["Java", "JavaScript", "React", "Zoom"];
+const SkillsCard = ({ profile }) => {
+  const skills = [profile.values.skills];
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -27,6 +28,12 @@ const SkillsCard = () => {
       </Card>
     </Box>
   );
+};
+
+SkillsCard.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.any),
+  setProfile: PropTypes.func,
+  currentUserEmail: PropTypes.string,
 };
 
 export default SkillsCard;
