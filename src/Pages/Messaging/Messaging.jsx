@@ -55,6 +55,7 @@ const TempMessages = () => {
       }
     });
 
+    console.log("allAuthors", allAuthors);
     querySnapshot = await getDocs(collection(db, "userProfiles"));
     const allUsers = []; //original for array of strings
 
@@ -62,19 +63,24 @@ const TempMessages = () => {
       // If the user is a participant in the conversation
       //  then add the name of the participants
       const userID = document.id;
+      console.log("userID", userID);
       allAuthors.forEach((el) => {
+        console.log("el", el);
         if (el[0] === userID) {
           allUsers.push(document.data().values);
         }
-        setProfiles(allUsers);
       });
     });
+    setProfiles(allUsers);
+    console.log("allUsers", allUsers);
   };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setMyUser(user.email);
-        getAllReceivers();
+        console.log("user.email", user.email);
+        // getAllReceivers();
       } else {
         console.err("User must be signed in");
       }
@@ -117,6 +123,10 @@ const TempMessages = () => {
       });
     }
   }, [convoId]);
+
+  React.useEffect(() => {
+    getAllReceivers();
+  }, [myUser]);
 
   return (
     <ThemeProvider theme={theme}>
