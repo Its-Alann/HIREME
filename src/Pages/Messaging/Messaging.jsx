@@ -26,66 +26,84 @@ import NewConvo from "../../Components/NewConvo/NewConvo";
 
 const theme = createTheme();
 
-const TempMessages = () => {
+const Messaging = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
-  // State for viewing existing messages
-  const [conversation, setConversation] = useState();
-  // aded this
+  // State for the current conversation to display
   const [convoId, setConvoId] = useState("");
 
-  const [profiles, setProfiles] = useState([]);
+  // an array with info for displaying the convo info
+  const [chatProfiles, setChatProfiles] = useState([]);
   const [name, setName] = useState([]);
 
   const [myUser, setMyUser] = useState("");
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
-    let querySnapshot = await getDocs(collection(db, "messages"));
-    const allAuthors = [];
-    querySnapshot.forEach((document) => {
-      // If the user is a participant in the conversation
-      //  then add the rest of the participants
-      if (document.data().authors.includes(myUser)) {
-        const recipients = document
-          .data()
-          .authors.filter((author) => author !== myUser);
-        allAuthors.push(recipients);
-      }
-    });
+    const messagesRef = collection(db, "messages");
 
-    querySnapshot = await getDocs(collection(db, "userProfiles"));
-    const allUsers = []; //original for array of strings
-
-    querySnapshot.forEach((document) => {
-      // If the user is a participant in the conversation
-      //  then add the name of the participants
-      const userID = document.id;
-      allAuthors.forEach((el) => {
-        if (el[0] === userID) {
-          allUsers.push(document.data().values);
-        }
-        setProfiles(allUsers);
+    // Searches all converstations containing the currentUser
+    const convosQuery = query(
+      messagesRef,
+      where("authors", "array-contains", myUser)
+    );
+    //list of author lists
+    const allAuthorsList = [];
+    const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
+      querySnapshot.forEach((document) => {
+        allAuthorsList.push(
+          document.data().authors.filter((author) => author !== myUser)
+        );
       });
+      console.log("allAuthorsList", allAuthorsList);
+
+      const allChatProfiles = await Promise.all(
+        allAuthorsList.map(async (list) => {
+          const nameList = await Promise.all(
+            list.map(async (author) => {
+              const docSnap = await getDoc(doc(db, "userProfiles", author));
+              if (docSnap.exists()) {
+                return `${docSnap.data().values.firstName} ${
+                  docSnap.data().values.lastName
+                }`;
+              }
+              return null;
+            })
+          );
+          const names = nameList.filter(Boolean).join(", ");
+          return { names, emails: list };
+        })
+      );
+      /*
+      {
+        names: "Billy Bob, Yodie Gang"
+        emails: ["billybob@gmail.com", "yodiegang@ful.com"]
+      }
+      
+      */
+      console.log("allChatProfiles", allChatProfiles);
+      setChatProfiles(allChatProfiles);
     });
   };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setMyUser(user.email);
-        getAllReceivers();
+        console.log("user.email", user.email);
+        // getAllReceivers();
       } else {
         console.err("User must be signed in");
       }
     });
   }, []);
 
-  // wong to fix it
-  const getConversation = async (authorsList) => {
+  // returns the ID of the currently selected conversation
+  const getConversationId = async (authorsList) => {
     authorsList.sort();
+    console.log("authorsList", authorsList);
     const messagesRef = collection(db, "messages");
-
     const convoQuery = query(messagesRef, where("authors", "==", authorsList));
     const querySnapshot = await getDocs(convoQuery);
 
@@ -95,19 +113,11 @@ const TempMessages = () => {
         authors: authorsList,
         messages: [],
       });
-      setConversation(docRef);
-    } else {
-      setConversation(querySnapshot.docs[0]);
+      return docRef.id;
     }
+    console.log("thing id", querySnapshot.docs[0].id);
+    return querySnapshot.docs[0].id;
   };
-
-  // Everytime conversation change
-  React.useEffect(() => {
-    if (conversation != null) {
-      setMessages(conversation.data().messages);
-      setConvoId(conversation.id);
-    }
-  }, [conversation]);
 
   React.useEffect(() => {
     let unSub;
@@ -118,26 +128,29 @@ const TempMessages = () => {
     }
   }, [convoId]);
 
+  React.useEffect(() => {
+    getAllReceivers();
+  }, [myUser]);
+
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
       <Grid container component={Paper}>
         <Grid item id="connection-list" style={{ flex: 1 }}>
           <List>
-            {profiles.map((el, i) => (
+            {chatProfiles.map((chat, i) => (
               <ListItem
                 // eslint-disable-next-line react/no-array-index-key
                 key={i}
                 button
                 onClick={async () => {
-                  await getConversation([el.email, myUser]);
-                  setName(`${el.firstName} ${el.lastName}`);
+                  setConvoId(await getConversationId([...chat.emails, myUser]));
+                  setName(chat.names);
                 }}
               >
-                <Typography
-                  sx={{ textTransform: "lowercase" }}
-                  variant="body1"
-                >{`${el.firstName} ${el.lastName}`}</Typography>
+                <Typography sx={{ textTransform: "lowercase" }} variant="body1">
+                  {chat.names}
+                </Typography>
               </ListItem>
             ))}
           </List>
@@ -162,4 +175,4 @@ const TempMessages = () => {
   );
 };
 
-export default TempMessages;
+export default Messaging;
