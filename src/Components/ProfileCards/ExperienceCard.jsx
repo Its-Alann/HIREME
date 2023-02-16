@@ -1,9 +1,33 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import { Grid, Box, Card, CardContent, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import PropTypes from "prop-types";
 
-const ExperienceCard = () => {
-  const something = "";
+const ExperienceCard = ({ setProfile, profile, currentUserEmail }) => {
+  const [startYear, setStartYear] = useState("");
+  const [endYear, setEndYear] = useState("");
+
+  const getDates = async () => {
+    if (profile.values.startDateEdu && profile.values.endDateEdu) {
+      setStartYear(
+        await profile.values.startDateExp.toDate().toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        })
+      );
+      setEndYear(
+        await profile.values.endDateExp.toDate().toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    // console.log("profile", profile);
+    getDates();
+  }, [profile]);
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -18,42 +42,43 @@ const ExperienceCard = () => {
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2"> Google </Typography>
+              <Typography variant="body2">
+                {" "}
+                {profile.values.company}{" "}
+              </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2"> 2020 - Present </Typography>
+              <Typography variant="body2">
+                {" "}
+                {startYear} - {endYear}{" "}
+              </Typography>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2">Junior Software Developer</Typography>
+              <Typography variant="body2">
+                {profile.values.jobPosition}
+              </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2">Montreal, Canada</Typography>
+              <Typography variant="body2">{profile.values.location}</Typography>
             </Grid>
           </Grid>
           <Grid item>
             <Typography variant="body2">
-              {" "}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-              maximus nibh nec massa convallis, quis bibendum neque fringilla.
-              Mauris et odio a sem malesuada fermentum. Nunc sed lacus sit amet
-              augue hendrerit tristique viverra non enim. Aliquam vitae porta
-              neque. Nullam sodales nibh at velit pulvinar, in fermentum dolor
-              dapibus. Donec efficitur metus ultricies magna mattis, eget
-              vulputate tortor hendrerit. In in tempus neque. Fusce urna enim,
-              faucibus quis bibendum ut, dictum quis urna. Aenean viverra urna
-              tellus, vel vestibulum nulla finibus quis. Sed dolor tortor,
-              iaculis ut purus id, dignissim sodales quam. Aliquam consectetur
-              vitae mi in lacinia. In in ante ac nisi faucibus volutpat eu sed
-              purus. Mauris commodo turpis ac augue condimentum, id tempor nunc
-              tincidunt. In scelerisque mi id ullamcorper faucibus.{" "}
+              {profile.values.description}
             </Typography>
           </Grid>
         </CardContent>
       </Card>
     </Box>
   );
+};
+
+ExperienceCard.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.any),
+  setProfile: PropTypes.func,
+  currentUserEmail: PropTypes.string,
 };
 
 export default ExperienceCard;
