@@ -172,8 +172,8 @@ const EditProfile = () => {
           profile={profile}
           currentUserEmail={currentUserEmail}
         />
+        <LanguagesCard profile={profile} />
         {/*
-        <LanguagesCard />
         <ProjectsCard />
         <VolunteeringCard />
         <AwardsCard /> */}
