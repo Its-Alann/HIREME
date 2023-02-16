@@ -20,6 +20,10 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
   },
 }));
 
+function withdraw() {
+  // remove user from invitations.sentRequest
+}
+
 export const SentInvitationCard = ({ userID }) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
 
@@ -41,7 +45,7 @@ export const SentInvitationCard = ({ userID }) => {
   return (
     <div>
       <Box sx={{ width: 300, minWidth: 100 }}>
-        <Card variant="outlined">
+        <Card variant="outlined" sx={{ p: 1 }}>
           <>
             <CardHeader
               avatar={
@@ -71,7 +75,9 @@ export const SentInvitationCard = ({ userID }) => {
             <Box display="flex" justifyContent="center">
               <CardActions>
                 {/*view profile will go to the user's profile and message will be sent to the */}
-                <ColorButtonBlue size="medium">Withdraw</ColorButtonBlue>
+                <ColorButtonBlue size="medium" onClick={withdraw}>
+                  Withdraw
+                </ColorButtonBlue>
               </CardActions>
             </Box>
           </>

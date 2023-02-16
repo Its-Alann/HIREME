@@ -48,7 +48,7 @@ export const NetworkCards = ({ connectedUserID }) => {
   return (
     <div>
       <Box sx={{ width: 300, minWidth: 100 }}>
-        <Card variant="outlined">
+        <Card variant="outlined" sx={{ p: 1 }}>
           <>
             <CardHeader
               avatar={
