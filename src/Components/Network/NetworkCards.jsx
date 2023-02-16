@@ -9,16 +9,8 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  getDoc,
-  doc,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { db, auth } from "../../Firebase/firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(blue[600]),
@@ -42,7 +34,6 @@ export const NetworkCards = ({ connectedUserID }) => {
   useEffect(() => {
     const getConnectedUsers = async () => {
       try {
-        //console.log(userID);
         const docSnap = await getDoc(doc(db, "userProfiles", connectedUserID));
         const userData = docSnap.data();
         setConnectedUser(userData);

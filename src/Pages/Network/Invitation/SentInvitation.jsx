@@ -4,37 +4,37 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { collection, getDocs } from "firebase/firestore";
-import Navbar from "../../../Components/Navbar/Navbar";
-import SentInvitationCard from "../../../Components/Network/SentInvitationCard";
-import { db } from "../../../Firebase/firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { SentInvitationCard } from "../../../Components/Network/SentInvitationCard";
+import { db, auth } from "../../../Firebase/firebase";
 
 const theme = createTheme();
 
 export const SentInvitation = () => {
-  const usersRef = collection(db, "userProfiles");
-  const [allUsers, setAllUsers] = useState([]);
+  const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
 
   useEffect(() => {
-    const getUsers = async () => {
-      // READ DATA
-      try {
-        // get data from reference collection
-        const data = await getDocs(usersRef);
-        const users = data.docs.map((doc) => ({
-          // all users is an array of users
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setAllUsers(users);
-        // console.log(users);
-      } catch (err) {
-        console.error(err);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const getSentRequestedUsers = async () => {
+          // READ DATA
+          try {
+            const docSnap = await getDoc(doc(db, "invitations", user.email));
+            const userData = docSnap.data();
+            setSentRequestsUserID(userData.sentRequests);
+            console.log(userData.sentRequests);
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        console.log(sentRequestsUserID);
+        getSentRequestedUsers();
+      } else {
+        //take you back to the homepage
+        //console.log("2:", user);
       }
-    };
-
-    getUsers();
+    });
   }, []);
 
   return (
@@ -42,12 +42,7 @@ export const SentInvitation = () => {
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
           <CssBaseline />
-          <Box
-            justifyContent="center"
-            alignItems="center"
-            minHeight="60vh"
-            display="flex"
-          >
+          <Box justifyContent="center" alignItems="center" display="flex">
             {/*The array will contain all the connected users*/}
             <Grid
               container
@@ -56,15 +51,9 @@ export const SentInvitation = () => {
               justifyContent="center"
               alignItems="center"
             >
-              {allUsers.map((user) => (
+              {sentRequestsUserID.map((userID) => (
                 <Grid item>
-                  <SentInvitationCard
-                    userImage={user.values.image}
-                    userFirstName={user.values.firstName}
-                    userLastName={user.values.lastName}
-                    userBio={user.values.description}
-                    userid={user.id}
-                  />
+                  <SentInvitationCard userID={userID} />
                 </Grid>
               ))}
             </Grid>
