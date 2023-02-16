@@ -18,8 +18,6 @@ export const ViewNetwork = () => {
   const connectionsRef = collection(db, "network");
   const [connectedUsersId, setConnectedUsersId] = useState([]);
 
-  const user = auth.currentUser;
-
   //console.log("user: ", user);
 
   useEffect(() => {
@@ -49,7 +47,7 @@ export const ViewNetwork = () => {
         getConnectedUserIDs();
       } else {
         //take you back to the homepage
-        //console.log("2:", user);
+        //console.log(user);
       }
     });
   }, []);
