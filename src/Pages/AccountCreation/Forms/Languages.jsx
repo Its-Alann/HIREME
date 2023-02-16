@@ -10,12 +10,13 @@ import PropTypes from "prop-types";
 
 const Languages = ({ setLanguage, setProficiency, values }) => (
   <Grid
+    id="formGrid"
     container
     spacing={0}
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "20vh" }}
+    style={{ minHeight: "30vh", maxWidth: "50vh" }}
     rowSpacing={1}
   >
     <Grid item xs={12}>
@@ -26,6 +27,7 @@ const Languages = ({ setLanguage, setProficiency, values }) => (
         variant="standard"
         value={values.language}
         onChange={(e) => setLanguage(e.target.value)}
+        fullWidth
       />
     </Grid>
 

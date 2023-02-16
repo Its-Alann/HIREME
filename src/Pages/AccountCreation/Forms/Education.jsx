@@ -16,13 +16,14 @@ const Education = ({
   values,
 }) => (
   <Grid
+    id="formGrid"
     container
     spacing={0}
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "50vh" }}
-    rowSpacing={1}
+    style={{ minHeight: "60vh", maxWidth: "60vh" }}
+    rowSpacing={2}
   >
     <Grid item xs={12}>
       <TextField
@@ -30,6 +31,7 @@ const Education = ({
         id="standard-required"
         placeholder="School"
         variant="standard"
+        fullWidth
         value={values.school}
         onChange={(e) => setSchool(e.target.value)}
       />
@@ -40,6 +42,7 @@ const Education = ({
         id="standard-required"
         placeholder="Degree"
         variant="standard"
+        fullWidth
         value={values.degree}
         onChange={(e) => setDegree(e.target.value)}
       />
@@ -50,34 +53,40 @@ const Education = ({
         id="standard-required"
         placeholder="Program"
         variant="standard"
+        fullWidth
         value={values.program}
         onChange={(e) => setProgram(e.target.value)}
       />
     </Grid>
-    <Grid item xs={12}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Start Date"
-          value={values.startDateEdu}
-          onChange={(newValue) => {
-            setStartDateEdu(newValue);
-          }}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="End Date"
-          value={values.endDateEdu}
-          onChange={(newValue) => {
-            setEndDateEdu(newValue);
-          }}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
+    <Grid item xs={18} container spacing={10}>
+      <Grid item xs={6}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Start Date"
+            value={values.startDateEdu}
+            onChange={(newValue) => {
+              setStartDateEdu(newValue);
+            }}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+      </Grid>
+      <Grid item xs={6}>
+        <Grid container direction="row-reverse">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="End Date"
+              value={values.endDateEdu}
+              onChange={(newValue) => {
+                setEndDateEdu(newValue);
+              }}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </Grid>
+      </Grid>
     </Grid>
     <Grid item xs={12}>
       <TextField
@@ -87,6 +96,8 @@ const Education = ({
         rows={6}
         value={values.courses}
         onChange={(e) => setCourses(e.target.value)}
+        fullWidth
+        style={{ backgroundColor: "white" }}
       />
     </Grid>
   </Grid>

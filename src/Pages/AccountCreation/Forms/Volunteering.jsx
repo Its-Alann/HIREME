@@ -13,13 +13,12 @@ const Volunteering = ({
   values,
 }) => (
   <Grid
+    id="formGrid"
     container
-    spacing={0}
     textAlign="center"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: "30vh" }}
-    rowSpacing={1}
+    style={{ minHeight: "45vh", maxWidth: "60vh" }}
   >
     <Grid item xs={12}>
       <TextField
@@ -28,10 +27,11 @@ const Volunteering = ({
         variant="standard"
         value={values.organization}
         onChange={(e) => setOrganization(e.target.value)}
+        fullWidth
       />
     </Grid>
 
-    <Grid item xs={12}>
+    <Grid item xs={12} container justify="flex" alignItems="center">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Start Date"
@@ -45,7 +45,7 @@ const Volunteering = ({
       </LocalizationProvider>
     </Grid>
 
-    <Grid>
+    <Grid item xs={12}>
       <TextField
         id="outlined-multiline-static"
         label="Description"
@@ -53,6 +53,8 @@ const Volunteering = ({
         rows={6}
         value={values.voluntDesc}
         onChange={(e) => setVoluntDesc(e.target.value)}
+        fullWidth
+        style={{ backgroundColor: "white" }}
       />
     </Grid>
   </Grid>
