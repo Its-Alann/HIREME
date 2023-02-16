@@ -5,9 +5,10 @@ import {
   getFirestore,
   getDoc,
   onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { Grid, Box, TextField, Avatar, Stack } from "@mui/material";
+import { Grid, Box, TextField, Avatar, Stack, Button } from "@mui/material";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
 import ExperienceCard from "../../Components/ProfileCards/ExperienceCard";
@@ -20,14 +21,21 @@ import { app, auth } from "../../Firebase/firebase";
 
 const EditProfile = () => {
   const something = "";
+
+  // Set default value, because otherwise UI glitch + warning
   const [profile, setProfile] = useState({
     values: {
       city: "Night city",
+      firstName: "temp first name",
+      lastName: "temp last name",
+      school: "temp school",
+      country: "temp country",
     },
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
 
+  // Only once, attach listener to onAuthStateChanged
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -38,6 +46,8 @@ const EditProfile = () => {
     });
   }, []);
 
+  // Whenever currentUserEmail or database changes, get user's profile from database
+  // Save it to profile
   useEffect(() => {
     async function fetchData() {
       if (currentUserEmail != null) {
@@ -60,15 +70,26 @@ const EditProfile = () => {
     fetchData();
   }, [currentUserEmail, database]);
 
+  // Whenever profile changes, log profile
   useEffect(() => {
     console.log("User Profile");
     console.log(profile);
   }, [profile]);
 
+  // Update user's profile with data inside "profile"
+  async function handleTempButton() {
+    console.log(profile);
+    if (currentUserEmail != null) {
+      const userProfileDocRef = doc(database, "userProfiles", currentUserEmail);
+      await updateDoc(userProfileDocRef, profile);
+      console.log("Update finished");
+    }
+  }
+
   return (
     <div>
       <Grid container>
-        <Grid item md="3">
+        <Grid item md={3}>
           <Grid container my={5}>
             <Avatar
               alt="Remy Sharp"
@@ -77,7 +98,7 @@ const EditProfile = () => {
             />
           </Grid>
         </Grid>
-        <Grid item md="9" margin="auto">
+        <Grid item md={9} margin="auto">
           <Grid container direction="column">
             <Grid container>
               <Grid container>
@@ -86,6 +107,7 @@ const EditProfile = () => {
                     id="standard-basic"
                     label="First Name"
                     variant="standard"
+                    value={profile.values.firstName}
                   />
                 </Grid>
                 <Grid item mx={5}>
@@ -93,6 +115,7 @@ const EditProfile = () => {
                     id="standard-basic"
                     label="Last Name"
                     variant="standard"
+                    value={profile.values.lastName}
                   />
                 </Grid>
               </Grid>
@@ -102,6 +125,7 @@ const EditProfile = () => {
                     id="standard-basic"
                     label="School Name"
                     variant="standard"
+                    value={profile.values.school}
                   />
                 </Grid>
               </Grid>
@@ -111,6 +135,7 @@ const EditProfile = () => {
                     id="standard-basic"
                     label="City"
                     variant="standard"
+                    value={profile.values.city}
                   />
                 </Grid>
                 <Grid item mx={5}>
@@ -118,6 +143,7 @@ const EditProfile = () => {
                     id="standard-basic"
                     label="Country"
                     variant="standard"
+                    value={profile.values.country}
                   />
                 </Grid>
               </Grid>
@@ -134,6 +160,14 @@ const EditProfile = () => {
         <ProjectsCard />
         <VolunteeringCard />
         <AwardsCard /> */}
+        <Button
+          onClick={() => {
+            console.log("Button Save Clicked");
+            handleTempButton();
+          }}
+        >
+          Temp Button, click to save
+        </Button>
       </Stack>
     </div>
   );
