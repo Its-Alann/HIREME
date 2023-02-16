@@ -10,8 +10,18 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
 
   const getDates = async () => {
     if (profile.values.startDateEdu && profile.values.endDateEdu) {
-      setStartYear(await profile.values.startDateEdu.toDate().getFullYear());
-      setEndYear(await profile.values.endDateEdu.toDate().getFullYear());
+      setStartYear(
+        await profile.values.startDateEdu.toDate().toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        })
+      );
+      setEndYear(
+        await profile.values.endDateEdu.toDate().toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        })
+      );
     }
   };
 
