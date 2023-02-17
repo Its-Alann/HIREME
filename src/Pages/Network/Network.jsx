@@ -9,8 +9,8 @@ import { Route, Link, Routes } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import Navbar from "../../Components/Navbar/Navbar";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
-import { AcceptInvitation } from "./Invitation/AcceptInvitation";
 import { SentInvitation } from "./Invitation/SentInvitation";
+import { ReceivedInvitation } from "./Invitation/ReceivedInvitation";
 
 const theme = createTheme();
 
@@ -45,14 +45,9 @@ export const Network = () => {
               onChange={handleChange}
               aria-label="nav tabs example"
             >
-              <LinkTab
-                label="My Network"
-                value={0}
-                href="/myNetwork"
-                component={Link}
-              />
-              <Tab label="Invitations" value={1} />
-              <Tab label="Sent Requests" value={2} />
+              <LinkTab label="My Network" value={0} />
+              <Tab label="Received Invitations" value={1} />
+              <Tab label="Sent Invitation" value={2} />
             </Tabs>
           </Box>
 
@@ -61,7 +56,7 @@ export const Network = () => {
           </Box>
 
           <Box sx={{ p: 3 }} hidden={value !== 1}>
-            <AcceptInvitation />
+            <ReceivedInvitation />
           </Box>
 
           <Box sx={{ p: 3 }} hidden={value !== 2}>

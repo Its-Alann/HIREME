@@ -6,31 +6,31 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { AcceptInvitationCard } from "../../../Components/Network/AcceptInvitationCard";
+import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 
 const theme = createTheme();
 
-export const AcceptInvitation = () => {
-  const [acceptInvitations, setAcceptInvitations] = useState([]);
+export const ReceivedInvitation = () => {
+  const [receivedInvitations, setReceivedInvitations] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
-        const getAcceptedInvitationUsers = async () => {
+        const getReceivedInvitationUsers = async () => {
           // READ DATA
           try {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
-            setAcceptInvitations(userData.requestUsers);
+            setReceivedInvitations(userData.requestUsers);
             //console.log(userData.requestUsers);
           } catch (err) {
             console.error(err);
           }
         };
-        getAcceptedInvitationUsers();
+        getReceivedInvitationUsers();
       } else {
         //take you back to the homepage
         //console.log("2:", user);
@@ -52,10 +52,10 @@ export const AcceptInvitation = () => {
               justifyContent="center"
               alignItems="center"
             >
-              {acceptInvitations.map((acceptInvitationUserID) => (
+              {receivedInvitations.map((receivedInvitationUserID) => (
                 <Grid item>
-                  <AcceptInvitationCard
-                    requestedUserID={acceptInvitationUserID}
+                  <ReceivedInvitationCard
+                    requestedUserID={receivedInvitationUserID}
                     currentUser={currentUser.email}
                   />
                 </Grid>
@@ -68,4 +68,4 @@ export const AcceptInvitation = () => {
   );
 };
 
-export default AcceptInvitation;
+export default ReceivedInvitation;
