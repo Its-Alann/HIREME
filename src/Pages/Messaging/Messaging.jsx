@@ -29,8 +29,9 @@ import NewConvo from "../../Components/NewConvo/NewConvo";
 const theme = createTheme({
   palette: {
     primary: { main: "#2B2F90" },
+    secondary: { main: "#CAF0F8" },
     background: { main: "#EAEAEA" },
-    gray: { main: "#757575" },
+    gray: { main: "#D9D9D9" },
   },
   typography: {
     fontFamily: ["Proxima Nova"],
