@@ -49,7 +49,7 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
 
     try {
       await updateDoc(sentInvitationRequestRef, {
-        sentRequests: arrayRemove(userID),
+        sentInvitations: arrayRemove(userID),
       });
       window.location.reload();
     } catch (error) {

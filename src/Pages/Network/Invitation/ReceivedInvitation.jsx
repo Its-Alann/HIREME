@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Typography } from "@mui/material";
 import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 
@@ -24,8 +25,8 @@ export const ReceivedInvitation = () => {
           try {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
-            setReceivedInvitations(userData.requestUsers);
-            //console.log(userData.requestUsers);
+            setReceivedInvitations(userData.receivedInvitations);
+            //console.log(receivedInvitations);
           } catch (err) {
             console.error(err);
           }
@@ -52,10 +53,10 @@ export const ReceivedInvitation = () => {
               justifyContent="center"
               alignItems="center"
             >
-              {receivedInvitations.map((receivedInvitationUserID) => (
+              {receivedInvitations.map((requestedUserID) => (
                 <Grid item>
                   <ReceivedInvitationCard
-                    requestedUserID={receivedInvitationUserID}
+                    receivedInvitationUserID={requestedUserID}
                     currentUser={currentUser.email}
                   />
                 </Grid>

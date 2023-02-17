@@ -34,16 +34,20 @@ const ColorButtonBlueGray = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const ReceivedInvitationCard = ({ requestedUserID, currentUser }) => {
-  const [requestedUser, setRequestedUser] = useState([]);
+export const ReceivedInvitationCard = ({
+  receivedInvitationUserID,
+  currentUser,
+}) => {
+  const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
 
   useEffect(() => {
     const getAcceptInvitationUsers = async () => {
       try {
-        //console.log(userID);
-        const docSnap = await getDoc(doc(db, "userProfiles", requestedUserID));
+        const docSnap = await getDoc(
+          doc(db, "userProfiles", receivedInvitationUserID)
+        );
         const userData = docSnap.data();
-        setRequestedUser(userData);
+        setReceivedInvitationUser(userData);
       } catch (err) {
         console.log(err);
       }
@@ -55,11 +59,10 @@ export const ReceivedInvitationCard = ({ requestedUserID, currentUser }) => {
   const ignoreInvite = async () => {
     // 1. remove user from invitations.requestUsers collection
     // 2. refresh page to remove user card
-    const requestInvitationRequestRef = doc(db, "invitations", currentUser);
-    //console.log(requestedUserID);
+    const receivedInvitationRef = doc(db, "invitations", currentUser);
     try {
-      await updateDoc(requestInvitationRequestRef, {
-        requestUsers: arrayRemove(requestedUserID),
+      await updateDoc(receivedInvitationRef, {
+        receivedInvitations: arrayRemove(receivedInvitationUserID),
       });
       window.location.reload();
     } catch (error) {
@@ -71,16 +74,15 @@ export const ReceivedInvitationCard = ({ requestedUserID, currentUser }) => {
     // 1. add user to network collection
     // 2. remove them from the invitations.requestUsers collection
     // 3. refresh the page to remove user card
-    const requestInvitationRequestRef = doc(db, "invitations", currentUser);
+    const receivedInvitationRef = doc(db, "invitations", currentUser);
     const currentUserNetworkRef = doc(db, "network", currentUser);
-    //console.log(requestedUserID);
     try {
-      await updateDoc(requestInvitationRequestRef, {
-        requestUsers: arrayRemove(requestedUserID),
+      await updateDoc(receivedInvitationRef, {
+        receivedInvitations: arrayRemove(receivedInvitationUserID),
       });
 
       await updateDoc(currentUserNetworkRef, {
-        connectedUsers: arrayUnion(requestedUserID),
+        connectedUsers: arrayUnion(receivedInvitationUserID),
       });
       window.location.reload();
     } catch (error) {
@@ -99,21 +101,21 @@ export const ReceivedInvitationCard = ({ requestedUserID, currentUser }) => {
                 <Avatar
                   aria-label="user"
                   sx={{ width: 56, height: 56 }}
-                  src={requestedUser.values.image}
+                  src={receivedInvitationUser.values.image}
                 />
               }
               //title will be the user's name and subheader is their bio
               title={
-                requestedUser.values.firstName !== "" &&
-                requestedUser.values.lastName !== ""
-                  ? `${requestedUser.values.firstName} ${requestedUser.values.lastName}`
+                receivedInvitationUser.values.firstName !== "" &&
+                receivedInvitationUser.values.lastName !== ""
+                  ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
                   : "No name"
               }
               subheader={
                 //remove != null when incomplete users are removed
-                requestedUser.values.description !== "" &&
-                requestedUser.values.description != null
-                  ? `${requestedUser.values.description}`
+                receivedInvitationUser.values.description !== "" &&
+                receivedInvitationUser.values.description != null
+                  ? `${receivedInvitationUser.values.description}`
                   : "No bio"
               }
             />
@@ -137,7 +139,7 @@ export const ReceivedInvitationCard = ({ requestedUserID, currentUser }) => {
 };
 
 ReceivedInvitationCard.propTypes = {
-  requestedUserID: PropTypes.string.isRequired,
+  receivedInvitationUserID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
 
