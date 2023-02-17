@@ -10,19 +10,23 @@ import {
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
   const [editButton, setEditButton] = useState(false);
   const [bday, setBday] = useState();
 
   const getBday = async () => {
-    if (profile.values.dob)
+    if (profile.values)
       setBday(
-        await profile.values.dob.toDate().toLocaleString("en-US", {
-          month: "long",
-          day: "2-digit",
-          year: "numeric",
-        })
+        await profile.values.dob
+        // await profile.values.dob.toDate().toLocaleString("en-US", {
+        //   month: "long",
+        //   day: "2-digit",
+        //   year: "numeric",
+        // })
       );
   };
 
@@ -59,55 +63,110 @@ const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2">
-                {editButton === false ? (
-                  `Email: ${currentUserEmail}`
-                ) : (
-                  <TextField
-                    id="standard-basic"
-                    variant="standard"
-                    size="small"
-                    value={currentUserEmail}
-                  />
-                )}
-              </Typography>
+              <TextField
+                label="Phone number"
+                variant="standard"
+                size="small"
+                value={profile.values.phoneNumber}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, phoneNumber: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
             <Grid item>
-              <Typography variant="body2">
-                {" "}
-                Phone: {profile.values.phoneNumber}{" "}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">
-                {" "}
-                Address: {profile.values.address}
-              </Typography>
+              <TextField
+                label="Address"
+                variant="standard"
+                size="small"
+                value={profile.values.address}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, address: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2">
-                {" "}
-                City: {profile.values.city}
-              </Typography>
+              <TextField
+                label="City"
+                variant="standard"
+                size="small"
+                value={profile.values.city}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, city: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
             <Grid item>
-              <Typography variant="body2">
-                {" "}
-                Country: {profile.values.country}{" "}
-              </Typography>
+              <TextField
+                label="Country"
+                variant="standard"
+                size="small"
+                value={profile.values.country}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, country: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
             <Grid item>
-              <Typography variant="body2">
-                {" "}
-                Postal Code: {profile.values.postalCode}{" "}
-              </Typography>
+              <TextField
+                label="Postal Code"
+                variant="standard"
+                size="small"
+                value={profile.values.postalCode}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, postalCode: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="body2"> Birthday: {bday} </Typography>
-          </Grid>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Date of Birth"
+              value={bday && bday}
+              onChange={(newValue) => {
+                setProfile({
+                  values: { ...profile.values, dob: newValue && newValue.$d },
+                });
+              }}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              renderInput={(params) => <TextField {...params} />}
+              InputProps={{
+                readOnly: !editButton,
+                error: editButton,
+              }}
+            />
+          </LocalizationProvider>
         </CardContent>
       </Card>
     </Box>
