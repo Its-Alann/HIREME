@@ -15,7 +15,12 @@
 } */
 
 .messaging-container {
-  /* border: solid red 3px; */
+  /* border: solid red 3px;  */
+  /* m: "auto";
+  mt: 2;
+  maxWidth: 1000;
+  background-color: "red";
+  height: `calc(95vh - ${theme.mixins.toolbar.minHeight}px - 16px)`;
 }
 
 .message-sidebar {
