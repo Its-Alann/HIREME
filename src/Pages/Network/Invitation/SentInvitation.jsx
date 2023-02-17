@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Typography } from "@mui/material";
 import { SentInvitationCard } from "../../../Components/Network/SentInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 
@@ -45,23 +46,27 @@ export const SentInvitation = () => {
         <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
+            {sentRequestsUserID.length > 0 && sentRequestsUserID != null ? (
+              <Grid
+                container
+                spacing={3}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {sentRequestsUserID.map((userID) => (
+                  <Grid item>
+                    <SentInvitationCard
+                      userID={userID}
+                      currentUser={currentUser.email}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Typography>No sent invitations :/</Typography>
+            )}
             {/*The array will contain all the connected users*/}
-            <Grid
-              container
-              spacing={3}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              {sentRequestsUserID.map((userID) => (
-                <Grid item>
-                  <SentInvitationCard
-                    userID={userID}
-                    currentUser={currentUser.email}
-                  />
-                </Grid>
-              ))}
-            </Grid>
           </Box>
         </Container>
       </ThemeProvider>

@@ -26,7 +26,7 @@ export const ReceivedInvitation = () => {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
             setReceivedInvitations(userData.receivedInvitations);
-            //console.log(receivedInvitations);
+            console.log(receivedInvitations);
           } catch (err) {
             console.error(err);
           }
@@ -46,22 +46,26 @@ export const ReceivedInvitation = () => {
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
             {/*The array will contain all the connected users*/}
-            <Grid
-              container
-              spacing={3}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              {receivedInvitations.map((requestedUserID) => (
-                <Grid item>
-                  <ReceivedInvitationCard
-                    receivedInvitationUserID={requestedUserID}
-                    currentUser={currentUser.email}
-                  />
-                </Grid>
-              ))}
-            </Grid>
+            {receivedInvitations.length > 0 && receivedInvitations != null ? (
+              <Grid
+                container
+                spacing={3}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {receivedInvitations.map((requestedUserID) => (
+                  <Grid item>
+                    <ReceivedInvitationCard
+                      receivedInvitationUserID={requestedUserID}
+                      currentUser={currentUser.email}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Typography>No received invitations yet :/</Typography>
+            )}
           </Box>
         </Container>
       </ThemeProvider>
