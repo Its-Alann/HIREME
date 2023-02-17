@@ -45,12 +45,18 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
     //console.log(5);
     //console.log(currentUser);
     //console.log(userID);
-    const sentInvitationRequestRef = doc(db, "invitations", currentUser);
+    const currentUserInvitationRed = doc(db, "invitations", currentUser);
+    const userReceivedInvitationRef = doc(db, "invitations", userID);
 
     try {
-      await updateDoc(sentInvitationRequestRef, {
+      await updateDoc(currentUserInvitationRed, {
         sentInvitations: arrayRemove(userID),
       });
+
+      await updateDoc(userReceivedInvitationRef, {
+        receivedInvitations: arrayRemove(currentUser),
+      });
+
       window.location.reload();
     } catch (error) {
       console.log(error);
