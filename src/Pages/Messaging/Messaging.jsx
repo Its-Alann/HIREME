@@ -171,11 +171,11 @@ const Messaging = () => {
                 p: 0,
               }}
             >
-              <Grid>
+              <Box component={Grid} sx={{ boxShadow: "0 4px 4px -4px gray" }}>
                 <Typography color="primary" variant="h4">
                   Messaging
                 </Typography>
-              </Grid>
+              </Box>
               <Grid
                 className="convo-list"
                 sx={{
@@ -229,17 +229,20 @@ const Messaging = () => {
                 <Avatar alt="sumn random" src="https://picsum.photos/200/300" />
               </div>
 
-              <Grid
+              <Box
+                component={Grid}
                 sx={{
                   // border: "black solid 1px",
                   // bgcolor: "aqua",
                   height: "85%",
                   overflow: "auto",
                   p: 0,
+                  boxShadow: "inset 0 0 -4px gray",
                 }}
+                boxShadow="0 8px 6px -6px black"
               >
                 <MessageList messages={messages} />
-              </Grid>
+              </Box>
               {/* <Grid container style={{ padding: "20px" }}>
                 <Grid item xs={12} align="right"> */}
               <SendChat

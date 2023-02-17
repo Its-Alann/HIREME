@@ -88,11 +88,11 @@ const SendChat = ({ conversationID, myUser }) => {
   };
 
   return (
-    <Grid container style={{ padding: "20px" }}>
-      <Grid item xs={1} align="center">
+    <Grid container style={{}}>
+      <Grid item xs={2} align="center">
         <FileUpload onFileChange={onFileChange} onFileUpload={onFileUpload} />
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs>
         <TextField
           id="outlined-basic-email"
           label="Type Something"
@@ -102,7 +102,7 @@ const SendChat = ({ conversationID, myUser }) => {
         />
       </Grid>
 
-      <Grid item xs={1} align="right">
+      <Grid item xs={2} align="right">
         <Fab
           color="secondary"
           aria-label="add"
