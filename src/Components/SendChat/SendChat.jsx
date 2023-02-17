@@ -88,7 +88,7 @@ const SendChat = ({ conversationID, myUser }) => {
   };
 
   return (
-    <Grid container style={{}}>
+    <Grid container sx={{ minHeight: 20 }}>
       <Grid item xs={2} align="center">
         <FileUpload onFileChange={onFileChange} onFileUpload={onFileUpload} />
       </Grid>

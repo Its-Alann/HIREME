@@ -21,19 +21,12 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
       </Box>
 
       <Box
-        // style={{
-        //   backgroundColor: alignment === "right" ? "yellow" : "lime",
-        //   width: "fit-content",
-        //   maxWidth: "100%",
-        //   padding: "12px",
-        //   borderRadius: "16px",
-        // }}
         sx={{
           bgcolor: alignment === "right" ? "secondary.main" : "gray.main",
           width: "fit-content",
           maxWidth: "100%",
           p: 1.5,
-          borderRadius: 4,
+          borderRadius: 3,
         }}
       >
         <ListItemText

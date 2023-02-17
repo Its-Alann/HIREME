@@ -162,7 +162,6 @@ const Messaging = () => {
             }}
           >
             <Grid
-              item
               className="message-sidebar"
               xs
               sx={{
@@ -184,8 +183,8 @@ const Messaging = () => {
                 sx={{
                   overflow: "auto",
                   // maxHeight: "calc(100% - 100px)",
-                  height: "85%",
-                  // bgcolor: "orange",
+                  height: "auto",
+                  bgcolor: "orange",
                 }}
               >
                 <List>
@@ -216,7 +215,6 @@ const Messaging = () => {
               </Grid>
             </Grid>
             <Grid
-              item
               className="message-view"
               xs={8}
               sx={{
@@ -227,7 +225,10 @@ const Messaging = () => {
                 maxHeight: "100%",
               }}
             >
-              <div className="message-view-banner">
+              <div
+                className="message-view-banner"
+                style={{ maxHeight: "64px" }}
+              >
                 <Typography variant="h4">{name}</Typography>
                 <Avatar alt="sumn random" src="https://picsum.photos/200/300" />
               </div>
@@ -236,8 +237,8 @@ const Messaging = () => {
                 component={Grid}
                 sx={{
                   // border: "black solid 1px",
-                  // bgcolor: "aqua",
-                  height: "85%",
+                  bgcolor: "aqua",
+                  height: "calc(100% - 64px - 56px)",
                   overflow: "auto",
                   p: 0,
                   boxShadow: "inset 0 0 -4px gray",
@@ -246,14 +247,15 @@ const Messaging = () => {
               >
                 <MessageList messages={messages} />
               </Box>
-              {/* <Grid container style={{ padding: "20px" }}>
-                <Grid item xs={12} align="right"> */}
-              <SendChat
-                color="primary"
-                conversationID={convoId}
-                myUser={myUser}
-              />
-              {/* </Grid>
+              {/* {/* <Grid container style={{ padding: "20px" }}> */}
+              <Box item xs={12} align="right" sx={{ minHeight: 32 }}>
+                <SendChat
+                  color="primary"
+                  conversationID={convoId}
+                  myUser={myUser}
+                />
+              </Box>
+              {/* 
               </Grid> */}
             </Grid>
           </Grid>
