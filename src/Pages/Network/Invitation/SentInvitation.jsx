@@ -24,7 +24,7 @@ export const SentInvitation = () => {
           try {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
-            setSentRequestsUserID(userData.sentRequests);
+            setSentRequestsUserID(userData.sentInvitations);
             //console.log(userData.sentRequests);
           } catch (err) {
             console.error(err);
