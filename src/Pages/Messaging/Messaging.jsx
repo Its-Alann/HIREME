@@ -17,8 +17,10 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Box, IconButton, Drawer } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
 import "./Messaging.css";
@@ -52,6 +54,8 @@ const Messaging = () => {
   const [myUser, setMyUser] = useState("");
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const mediaMobile = useMediaQuery("only screen and (max-width: 600px)");
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
@@ -171,6 +175,8 @@ const Messaging = () => {
                 maxHeight: "100%",
                 // overflow: "auto",
                 p: 0,
+                display:
+                  mediaMobile && selectedIndex > -1 ? "none" : "inline-block",
               }}
             >
               <Box component={Grid} sx={{ boxShadow: "0 4px 4px -4px gray" }}>
@@ -216,19 +222,32 @@ const Messaging = () => {
             </Grid>
             <Grid
               className="message-view"
-              xs={8}
+              sm={8}
+              xs={12}
               sx={{
                 bgcolor: "white",
                 borderRadius: 2,
-                ml: 2,
+                ml: mediaMobile ? 0 : 2,
                 p: 0,
                 maxHeight: "100%",
+                display: mediaMobile && selectedIndex < 0 ? "none" : null,
               }}
             >
               <div
                 className="message-view-banner"
                 style={{ maxHeight: "64px" }}
               >
+                {mediaMobile && (
+                  <IconButton
+                    aria-label="back"
+                    onClick={() => {
+                      setSelectedIndex(-1);
+                    }}
+                  >
+                    <ChevronLeftIcon sx={{ color: "white" }} />
+                  </IconButton>
+                )}
+
                 <Typography variant="h4">{name}</Typography>
                 <Avatar alt="sumn random" src="https://picsum.photos/200/300" />
               </div>
@@ -237,13 +256,12 @@ const Messaging = () => {
                 component={Grid}
                 sx={{
                   // border: "black solid 1px",
-                  bgcolor: "aqua",
+                  bgcolor: "white",
                   height: "calc(100% - 64px - 56px)",
                   overflow: "auto",
                   p: 0,
-                  boxShadow: "inset 0 0 -4px gray",
+                  borderBottom: "solid 1px gray",
                 }}
-                boxShadow="0 8px 6px -6px black"
               >
                 <MessageList messages={messages} />
               </Box>
