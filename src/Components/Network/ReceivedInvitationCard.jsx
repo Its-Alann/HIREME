@@ -59,12 +59,26 @@ export const ReceivedInvitationCard = ({
   const ignoreInvite = async () => {
     // 1. remove user from invitations.requestUsers collection
     // 2. refresh page to remove user card
-    const receivedInvitationRef = doc(db, "invitations", currentUser);
+    const currentUserReceivedInvitationsRef = doc(
+      db,
+      "invitations",
+      currentUser
+    );
+    const userSentInvitationRef = doc(
+      db,
+      "invitations",
+      receivedInvitationUserID
+    );
 
     try {
-      await updateDoc(receivedInvitationRef, {
+      await updateDoc(currentUserReceivedInvitationsRef, {
         receivedInvitations: arrayRemove(receivedInvitationUserID),
       });
+
+      await updateDoc(userSentInvitationRef, {
+        sentInvitations: arrayRemove(currentUser),
+      });
+
       window.location.reload();
     } catch (error) {
       console.log(error);
