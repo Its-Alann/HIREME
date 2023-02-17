@@ -57,7 +57,7 @@ export const SentInvitation = () => {
                 <Grid item>
                   <SentInvitationCard
                     userID={userID}
-                    currentUser={currentUser}
+                    currentUser={currentUser.email}
                   />
                 </Grid>
               ))}

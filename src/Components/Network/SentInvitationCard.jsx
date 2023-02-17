@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc, deleteField } from "firebase/firestore";
+import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
@@ -38,12 +38,20 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
     getSentRequestUsers();
   }, []);
 
-  const withdraw = async () => {
+  const withdrawInvitation = async () => {
     // 1. remove user from invitations.sentRequest
     // 2. remove user card
-    const sentUserRequestRef = doc(db, "invitations", currentUser);
+
+    //console.log(5);
+    //console.log(currentUser);
+    //console.log(userID);
+    const sentInvitationRequestRef = doc(db, "invitations", currentUser);
+
     try {
-      console.log(5);
+      await updateDoc(sentInvitationRequestRef, {
+        sentRequests: arrayRemove(userID),
+      });
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +90,7 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
             <Box display="flex" justifyContent="center">
               <CardActions>
                 {/*view profile will go to the user's profile and message will be sent to the */}
-                <ColorButtonBlue size="medium" onClick={withdraw}>
+                <ColorButtonBlue size="medium" onClick={withdrawInvitation}>
                   Withdraw
                 </ColorButtonBlue>
               </CardActions>
