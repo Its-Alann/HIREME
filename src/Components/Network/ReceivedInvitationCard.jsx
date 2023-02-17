@@ -34,7 +34,7 @@ const ColorButtonBlueGray = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const AcceptInvitationCard = ({ requestedUserID, currentUser }) => {
+export const ReceivedInvitationCard = ({ requestedUserID, currentUser }) => {
   const [requestedUser, setRequestedUser] = useState([]);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export const AcceptInvitationCard = ({ requestedUserID, currentUser }) => {
     // 1. remove user from invitations.requestUsers collection
     // 2. refresh page to remove user card
     const requestInvitationRequestRef = doc(db, "invitations", currentUser);
-    console.log(requestedUserID);
+    //console.log(requestedUserID);
     try {
       await updateDoc(requestInvitationRequestRef, {
         requestUsers: arrayRemove(requestedUserID),
@@ -73,7 +73,7 @@ export const AcceptInvitationCard = ({ requestedUserID, currentUser }) => {
     // 3. refresh the page to remove user card
     const requestInvitationRequestRef = doc(db, "invitations", currentUser);
     const currentUserNetworkRef = doc(db, "network", currentUser);
-    console.log(requestedUserID);
+    //console.log(requestedUserID);
     try {
       await updateDoc(requestInvitationRequestRef, {
         requestUsers: arrayRemove(requestedUserID),
@@ -136,9 +136,9 @@ export const AcceptInvitationCard = ({ requestedUserID, currentUser }) => {
   );
 };
 
-AcceptInvitationCard.propTypes = {
+ReceivedInvitationCard.propTypes = {
   requestedUserID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
 
-export default AcceptInvitationCard;
+export default ReceivedInvitationCard;
