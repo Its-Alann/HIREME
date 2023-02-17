@@ -50,6 +50,8 @@ const Messaging = () => {
 
   const [myUser, setMyUser] = useState("");
 
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
   // get all names of user's receivers
   const getAllReceivers = async () => {
     setChatProfiles([]);
@@ -185,20 +187,20 @@ const Messaging = () => {
                   // bgcolor: "orange",
                 }}
               >
-                {/* //do list later */}
                 <List>
                   {chatProfiles.map((chat, i) => (
                     <ListItem
-                      // style={{ backgroundColor: "#807e7e8c" }}
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
                       button
+                      selected={selectedIndex === i}
                       onClick={async () => {
                         setConvoId(
                           await getConversationId([...chat.emails, myUser])
                         );
                         setName(chat.names);
+                        setSelectedIndex(i);
                       }}
                     >
                       <Typography
