@@ -60,6 +60,7 @@ export const ReceivedInvitationCard = ({
     // 1. remove user from invitations.requestUsers collection
     // 2. refresh page to remove user card
     const receivedInvitationRef = doc(db, "invitations", currentUser);
+
     try {
       await updateDoc(receivedInvitationRef, {
         receivedInvitations: arrayRemove(receivedInvitationUserID),
@@ -71,18 +72,39 @@ export const ReceivedInvitationCard = ({
   };
 
   const acceptInvite = async () => {
-    // 1. add user to network collection
-    // 2. remove them from the invitations.requestUsers collection
-    // 3. refresh the page to remove user card
-    const receivedInvitationRef = doc(db, "invitations", currentUser);
+    //curent user references
+    const currentUserInvitationRef = doc(db, "invitations", currentUser);
     const currentUserNetworkRef = doc(db, "network", currentUser);
+
+    // sent/received invitation user reference
+    const userSentInvitiationRef = doc(
+      db,
+      "invitations",
+      receivedInvitationUserID
+    );
+    const userSentInvitationNetworkRef = doc(
+      db,
+      "network",
+      receivedInvitationUserID
+    );
+
     try {
-      await updateDoc(receivedInvitationRef, {
+      //remove received invitation from current user array
+      await updateDoc(currentUserInvitationRef, {
         receivedInvitations: arrayRemove(receivedInvitationUserID),
       });
-
+      //add user that sent the invitation to current user network
       await updateDoc(currentUserNetworkRef, {
         connectedUsers: arrayUnion(receivedInvitationUserID),
+      });
+
+      //remove current user from the sent invitation array of the user that send the invitation
+      await updateDoc(userSentInvitiationRef, {
+        sentInvitations: arrayRemove(currentUser),
+      });
+      //add current user that to the network of the user sent the invitation
+      await updateDoc(userSentInvitationNetworkRef, {
+        connectedUsers: arrayUnion(currentUser),
       });
       window.location.reload();
     } catch (error) {
