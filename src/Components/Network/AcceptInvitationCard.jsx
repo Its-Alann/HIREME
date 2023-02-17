@@ -9,7 +9,13 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blueGrey, blue } from "@mui/material/colors";
-import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  arrayRemove,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
@@ -65,6 +71,21 @@ export const AcceptInvitationCard = ({ requestedUserID, currentUser }) => {
     // 1. add user to network collection
     // 2. remove them from the invitations.requestUsers collection
     // 3. refresh the page to remove user card
+    const requestInvitationRequestRef = doc(db, "invitations", currentUser);
+    const currentUserNetworkRef = doc(db, "network", currentUser);
+    console.log(requestedUserID);
+    try {
+      await updateDoc(requestInvitationRequestRef, {
+        requestUsers: arrayRemove(requestedUserID),
+      });
+
+      await updateDoc(currentUserNetworkRef, {
+        connectedUsers: arrayUnion(requestedUserID),
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
