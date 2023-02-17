@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Typography } from "@mui/material";
 import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
 
@@ -44,19 +45,23 @@ export const ViewNetwork = () => {
         <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
-            <Grid
-              container
-              spacing={3}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              {connectedUsersId.map((connectedUserID) => (
-                <Grid item>
-                  <NetworkCards connectedUserID={connectedUserID} />
-                </Grid>
-              ))}
-            </Grid>
+            {connectedUsersId.length > 0 && connectedUsersId != null ? (
+              <Grid
+                container
+                spacing={3}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {connectedUsersId.map((connectedUserID) => (
+                  <Grid item>
+                    <NetworkCards connectedUserID={connectedUserID} />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Typography>No connections yet :/</Typography>
+            )}
           </Box>
         </Container>
       </ThemeProvider>
