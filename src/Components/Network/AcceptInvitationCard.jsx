@@ -9,14 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blueGrey, blue } from "@mui/material/colors";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  getDoc,
-  doc,
-} from "firebase/firestore";
+import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
@@ -35,7 +28,7 @@ const ColorButtonBlueGray = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const AcceptInvitationCard = ({ requestedUserID }) => {
+export const AcceptInvitationCard = ({ requestedUserID, currentUser }) => {
   const [requestedUser, setRequestedUser] = useState([]);
 
   useEffect(() => {
@@ -56,6 +49,16 @@ export const AcceptInvitationCard = ({ requestedUserID }) => {
   const ignoreInvite = async () => {
     // 1. remove user from invitations.requestUsers collection
     // 2. refresh page to remove user card
+    const requestInvitationRequestRef = doc(db, "invitations", currentUser);
+    console.log(requestedUserID);
+    try {
+      await updateDoc(requestInvitationRequestRef, {
+        requestUsers: arrayRemove(requestedUserID),
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const acceptInvite = async () => {
@@ -114,6 +117,7 @@ export const AcceptInvitationCard = ({ requestedUserID }) => {
 
 AcceptInvitationCard.propTypes = {
   requestedUserID: PropTypes.string.isRequired,
+  currentUser: PropTypes.string.isRequired,
 };
 
 export default AcceptInvitationCard;

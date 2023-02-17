@@ -13,10 +13,12 @@ const theme = createTheme();
 
 export const AcceptInvitation = () => {
   const [acceptInvitations, setAcceptInvitations] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        setCurrentUser(user);
         const getAcceptedInvitationUsers = async () => {
           // READ DATA
           try {
@@ -54,6 +56,7 @@ export const AcceptInvitation = () => {
                 <Grid item>
                   <AcceptInvitationCard
                     requestedUserID={acceptInvitationUserID}
+                    currentUser={currentUser.email}
                   />
                 </Grid>
               ))}
