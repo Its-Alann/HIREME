@@ -13,7 +13,7 @@ const MessageList = (props) => {
   return (
     <List>
       {props.messages.map((message, i) => (
-        <ListItem key={i}>
+        <ListItem key={i} style={{ align: "right" }}>
           <MessageListItem
             timestamp={message.timestamp.toDate()}
             content={message.content}

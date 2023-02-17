@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Avatar from "@material-ui/core/Avatar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   doc,
@@ -16,6 +17,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { Box, IconButton, Drawer } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
@@ -140,64 +142,117 @@ const Messaging = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
-      <Grid
-        style={{ backgroundColor: "#EAEAEA" }}
-        className="background-georgia"
-        container
-        component={Paper}
-        color="background"
-      >
-        <Grid item id="connection-list" style={{ flex: 0.7, padding: 30 }}>
-          <List className="sidebar-full">
-            <Typography color="primary" variant="h6">
-              Messaging
-            </Typography>
-            <NewConvo />
-            {chatProfiles.map((chat, i) => (
-              <ListItem
-                style={{ backgroundColor: "#807e7e8c" }}
-                className="sidebar-item"
-                // eslint-disable-next-line react/no-array-index-key
-                key={i}
-                button
-                onClick={async () => {
-                  setConvoId(await getConversationId([...chat.emails, myUser]));
-                  setName(chat.names);
+      <Box className="page" sx={{ height: "100vh" }}>
+        <Navbar />
+        <Box>
+          <Grid
+            container
+            className="messaging-container"
+            spacing={3}
+            sx={{
+              m: "auto",
+              mt: 2,
+              maxWidth: 1000,
+              bgcolor: "red",
+              height: `calc(95vh - ${theme.mixins.toolbar.minHeight}px - 16px)`,
+              // overflow: "hidden",
+            }}
+          >
+            <Grid
+              item
+              className="message-sidebar"
+              xs
+              sx={{
+                border: "black solid 1px",
+                bgcolor: "pink",
+                borderRadius: 2,
+                maxHeight: "100%",
+                // overflow: "auto",
+                p: 0,
+              }}
+            >
+              <Grid>
+                <Typography color="primary" variant="h4">
+                  Messaging
+                </Typography>
+              </Grid>
+              <Grid
+                className="convo-list"
+                sx={{
+                  overflow: "auto",
+                  // maxHeight: "calc(100% - 100px)",
+                  height: "85%",
+                  bgcolor: "orange",
                 }}
               >
-                <Typography sx={{ textTransform: "lowercase" }} variant="body1">
-                  {chat.names}
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-        <Grid
-          className="message-side-full"
-          item
-          style={{ flex: 3, padding: 30 }}
-        >
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography className="message-side-title" variant="h5">
-                Chat With {name}
-              </Typography>
+                {/* //do list later */}
+                <List>
+                  {chatProfiles.map((chat, i) => (
+                    <ListItem
+                      // style={{ backgroundColor: "#807e7e8c" }}
+                      className="sidebar-item"
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={i}
+                      button
+                      onClick={async () => {
+                        setConvoId(
+                          await getConversationId([...chat.emails, myUser])
+                        );
+                        setName(chat.names);
+                      }}
+                    >
+                      <Typography
+                        sx={{ textTransform: "lowercase" }}
+                        variant="body1"
+                      >
+                        {chat.names}
+                      </Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
             </Grid>
-          </Grid>
-          <MessageList messages={messages} />
-          <Divider />
-          <Grid container style={{ padding: "20px" }}>
-            <Grid item xs={12} align="right">
+            <Grid
+              item
+              className="message-view"
+              xs={8}
+              sx={{
+                bgcolor: "hotpink",
+                borderRadius: 2,
+                ml: 2,
+                p: 0,
+                maxHeight: "100%",
+              }}
+            >
+              <div className="message-view-banner">
+                <Typography variant="h4">{name}</Typography>
+                <Avatar alt="sumn random" src="https://picsum.photos/200/300" />
+              </div>
+
+              <Grid
+                sx={{
+                  border: "black solid 1px",
+                  bgcolor: "aqua",
+                  height: "85%",
+                  overflow: "auto",
+                  p: 0,
+                }}
+              >
+                <MessageList messages={messages} />
+              </Grid>
+              {/* <Grid container style={{ padding: "20px" }}>
+                <Grid item xs={12} align="right"> */}
               <SendChat
                 color="primary"
                 conversationID={convoId}
                 myUser={myUser}
               />
+              {/* </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 };
