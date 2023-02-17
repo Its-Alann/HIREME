@@ -57,6 +57,7 @@ const EditProfile = () => {
       awardTitle: "",
       issuer: "",
       dateAward: "",
+      awardDesc: "",
     },
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
