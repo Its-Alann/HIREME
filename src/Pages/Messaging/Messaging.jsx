@@ -153,7 +153,7 @@ const Messaging = () => {
               m: "auto",
               mt: 2,
               maxWidth: 1000,
-              bgcolor: "red",
+              // bgcolor: "red",
               height: `calc(95vh - ${theme.mixins.toolbar.minHeight}px - 16px)`,
               // overflow: "hidden",
             }}
@@ -163,8 +163,8 @@ const Messaging = () => {
               className="message-sidebar"
               xs
               sx={{
-                border: "black solid 1px",
-                bgcolor: "pink",
+                // border: "black solid 1px",
+                bgcolor: "white",
                 borderRadius: 2,
                 maxHeight: "100%",
                 // overflow: "auto",
@@ -182,7 +182,7 @@ const Messaging = () => {
                   overflow: "auto",
                   // maxHeight: "calc(100% - 100px)",
                   height: "85%",
-                  bgcolor: "orange",
+                  // bgcolor: "orange",
                 }}
               >
                 {/* //do list later */}
@@ -217,7 +217,7 @@ const Messaging = () => {
               className="message-view"
               xs={8}
               sx={{
-                bgcolor: "hotpink",
+                bgcolor: "white",
                 borderRadius: 2,
                 ml: 2,
                 p: 0,
@@ -231,8 +231,8 @@ const Messaging = () => {
 
               <Grid
                 sx={{
-                  border: "black solid 1px",
-                  bgcolor: "aqua",
+                  // border: "black solid 1px",
+                  // bgcolor: "aqua",
                   height: "85%",
                   overflow: "auto",
                   p: 0,

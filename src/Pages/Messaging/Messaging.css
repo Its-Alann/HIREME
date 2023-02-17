@@ -10,23 +10,6 @@
   }
 }
 
-/* .background-georgia {
-  background-color: #40c22f;
-} */
-
-.messaging-container {
-  /* border: solid red 3px;  */
-  /* m: "auto";
-  mt: 2;
-  maxWidth: 1000;
-  background-color: "red";
-  height: `calc(95vh - ${theme.mixins.toolbar.minHeight}px - 16px)`;
-}
-
-.message-sidebar {
-  /* max-height: 100%; */
-}
-
 .message-view-banner {
   background-color: #2b2f90;
   color: white;
