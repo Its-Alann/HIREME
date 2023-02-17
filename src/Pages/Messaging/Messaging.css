@@ -1,6 +1,12 @@
 @media only screen and (max-width: 800px) {
-  #connection-list {
+  .message-view {
     display: none;
+  }
+  .message-sidebar {
+    width: 100%;
+  }
+  .messaging-container {
+    height: 100%;
   }
 }
 
@@ -10,6 +16,19 @@
 
 .messaging-container {
   /* border: solid red 3px; */
+}
+
+.message-sidebar {
+  /* max-height: 100%; */
+}
+
+.message-view-banner {
+  background-color: #2b2f90;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
 }
 
 .sidebar-full {
