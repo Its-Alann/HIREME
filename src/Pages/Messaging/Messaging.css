@@ -1,9 +1,7 @@
-@media only screen and (max-width: 640px) {
-  .message-view {
-    display: none;
-  }
+@media only screen and (max-width: 600px) {
   .message-sidebar {
     width: 100%;
+    /* display: none; */
   }
   .messaging-container {
     height: 100%;
