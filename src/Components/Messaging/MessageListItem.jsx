@@ -18,7 +18,11 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
   // }, [auth]);
   const antinos = "🖖";
   return (
-    <Stack className="message-stack" container>
+    <Stack
+      className="message-stack"
+      container
+      alignItems={alignment === "right" ? "flex-end" : "flex-start"}
+    >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
         <ListItemText secondary={sender} align={alignment} />
       </Box>
@@ -26,6 +30,7 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
       <Box
         style={{
           backgroundColor: alignment === "right" ? "yellow" : "lime",
+          width: "fit-content",
           maxWidth: "100%",
           padding: "12px",
           borderRadius: "16px",
