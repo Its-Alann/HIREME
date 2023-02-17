@@ -190,7 +190,7 @@ const Messaging = () => {
                   overflow: "auto",
                   // maxHeight: "calc(100% - 100px)",
                   height: "auto",
-                  bgcolor: "orange",
+                  bgcolor: "white",
                 }}
               >
                 <List>

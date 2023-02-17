@@ -15,6 +15,7 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
       className="message-stack"
       container
       alignItems={alignment === "right" ? "flex-end" : "flex-start"}
+      sx={{ maxWidth: "100%" }}
     >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
         <ListItemText secondary={sender} align={alignment} />
