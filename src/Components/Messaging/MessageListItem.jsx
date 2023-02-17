@@ -9,13 +9,6 @@ import { Timestamp } from "firebase/firestore";
 // import { auth } from "../../Firebase/firebase";
 
 const MessageListItem = ({ content, sender, timestamp, alignment }) => {
-  // const [alignment, setAlignment] = React.useState("left");
-
-  // React.useEffect(() => {
-  //   if (auth.currentUser.email === sender) {
-  //     setAlignment("right");
-  //   }
-  // }, [auth]);
   const antinos = "🖖";
   return (
     <Stack
@@ -28,12 +21,19 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
       </Box>
 
       <Box
-        style={{
-          backgroundColor: alignment === "right" ? "yellow" : "lime",
+        // style={{
+        //   backgroundColor: alignment === "right" ? "yellow" : "lime",
+        //   width: "fit-content",
+        //   maxWidth: "100%",
+        //   padding: "12px",
+        //   borderRadius: "16px",
+        // }}
+        sx={{
+          bgcolor: alignment === "right" ? "secondary.main" : "gray.main",
           width: "fit-content",
           maxWidth: "100%",
-          padding: "12px",
-          borderRadius: "16px",
+          p: 1.5,
+          borderRadius: 4,
         }}
       >
         <ListItemText
