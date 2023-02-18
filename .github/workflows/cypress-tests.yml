@@ -12,6 +12,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          config-file: tests/cypress-config.json
+#          config-file: tests/cypress-config.json
           component: true
           
