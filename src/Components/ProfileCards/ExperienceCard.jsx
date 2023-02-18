@@ -1,26 +1,27 @@
 import { React, useEffect, useState } from "react";
-import { Grid, Box, Card, CardContent, Typography } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const ExperienceCard = ({ setProfile, profile, currentUserEmail }) => {
   const [startYear, setStartYear] = useState("");
   const [endYear, setEndYear] = useState("");
+  const [editButton, setEditButton] = useState(false);
 
   const getDates = async () => {
-    if (profile.values.startDateEdu && profile.values.endDateEdu) {
-      setStartYear(
-        await profile.values.startDateExp.toDate().toLocaleString("en-US", {
-          month: "long",
-          year: "numeric",
-        })
-      );
-      setEndYear(
-        await profile.values.endDateExp.toDate().toLocaleString("en-US", {
-          month: "long",
-          year: "numeric",
-        })
-      );
+    if (profile.values) {
+      setStartYear(await profile.values.startDateExp);
+      setEndYear(await profile.values.endDateExp);
     }
   };
 
@@ -37,37 +38,127 @@ const ExperienceCard = ({ setProfile, profile, currentUserEmail }) => {
               <Typography variant="h5"> Experience </Typography>
             </Grid>
             <Grid item>
-              <EditIcon />
+              <EditIcon
+                onClick={() => setEditButton(!editButton)}
+                style={{ cursor: "pointer" }}
+              />
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2">
-                {" "}
-                {profile.values.company}{" "}
-              </Typography>
+              <TextField
+                label="Company Name"
+                variant="standard"
+                size="small"
+                value={profile.values.company}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, company: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
             <Grid item>
-              <Typography variant="body2">
-                {" "}
-                {startYear} - {endYear}{" "}
-              </Typography>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={startYear && startYear}
+                  onChange={(newValue) => {
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        startDateExp: newValue && newValue.$d,
+                      },
+                    });
+                  }}
+                  // eslint-disable-next-line react/jsx-props-no-spreading
+                  renderInput={(params) => <TextField {...params} />}
+                  InputProps={{
+                    readOnly: !editButton,
+                    error: editButton,
+                  }}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="End Date"
+                  value={endYear && endYear}
+                  onChange={(newValue) => {
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        endDateExp: newValue && newValue.$d,
+                      },
+                    });
+                  }}
+                  // eslint-disable-next-line react/jsx-props-no-spreading
+                  renderInput={(params) => <TextField {...params} />}
+                  InputProps={{
+                    readOnly: !editButton,
+                    error: editButton,
+                  }}
+                />
+              </LocalizationProvider>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
-              <Typography variant="body2">
-                {profile.values.jobPosition}
-              </Typography>
+              <TextField
+                label="Job Position"
+                variant="standard"
+                size="small"
+                value={profile.values.jobPosition}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, jobPosition: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
             <Grid item>
-              <Typography variant="body2">{profile.values.location}</Typography>
+              <TextField
+                label="Location"
+                variant="standard"
+                size="small"
+                value={profile.values.location}
+                onChange={(e) =>
+                  setProfile({
+                    values: { ...profile.values, location: e.target.value },
+                  })
+                }
+                InputProps={{
+                  readOnly: !editButton,
+                  error: editButton,
+                }}
+              />
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="body2">
-              {profile.values.description}
-            </Typography>
+            <TextField
+              label="Job Description"
+              variant="standard"
+              size="small"
+              value={profile.values.description}
+              onChange={(e) =>
+                setProfile({
+                  values: { ...profile.values, description: e.target.value },
+                })
+              }
+              InputProps={{
+                readOnly: !editButton,
+                error: editButton,
+              }}
+            />
           </Grid>
         </CardContent>
       </Card>

@@ -1,10 +1,11 @@
-import React from "react";
+import { React, useState } from "react";
 import { Grid, Box, Card, CardContent, Typography, Chip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 
 const SkillsCard = ({ profile }) => {
   const skills = [profile.values.skills];
+  const [editButton, setEditButton] = useState(false);
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -14,9 +15,13 @@ const SkillsCard = ({ profile }) => {
               <Typography variant="h5"> Skills </Typography>
             </Grid>
             <Grid item>
-              <EditIcon />
+              <EditIcon
+                onClick={() => setEditButton(!editButton)}
+                style={{ cursor: "pointer" }}
+              />
             </Grid>
           </Grid>
+          {/* Would like to turn this into tags that can be deleted */}
           <Grid container spacing={1}>
             {skills.map((data) => (
               <Grid item>
