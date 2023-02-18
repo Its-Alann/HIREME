@@ -16,7 +16,6 @@ const MessageList = ({ messages }) => {
       {messages.map((message, i) => {
         const alignment =
           message.sender === auth.currentUser.email ? "right" : "left";
-        console.log(message.sender, alignment);
         return (
           <ListItem key={i} style={{ justifyContent: alignment }}>
             <MessageListItem

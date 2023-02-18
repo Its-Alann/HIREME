@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import Divider from "@material-ui/core/Divider";
@@ -53,9 +53,16 @@ const Messaging = () => {
 
   const [myUser, setMyUser] = useState("");
 
+  //tracks the convo in the sidebar
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
+  // true when on mobile
   const mediaMobile = useMediaQuery("only screen and (max-width: 600px)");
+
+  // ref to dummy div under messageLIst
+  const dummy = useRef();
+
+  const messageViewRef = useRef();
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
@@ -134,6 +141,10 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
+  const scrollToBottom = () => {
+    dummy.current.scrollIntoView({ behaviour: "smooth" });
+  };
+
   React.useEffect(() => {
     let unSub;
     if (convoId) {
@@ -146,6 +157,10 @@ const Messaging = () => {
   React.useEffect(() => {
     getAllReceivers();
   }, [myUser]);
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -207,6 +222,7 @@ const Messaging = () => {
                         );
                         setName(chat.names);
                         setSelectedIndex(i);
+                        scrollToBottom();
                       }}
                     >
                       <Typography
@@ -221,6 +237,7 @@ const Messaging = () => {
               </Grid>
             </Grid>
             <Grid
+              ref={messageViewRef}
               className="message-view"
               sm={8}
               xs={12}
@@ -264,6 +281,7 @@ const Messaging = () => {
                 }}
               >
                 <MessageList messages={messages} />
+                <div ref={dummy} />
               </Box>
               {/* {/* <Grid container style={{ padding: "20px" }}> */}
               <Box item xs={12} align="right" sx={{ minHeight: 32 }}>
