@@ -25,11 +25,39 @@ const EditProfile = () => {
   // Set default value, because otherwise UI glitch + warning
   const [profile, setProfile] = useState({
     values: {
-      city: "",
       firstName: "",
       lastName: "",
-      school: "",
+      phoneNumber: "",
+      address: "",
+      city: "",
       country: "",
+      postalCode: "",
+      dob: "",
+      school: "",
+      degree: "",
+      program: "",
+      startDateEdu: "",
+      endDateEdu: "",
+      courses: "",
+      company: "",
+      jobPosition: "",
+      location: "",
+      startDateExp: "",
+      endDateExp: "",
+      workingHere: "",
+      description: "",
+      skills: "",
+      language: "",
+      proficiency: "",
+      project: "",
+      projectDesc: "",
+      organization: "",
+      dateVolunt: "",
+      voluntDesc: "",
+      awardTitle: "",
+      issuer: "",
+      dateAward: "",
+      awardDesc: "",
     },
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
@@ -172,10 +200,10 @@ const EditProfile = () => {
           profile={profile}
           currentUserEmail={currentUserEmail}
         />
-        <LanguagesCard profile={profile} />
-        <ProjectsCard profile={profile} />
-        <VolunteeringCard profile={profile} />
-        <AwardsCard profile={profile} />
+        <LanguagesCard profile={profile} setProfile={setProfile} />
+        <ProjectsCard profile={profile} setProfile={setProfile} />
+        <VolunteeringCard profile={profile} setProfile={setProfile} />
+        <AwardsCard profile={profile} setProfile={setProfile} />
         <Button
           onClick={() => {
             console.log("Button Save Clicked");
