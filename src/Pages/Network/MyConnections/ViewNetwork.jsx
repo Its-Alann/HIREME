@@ -42,7 +42,7 @@ export const ViewNetwork = () => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
+        <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
             {connectedUsersId.length > 0 && connectedUsersId != null ? (

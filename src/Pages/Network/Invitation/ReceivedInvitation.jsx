@@ -42,7 +42,7 @@ export const ReceivedInvitation = () => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xl" sx={{ m: 2 }}>
+        <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
             {/*The array will contain all the connected users*/}
