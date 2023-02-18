@@ -16,4 +16,4 @@ jobs:
         uses: cypress-io/github-action@v4.1.0
         with:
           cache-dependency-path: cypress.config.js
-          start: npx cypress run --component 
+          start: npx cypress run --spec src/tests
