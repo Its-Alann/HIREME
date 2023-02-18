@@ -16,4 +16,5 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           start: npx cypress run --component
+          component: true
 
