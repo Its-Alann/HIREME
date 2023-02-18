@@ -5,7 +5,8 @@ import { Button } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
-import { Grid, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
+import Grid from "@mui/material/Unstable_Grid2";
 import PropTypes from "prop-types";
 import {
   getStorage,
@@ -87,21 +88,39 @@ const SendChat = ({ conversationID, myUser }) => {
   };
 
   return (
-    <Grid container sx={{ minHeight: 20 }}>
-      <Grid item xs={2} align="center">
+    <Grid
+      className="sendChatContainer"
+      container
+      sx={{
+        bgcolor: "gray.main",
+        alignItems: "center",
+        justifyItems: "center",
+        height: 56,
+        p: 0,
+        borderRadius: "0 0 8px 8px",
+      }}
+    >
+      <Grid xs={2} align="center" sx={{ height: 56 }}>
         <FileUpload onFileChange={onFileChange} onFileUpload={onFileUpload} />
       </Grid>
-      <Grid item xs>
+      <Grid xs justifyItems="center" sx={{ height: 56, p: 1 }}>
         <TextField
+          hiddenLabel
           id="outlined-basic-email"
-          label="Type Something"
+          placeholder="Type Something"
           fullWidth
           onChange={(e) => setMessageContent(e.target.value)}
           value={messageContent}
+          sx={{ m: 0 }}
         />
       </Grid>
 
-      <Grid item xs={2} align="right">
+      <Grid
+        xs={2}
+        align="center"
+        justifyItems="center"
+        sx={{ height: 56, p: 1 }}
+      >
         <Fab
           color="primary"
           aria-label="add"
@@ -112,6 +131,7 @@ const SendChat = ({ conversationID, myUser }) => {
             handleClick();
             setMessageContent("");
           }}
+          sx={{ p: 1 }}
         >
           <SendRoundedIcon />
         </Fab>
