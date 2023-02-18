@@ -17,4 +17,3 @@ jobs:
         with:
           cache-dependency-path: cypress.config.js
           build: npm run build
-          start: npx cypress run-ct
