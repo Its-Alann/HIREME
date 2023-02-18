@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
 import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
 
 const FileUpload = ({ onFileChange }) => (
@@ -22,7 +21,6 @@ const FileUpload = ({ onFileChange }) => (
 
 FileUpload.propTypes = {
   onFileChange: PropTypes.func,
-  onFileUpload: PropTypes.func,
 };
 
 export default FileUpload;
