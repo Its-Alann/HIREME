@@ -248,6 +248,8 @@ const Messaging = () => {
                 p: 0,
                 maxHeight: "100%",
                 display: mediaMobile && selectedIndex < 0 ? "none" : null,
+                // scroll: "auto",
+                // scrollX: "hidden",
               }}
             >
               <div
@@ -278,13 +280,14 @@ const Messaging = () => {
                   overflow: "auto",
                   p: 0,
                   borderBottom: "solid 1px gray",
+                  overflowX: "hidden",
                 }}
               >
                 <MessageList messages={messages} />
                 <div ref={dummy} />
               </Box>
               {/* {/* <Grid container style={{ padding: "20px" }}> */}
-              <Box item xs={12} align="right" sx={{ minHeight: 32 }}>
+              <Box component={Grid} xs={12}>
                 <SendChat
                   color="primary"
                   conversationID={convoId}
