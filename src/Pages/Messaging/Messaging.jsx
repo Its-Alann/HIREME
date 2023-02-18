@@ -267,7 +267,9 @@ const Messaging = () => {
                     </IconButton>
                   )}
 
-                  <Typography variant="h4">{name}</Typography>
+                  <Typography variant="h4" noWrap>
+                    {name}
+                  </Typography>
                   <Avatar
                     alt="sumn random"
                     src="https://picsum.photos/200/300"
@@ -276,7 +278,6 @@ const Messaging = () => {
 
                 <Box
                   id="message-chats"
-                  // component={Grid}
                   sx={{
                     // border: "black solid 1px",
                     bgcolor: "white",
