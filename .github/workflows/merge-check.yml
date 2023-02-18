@@ -1,17 +1,19 @@
 name: Merge Check
 
 on:
-  pull_request
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   merge-branch-check:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Check if branch is behind target branch
       run: |
         git fetch origin
-        BASE=$(git merge-base HEAD ${{ github.event.pull_request.base.ref }})
-        if [ $BASE != $(git rev-parse ${{ github.event.pull_request.head.ref }}) ]; then
+        BASE=$(git merge-base HEAD main)
+        if [ $BASE != $(git rev-parse actions/merge-check) ]; then
           echo "Branch is behind target branch"
           exit 1
         fi
