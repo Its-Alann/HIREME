@@ -20,13 +20,13 @@ const FileUpload = ({ onFileChange, onFileUpload }) => (
       <AttachFileSharpIcon />
     </label>
 
-    <Button
+    {/* <Button
       onClick={() => {
         onFileUpload();
       }}
     >
       Upload!
-    </Button>
+    </Button> */}
   </>
 );
 
