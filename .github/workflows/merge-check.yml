@@ -1,28 +1,17 @@
 name: Merge Check
 
 on:
-  pull_request:
-    branches:
-      - main
+  pull_request
 
 jobs:
-  check-main:
+  merge-branch-check:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Checkout main branch
-        run: git checkout main
-
-      - name: Fetch latest changes
-        run: git pull
-
-      - name: Check number of commits behind main
-        id: commits-behind-main
-        run: |
-          COMMITS_BEHIND=$(git rev-list --count main..HEAD)
-          echo "There are $COMMITS_BEHIND commits behind main"
+    - name: Check if branch is behind target branch
+      run: |
+        git fetch origin
+        BASE=$(git merge-base HEAD ${{ github.event.pull_request.base.ref }})
+        if [ $BASE != $(git rev-parse ${{ github.event.pull_request.head.ref }}) ]; then
+          echo "Branch is behind target branch"
+          exit 1
+        fi
