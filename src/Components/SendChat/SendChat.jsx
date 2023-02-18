@@ -116,21 +116,21 @@ const SendChat = ({ conversationID, myUser }) => {
             <Box
               id="file-preview"
               sx={{
-                // height: 48,
                 maxHeight: "100%",
                 display: "flex",
-                bgcolor: "violet",
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
-              <Box
-                component="img"
-                src={url}
-                alt={file.name}
-                sx={{ width: 36, height: 36, p: 1, display: "inline-flex" }}
-                xs
-              />
+              {file.type.includes("image") && (
+                <Box
+                  component="img"
+                  src={url}
+                  alt={file.name}
+                  sx={{ width: 36, height: 36, p: 1, display: "inline-flex" }}
+                  xs
+                />
+              )}
               <Typography variant="caption" noWrap xs>
                 {file.name}
               </Typography>
@@ -158,10 +158,7 @@ const SendChat = ({ conversationID, myUser }) => {
             justifyContent="center"
             sx={{ display: "flex", height: 56 }}
           >
-            <FileUpload
-              onFileChange={onFileChange}
-              onFileUpload={onFileUpload}
-            />
+            <FileUpload onFileChange={onFileChange} />
           </Grid>
         )}
 
