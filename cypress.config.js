@@ -3,7 +3,6 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   chromeWebSecurity: false,
   video: false,
-
   component: {
     specPattern: "cypress/component/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
