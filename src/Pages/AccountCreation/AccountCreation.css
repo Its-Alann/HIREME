@@ -18,13 +18,13 @@
 }
 
 #next {
-  background-color: blue;
+  background-color: #263aaf;
   color: white;
   font-style: italic;
 }
 
 #title {
-  color: #3f51b5;
+  color: #263aaf;
   margin-bottom: 15px;
   font-weight: bold;
 }
