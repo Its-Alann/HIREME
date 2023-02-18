@@ -4,7 +4,7 @@ import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { Button } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
-import SendIcon from "@material-ui/icons/Send";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { Grid, TextField } from "@material-ui/core";
 import PropTypes from "prop-types";
 import {
@@ -19,9 +19,6 @@ import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
 const theme = createTheme();
-
-const bobId = "billybob@gmail.com";
-const aliID = "aliceykchen01@gmail.com";
 
 const auth = getAuth();
 
@@ -62,6 +59,10 @@ const SendChat = ({ conversationID, myUser }) => {
   };
 
   const handleClick = async () => {
+    if (!messageContent) {
+      console.log("NO CONTETN");
+      return;
+    }
     // Format a new message
     const timestamp = Timestamp.now();
     if (myUser) {
@@ -80,11 +81,9 @@ const SendChat = ({ conversationID, myUser }) => {
 
     // SENDS TO THE DB
     // ex id: "17k4dPDcymw3GcNjSCSG"
-    if (newMessage.content) {
-      await updateDoc(doc(db, "messages", conversationID), {
-        messages: arrayUnion(newMessage),
-      });
-    }
+    await updateDoc(doc(db, "messages", conversationID), {
+      messages: arrayUnion(newMessage),
+    });
   };
 
   return (
@@ -104,16 +103,17 @@ const SendChat = ({ conversationID, myUser }) => {
 
       <Grid item xs={2} align="right">
         <Fab
-          color="secondary"
+          color="primary"
           aria-label="add"
           type="button"
+          size="small"
           disabled={isUploading}
           onClick={() => {
             handleClick();
             setMessageContent("");
           }}
         >
-          <SendIcon />
+          <SendRoundedIcon />
         </Fab>
       </Grid>
     </Grid>
