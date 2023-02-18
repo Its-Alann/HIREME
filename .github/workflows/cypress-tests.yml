@@ -19,7 +19,7 @@ jobs:
 
       # now run the tests from the subfolder
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4.1.0
         with:
           install: false
           start: npx cypress run --component
