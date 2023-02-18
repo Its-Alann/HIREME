@@ -20,11 +20,22 @@ import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogle
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 const Login = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
+  const [authError, setAuthError] = React.useState(false);
+  const [authErrorMsg, setAuthErrorMsg] = React.useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,9 +50,26 @@ const Login = () => {
         password,
       });
       try {
-        console.log(email, password);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const { user } = userCredential;
+        console.log(user);
+
+        navigate("/");
       } catch (err) {
-        console.log(err);
+        setAuthError(true);
+        console.log(err.code);
+        if (err.code.includes("user-not-found")) {
+          setAuthErrorMsg("An account with that email does not exist");
+        } else if (err.code.includes("wrong-password")) {
+          setAuthErrorMsg("Wrong password");
+        } else {
+          setAuthErrorMsg(err.code);
+        }
+        console.error(err.code, err.message);
       }
     }
   };
@@ -53,17 +81,15 @@ const Login = () => {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            mx: 2,
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          <Typography component="h1" variant="h5" color="primary">
+            HIRE<em>ME</em> account Sign In
           </Typography>
           <Box
             component="form"
@@ -73,6 +99,7 @@ const Login = () => {
             data-cy="formTest"
           >
             <TextField
+              className="TextField"
               type="text"
               margin="normal"
               required
@@ -95,8 +122,11 @@ const Login = () => {
               }}
               error={emailError}
               helperText={!emailError ? "" : "Please enter valid credentials"}
+              variant="standard"
+              color="primary"
             />
             <TextField
+              className="TextField"
               margin="normal"
               required
               fullWidth
@@ -105,7 +135,13 @@ const Login = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              variant="standard"
+              color="primary"
+              onFocus={() => setAuthErrorMsg("")}
             />
+            <Typography color={theme.palette.error.main}>
+              {authError && authErrorMsg}
+            </Typography>
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -114,33 +150,50 @@ const Login = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, py: 1 }}
+              color="primary"
               name="signIn"
               inputProps={{ "aria-label": "signIn" }}
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/SignUp" variant="body2">
-                  Don&apos;t have an account? Sign Up
-                </Link>
-              </Grid>
-            </Grid>
-            <Stack container justifyContent="center">
-              <Stack item>
-                <Typography variant="subtitle2" align="center">
-                  or you can sign in with
-                </Typography>
-              </Stack>
-              <Stack item margin="auto">
-                <SignInGoogleButton data-cy="GoogleTest" />
-              </Stack>
+            <Stack container justifyContent="center" spacing={1}>
+              <Link item xs align="center" href="/" variant="subtitle2">
+                Forgot password?
+              </Link>
+            </Stack>
+            <Stack container justifyContent="center" spacing={0} sx={{ mt: 3 }}>
+              <Typography
+                variant="subtitle1"
+                align="center"
+                color="gray"
+                sx={{ fontSize: ".9rem" }}
+              >
+                or you can sign in with
+              </Typography>
+              <div align="center">
+                <SignInGoogleButton sx={{ m: "auto" }} data-cy="GoogleTest" />
+              </div>
+            </Stack>
+            <Stack
+              sx={{ pt: 4 }}
+              spacing={1}
+              container
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Typography color="primary">
+                Don&apos;t have an account?
+              </Typography>
+              <Button
+                href="/SignUp"
+                variant="outlined"
+                fullWidth
+                color="primary"
+                sx={{ mt: 3, mb: 2, py: 1 }}
+              >
+                Sign Up
+              </Button>
             </Stack>
           </Box>
         </Box>
