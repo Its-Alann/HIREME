@@ -3,6 +3,7 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   chromeWebSecurity: false,
   video: false,
+  screenshotOnRunFailure: false,
 
   component: {
     specPattern: "cypress/__tests__/ComponentTesting/*.cy.{js,jsx,ts,tsx}",
