@@ -35,7 +35,14 @@ const SendChat = ({ conversationID, myUser }) => {
     if (!file) return;
     const storageRef = ref(storage, `/messages/${file.name}`);
     setFileStorageRef(storageRef);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    const metadata = {
+      customMetadata: {
+        conversationID,
+      },
+    };
+
+    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
     uploadTask.on(
       "state_changed",
