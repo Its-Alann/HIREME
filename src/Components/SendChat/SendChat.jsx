@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
-import { Button, Stack, Box } from "@mui/material";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { IconButton, Stack, Box } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import Fab from "@material-ui/core/Fab";
-import { SendRoundedIcon, Clear } from "@mui/icons-material";
-import { TextField } from "@material-ui/core";
+import { SendRounded as SendRoundedIcon, Clear } from "@mui/icons-material";
+import { TextField, Typography } from "@material-ui/core";
 import Grid from "@mui/material/Unstable_Grid2";
 import PropTypes from "prop-types";
 import {
@@ -15,13 +15,10 @@ import {
   getDownloadURL,
   uploadBytesResumable,
   listAll,
+  deleteObject,
 } from "firebase/storage";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
-
-const theme = createTheme();
-
-const auth = getAuth();
 
 const SendChat = ({ conversationID, myUser }) => {
   // const SendChat = ({ conversationID }) => {
@@ -32,9 +29,12 @@ const SendChat = ({ conversationID, myUser }) => {
 
   const [isUploading, setIsUploading] = useState(false);
 
+  const [fileStorageRef, setFileStorageRef] = useState();
+
   const onFileUpload = () => {
     if (!file) return;
     const storageRef = ref(storage, `/messages/${file.name}`);
+    setFileStorageRef(storageRef);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -43,13 +43,13 @@ const SendChat = ({ conversationID, myUser }) => {
         setIsUploading(true);
       },
       (error) => {
-        console.log("error", error);
+        console.log("ERROR onFileUpload()", error);
       },
       async () => {
         const downloadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setUrl(downloadedUrl);
         setIsUploading(false);
-        // setMessageContent(`${messageContent} ${downloadedUrl}`);
+        console.log(`uploaded ${file} to storage!`);
       }
     );
   };
@@ -57,8 +57,19 @@ const SendChat = ({ conversationID, myUser }) => {
   const onFileChange = (e) => {
     e.preventDefault();
     setFile(e.target.files[0]);
-    setMessageContent(e.target.files[0].name);
     console.log("file", e.target.files[0]);
+  };
+
+  const handleFileClear = async () => {
+    //delete from storage
+    try {
+      await deleteObject(fileStorageRef);
+      console.log(`${file.name} deleted from storage!`);
+    } catch (err) {
+      console.log(err);
+    }
+    setFile(null);
+    setFileStorageRef(null);
   };
 
   const handleSend = async () => {
@@ -87,39 +98,80 @@ const SendChat = ({ conversationID, myUser }) => {
     await updateDoc(doc(db, "messages", conversationID), {
       messages: arrayUnion(newMessage),
     });
+
+    setFileStorageRef();
   };
+
+  useEffect(
+    //uplaod file to cloud storage
+    onFileUpload,
+    [file]
+  );
 
   return (
     <Stack>
-      {file && (
-        <Box id="image-preview" sx={{ height: 56, bgcolor: "violet" }}>
-          File: {file.name}
-        </Box>
-      )}
-
       <Grid className="sendChatContainer" container>
-        <Grid xs={2} align="center" sx={{ height: 56 }}>
-          <FileUpload onFileChange={onFileChange} onFileUpload={onFileUpload} />
-        </Grid>
         <Grid xs justifyItems="center" sx={{ height: 56, p: 1 }}>
-          <TextField
-            hiddenLabel
-            id="outlined-basic-email"
-            placeholder="Type Something"
-            fullWidth
-            onChange={(e) => setMessageContent(e.target.value)}
-            value={messageContent}
-            sx={{ m: 0 }}
-          />
+          {file ? (
+            <Box
+              id="file-preview"
+              sx={{
+                // height: 48,
+                maxHeight: "100%",
+                display: "flex",
+                bgcolor: "violet",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                component="img"
+                src={url}
+                alt={file.name}
+                sx={{ width: 36, height: 36, p: 1, display: "inline-flex" }}
+                xs
+              />
+              <Typography variant="caption" noWrap xs>
+                {file.name}
+              </Typography>
+              <IconButton onClick={handleFileClear}>
+                <Clear />
+              </IconButton>
+            </Box>
+          ) : (
+            <TextField
+              hiddenLabel
+              id="outlined-basic-email"
+              placeholder="Type Something"
+              fullWidth
+              onChange={(e) => setMessageContent(e.target.value)}
+              value={messageContent}
+              sx={{ m: 0 }}
+            />
+          )}
         </Grid>
+
+        {messageContent === "" && (
+          <Grid
+            xs={1}
+            alignItems="center"
+            justifyContent="center"
+            sx={{ display: "flex", height: 56 }}
+          >
+            <FileUpload
+              onFileChange={onFileChange}
+              onFileUpload={onFileUpload}
+            />
+          </Grid>
+        )}
 
         <Grid
-          xs={2}
+          xs={1}
           align="center"
-          justifyItems="center"
-          sx={{ height: 56, p: 1 }}
+          justifyContent="center"
+          sx={{ display: "flex", height: 56 }}
         >
-          <Fab
+          <IconButton
             color="primary"
             aria-label="add"
             type="button"
@@ -129,10 +181,10 @@ const SendChat = ({ conversationID, myUser }) => {
               await handleSend();
               setMessageContent("");
             }}
-            sx={{ p: 1 }}
+            // sx={{ p: 1 }}
           >
             <SendRoundedIcon />
-          </Fab>
+          </IconButton>
         </Grid>
       </Grid>
     </Stack>
