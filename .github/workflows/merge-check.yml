@@ -1,0 +1,24 @@
+name: Merge Check
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install Node.js and dependencies
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - run: npm ci
+      
+      - name: Check if branch is up to date with main
+        uses: redhat-actions/merge-check@v1
+        with:
+          base: 'main'
+          branch: ${{ github.head_ref }}
