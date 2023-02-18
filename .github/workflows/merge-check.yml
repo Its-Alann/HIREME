@@ -17,7 +17,7 @@ jobs:
 
       - name: Check if branch is up-to-date with main
         run: |
-          COMMITS_BEHIND=$(git rev-list --count main..HEAD)
+          COMMITS_BEHIND=$(git rev-list --count main)
           if [ "$COMMITS_BEHIND" -gt 0 ]; then
             echo "The branch is $COMMITS_BEHIND commit(s) behind main."
             exit 1
