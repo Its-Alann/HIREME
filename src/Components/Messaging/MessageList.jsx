@@ -12,7 +12,7 @@ const MessageList = ({ messages }) => {
   // How??
   const hello = "hello";
   return (
-    <List style={{ justifyContent: "right" }}>
+    <List>
       {messages.map((message, i) => {
         const alignment =
           message.sender === auth.currentUser.email ? "right" : "left";
