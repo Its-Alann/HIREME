@@ -74,6 +74,7 @@ const Messaging = () => {
       where("authors", "array-contains", myUser)
     );
 
+    // set listener to convos involving the user
     const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
       //list of author lists
       const allAuthorsList = [];
@@ -144,6 +145,7 @@ const Messaging = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
 
+  //set a listener to on the conversation document
   React.useEffect(() => {
     let unSub;
     if (convoId) {

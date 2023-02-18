@@ -31,7 +31,7 @@ const SendChat = ({ conversationID, myUser }) => {
 
   const [fileStorageRef, setFileStorageRef] = useState();
 
-  const onFileUpload = () => {
+  const uploadFile = () => {
     if (!file) return;
     const storageRef = ref(storage, `/messages/${file.name}`);
     setFileStorageRef(storageRef);
@@ -65,11 +65,11 @@ const SendChat = ({ conversationID, myUser }) => {
     try {
       await deleteObject(fileStorageRef);
       console.log(`${file.name} deleted from storage!`);
+      setFile(null);
+      setFileStorageRef(null);
     } catch (err) {
       console.log(err);
     }
-    setFile(null);
-    setFileStorageRef(null);
   };
 
   const handleSend = async () => {
@@ -104,7 +104,7 @@ const SendChat = ({ conversationID, myUser }) => {
 
   useEffect(
     //uplaod file to cloud storage
-    onFileUpload,
+    uploadFile,
     [file]
   );
 
@@ -141,7 +141,7 @@ const SendChat = ({ conversationID, myUser }) => {
           ) : (
             <TextField
               hiddenLabel
-              id="outlined-basic-email"
+              id="message-input"
               placeholder="Type Something"
               fullWidth
               onChange={(e) => setMessageContent(e.target.value)}
@@ -180,7 +180,7 @@ const SendChat = ({ conversationID, myUser }) => {
             }}
             // sx={{ p: 1 }}
           >
-            <SendRoundedIcon />
+            <SendRoundedIcon color="primary" />
           </IconButton>
         </Grid>
       </Grid>
