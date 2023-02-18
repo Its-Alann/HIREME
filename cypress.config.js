@@ -57,6 +57,7 @@ module.exports = defineConfig({
         },
       },
     },
+    specs: ["./components"],
   },
 
   e2e: {
