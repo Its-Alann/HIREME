@@ -23,4 +23,4 @@ jobs:
         with:
           install: false
           working-directory: packages/e2e
-          start: npx cypress run --spec "cypress/components/__tests__/*.cy.jsx"
+          start: npx cypress run --component
