@@ -3,6 +3,7 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   chromeWebSecurity: false,
   video: false,
+
   component: {
     specPattern: "src/**/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
@@ -56,5 +57,9 @@ module.exports = defineConfig({
         },
       },
     },
+  },
+
+  e2e: {
+    setupNodeEvents(on, config) {},
   },
 });
