@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
-import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -284,7 +283,6 @@ const Messaging = () => {
                     // height: "calc(100% - 64px - 56px)",
                     overflow: "auto",
                     p: 0,
-                    borderBottom: "solid 1px gray",
                     overflowX: "hidden",
                   }}
                 >
@@ -292,22 +290,25 @@ const Messaging = () => {
                   <div ref={dummy} />
                 </Box>
 
-                <Box
-                  sx={{
-                    bgcolor: "gray.main",
-                    alignItems: "center",
-                    justifyItems: "center",
-                    // height: 56,
-                    p: 0,
-                    borderRadius: "0 0 8px 8px",
-                  }}
-                >
-                  <SendChat
-                    color="primary"
-                    conversationID={convoId}
-                    myUser={myUser}
-                  />
-                </Box>
+                {selectedIndex > -1 && (
+                  <Box
+                    sx={{
+                      bgcolor: "gray.main",
+                      alignItems: "center",
+                      justifyItems: "center",
+                      // height: 56,
+                      p: 0,
+                      borderRadius: "0 0 8px 8px",
+                      borderTop: "1px solid gray",
+                    }}
+                  >
+                    <SendChat
+                      color="primary"
+                      conversationID={convoId}
+                      myUser={myUser}
+                    />
+                  </Box>
+                )}
               </Stack>
             </Grid>
           </Grid>
