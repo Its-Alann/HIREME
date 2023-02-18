@@ -16,10 +16,4 @@ jobs:
         uses: cypress-io/github-action@v4.1.0
         with:
           runTests: false
-
-      # now run the tests from the subfolder
-      - name: Cypress run
-        uses: cypress-io/github-action@v4.1.0
-        with:
-          install: false
-          spec: cypress/components/**/*cy.jsx
+          spec: cypress/components/*
