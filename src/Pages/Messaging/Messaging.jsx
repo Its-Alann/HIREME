@@ -18,7 +18,7 @@ import {
   where,
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Box, IconButton, Drawer } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -252,50 +252,63 @@ const Messaging = () => {
                 // scrollX: "hidden",
               }}
             >
-              <div
-                className="message-view-banner"
-                style={{ maxHeight: "64px" }}
-              >
-                {mediaMobile && (
-                  <IconButton
-                    aria-label="back"
-                    onClick={() => {
-                      setSelectedIndex(-1);
-                    }}
-                  >
-                    <ChevronLeftIcon sx={{ color: "white" }} />
-                  </IconButton>
-                )}
+              <Stack sx={{ maxHeight: "100%" }}>
+                <div
+                  className="message-view-banner"
+                  style={{ maxHeight: "64px" }}
+                >
+                  {mediaMobile && (
+                    <IconButton
+                      aria-label="back"
+                      onClick={() => {
+                        setSelectedIndex(-1);
+                      }}
+                    >
+                      <ChevronLeftIcon sx={{ color: "white" }} />
+                    </IconButton>
+                  )}
 
-                <Typography variant="h4">{name}</Typography>
-                <Avatar alt="sumn random" src="https://picsum.photos/200/300" />
-              </div>
+                  <Typography variant="h4">{name}</Typography>
+                  <Avatar
+                    alt="sumn random"
+                    src="https://picsum.photos/200/300"
+                  />
+                </div>
 
-              <Box
-                component={Grid}
-                sx={{
-                  // border: "black solid 1px",
-                  bgcolor: "white",
-                  height: "calc(100% - 64px - 56px)",
-                  overflow: "auto",
-                  p: 0,
-                  borderBottom: "solid 1px gray",
-                  overflowX: "hidden",
-                }}
-              >
-                <MessageList messages={messages} />
-                <div ref={dummy} />
-              </Box>
-              {/* {/* <Grid container style={{ padding: "20px" }}> */}
-              <Box component={Grid} xs={12}>
-                <SendChat
-                  color="primary"
-                  conversationID={convoId}
-                  myUser={myUser}
-                />
-              </Box>
-              {/* 
-              </Grid> */}
+                <Box
+                  id="message-chats"
+                  // component={Grid}
+                  sx={{
+                    // border: "black solid 1px",
+                    bgcolor: "white",
+                    // height: "calc(100% - 64px - 56px)",
+                    overflow: "auto",
+                    p: 0,
+                    borderBottom: "solid 1px gray",
+                    overflowX: "hidden",
+                  }}
+                >
+                  <MessageList messages={messages} />
+                  <div ref={dummy} />
+                </Box>
+
+                <Box
+                  sx={{
+                    bgcolor: "gray.main",
+                    alignItems: "center",
+                    justifyItems: "center",
+                    // height: 56,
+                    p: 0,
+                    borderRadius: "0 0 8px 8px",
+                  }}
+                >
+                  <SendChat
+                    color="primary"
+                    conversationID={convoId}
+                    myUser={myUser}
+                  />
+                </Box>
+              </Stack>
             </Grid>
           </Grid>
         </Box>
