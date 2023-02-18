@@ -5,7 +5,7 @@ module.exports = defineConfig({
   video: false,
 
   component: {
-    specPattern: "cypress/components/__tests__/*.cy.{js,jsx,ts,tsx}",
+    specPattern: "src/**/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
 
@@ -27,36 +27,36 @@ module.exports = defineConfig({
       codeCoverageTasksRegistered: true,
     },
 
-    // devServer: {
-    //   framework: "create-react-app",
-    //   bundler: "webpack",
-    //   webpackConfig: {
-    //     mode: "development",
-    //     devtool: false,
-    //     module: {
-    //       rules: [
-    //         // application and Cypress files are bundled like React components
-    //         // and instrumented using the babel-plugin-istanbul
-    //         // (we will filter the code coverage for non-application files later)
-    //         {
-    //           test: /\.js/,
-    //           exclude: /node_modules/,
-    //           use: {
-    //             loader: "babel-loader",
-    //             options: {
-    //               presets: ["@babel/preset-env", "@babel/preset-react"],
-    //               plugins: [
-    //                 // we could optionally insert this plugin
-    //                 // only if the code coverage flag is on
-    //                 "istanbul",
-    //               ],
-    //             },
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // },
+    devServer: {
+      framework: "create-react-app",
+      bundler: "webpack",
+      webpackConfig: {
+        mode: "development",
+        devtool: false,
+        module: {
+          rules: [
+            // application and Cypress files are bundled like React components
+            // and instrumented using the babel-plugin-istanbul
+            // (we will filter the code coverage for non-application files later)
+            {
+              test: /\.js/,
+              exclude: /node_modules/,
+              use: {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env", "@babel/preset-react"],
+                  plugins: [
+                    // we could optionally insert this plugin
+                    // only if the code coverage flag is on
+                    "istanbul",
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
     specs: ["./components"],
   },
 
