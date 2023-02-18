@@ -5,7 +5,7 @@ module.exports = defineConfig({
   video: false,
 
   component: {
-    specPattern: "src/**/*.cy.{js,jsx,ts,tsx}",
+    specPattern: "cypress/__tests__/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
 
