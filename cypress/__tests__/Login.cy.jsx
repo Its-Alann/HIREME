@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import Login from "../Pages/Login/Login";
+import Login from "../../src/Pages/Login/Login";
 
 describe("<Login />", () => {
   it("renders", () => {
