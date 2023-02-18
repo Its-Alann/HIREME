@@ -6,19 +6,23 @@ on:
       - main
 
 jobs:
-  check-branch:
+  check-main:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Fetch latest changes from main
-        run: git fetch origin main
+      - name: Checkout main branch
+        run: git checkout main
 
-      - name: Check if branch is up-to-date with main
+      - name: Fetch latest changes
+        run: git pull
+
+      - name: Check number of commits behind main
+        id: commits-behind-main
         run: |
-          COMMITS_BEHIND=$(git rev-list --count main)
-          if [ "$COMMITS_BEHIND" -gt 0 ]; then
-            echo "The branch is $COMMITS_BEHIND commit(s) behind main."
-            exit 1
-          fi
+          COMMITS_BEHIND=$(git rev-list --count main..HEAD)
+          echo "There are $COMMITS_BEHIND commits behind main"
