@@ -20,7 +20,7 @@ import {
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
-const SendChat = ({ conversationID, myUser }) => {
+const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
   const [url, setUrl] = useState();
@@ -30,6 +30,8 @@ const SendChat = ({ conversationID, myUser }) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const [fileStorageRef, setFileStorageRef] = useState();
+
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const uploadFile = () => {
     if (!file) return;
@@ -48,6 +50,9 @@ const SendChat = ({ conversationID, myUser }) => {
       "state_changed",
       (snapshot) => {
         setIsUploading(true);
+        setUploadProgress(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
       },
       (error) => {
         console.log("ERROR onFileUpload()", error);
@@ -67,16 +72,22 @@ const SendChat = ({ conversationID, myUser }) => {
     console.log("file", e.target.files[0]);
   };
 
-  const handleFileClear = async () => {
+  const deleteFile = async () => {
+    if (!fileStorageRef) return;
     //delete from storage
     try {
       await deleteObject(fileStorageRef);
       console.log(`${file.name} deleted from storage!`);
-      setFile(null);
-      setFileStorageRef(null);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleFileClear = () => {
+    deleteFile().then(() => {
+      setFile(null);
+      setFileStorageRef(null);
+    });
   };
 
   const handleSend = async () => {
@@ -115,36 +126,51 @@ const SendChat = ({ conversationID, myUser }) => {
     [file]
   );
 
+  useEffect(() => {
+    console.log("after mount");
+    return () => {
+      handleFileClear();
+      console.log("before unmount");
+    };
+  }, []);
+
   return (
     <Stack>
       <Grid className="sendChatContainer" container>
         <Grid xs justifyItems="center" sx={{ height: 56, p: 1 }}>
           {file ? (
-            <Box
-              id="file-preview"
-              sx={{
-                maxHeight: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              {file.type.includes("image") && (
-                <Box
-                  component="img"
-                  src={url}
-                  alt={file.name}
-                  sx={{ width: 36, height: 36, p: 1, display: "inline-flex" }}
-                  xs
-                />
-              )}
-              <Typography variant="caption" noWrap xs>
-                {file.name}
-              </Typography>
-              <IconButton onClick={handleFileClear}>
-                <Clear />
-              </IconButton>
-            </Box>
+            isUploading ? (
+              <Grid container>
+                <Typography noWrap>Uploading {file.name} </Typography>
+                <Typography>{uploadProgress}%</Typography>
+              </Grid>
+            ) : (
+              <Box
+                id="file-preview"
+                sx={{
+                  maxHeight: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {file.type.includes("image") && (
+                  <Box
+                    component="img"
+                    src={url}
+                    alt={file.name}
+                    sx={{ width: 36, height: 36, p: 1, display: "inline-flex" }}
+                    xs
+                  />
+                )}
+                <Typography variant="caption" noWrap xs>
+                  {file.name}
+                </Typography>
+                <IconButton onClick={handleFileClear}>
+                  <Clear />
+                </IconButton>
+              </Box>
+            )
           ) : (
             <TextField
               hiddenLabel
@@ -158,7 +184,7 @@ const SendChat = ({ conversationID, myUser }) => {
           )}
         </Grid>
 
-        {messageContent === "" && (
+        {messageContent === "" && !file && (
           <Grid
             xs={1}
             alignItems="center"
@@ -198,6 +224,7 @@ const SendChat = ({ conversationID, myUser }) => {
 SendChat.propTypes = {
   conversationID: PropTypes.string,
   myUser: PropTypes.string, //email
+  selectedIndex: PropTypes.number,
 };
 
 export default SendChat;
