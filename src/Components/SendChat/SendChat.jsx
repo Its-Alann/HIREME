@@ -84,10 +84,15 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     }
   };
 
+  const clearPreview = () => {
+    setFile(null);
+    setFileStorageRef(null);
+    setMessageContent("");
+  };
+
   const handleFileClear = () => {
     deleteFile().then(() => {
-      setFile(null);
-      setFileStorageRef(null);
+      clearPreview();
     });
   };
 
@@ -118,9 +123,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
       messages: arrayUnion(newMessage),
     });
 
-    setFile(null);
-    setFileStorageRef(null);
-    setMessageContent("");
+    clearPreview();
   };
 
   useEffect(
