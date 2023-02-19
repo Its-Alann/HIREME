@@ -21,3 +21,9 @@ jobs:
           browser: chrome
           headed: true
           timeout-minutes: 5
+      
+      - uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: 'main'
+          
