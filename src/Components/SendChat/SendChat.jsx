@@ -61,6 +61,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
         const downloadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setUrl(downloadedUrl);
         setIsUploading(false);
+        setMessageContent(downloadedUrl);
         console.log(`uploaded ${file} to storage!`);
       }
     );
@@ -117,7 +118,9 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
       messages: arrayUnion(newMessage),
     });
 
-    setFileStorageRef();
+    setFile(null);
+    setFileStorageRef(null);
+    setMessageContent("");
   };
 
   useEffect(
@@ -126,13 +129,13 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     [file]
   );
 
-  useEffect(() => {
-    console.log("after mount");
-    return () => {
-      handleFileClear();
-      console.log("before unmount");
-    };
-  }, []);
+  // useEffect(() => {
+  //   console.log("after mount");
+  //   return () => {
+  //     handleFileClear();
+  //     console.log("before unmount");
+  //   };
+  // }, []);
 
   return (
     <Stack>
@@ -141,8 +144,10 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
           {file ? (
             isUploading ? (
               <Grid container>
-                <Typography noWrap>Uploading {file.name} </Typography>
-                <Typography>{uploadProgress}%</Typography>
+                <Typography variant="caption" noWrap>
+                  Uploading {file.name}{" "}
+                </Typography>
+                <Typography variant="caption">{uploadProgress}%</Typography>
               </Grid>
             ) : (
               <Box
@@ -209,7 +214,6 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             disabled={isUploading}
             onClick={async () => {
               await handleSend();
-              setMessageContent("");
             }}
             // sx={{ p: 1 }}
           >
