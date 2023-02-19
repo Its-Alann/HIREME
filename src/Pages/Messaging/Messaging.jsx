@@ -306,9 +306,9 @@ const Messaging = () => {
                     }}
                   >
                     <SendChat
-                      color="primary"
                       conversationID={convoId}
                       myUser={myUser}
+                      selectedIndex={selectedIndex}
                     />
                   </Box>
                 )}
