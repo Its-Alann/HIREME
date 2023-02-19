@@ -22,6 +22,9 @@ jobs:
           headed: true
           timeout-minutes: 5
       
+      - name: Update Code Coverage Badge
+        run: npx update-badge
+      
       - uses: mikeal/publish-to-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
