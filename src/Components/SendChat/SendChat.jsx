@@ -132,23 +132,15 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     [file]
   );
 
-  // useEffect(() => {
-  //   console.log("after mount");
-  //   return () => {
-  //     handleFileClear();
-  //     console.log("before unmount");
-  //   };
-  // }, []);
-
   return (
     <Stack>
       <Grid className="sendChatContainer" container>
-        <Grid xs justifyItems="center" sx={{ height: 56, p: 1 }}>
+        <Grid xs justifyItems="center" sx={{ height: 56 }}>
           {file ? (
             isUploading ? (
               <Grid container>
                 <Typography variant="caption" noWrap>
-                  Uploading {file.name}{" "}
+                  Uploading {file.name} ...
                 </Typography>
                 <Typography variant="caption">{uploadProgress}%</Typography>
               </Grid>
