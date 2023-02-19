@@ -1,8 +1,6 @@
 #from https://github.com/cypress-io/todomvc/blob/master/.github/workflows/test-app.yml
 name: Cypress tests
 on:
-  push:
-    branches: [ main ]
   pull_request:
     types: [opened, reopened]
     
@@ -21,12 +19,4 @@ jobs:
           browser: chrome
           headed: true
           timeout-minutes: 5
-      
-      - name: Update Code Coverage Badge
-        run: npx update-badge
-      
-      - uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: 'main'
           
