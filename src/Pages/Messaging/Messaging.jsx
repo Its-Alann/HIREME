@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Avatar from "@material-ui/core/Avatar";
+import {
+  Typography,
+  List,
+  ListItem,
+  Avatar,
+  ListItemAvatar,
+} from "@material-ui/core";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   doc,
@@ -226,6 +228,12 @@ const Messaging = () => {
                         scrollToBottom();
                       }}
                     >
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="sumn random"
+                          src="https://picsum.photos/200/300"
+                        />
+                      </ListItemAvatar>
                       <Typography
                         sx={{ textTransform: "lowercase" }}
                         variant="body1"
