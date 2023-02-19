@@ -1,6 +1,8 @@
 #from https://github.com/cypress-io/todomvc/blob/master/.github/workflows/test-app.yml
 name: Cypress tests
 on:
+  push:
+    branches: [ main ]
   pull_request:
     types: [opened, reopened]
     
