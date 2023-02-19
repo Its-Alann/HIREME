@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import Login from "../Pages/Login/Login";
+import Login from "../../../src/Pages/Login/Login";
 
 describe("<Login />", () => {
   it("renders", () => {
@@ -30,8 +30,8 @@ describe("<Login />", () => {
     cy.get("#email").type("email@test.com");
     cy.get("#password").type("abcd");
     cy.get("input").tab();
-    cy.get('[data-cy="formTest"]').should("not.include.text", "Please");
+    cy.get('[data-cy="formTest"]').should("not.include.text", "valid email");
     cy.get('[data-cy="formTest"] > .MuiButton-root').click();
-    cy.get(".css-18rt8lx-MuiStack-root > .MuiButtonBase-root").click();
+    cy.get(".MuiButton-contained").click();
   });
 });
