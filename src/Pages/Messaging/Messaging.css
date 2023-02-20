@@ -1,0 +1,38 @@
+@media only screen and (max-width: 600px) {
+  .message-sidebar {
+    width: 100%;
+    /* display: none; */
+  }
+  .messaging-container {
+    height: 100%;
+  }
+}
+
+.message-view-banner {
+  background-color: #2b2f90;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+
+.sidebar-full {
+  background-color: #fdfdfd;
+  padding-left: 10;
+}
+
+/* .sidebar-item {
+  background-color: #807e7e8c;
+} */
+
+.message-side-full {
+  background-color: #fdfdfd;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.message-side-title {
+  background-color: #2b2f90;
+  color: #fdfdfd;
+}
