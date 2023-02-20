@@ -6,22 +6,23 @@ import {
   ListItem,
   Avatar,
   ListItemAvatar,
-} from "@material-ui/core";
+  Box,
+  IconButton,
+  Stack,
+  useMediaQuery,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   doc,
   getDocs,
   getDoc,
-  addDoc,
   collection,
   onSnapshot,
   query,
   where,
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Box, IconButton, Stack } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
 import "./Messaging.css";

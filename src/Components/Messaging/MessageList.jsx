@@ -1,8 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import * as React from "react";
 import PropTypes from "prop-types";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
+import { List, ListItem } from "@mui/material";
 import MessageListItem from "./MessageListItem";
 import { auth } from "../../Firebase/firebase";
 

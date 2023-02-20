@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
-import { IconButton, Stack, Box } from "@mui/material";
+import { IconButton, Stack, Box, TextField, Typography } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import Fab from "@material-ui/core/Fab";
+import Fab from "@mui/material/Fab";
 import { SendRounded as SendRoundedIcon, Clear } from "@mui/icons-material";
-import { TextField, Typography } from "@material-ui/core";
 import Grid from "@mui/material/Unstable_Grid2";
 import PropTypes from "prop-types";
 import {
@@ -173,6 +172,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             )
           ) : (
             <TextField
+              variant="standard"
               hiddenLabel
               id="message-input"
               placeholder="Type Something"

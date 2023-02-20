@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import Fab from "@material-ui/core/Fab";
-import AddBox from "@material-ui/icons/AddBox";
-import Button from "@mui/material/Button";
-import { getAuth } from "firebase/auth";
+import Fab from "@mui/material/Fab";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { Autocomplete, Grid, TextField } from "@mui/material";
+import { Autocomplete, Grid, TextField, Button } from "@mui/material";
 import { auth, db } from "../../Firebase/firebase";
 
 const messagesRef = collection(db, "messages");
@@ -95,7 +93,7 @@ const NewConvo = () => {
             handleClick();
           }}
         >
-          <AddBox />
+          <AddBoxIcon />
         </Fab>
       </Grid>
     </Grid>
