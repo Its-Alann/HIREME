@@ -1,5 +1,6 @@
 import { React, useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
 import {
   Grid,
   Box,
@@ -21,17 +22,13 @@ const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
   const getBday = async () => {
     if (profile.values)
       setBday(
-        await profile.values.dob
-        // await profile.values.dob.toDate().toLocaleString("en-US", {
-        //   month: "long",
-        //   day: "2-digit",
-        //   year: "numeric",
-        // })
+        profile.values.dob instanceof Date
+          ? await dayjs.unix(profile.values.dob.valueOf() / 1000)
+          : await dayjs.unix(profile.values.dob.seconds)
       );
   };
 
   useEffect(() => {
-    // console.log("profile", profile);
     getBday();
   }, [profile]);
 
@@ -49,16 +46,6 @@ const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
                 onClick={() => setEditButton(!editButton)}
                 style={{ cursor: "pointer" }}
               />
-
-              {/* <Button
-                onClick={() =>
-                  setProfile((previousState) => ({
-                    values: { ...previousState.values, city: "Los Angeles" },
-                  }))
-                }
-              >
-                Change state in child, Change City to LA
-              </Button> */}
             </Grid>
           </Grid>
           <Grid container spacing={3}>
@@ -153,7 +140,7 @@ const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Date of Birth"
-              value={bday && bday}
+              value={bday}
               onChange={(newValue) => {
                 setProfile({
                   values: { ...profile.values, dob: newValue && newValue.$d },

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,8 +23,16 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
 
   const getDates = async () => {
     if (profile.values) {
-      setStartYear(await profile.values.startDateEdu);
-      setEndYear(await profile.values.endDateEdu);
+      setStartYear(
+        profile.values.startDateEdu instanceof Date
+          ? await dayjs.unix(profile.values.startDateEdu.valueOf() / 1000)
+          : await dayjs.unix(profile.values.startDateEdu.seconds)
+      );
+      setEndYear(
+        profile.values.endDateEdu instanceof Date
+          ? await dayjs.unix(profile.values.endDateEdu.valueOf() / 1000)
+          : await dayjs.unix(profile.values.endDateEdu.seconds)
+      );
     }
   };
 
