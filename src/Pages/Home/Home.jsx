@@ -17,10 +17,9 @@ import Navbar from "../../Components/Navbar/Navbar";
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
-  const [email, setEmail] = useState();
   const [formCompleted, setFormCompleted] = useState(false);
 
-  const checkFormCompletion = async () => {
+  const checkFormCompletion = async (email) => {
     const docRef = doc(db, "userProfiles", email);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -35,6 +34,7 @@ const Home = () => {
         console.log("uid", uid);
         console.log("email", email);
         setUser(uid);
+        checkFormCompletion(email);
       } else {
         setUser(null);
       }
