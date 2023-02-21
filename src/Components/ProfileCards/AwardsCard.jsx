@@ -11,15 +11,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const AwardsCard = ({ profile, setProfile }) => {
-  const [startDate, setStartYear] = useState("");
+  const [startYear, setStartYear] = useState("");
   const [editButton, setEditButton] = useState(false);
 
   const getDates = async () => {
     if (profile.values) {
-      setStartYear(await profile.values.dateVolunt);
+      setStartYear(
+        profile.values.dateAward instanceof Date
+          ? await dayjs.unix(profile.values.dateAward.valueOf() / 1000)
+          : await dayjs.unix(profile.values.dateAward.seconds)
+      );
     }
   };
 
@@ -80,11 +85,10 @@ const AwardsCard = ({ profile, setProfile }) => {
               />
             </Grid>
             <Grid item>
-              <Typography variant="body2"> {startDate} </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Start Date"
-                  value={startDate && startDate}
+                  value={startYear}
                   onChange={(newValue) => {
                     setProfile({
                       values: {

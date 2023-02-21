@@ -12,14 +12,19 @@ import PropTypes from "prop-types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const VolunteeringCard = ({ profile, setProfile }) => {
-  const [startDate, setStartYear] = useState("");
+  const [startYear, setStartYear] = useState("");
   const [editButton, setEditButton] = useState(false);
 
   const getDates = async () => {
     if (profile.values) {
-      setStartYear(await profile.values.dateAward);
+      setStartYear(
+        profile.values.dateVolunt instanceof Date
+          ? await dayjs.unix(profile.values.dateVolunt.valueOf() / 1000)
+          : await dayjs.unix(profile.values.dateVolunt.seconds)
+      );
     }
   };
 
@@ -64,7 +69,7 @@ const VolunteeringCard = ({ profile, setProfile }) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date Awarded"
-                  value={startDate && startDate}
+                  value={startYear}
                   onChange={(newValue) => {
                     setProfile({
                       values: {
