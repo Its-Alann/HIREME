@@ -14,6 +14,12 @@ import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import EditProfile from "./Pages/EditProfile/EditProfile";
+import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
+import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
+import { Network } from "./Pages/Network/Network";
+import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
+import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
+import Messaging from "./Pages/Messaging/Messaging";
 
 const App = () => {
   const hello = "hello";
@@ -31,6 +37,16 @@ const App = () => {
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
           <Route path="/editProfile" exact element={<EditProfile />} />
+          <Route path="/network" exact element={<Network />} />
+          <Route path="/messaging" export element={<Messaging />} />
+          <Route path="/myNetwork" exact element={<ViewNetwork />} />
+          <Route path="/invitations" exact element={<ReceivedInvitation />} />
+          <Route path="/sentRequests" exact element={<SentInvitation />} />
+          <Route
+            path="/possibleConnections"
+            exact
+            element={<NetworkPossibleConnections />}
+          />
         </Routes>
       </Router>
     </div>

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Home.css";
 import Typewriter from "typewriter-effect";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -28,17 +28,18 @@ const Home = () => {
     }
   };
 
-  onAuthStateChanged(auth, (authUser) => {
-    if (authUser) {
-      const { uid } = authUser;
-      console.log("uid", uid);
-      setUser(uid);
-      setEmail(authUser.email);
-      checkFormCompletion();
-    } else {
-      setUser(null);
-    }
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const { uid, email } = authUser;
+        console.log("uid", uid);
+        console.log("email", email);
+        setUser(uid);
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
 
   const handleSignOut = async () => {
     signOut(auth)
@@ -67,24 +68,26 @@ const Home = () => {
             </h1>
             <div id="businessInfo">
               <table>
-                <tr>
-                  <td>
-                    <LocalPhoneIcon />
-                  </td>
-                  <td>Contact clients, partners and contractors</td>
-                </tr>
-                <tr>
-                  <td>
-                    <LocationOnIcon />
-                  </td>
-                  <td>Search by location to find the nearest job</td>
-                </tr>
-                <tr>
-                  <td>
-                    <InsertLinkIcon />
-                  </td>
-                  <td>Add your contact information easily</td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td>
+                      <LocalPhoneIcon />
+                    </td>
+                    <td>Contact clients, partners and contractors</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <LocationOnIcon />
+                    </td>
+                    <td>Search by location to find the nearest job</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <InsertLinkIcon />
+                    </td>
+                    <td>Add your contact information easily</td>
+                  </tr>
+                </tbody>
               </table>
               <br />
               <br />
