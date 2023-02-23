@@ -61,7 +61,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
         setUrl(downloadedUrl);
         setIsUploading(false);
         setMessageContent(downloadedUrl);
-        console.log(`uploaded ${file} to storage!`);
+        console.log(`uploaded ${file.name} to storage!`);
       }
     );
   };
@@ -202,6 +202,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
           sx={{ display: "flex", height: 56 }}
         >
           <IconButton
+            data-cy="send-button"
             color="primary"
             aria-label="add"
             type="button"
