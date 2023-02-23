@@ -3,6 +3,7 @@ import { doc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Stack, Button, InputBase } from "@mui/material";
 import { ref, getDownloadURL } from "firebase/storage";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
 import ExperienceCard from "../../Components/ProfileCards/ExperienceCard";
@@ -17,6 +18,18 @@ import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
 
 const EditProfile = () => {
   // Set default value, because otherwise UI glitch + warning
+
+  const theme = createTheme({
+    palette: {
+      primary: { main: "#2B2F90" },
+      background: { main: "#EAEAEA" },
+      gray: { main: "#757575" },
+    },
+    typography: {
+      fontFamily: ["Proxima Nova"],
+    },
+  });
+
   const [profile, setProfile] = useState({
     values: {
       firstName: "",
@@ -122,94 +135,101 @@ const EditProfile = () => {
   }
 
   return (
-    <Grid display="flex" style={{ minWidth: "100vh" }}>
-      <div id="profile-container">
-        <Grid container columnSpacing={2}>
-          <Grid item justifyContent="center" alignItems="center" display="flex">
-            <ProfilePicture urlProfilePicture={url} />
+    <ThemeProvider theme={theme}>
+      <Grid display="flex" style={{ minWidth: "100vh" }}>
+        <div id="profile-container">
+          <Grid container columnSpacing={2}>
+            <Grid
+              item
+              justifyContent="center"
+              alignItems="center"
+              display="flex"
+            >
+              <ProfilePicture urlProfilePicture={url} />
+            </Grid>
+            <Grid item xs={6} container>
+              <InputBase
+                id="standard-basic"
+                style={{ fontSize: "45px" }}
+                placeholder="First Name"
+                value={profile.values.firstName}
+                readOnly
+              />
+              <InputBase
+                id="standard-basic"
+                style={{ fontSize: "45px" }}
+                variant="standard"
+                placeholder="Last Name"
+                value={profile.values.lastName}
+                readOnly
+              />
+
+              <InputBase
+                id="standard-basic"
+                style={{ fontSize: "25px" }}
+                placeholder="School Name"
+                variant="standard"
+                value={profile.values.school}
+                readOnly
+              />
+
+              <InputBase
+                id="standard-basic"
+                placeholder="City"
+                variant="standard"
+                value={profile.values.city}
+                readOnly
+              />
+
+              <InputBase
+                id="standard-basic"
+                placeholder="Country"
+                variant="standard"
+                value={profile.values.country}
+                readOnly
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6} container>
-            <InputBase
-              id="standard-basic"
-              style={{ fontSize: "45px" }}
-              placeholder="First Name"
-              value={profile.values.firstName}
-              readOnly
+          <Stack spacing={2}>
+            <ContactInfoCard
+              setProfile={setProfile}
+              profile={profile}
+              currentUserEmail={currentUserEmail}
             />
-            <InputBase
-              id="standard-basic"
-              style={{ fontSize: "45px" }}
-              variant="standard"
-              placeholder="Last Name"
-              value={profile.values.lastName}
-              readOnly
+            <EducationCard
+              setProfile={setProfile}
+              profile={profile}
+              currentUserEmail={currentUserEmail}
             />
-
-            <InputBase
-              id="standard-basic"
-              style={{ fontSize: "25px" }}
-              placeholder="School Name"
-              variant="standard"
-              value={profile.values.school}
-              readOnly
+            <ExperienceCard
+              setProfile={setProfile}
+              profile={profile}
+              currentUserEmail={currentUserEmail}
             />
-
-            <InputBase
-              id="standard-basic"
-              placeholder="City"
-              variant="standard"
-              value={profile.values.city}
-              readOnly
+            <SkillsCard
+              setProfile={setProfile}
+              profile={profile}
+              currentUserEmail={currentUserEmail}
             />
-
-            <InputBase
-              id="standard-basic"
-              placeholder="Country"
-              variant="standard"
-              value={profile.values.country}
-              readOnly
-            />
-          </Grid>
-        </Grid>
-        <Stack spacing={2}>
-          <ContactInfoCard
-            setProfile={setProfile}
-            profile={profile}
-            currentUserEmail={currentUserEmail}
-          />
-          <EducationCard
-            setProfile={setProfile}
-            profile={profile}
-            currentUserEmail={currentUserEmail}
-          />
-          <ExperienceCard
-            setProfile={setProfile}
-            profile={profile}
-            currentUserEmail={currentUserEmail}
-          />
-          <SkillsCard
-            setProfile={setProfile}
-            profile={profile}
-            currentUserEmail={currentUserEmail}
-          />
-          <LanguagesCard profile={profile} setProfile={setProfile} />
-          <ProjectsCard profile={profile} setProfile={setProfile} />
-          <VolunteeringCard profile={profile} setProfile={setProfile} />
-          <AwardsCard profile={profile} setProfile={setProfile} />
-          <Button
-            onClick={() => {
-              console.log("Button Save Clicked");
-              handleTempButton();
-            }}
-            style={{
-              color: "white",
-            }}
-          >
-            Save Changes
-          </Button>
-        </Stack>
-      </div>
-    </Grid>
+            <LanguagesCard profile={profile} setProfile={setProfile} />
+            <ProjectsCard profile={profile} setProfile={setProfile} />
+            <VolunteeringCard profile={profile} setProfile={setProfile} />
+            <AwardsCard profile={profile} setProfile={setProfile} />
+            <Button
+              onClick={() => {
+                console.log("Button Save Clicked");
+                handleTempButton();
+              }}
+              style={{
+                color: "white",
+              }}
+            >
+              Save Changes
+            </Button>
+          </Stack>
+        </div>
+      </Grid>
+    </ThemeProvider>
   );
 };
 
