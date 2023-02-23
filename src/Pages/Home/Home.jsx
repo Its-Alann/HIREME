@@ -122,7 +122,9 @@ const Home = () => {
               Sign Out
             </button>
             {formCompleted === false ? (
-              <a href="/accountCreation"> Create your profile </a>
+              <a href="/accountCreation" data-testid="createProfileLink">
+                Create your profile
+              </a>
             ) : (
               <a href="/editProfile"> Edit your profile </a>
               // <div> </div>
