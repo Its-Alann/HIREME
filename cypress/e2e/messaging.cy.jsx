@@ -35,8 +35,14 @@ describe("<Messaging />", () => {
   it("testing messaging's buttons and title", () => {
     cy.get(".convo-list > .MuiList-root > :nth-child(1)").click();
     cy.get("#message-input").type("Hello test");
+    cy.get('[data-cy="file_input"]').should("not.exist");
     cy.get(".css-1yyxpsu-MuiGrid2-root").click();
     cy.get("#message-chats").contains("Hello test");
+    cy.get("#message-input").should("be.empty");
+    cy.get(":nth-child(1) > .message-stack > .css-k9lbh4").scrollIntoView();
+    cy.get("#message-chats").contains("mr right now");
+    cy.get("#message-chats").contains("Hello test");
+
     // cy.get('.MuiGrid-container > [align="right"]');
     // cy.get('[align="right"] > .MuiButtonBase-root');
 
@@ -54,9 +60,7 @@ describe("<Messaging />", () => {
         });
       })
       .then(() => {
-        cy.get("#file-preview > .MuiBox-root", {
-          timeout: 10000,
-        }).should("be.visible");
+        cy.get("#file-preview > .MuiBox-root").should("be.visible");
         cy.get('[data-cy="send-button"]').click();
         cy.get("#message-chats").contains("jo.jpg");
       });
