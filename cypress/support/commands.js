@@ -26,3 +26,4 @@
 import "@testing-library/cypress/add-commands";
 
 require("cypress-plugin-tab");
+import "@cypress/code-coverage/support";
