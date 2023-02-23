@@ -7,6 +7,7 @@ const webpackPreprocessor = require("@cypress/webpack-preprocessor");
 module.exports = defineConfig({
   chromeWebSecurity: false,
   video: false,
+  screenshotOnRunFailure: false,
 
   component: {
     specPattern: "cypress/component/*.cy.{js,jsx,ts,tsx}",
@@ -25,6 +26,10 @@ module.exports = defineConfig({
         close: () => {},
         config,
       };
+    },
+
+    env: {
+      codeCoverageTasksRegistered: false,
     },
 
     devServer: {
