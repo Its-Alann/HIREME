@@ -1,18 +1,16 @@
 import { React, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { Grid, IconButton } from "@mui/material";
-import PropTypes from "prop-types";
 import { getAuth } from "firebase/auth";
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+import PropTypes from "prop-types";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage, app } from "../../Firebase/firebase";
+import { storage } from "../../Firebase/firebase";
 
-const db = getFirestore(app);
-
-const ProfilePicture = () => {
+const ProfilePicture = ({ urlProfilePicture }) => {
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const [hidden, setHidden] = useState(true);
+  const [newPicture, setNewPicture] = useState(false);
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -23,13 +21,11 @@ const ProfilePicture = () => {
 
   const handleSubmit = async () => {
     try {
+      console.log("Arugment value:");
+      console.log(urlProfilePicture);
       const auth = getAuth();
       const user = auth.currentUser;
       const profilePictureLink = `${user.email}-profilePicture`;
-
-      await setDoc(doc(db, "userProfiles", user.email), {
-        profilePictureLink,
-      });
       const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
       uploadBytes(imageRef, image)
         .then(() => {
@@ -42,6 +38,7 @@ const ProfilePicture = () => {
               console.log(error.message, "error getting the image url");
             });
           setImage(null);
+          setNewPicture(true);
         })
         .catch((error) => {
           console.log(error.message);
@@ -65,7 +62,11 @@ const ProfilePicture = () => {
         </IconButton>
         <Avatar
           alt="Upload Image"
-          src={url}
+          src={
+            urlProfilePicture !== undefined && newPicture === false
+              ? urlProfilePicture
+              : url
+          }
           sx={{
             width: 200,
             height: 200,
@@ -82,12 +83,22 @@ const ProfilePicture = () => {
         >
           Upload Picture
         </Avatar>
-        <button onClick={handleSubmit} type="submit" hidden={hidden}>
+        <button
+          onClick={handleSubmit}
+          justifyContent="center"
+          textAlign="center"
+          type="submit"
+          hidden={hidden}
+        >
           Submit
         </button>
       </label>
     </Grid>
   );
+};
+
+ProfilePicture.propTypes = {
+  urlProfilePicture: PropTypes.string,
 };
 
 export default ProfilePicture;

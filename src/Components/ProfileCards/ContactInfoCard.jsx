@@ -38,7 +38,6 @@ const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              {" "}
               <Typography variant="h5"> Contact Information </Typography>{" "}
             </Grid>
             <Grid item>

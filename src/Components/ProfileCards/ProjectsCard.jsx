@@ -11,7 +11,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 
 const ProjectsCard = ({ profile, setProfile }) => {
-  const something = "";
   const [editButton, setEditButton] = useState(false);
   return (
     <Box>

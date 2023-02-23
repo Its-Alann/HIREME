@@ -15,7 +15,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 
 const LanguagesCard = ({ profile, setProfile }) => {
-  const something = "";
   const [editButton, setEditButton] = useState(false);
   const [proficiency, setProficiency] = useState("");
 

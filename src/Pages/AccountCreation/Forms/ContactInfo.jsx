@@ -47,8 +47,8 @@ const ContactInfo = ({
         onChange={(e) => setAddress(e.target.value)}
       />
     </Grid>
-    <Grid item xs={18} container spacing={10}>
-      <Grid item xs={6}>
+    <Grid item xs={18} container spacing={13}>
+      <Grid item xs={0}>
         <TextField
           required
           id="standard-required"
