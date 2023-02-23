@@ -1,7 +1,7 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-// import SignUp from "../Pages/SignUp/SignUp";
-import Messaging from "../../src/Pages/Messaging/Messaging";
+// import React from "react";
+// import { BrowserRouter } from "react-router-dom";
+// // import SignUp from "../Pages/SignUp/SignUp";
+// import Messaging from "../../src/Pages/Messaging/Messaging";
 import "cypress-file-upload";
 
 describe("<Messaging />", () => {
@@ -28,15 +28,17 @@ describe("<Messaging />", () => {
     //     <Messaging />
     //   </BrowserRouter>
     // );
+    cy.wait(2000);
 
     cy.visit("http://localhost:3000/messaging");
+    cy.wait(2000);
   });
 
   it("testing messaging's buttons and title", () => {
     cy.get(".convo-list > .MuiList-root > :nth-child(1)").click();
     cy.get("#message-input").type("Hello test");
     cy.get('[data-cy="file_input"]').should("not.exist");
-    cy.get(".css-1yyxpsu-MuiGrid2-root").click();
+    cy.get('[data-cy="send-button"]').click();
     cy.get("#message-chats").contains("Hello test");
     cy.get("#message-input").should("be.empty");
     cy.get(":nth-child(1) > .message-stack > .css-k9lbh4").scrollIntoView();
