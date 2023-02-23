@@ -9,12 +9,15 @@ on:
     
 jobs:
   cypress-run:
-    name: Cypress runhttps://github.com/Its-Alann/SOEN390-Project-Team8
+    name: Cypress run https://github.com/Its-Alann/SOEN390-Project-Team8
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
+      
+      - name: Start app
+        run: npm start
+        
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
