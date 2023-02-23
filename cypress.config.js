@@ -69,6 +69,7 @@ module.exports = defineConfig({
     // videoUploadOnPasses: false,
     // viewportWidth: 1920,
     // viewportHeight: 1080,
+    baseUrl: "http://localhost:3000",
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
