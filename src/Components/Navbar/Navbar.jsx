@@ -13,14 +13,21 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
-const pages = ["Home", "Postings", "About Us", "F.A.Q"];
+const pages = ["Home", "Messaging", "Network"];
+// const pages = [
+//   { title: "Home", redirect: "/" },
+//   { title: "Messaging", redirect: "/messaging" },
+// ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = ({ connected }) => {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const [redirectToPage, setRedirectToPage] = React.useState("");
+  let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -29,6 +36,21 @@ const Navbar = ({ connected }) => {
   };
 
   const handleCloseNavMenu = () => {
+    console.log(redirectToPage);
+    console.log("redirectToPage2", redirectToPage2);
+    switch (redirectToPage2.toLowerCase()) {
+      case "messaging":
+        navigate("/messaging");
+        break;
+      case "home":
+        navigate("/");
+        break;
+      case "network":
+        navigate("/network");
+        break;
+      default:
+        break;
+    }
     setAnchorElNav(null);
   };
 
@@ -56,7 +78,7 @@ const Navbar = ({ connected }) => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            HIRE<i>ME</i>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -89,7 +111,15 @@ const Navbar = ({ connected }) => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  onClick={() => {
+                    console.log(page);
+                    // setRedirectToPage(page);
+                    redirectToPage2 = page;
+                    handleCloseNavMenu();
+                  }}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -112,13 +142,16 @@ const Navbar = ({ connected }) => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            HIRE<i>ME</i>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  redirectToPage2 = page;
+                  handleCloseNavMenu();
+                }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
