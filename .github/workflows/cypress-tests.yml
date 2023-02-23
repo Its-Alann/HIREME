@@ -21,15 +21,9 @@ jobs:
       - name: Start the app
         run: npm start &
 
-      - name: Wait for app to start
-        run: |
-          npx wait-on http://localhost:3000
-          sleep 10
-
       - name: Run E2E tests with Cypress
         uses: cypress-io/github-action@v2
         with:
           e2e: true
           browser: chrome
           headless: true
-          wait-on: 'http://localhost:3000'
