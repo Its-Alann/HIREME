@@ -15,15 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Start the app
-        run: npm start &
-
-      - name: Run E2E tests with Cypress
+      - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          e2e: true
           browser: chrome
-          headless: true
+          build: npm run build
+          start: npm start
