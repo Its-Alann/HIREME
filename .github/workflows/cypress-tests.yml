@@ -1,29 +1,8 @@
-#from https://github.com/cypress-io/todomvc/blob/master/.github/workflows/test-app.yml
-name: Cypress tests
-on:
-  pull_request:
-    types: [opened, reopened]
-  push:
-    branches:
-      - main
-    
+name: Cypress Tests
+on: [push]
 jobs:
-  cypress-run:
-    name: Cypress run https://github.com/Its-Alann/SOEN390-Project-Team8
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Start the app
-        run: npm start &
-
-      - name: Run E2E tests with Cypress
-        uses: cypress-io/github-action@v2
-        with:
-          e2e: true
-          browser: chrome
-          headless: true
+  test:
+    # use the reusable workflow to check out the code, install dependencies
+    # and run the Cypress tests
+    # https://github.com/bahmutov/cypress-workflows
+    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
