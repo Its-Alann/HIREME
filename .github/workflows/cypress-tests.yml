@@ -7,6 +7,6 @@ jobs:
     # https://github.com/bahmutov/cypress-workflows
     uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
     with:
-      start: 'npm run build'
-      wait-on: 'http://localhost:3000'
+      start: npm start
+      wait-on: 'http://localhost:3000/'
       wait-on-timeout: 120
