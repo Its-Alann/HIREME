@@ -1,12 +1,23 @@
-name: Cypress Tests
-on: [push]
+name: Cypress tests
+on:
+  pull_request:
+    types: [opened, reopened]
+  push:
+    branches:
+      - main
+    
 jobs:
-  test:
-    # use the reusable workflow to check out the code, install dependencies
-    # and run the Cypress tests
-    # https://github.com/bahmutov/cypress-workflows
-    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
-    with:
-      start: npm start
-      wait-on: 'http://localhost:3000/'
-      wait-on-timeout: 120
+  cypress-run:
+    name: Cypress runhttps://github.com/Its-Alann/SOEN390-Project-Team8
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          component: true
+          browser: chrome
+          headed: true
+          timeout-minutes: 5
