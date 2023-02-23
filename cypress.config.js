@@ -54,6 +54,19 @@ module.exports = defineConfig({
                 },
               },
             },
+            {
+              test: /\.css$/,
+              use: [
+                { loader: "style-loader" },
+                {
+                  loader: "css-loader",
+                  options: {
+                    modules: true,
+                  },
+                },
+                { loader: "sass-loader" },
+              ],
+            },
           ],
         },
       },
@@ -61,11 +74,59 @@ module.exports = defineConfig({
     specs: ["./components"],
   },
 
-  e2e: {
-    // setupNodeEvents(on, config) {},
-  },
+  // e2e: {
+  //   // setupNodeEvents(on, config) {},
+  // },
 
   e2e: {
+    env: {
+      codeCoverageTasksRegistered: true,
+    },
+
+    devServer: {
+      framework: "create-react-app",
+      bundler: "webpack",
+      webpackConfig: {
+        mode: "development",
+        devtool: false,
+        module: {
+          rules: [
+            // application and Cypress files are bundled like React components
+            // and instrumented using the babel-plugin-istanbul
+            // (we will filter the code coverage for non-application files later)
+            {
+              test: /\.js/,
+              exclude: /node_modules/,
+              use: {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env", "@babel/preset-react"],
+                  plugins: [
+                    // we could optionally insert this plugin
+                    // only if the code coverage flag is on
+                    "istanbul",
+                  ],
+                },
+              },
+            },
+            {
+              test: /\.css$/,
+              use: [
+                { loader: "style-loader" },
+                {
+                  loader: "css-loader",
+                  options: {
+                    modules: true,
+                  },
+                },
+                { loader: "sass-loader" },
+              ],
+            },
+          ],
+        },
+      },
+    },
+
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
