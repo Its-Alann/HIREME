@@ -169,7 +169,7 @@ const Messaging = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box className="page" sx={{ height: "100vh" }}>
-        <Navbar />
+        {/* <Navbar /> */}
         <Box>
           <Grid
             container
