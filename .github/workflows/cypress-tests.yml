@@ -1,12 +1,27 @@
+<<<<<<< HEAD
 #from https://github.com/cypress-io/todomvc/blob/master/.github/workflows/test-app.yml
 name: Cypress Tests
 
 on: [push]
+=======
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      [ main ]
+  pull_request:
+    branches:
+      [ main ]
+>>>>>>> 62982c644181e8a9907bc670ae912e476241a6c9
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     timeout-minutes: 10
+=======
+>>>>>>> 62982c644181e8a9907bc670ae912e476241a6c9
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,5 +30,11 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
+<<<<<<< HEAD
           component: true
 
+=======
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+>>>>>>> 62982c644181e8a9907bc670ae912e476241a6c9
