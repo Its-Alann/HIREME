@@ -1,19 +1,23 @@
-#from https://github.com/cypress-io/todomvc/blob/master/.github/workflows/test-app.yml
-name: Cypress Tests
-
-on: [push]
-
+name: Cypress tests
+on:
+  pull_request:
+    types: [opened, reopened]
+  push:
+    branches:
+      - main
+    
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    name: Cypress runhttps://github.com/Its-Alann/SOEN390-Project-Team8
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
+
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           component: true
-
+          browser: chrome
+          headed: true
+          timeout-minutes: 5
