@@ -68,9 +68,20 @@ module.exports = defineConfig({
     // videoUploadOnPasses: false,
     // viewportWidth: 1920,
     // viewportHeight: 1080,
-    baseUrl: "http://localhost:3000",
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
+    baseUrl: "http://localhost:3000",
+
     setupNodeEvents(on, config) {
+      console.log("setupNodeEvents for components");
+
+      // https://github.com/bahmutov/cypress-code-coverage
+      // eslint-disable-next-line global-require
+      require("@bahmutov/cypress-code-coverage/plugin")(on, config);
+      // eslint-disable-next-line global-require
+      require("@cypress/code-coverage/task")(on, config);
+      // eslint-disable-next-line global-require
+      on("file:preprocessor", require("@cypress/code-coverage/use-babelrc"));
+
       console.log("setupNodeEvents for components");
 
       // https://github.com/bahmutov/cypress-code-coverage
