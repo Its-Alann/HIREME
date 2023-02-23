@@ -1,24 +1,8 @@
-#from https://github.com/cypress-io/todomvc/blob/master/.github/workflows/test-app.yml
-name: Cypress tests
-on:
-  pull_request:
-    types: [opened, reopened]
-  push:
-    branches:
-      - main
-    
+name: Cypress Tests
+on: [push]
 jobs:
-  cypress-run:
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v5
-        with:
-          # Specify Browser since container image is compile with Firefox
-          browser: chrome
+  test:
+    # use the reusable workflow to check out the code, install dependencies
+    # and run the Cypress tests
+    # https://github.com/bahmutov/cypress-workflows
+    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
