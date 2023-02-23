@@ -1,12 +1,9 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
+import { List, ListItem } from "@mui/material";
 import { collection, getDocs } from "firebase/firestore";
-import { Button } from "@material-ui/core";
-import ConnectionListItem from "./ConnectionListItem";
-import { db, auth } from "../../Firebase/firebase";
+import { db } from "../../Firebase/firebase";
 
 // get our sender s email
 //const user = auth.currentUser.email;

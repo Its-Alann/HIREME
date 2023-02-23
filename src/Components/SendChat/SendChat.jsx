@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
-import { Button } from "@mui/material";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Fab from "@material-ui/core/Fab";
-import SendIcon from "@material-ui/icons/Send";
-import { Grid, TextField } from "@material-ui/core";
+import { IconButton, Stack, Box, TextField, Typography } from "@mui/material";
+import { getAuth } from "firebase/auth";
+import Fab from "@mui/material/Fab";
+import { SendRounded as SendRoundedIcon, Clear } from "@mui/icons-material";
+import Grid from "@mui/material/Unstable_Grid2";
 import PropTypes from "prop-types";
 import {
   getStorage,
@@ -14,18 +14,12 @@ import {
   getDownloadURL,
   uploadBytesResumable,
   listAll,
+  deleteObject,
 } from "firebase/storage";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
-const theme = createTheme();
-
-const bobId = "billybob@gmail.com";
-const aliID = "aliceykchen01@gmail.com";
-
-const auth = getAuth();
-
-const SendChat = ({ conversationID, myUser }) => {
+const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
   const [url, setUrl] = useState();
@@ -34,34 +28,78 @@ const SendChat = ({ conversationID, myUser }) => {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const onFileUpload = () => {
+  const [fileStorageRef, setFileStorageRef] = useState();
+
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const uploadFile = () => {
     if (!file) return;
     const storageRef = ref(storage, `/messages/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    setFileStorageRef(storageRef);
+
+    const metadata = {
+      customMetadata: {
+        conversationID,
+      },
+    };
+
+    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
     uploadTask.on(
       "state_changed",
       (snapshot) => {
         setIsUploading(true);
+        setUploadProgress(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
       },
       (error) => {
-        console.log("error", error);
+        console.log("ERROR onFileUpload()", error);
       },
       async () => {
         const downloadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setUrl(downloadedUrl);
         setIsUploading(false);
-        setMessageContent(`${messageContent} ${downloadedUrl}`);
+        setMessageContent(downloadedUrl);
+        console.log(`uploaded ${file} to storage!`);
       }
     );
   };
 
   const onFileChange = (e) => {
-    setFile(e.target.files[0]);
     e.preventDefault();
+    setFile(e.target.files[0]);
+    console.log("file", e.target.files[0]);
   };
 
-  const handleClick = async () => {
+  const deleteFile = async () => {
+    if (!fileStorageRef) return;
+    //delete from storage
+    try {
+      await deleteObject(fileStorageRef);
+      console.log(`${file.name} deleted from storage!`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const clearPreview = () => {
+    setFile(null);
+    setFileStorageRef(null);
+    setMessageContent("");
+  };
+
+  const handleFileClear = () => {
+    deleteFile().then(() => {
+      clearPreview();
+    });
+  };
+
+  const handleSend = async () => {
+    if (!messageContent) {
+      console.log("NO CONTETN");
+      return;
+    }
     // Format a new message
     const timestamp = Timestamp.now();
     if (myUser) {
@@ -80,49 +118,112 @@ const SendChat = ({ conversationID, myUser }) => {
 
     // SENDS TO THE DB
     // ex id: "17k4dPDcymw3GcNjSCSG"
-    if (newMessage.content) {
-      await updateDoc(doc(db, "messages", conversationID), {
-        messages: arrayUnion(newMessage),
-      });
-    }
+    await updateDoc(doc(db, "messages", conversationID), {
+      messages: arrayUnion(newMessage),
+    });
+
+    clearPreview();
   };
 
-  return (
-    <Grid container sx={{ minHeight: 20 }}>
-      <Grid item xs={2} align="center">
-        <FileUpload onFileChange={onFileChange} onFileUpload={onFileUpload} />
-      </Grid>
-      <Grid item xs>
-        <TextField
-          id="outlined-basic-email"
-          label="Type Something"
-          fullWidth
-          onChange={(e) => setMessageContent(e.target.value)}
-          value={messageContent}
-        />
-      </Grid>
+  useEffect(
+    //uplaod file to cloud storage
+    uploadFile,
+    [file]
+  );
 
-      <Grid item xs={2} align="right">
-        <Fab
-          color="secondary"
-          aria-label="add"
-          type="button"
-          disabled={isUploading}
-          onClick={() => {
-            handleClick();
-            setMessageContent("");
-          }}
+  return (
+    <Stack>
+      <Grid className="sendChatContainer" container>
+        <Grid xs justifyItems="center" sx={{ height: 56 }}>
+          {file ? (
+            isUploading ? (
+              <Grid container>
+                <Typography variant="caption" noWrap>
+                  Uploading {file.name} ...
+                </Typography>
+                <Typography variant="caption">{uploadProgress}%</Typography>
+              </Grid>
+            ) : (
+              <Box
+                id="file-preview"
+                sx={{
+                  maxHeight: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {file.type.includes("image") && (
+                  <Box
+                    component="img"
+                    src={url}
+                    alt={file.name}
+                    sx={{ width: 36, height: 36, p: 1, display: "inline-flex" }}
+                    xs
+                  />
+                )}
+                <Typography variant="caption" noWrap xs>
+                  {file.name}
+                </Typography>
+                <IconButton onClick={handleFileClear}>
+                  <Clear />
+                </IconButton>
+              </Box>
+            )
+          ) : (
+            <TextField
+              variant="standard"
+              hiddenLabel
+              id="message-input"
+              placeholder="Type Something"
+              fullWidth
+              onChange={(e) => setMessageContent(e.target.value)}
+              value={messageContent}
+              sx={{ m: 0 }}
+            />
+          )}
+        </Grid>
+
+        {messageContent === "" && !file && (
+          <Grid
+            xs={1}
+            alignItems="center"
+            justifyContent="center"
+            sx={{ display: "flex", height: 56 }}
+          >
+            <FileUpload onFileChange={onFileChange} />
+          </Grid>
+        )}
+
+        <Grid
+          xs={1}
+          align="center"
+          justifyContent="center"
+          sx={{ display: "flex", height: 56 }}
         >
-          <SendIcon />
-        </Fab>
+          <IconButton
+            color="primary"
+            aria-label="add"
+            type="button"
+            size="small"
+            disabled={isUploading}
+            onClick={async () => {
+              await handleSend();
+            }}
+            // sx={{ p: 1 }}
+          >
+            <SendRoundedIcon color="primary" />
+          </IconButton>
+        </Grid>
       </Grid>
-    </Grid>
+    </Stack>
   );
 };
 
 SendChat.propTypes = {
   conversationID: PropTypes.string,
   myUser: PropTypes.string, //email
+  selectedIndex: PropTypes.number,
 };
 
 export default SendChat;

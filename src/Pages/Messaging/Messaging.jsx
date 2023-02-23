@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState, useEffect, useRef } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Avatar from "@material-ui/core/Avatar";
+import {
+  Typography,
+  List,
+  ListItem,
+  Avatar,
+  ListItemAvatar,
+  Box,
+  IconButton,
+  Stack,
+  useMediaQuery,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   doc,
   getDocs,
   getDoc,
-  addDoc,
   collection,
   onSnapshot,
   query,
   where,
 } from "firebase/firestore";
-import { Box, IconButton, Drawer } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
@@ -51,7 +55,16 @@ const Messaging = () => {
 
   const [myUser, setMyUser] = useState("");
 
+  //tracks the convo in the sidebar
   const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  // true when on mobile
+  const mediaMobile = useMediaQuery("only screen and (max-width: 600px)");
+
+  // ref to dummy div under messageLIst
+  const dummy = useRef();
+
+  const messageViewRef = useRef();
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
@@ -64,6 +77,7 @@ const Messaging = () => {
       where("authors", "array-contains", myUser)
     );
 
+    // set listener to convos involving the user
     const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
       //list of author lists
       const allAuthorsList = [];
@@ -130,6 +144,11 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
+  const scrollToBottom = () => {
+    dummy.current.scrollIntoView({ behaviour: "smooth" });
+  };
+
+  //set a listener to on the conversation document
   React.useEffect(() => {
     let unSub;
     if (convoId) {
@@ -142,6 +161,10 @@ const Messaging = () => {
   React.useEffect(() => {
     getAllReceivers();
   }, [myUser]);
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -171,6 +194,8 @@ const Messaging = () => {
                 maxHeight: "100%",
                 // overflow: "auto",
                 p: 0,
+                display:
+                  mediaMobile && selectedIndex > -1 ? "none" : "inline-block",
               }}
             >
               <Box component={Grid} sx={{ boxShadow: "0 4px 4px -4px gray" }}>
@@ -184,7 +209,7 @@ const Messaging = () => {
                   overflow: "auto",
                   // maxHeight: "calc(100% - 100px)",
                   height: "auto",
-                  bgcolor: "orange",
+                  bgcolor: "white",
                 }}
               >
                 <List>
@@ -201,8 +226,15 @@ const Messaging = () => {
                         );
                         setName(chat.names);
                         setSelectedIndex(i);
+                        scrollToBottom();
                       }}
                     >
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="sumn random"
+                          src="https://picsum.photos/200/300"
+                        />
+                      </ListItemAvatar>
                       <Typography
                         sx={{ textTransform: "lowercase" }}
                         variant="body1"
@@ -215,48 +247,81 @@ const Messaging = () => {
               </Grid>
             </Grid>
             <Grid
+              ref={messageViewRef}
               className="message-view"
-              xs={8}
+              sm={8}
+              xs={12}
               sx={{
                 bgcolor: "white",
                 borderRadius: 2,
-                ml: 2,
+                ml: mediaMobile ? 0 : 2,
                 p: 0,
                 maxHeight: "100%",
+                display: mediaMobile && selectedIndex < 0 ? "none" : null,
+                // scroll: "auto",
+                // scrollX: "hidden",
               }}
             >
-              <div
-                className="message-view-banner"
-                style={{ maxHeight: "64px" }}
-              >
-                <Typography variant="h4">{name}</Typography>
-                <Avatar alt="sumn random" src="https://picsum.photos/200/300" />
-              </div>
+              <Stack sx={{ maxHeight: "100%" }}>
+                <div
+                  className="message-view-banner"
+                  style={{ maxHeight: "64px" }}
+                >
+                  {mediaMobile && (
+                    <IconButton
+                      aria-label="back"
+                      onClick={() => {
+                        setSelectedIndex(-1);
+                      }}
+                    >
+                      <ChevronLeftIcon sx={{ color: "white" }} />
+                    </IconButton>
+                  )}
 
-              <Box
-                component={Grid}
-                sx={{
-                  // border: "black solid 1px",
-                  bgcolor: "aqua",
-                  height: "calc(100% - 64px - 56px)",
-                  overflow: "auto",
-                  p: 0,
-                  boxShadow: "inset 0 0 -4px gray",
-                }}
-                boxShadow="0 8px 6px -6px black"
-              >
-                <MessageList messages={messages} />
-              </Box>
-              {/* {/* <Grid container style={{ padding: "20px" }}> */}
-              <Box item xs={12} align="right" sx={{ minHeight: 32 }}>
-                <SendChat
-                  color="primary"
-                  conversationID={convoId}
-                  myUser={myUser}
-                />
-              </Box>
-              {/* 
-              </Grid> */}
+                  <Typography variant="h4" noWrap>
+                    {name}
+                  </Typography>
+                  <Avatar
+                    alt="sumn random"
+                    src="https://picsum.photos/200/300"
+                  />
+                </div>
+
+                <Box
+                  id="message-chats"
+                  sx={{
+                    // border: "black solid 1px",
+                    bgcolor: "white",
+                    // height: "calc(100% - 64px - 56px)",
+                    overflow: "auto",
+                    p: 0,
+                    overflowX: "hidden",
+                  }}
+                >
+                  <MessageList messages={messages} />
+                  <div ref={dummy} />
+                </Box>
+
+                {selectedIndex > -1 && (
+                  <Box
+                    sx={{
+                      bgcolor: "gray.main",
+                      alignItems: "center",
+                      justifyItems: "center",
+                      // height: 56,
+                      p: 0,
+                      borderRadius: "0 0 8px 8px",
+                      borderTop: "1px solid gray",
+                    }}
+                  >
+                    <SendChat
+                      conversationID={convoId}
+                      myUser={myUser}
+                      selectedIndex={selectedIndex}
+                    />
+                  </Box>
+                )}
+              </Stack>
             </Grid>
           </Grid>
         </Box>

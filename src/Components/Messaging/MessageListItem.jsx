@@ -1,10 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
-import Stack from "@mui/material/Stack";
-import { Box } from "@mui/material";
-
-import ListItemText from "@material-ui/core/ListItemText";
+import { Box, Stack, ListItemText } from "@mui/material";
 import { Timestamp } from "firebase/firestore";
 // import { auth } from "../../Firebase/firebase";
 
@@ -15,6 +12,7 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
       className="message-stack"
       container
       alignItems={alignment === "right" ? "flex-end" : "flex-start"}
+      sx={{ maxWidth: "100%" }}
     >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
         <ListItemText secondary={sender} align={alignment} />

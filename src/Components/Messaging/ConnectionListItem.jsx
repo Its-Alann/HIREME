@@ -1,8 +1,8 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import Avatar from "@material-ui/core/Avatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Avatar from "@mui/material/Avatar";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
 const ConnectionListItem = (props) => {
   // Really fking mysterious

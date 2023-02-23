@@ -9,10 +9,8 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
-  Divider,
-} from "@material-ui/core";
-import { Box, IconButton, Drawer } from "@mui/material";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+  Box,
+} from "@mui/material";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./Messaging.css";
 import SendChat from "../../Components/SendChat/SendChat";
