@@ -125,7 +125,7 @@ const EditProfile = () => {
     <Grid display="flex" style={{ minWidth: "100vh" }}>
       <div id="profile-container">
         <Grid container columnSpacing={2}>
-          <Grid item xs={0} md={0} lg={0}>
+          <Grid item justifyContent="center" alignItems="center" display="flex">
             <ProfilePicture urlProfilePicture={url} />
           </Grid>
           <Grid item xs={6} container>
