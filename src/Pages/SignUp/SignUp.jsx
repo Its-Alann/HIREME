@@ -17,7 +17,16 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 const SignUp = () => {
   const [emailError, setEmailError] = React.useState(false);
@@ -38,7 +47,7 @@ const SignUp = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
+      {/* <Navbar /> */}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
