@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
-import { styled } from "@mui/material/styles";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blueGrey, blue } from "@mui/material/colors";
 import {
   getDoc,
@@ -18,20 +18,28 @@ import {
 } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
+const theme2 = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+    fontSize: 15,
+  },
+});
+
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(blue[600]),
-  backgroundColor: blue[600],
+  color: "#EAEAEA",
+  backgroundColor: "#2B2F90",
   "&:hover": {
-    backgroundColor: blue[700],
+    backgroundColor: "#2B2F60",
   },
 }));
 
-const ColorButtonBlueGray = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(blueGrey[400]),
-  backgroundColor: blueGrey[400],
-  "&:hover": {
-    backgroundColor: blueGrey[500],
-  },
+const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
+  color: "#2B2F90",
 }));
 
 export const ReceivedInvitationCard = ({
@@ -127,50 +135,56 @@ export const ReceivedInvitationCard = ({
   };
 
   return (
-    <div>
-      <Box sx={{ width: 300, minWidth: 100 }}>
-        <Card variant="outlined" sx={{ p: 1 }}>
-          <>
-            <CardHeader
-              avatar={
-                //source will be the user's image
-                <Avatar
-                  aria-label="user"
-                  sx={{ width: 56, height: 56 }}
-                  src={receivedInvitationUser.values.image}
-                />
-              }
-              //title will be the user's name and subheader is their bio
-              title={
-                receivedInvitationUser.values.firstName !== "" &&
-                receivedInvitationUser.values.lastName !== ""
-                  ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
-                  : "No name"
-              }
-              subheader={
-                //remove != null when incomplete users are removed
-                receivedInvitationUser.values.description !== "" &&
-                receivedInvitationUser.values.description != null
-                  ? `${receivedInvitationUser.values.description}`
-                  : "No bio"
-              }
-            />
-            {/*moves the buttons to the right*/}
-            <Box display="flex" justifyContent="flex-end">
-              <CardActions>
-                {/*view profile will go to the user's profile and message will be sent to the */}
-                <ColorButtonBlueGray size="medium" onClick={ignoreInvite}>
-                  Ignore
-                </ColorButtonBlueGray>
-                <ColorButtonBlue size="medium" onClick={acceptInvite}>
-                  Accept
-                </ColorButtonBlue>
-              </CardActions>
-            </Box>
-          </>
-        </Card>
-      </Box>
-    </div>
+    <ThemeProvider theme={theme2}>
+      <div>
+        <Box sx={{ width: 300, minWidth: 100 }}>
+          <Card variant="outlined" sx={{ p: 1 }}>
+            <>
+              <CardHeader
+                avatar={
+                  //source will be the user's image
+                  <Avatar
+                    aria-label="user"
+                    sx={{ width: 56, height: 56 }}
+                    src={receivedInvitationUser.values.image}
+                  />
+                }
+                //title will be the user's name and subheader is their bio
+                title={
+                  receivedInvitationUser.values.firstName !== "" &&
+                  receivedInvitationUser.values.lastName !== ""
+                    ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
+                    : "No name"
+                }
+                subheader={
+                  //remove != null when incomplete users are removed
+                  receivedInvitationUser.values.description !== "" &&
+                  receivedInvitationUser.values.description != null
+                    ? `${receivedInvitationUser.values.description}`
+                    : "No bio"
+                }
+              />
+              {/*moves the buttons to the right*/}
+              <Box display="flex" justifyContent="flex-end">
+                <CardActions>
+                  {/*view profile will go to the user's profile and message will be sent to the */}
+                  <ColorButtonBlue size="medium" onClick={acceptInvite}>
+                    Accept
+                  </ColorButtonBlue>
+                  <ColorButtonLightBlue
+                    size="medium"
+                    variant="outlined"
+                    onClick={ignoreInvite}
+                  >
+                    Ignore
+                  </ColorButtonLightBlue>
+                </CardActions>
+              </Box>
+            </>
+          </Card>
+        </Box>
+      </div>
+    </ThemeProvider>
   );
 };
 
