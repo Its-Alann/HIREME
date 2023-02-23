@@ -10,7 +10,7 @@ module.exports = defineConfig({
   screenshotOnRunFailure: false,
 
   component: {
-    specPattern: "cypress/component/*.cy.{js,jsx,ts,tsx}",
+    specPattern: "cypress/__tests__/ComponentTesting/*.cy.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
 

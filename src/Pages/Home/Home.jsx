@@ -1,29 +1,46 @@
-import React, { useState } from "react";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState, useEffect } from "react";
 import "./Home.css";
 import Typewriter from "typewriter-effect";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Tilt from "react-parallax-tilt";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import Grid from "@mui/material/Grid";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
-import { auth } from "../../Firebase/firebase";
-import Navbar from "../../Components/Navbar/Navbar";
+import { auth, app } from "../../Firebase/firebase";
 
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
+  const db = getFirestore(app);
+  const [formCompleted, setFormCompleted] = useState(false);
 
-  onAuthStateChanged(auth, (authUser) => {
-    if (authUser) {
-      const { uid } = authUser;
-      console.log("uid", uid);
-      setUser(uid);
-    } else {
-      setUser(null);
+  const checkFormCompletion = async (email) => {
+    const docRef = doc(db, "userProfiles", email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setFormCompleted(true);
     }
-  });
+  };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const { uid, email } = authUser;
+        console.log("uid", uid);
+        console.log("email", email);
+        setUser(uid);
+        checkFormCompletion(email);
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
 
   const handleSignOut = async () => {
     signOut(auth)
@@ -37,81 +54,104 @@ const Home = () => {
       });
   };
 
+  const theme = createTheme({
+    palette: {
+      primary: { main: "#2B2F90" },
+      background: { main: "#EAEAEA" },
+      gray: { main: "#757575" },
+    },
+    typography: {
+      fontFamily: ["Proxima Nova"],
+      fontSize: 15,
+    },
+  });
+
   return (
-    <div className="Home" id="Home">
-      <div className="overlay" />
-      <video src={mainVideo} autoPlay loop muted playsInline />
-      <div className="content">
-        <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} gyroscope>
-          <div id="card">
-            <h1 id="title">
-              <span id="titleHire">
-                <div id="gradient">HIRE</div>
-              </span>
-              <span id="titleME">ME</span>
-            </h1>
-            <div id="businessInfo">
-              <table>
-                <tr>
-                  <td>
-                    <LocalPhoneIcon />
-                  </td>
-                  <td>Contact clients, partners and contractors</td>
-                </tr>
-                <tr>
-                  <td>
-                    <LocationOnIcon />
-                  </td>
-                  <td>Search by location to find the nearest job</td>
-                </tr>
-                <tr>
-                  <td>
-                    <InsertLinkIcon />
-                  </td>
-                  <td>Add your contact information easily</td>
-                </tr>
-              </table>
-              <br />
-              <br />
-              <div id="type">
-                Connect with &#160;
-                <Typewriter
-                  options={{
-                    strings: [
-                      "Peers",
-                      "Potential Employers",
-                      "Partners",
-                      "Clients",
-                    ],
-                    autoStart: true,
-                    loop: true,
-                    deleteSpeed: 50,
-                  }}
-                />
+    <ThemeProvider theme={theme}>
+      <div className="Home" id="Home">
+        {/* <div className="overlay" /> */}
+        <video src={mainVideo} autoPlay loop muted playsInline />
+        <div className="content">
+          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} gyroscope>
+            <div id="card">
+              <h1 id="title">
+                <span id="titleHire">
+                  <div id="gradient">HIRE</div>
+                </span>
+                <span id="titleME">ME</span>
+              </h1>
+              <div id="businessInfo">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <LocalPhoneIcon />
+                      </td>
+                      <td>Contact clients, partners and contractors</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <LocationOnIcon />
+                      </td>
+                      <td>Search by location to find the nearest job</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <InsertLinkIcon />
+                      </td>
+                      <td>Add your contact information easily</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br />
+                <br />
+                <div id="type">
+                  Connect with &#160;
+                  <Typewriter
+                    options={{
+                      strings: [
+                        "Peers",
+                        "Potential Employers",
+                        "Partners",
+                        "Clients",
+                      ],
+                      autoStart: true,
+                      loop: true,
+                      deleteSpeed: 50,
+                    }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </Tilt>
+          </Tilt>
 
-        {user ? (
-          <div style={{ display: "grid" }}>
-            <button
-              id="signout"
-              type="button"
-              data-testid="homeLink"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button>
-            <a href="/accountCreation"> Create your profile</a>
-          </div>
-        ) : (
-          <a href="/login" data-testid="homeLink" id="glass-btn">
-            Sign In
-          </a>
-        )}
+          {user ? (
+            <div style={{ display: "grid" }}>
+              <button
+                id="signout"
+                type="button"
+                data-testid="homeLink"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </button>
+              {formCompleted === false ? (
+                <a href="/accountCreation" data-testid="createProfileLink">
+                  Create your profile
+                </a>
+              ) : (
+                <a href="/editProfile"> Edit your profile </a>
+                // <div> </div>
+              )}
+            </div>
+          ) : (
+            <a href="/login" data-testid="homeLink" id="glass-btn">
+              Sign In
+            </a>
+          )}
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 
