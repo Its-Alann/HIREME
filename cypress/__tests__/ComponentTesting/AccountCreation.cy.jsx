@@ -7,9 +7,9 @@ describe("<AccountCreation />", () => {
     cy.mount(<AccountCreation />);
   });
 
-  beforeEach(() => {
-    cy.mount(<AccountCreation />);
-  });
+  // beforeEach(() => {
+  //   cy.mount(<AccountCreation />);
+  // });
 
   //it("")
 });

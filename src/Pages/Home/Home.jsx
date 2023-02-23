@@ -8,13 +8,24 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import Grid from "@mui/material/Grid";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
-import { auth } from "../../Firebase/firebase";
+import { auth, app } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
 
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
+  const db = getFirestore(app);
+  const [formCompleted, setFormCompleted] = useState(false);
+
+  const checkFormCompletion = async (email) => {
+    const docRef = doc(db, "userProfiles", email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setFormCompleted(true);
+    }
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, (authUser) => {
@@ -23,6 +34,7 @@ const Home = () => {
         console.log("uid", uid);
         console.log("email", email);
         setUser(uid);
+        checkFormCompletion(email);
       } else {
         setUser(null);
       }
@@ -109,7 +121,14 @@ const Home = () => {
             >
               Sign Out
             </button>
-            <a href="/accountCreation"> Create your profile</a>
+            {formCompleted === false ? (
+              <a href="/accountCreation" data-testid="createProfileLink">
+                Create your profile
+              </a>
+            ) : (
+              <a href="/editProfile"> Edit your profile </a>
+              // <div> </div>
+            )}
           </div>
         ) : (
           <a href="/login" data-testid="homeLink" id="glass-btn">
