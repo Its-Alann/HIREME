@@ -146,7 +146,8 @@ describe("Filling Up Forms", () => {
       cy.get("#next").click();
       cy.get("#standard-required").type("English");
       cy.get("#language-dropdown").click();
-      cy.get('.MuiList-root > [tabindex="0"]').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.get('[data-value="Beginner"]');
     });
   });
   describe("Projects Form", () => {
@@ -206,6 +207,24 @@ describe("Filling Up Forms", () => {
       cy.get("#outlined-multiline-static").type(
         "I ended all wars in all countries"
       );
+      cy.get(".MuiButton-textInherit").click();
+    });
+  });
+
+  describe("Form Submission", () => {
+    describe("Submission", () => {
+      it("submits form", () => {
+        cy.visit("http://localhost:3000/accountCreation");
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+        cy.get("#next").click();
+      });
     });
   });
 });
