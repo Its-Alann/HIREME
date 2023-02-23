@@ -13,8 +13,11 @@ describe("example to-do app", () => {
 
   describe("Some Test", () => {
     it("Adds document to test_hello_world collection of Firestore", () => {
-      //cy.callFirestore("add", "group", { members: "newMember" });
+      cy.callFirestore("add", "group", { members: "newMember" });
+      //logs in with the UID found on cypress.env.json
+      cy.login();
 
+      //custom login
       const uid = "EVgG5esZ4cRVNkf67eySrkJ1dVg1";
       const tenantId = "testacc2@mail.com";
       cy.login(uid, undefined, tenantId);
