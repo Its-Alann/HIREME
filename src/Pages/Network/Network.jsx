@@ -12,7 +12,16 @@ import { ViewNetwork } from "./MyConnections/ViewNetwork";
 import { SentInvitation } from "./Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Invitation/ReceivedInvitation";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 const LinkTab = (props) => (
   <Tab
@@ -36,7 +45,7 @@ export const Network = () => {
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
       <ThemeProvider theme={theme}>
-        <Navbar />
+        {/* <Navbar /> */}
         <Container component="main" maxWidth={false} sx={{ m: 2 }}>
           <CssBaseline />
           <Box sx={{ width: "100%" }}>
