@@ -1,8 +1,4 @@
-/* eslint-disable import/no-import-module-exports */
 const { defineConfig } = require("cypress");
-const cypressFirebasePlugin = require("cypress-firebase").plugin;
-const admin = require("firebase-admin");
-const webpackPreprocessor = require("@cypress/webpack-preprocessor");
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
@@ -125,33 +121,5 @@ module.exports = defineConfig({
         },
       },
     },
-    specs: ["./components"],
-  },
-
-  e2e: {
-    baseUrl: "http://localhost:3000",
-    async setupNodeEvents(on, config) {
-      require("@cypress/code-coverage/task")(on, config);
-
-      const file = config.env.configFile || "dev";
-      const envConfig = await getConfigurationByFile(file);
-      d;
-      const allConfig = merge({}, config, envConfig);
-      return allConfig;
-      dd;
-    },
-
-    specs: ["./e2e"],
-
-    // NOTE: If not setting GCLOUD_PROJECT env variable, project can be set like so:
-    // return cypressFirebasePlugin(on, config, admin, { projectId: 'some-project' });
   },
 });
-
-async function getConfigurationByFile(file) {
-  const pathToConfigFile = path.resolve(
-    "cypress/config",
-    `cypress.${file}.json`
-  );
-  return await fs.readJson(pathToConfigFile);
-}
