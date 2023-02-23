@@ -22,7 +22,7 @@ jobs:
         run: npm start &
 
       - name: Run E2E tests with Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           e2e: true
           browser: chrome
