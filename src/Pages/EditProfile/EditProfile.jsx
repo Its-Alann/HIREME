@@ -1,14 +1,8 @@
 import { React, useState, useEffect } from "react";
-import {
-  doc,
-  setDoc,
-  getFirestore,
-  getDoc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { Grid, Box, TextField, Avatar, Stack, Button } from "@mui/material";
+import { Grid, Stack, Button, InputBase } from "@mui/material";
+import { ref, getDownloadURL } from "firebase/storage";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
 import ExperienceCard from "../../Components/ProfileCards/ExperienceCard";
@@ -17,11 +11,11 @@ import LanguagesCard from "../../Components/ProfileCards/LanguagesCard";
 import ProjectsCard from "../../Components/ProfileCards/ProjectsCard";
 import VolunteeringCard from "../../Components/ProfileCards/VolunteeringCard";
 import AwardsCard from "../../Components/ProfileCards/AwardsCard";
-import { app, auth } from "../../Firebase/firebase";
+import { app, auth, storage } from "../../Firebase/firebase";
+import "./EditProfile.css";
+import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
 
 const EditProfile = () => {
-  const something = "";
-
   // Set default value, because otherwise UI glitch + warning
   const [profile, setProfile] = useState({
     values: {
@@ -62,6 +56,7 @@ const EditProfile = () => {
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
+  const [url, setUrl] = useState();
 
   // Only once, attach listener to onAuthStateChanged
   useEffect(() => {
@@ -91,6 +86,18 @@ const EditProfile = () => {
         } else {
           console.log("User Profile Not Exist");
         }
+        //Get profile picture
+        console.log(currentUserEmail);
+        const profilePictureLink = `${currentUserEmail}-profilePicture`;
+        const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
+        getDownloadURL(imageRef)
+          // eslint-disable-next-line no-shadow
+          .then((url) => {
+            setUrl(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
       }
     }
     console.log("current User Email");
@@ -115,105 +122,95 @@ const EditProfile = () => {
   }
 
   return (
-    <div>
-      <Grid container>
-        <Grid item md={3}>
-          <Grid container my={5}>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
-              sx={{ width: 150, height: 150 }}
-            />
+    <Grid display="flex" style={{ minWidth: "100vh" }}>
+      <div id="profile-container">
+        <Grid container spacing={2} columns={3}>
+          <Grid item xs={0} md={0} lg={0}>
+            <ProfilePicture urlProfilePicture={url} />
           </Grid>
-        </Grid>
-        <Grid item md={9} margin="auto">
-          <Grid container direction="column">
-            <Grid container>
-              <Grid container>
-                <Grid item mx={5}>
-                  <TextField
-                    id="standard-basic"
-                    label="First Name"
-                    variant="standard"
-                    value={profile.values.firstName}
-                  />
-                </Grid>
-                <Grid item mx={5}>
-                  <TextField
-                    id="standard-basic"
-                    label="Last Name"
-                    variant="standard"
-                    value={profile.values.lastName}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item mx={5}>
-                  <TextField
-                    id="standard-basic"
-                    label="School Name"
-                    variant="standard"
-                    value={profile.values.school}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item mx={5}>
-                  <TextField
-                    id="standard-basic"
-                    label="City"
-                    variant="standard"
-                    value={profile.values.city}
-                  />
-                </Grid>
-                <Grid item mx={5}>
-                  <TextField
-                    id="standard-basic"
-                    label="Country"
-                    variant="standard"
-                    value={profile.values.country}
-                  />
-                </Grid>
+          <Grid item xs={12} sm container>
+            <Grid item container direction="column">
+              <Grid item xs sm lg>
+                <InputBase
+                  id="standard-basic"
+                  style={{ fontSize: "45px" }}
+                  placeholder="First Name"
+                  value={profile.values.firstName}
+                  readOnly
+                />
+                <InputBase
+                  id="standard-basic"
+                  style={{ fontSize: "45px" }}
+                  variant="standard"
+                  placeholder="Last Name"
+                  value={profile.values.lastName}
+                  readOnly
+                />
+                <InputBase
+                  id="standard-basic"
+                  style={{ fontSize: "25px" }}
+                  placeholder="School Name"
+                  variant="standard"
+                  value={profile.values.school}
+                  readOnly
+                />
+                <InputBase
+                  id="standard-basic"
+                  placeholder="City"
+                  variant="standard"
+                  value={profile.values.city}
+                  readOnly
+                />
+                <InputBase
+                  id="standard-basic"
+                  placeholder="Country"
+                  variant="standard"
+                  value={profile.values.country}
+                  readOnly
+                />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Stack spacing={2}>
-        <ContactInfoCard
-          setProfile={setProfile}
-          profile={profile}
-          currentUserEmail={currentUserEmail}
-        />
-        <EducationCard
-          setProfile={setProfile}
-          profile={profile}
-          currentUserEmail={currentUserEmail}
-        />
-        <ExperienceCard
-          setProfile={setProfile}
-          profile={profile}
-          currentUserEmail={currentUserEmail}
-        />
-        <SkillsCard
-          setProfile={setProfile}
-          profile={profile}
-          currentUserEmail={currentUserEmail}
-        />
-        <LanguagesCard profile={profile} setProfile={setProfile} />
-        <ProjectsCard profile={profile} setProfile={setProfile} />
-        <VolunteeringCard profile={profile} setProfile={setProfile} />
-        <AwardsCard profile={profile} setProfile={setProfile} />
-        <Button
-          onClick={() => {
-            console.log("Button Save Clicked");
-            handleTempButton();
-          }}
-        >
-          Save Changes
-        </Button>
-      </Stack>
-    </div>
+        <Stack spacing={2}>
+          <ContactInfoCard
+            setProfile={setProfile}
+            profile={profile}
+            currentUserEmail={currentUserEmail}
+          />
+          <EducationCard
+            setProfile={setProfile}
+            profile={profile}
+            currentUserEmail={currentUserEmail}
+          />
+          <ExperienceCard
+            setProfile={setProfile}
+            profile={profile}
+            currentUserEmail={currentUserEmail}
+          />
+          <SkillsCard
+            setProfile={setProfile}
+            profile={profile}
+            currentUserEmail={currentUserEmail}
+          />
+          <LanguagesCard profile={profile} setProfile={setProfile} />
+          <ProjectsCard profile={profile} setProfile={setProfile} />
+          <VolunteeringCard profile={profile} setProfile={setProfile} />
+          <AwardsCard profile={profile} setProfile={setProfile} />
+          <Button
+            onClick={() => {
+              console.log("Button Save Clicked");
+              handleTempButton();
+            }}
+            style={{
+              color: "white",
+            }}
+          >
+            Save Changes
+          </Button>
+        </Stack>
+      </div>
+    </Grid>
   );
 };
 

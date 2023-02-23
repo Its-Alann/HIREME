@@ -54,7 +54,6 @@ NameForm.propTypes = {
   values: PropTypes.shape({
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
-    profilePictureUrl: PropTypes.string.isRequired,
   }).isRequired,
 };
 

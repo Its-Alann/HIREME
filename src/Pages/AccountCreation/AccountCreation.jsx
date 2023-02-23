@@ -213,10 +213,8 @@ const AccountCreation = () => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      const profilePictureLink = `${user.email}-profilePicture`;
       await setDoc(doc(db, "userProfiles", user.email), {
         values,
-        profilePictureLink,
       });
     } catch (error) {
       console.log(error);
