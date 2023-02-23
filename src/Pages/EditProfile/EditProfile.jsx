@@ -124,52 +124,51 @@ const EditProfile = () => {
   return (
     <Grid display="flex" style={{ minWidth: "100vh" }}>
       <div id="profile-container">
-        <Grid container spacing={2} columns={3}>
+        <Grid container columnSpacing={2}>
           <Grid item xs={0} md={0} lg={0}>
             <ProfilePicture urlProfilePicture={url} />
           </Grid>
-          <Grid item xs={12} sm container>
-            <Grid item container direction="column">
-              <Grid item xs sm lg>
-                <InputBase
-                  id="standard-basic"
-                  style={{ fontSize: "45px" }}
-                  placeholder="First Name"
-                  value={profile.values.firstName}
-                  readOnly
-                />
-                <InputBase
-                  id="standard-basic"
-                  style={{ fontSize: "45px" }}
-                  variant="standard"
-                  placeholder="Last Name"
-                  value={profile.values.lastName}
-                  readOnly
-                />
-                <InputBase
-                  id="standard-basic"
-                  style={{ fontSize: "25px" }}
-                  placeholder="School Name"
-                  variant="standard"
-                  value={profile.values.school}
-                  readOnly
-                />
-                <InputBase
-                  id="standard-basic"
-                  placeholder="City"
-                  variant="standard"
-                  value={profile.values.city}
-                  readOnly
-                />
-                <InputBase
-                  id="standard-basic"
-                  placeholder="Country"
-                  variant="standard"
-                  value={profile.values.country}
-                  readOnly
-                />
-              </Grid>
-            </Grid>
+          <Grid item xs={6} container>
+            <InputBase
+              id="standard-basic"
+              style={{ fontSize: "45px" }}
+              placeholder="First Name"
+              value={profile.values.firstName}
+              readOnly
+            />
+            <InputBase
+              id="standard-basic"
+              style={{ fontSize: "45px" }}
+              variant="standard"
+              placeholder="Last Name"
+              value={profile.values.lastName}
+              readOnly
+            />
+
+            <InputBase
+              id="standard-basic"
+              style={{ fontSize: "25px" }}
+              placeholder="School Name"
+              variant="standard"
+              value={profile.values.school}
+              readOnly
+            />
+
+            <InputBase
+              id="standard-basic"
+              placeholder="City"
+              variant="standard"
+              value={profile.values.city}
+              readOnly
+            />
+
+            <InputBase
+              id="standard-basic"
+              placeholder="Country"
+              variant="standard"
+              value={profile.values.country}
+              readOnly
+            />
           </Grid>
         </Grid>
         <Stack spacing={2}>
