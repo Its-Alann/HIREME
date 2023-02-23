@@ -18,6 +18,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          cache-dependency-path: cypress.config.js
           build: npm run build
-          start: npx cypress run
+          start: npm start
