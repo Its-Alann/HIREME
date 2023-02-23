@@ -13,6 +13,7 @@ import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
+import EditProfile from "./Pages/EditProfile/EditProfile";
 import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { Network } from "./Pages/Network/Network";
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/accountCreation" exact element={<AccountCreation />} />
+          <Route path="/editProfile" exact element={<EditProfile />} />
           <Route path="/network" exact element={<Network />} />
           <Route path="/messaging" export element={<Messaging />} />
           <Route path="/myNetwork" exact element={<ViewNetwork />} />
