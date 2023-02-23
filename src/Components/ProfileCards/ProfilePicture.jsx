@@ -7,22 +7,13 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/firebase";
 
 const ProfilePicture = ({ urlProfilePicture }) => {
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const [hidden, setHidden] = useState(true);
   const [newPicture, setNewPicture] = useState(false);
 
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
-      setHidden(false);
-    }
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = (image) => {
     try {
-      console.log("Arugment value:");
-      console.log(urlProfilePicture);
       const auth = getAuth();
       const user = auth.currentUser;
       const profilePictureLink = `${user.email}-profilePicture`;
@@ -37,7 +28,10 @@ const ProfilePicture = ({ urlProfilePicture }) => {
             .catch((error) => {
               console.log(error.message, "error getting the image url");
             });
-          setImage(null);
+          console.log("image");
+          console.log(image);
+          console.log("url");
+          console.log(url);
           setNewPicture(true);
         })
         .catch((error) => {
@@ -48,8 +42,15 @@ const ProfilePicture = ({ urlProfilePicture }) => {
     }
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setHidden(false);
+      handleSubmit(e.target.files[0]);
+    }
+  };
+
   return (
-    <Grid container alignItems="center" justifyContent="center">
+    <Grid alignItems="center" justifyContent="center" display="flex">
       <label htmlFor="contained-button-file">
         <IconButton>
           <input
@@ -83,7 +84,7 @@ const ProfilePicture = ({ urlProfilePicture }) => {
         >
           Upload Picture
         </Avatar>
-        <button
+        {/* <button
           onClick={handleSubmit}
           justifyContent="center"
           textAlign="center"
@@ -91,7 +92,7 @@ const ProfilePicture = ({ urlProfilePicture }) => {
           hidden={hidden}
         >
           Submit
-        </button>
+        </button> */}
       </label>
     </Grid>
   );
