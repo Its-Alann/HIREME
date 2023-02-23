@@ -14,7 +14,26 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
+import "firebase/compat/firestore";
+import { attachCustomCommands } from "cypress-firebase";
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+const fbConfig = {
+  // Your config from Firebase Console
+  apiKey: "AIzaSyAtBgQOP98BP-kfPojULSjRj6enAuToJ_I",
+  authDomain: "team-ate.firebaseapp.com",
+  projectId: "team-ate",
+  storageBucket: "team-ate.appspot.com",
+  messagingSenderId: "1078110272163",
+  appId: "1:1078110272163:web:3c0ac8143d1ed0ceb8dd16",
+  measurementId: "G-PJ6PRNK71S",
+  serviceAccountId:
+    "firebase-service-account@firebase-sa-management.iam.gserviceaccount.com",
+};
+
+firebase.initializeApp(fbConfig);
+
+attachCustomCommands({ Cypress, cy, firebase });
