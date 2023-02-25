@@ -121,7 +121,7 @@ const Messaging = () => {
         console.log("user.email", user.email);
         // getAllReceivers();
       } else {
-        console.err("User must be signed in");
+        console.log("User must be signed in");
       }
     });
   }, []);
@@ -270,6 +270,7 @@ const Messaging = () => {
                   {mediaMobile && (
                     <IconButton
                       aria-label="back"
+                      id="ChevronIcon"
                       onClick={() => {
                         setSelectedIndex(-1);
                       }}
@@ -318,6 +319,8 @@ const Messaging = () => {
                       conversationID={convoId}
                       myUser={myUser}
                       selectedIndex={selectedIndex}
+                      id="sendChat"
+                      data-cy="sendChat"
                     />
                   </Box>
                 )}

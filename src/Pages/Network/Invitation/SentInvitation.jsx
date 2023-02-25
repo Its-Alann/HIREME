@@ -28,7 +28,7 @@ export const SentInvitation = () => {
             setSentRequestsUserID(userData.sentInvitations);
             //console.log(userData.sentRequests);
           } catch (err) {
-            console.error(err);
+            console.log(err);
           }
         };
         //console.log(sentRequestsUserID);
@@ -55,7 +55,7 @@ export const SentInvitation = () => {
                 alignItems="center"
               >
                 {sentRequestsUserID.map((userID) => (
-                  <Grid item>
+                  <Grid item data-cy="invitationsGrid">
                     <SentInvitationCard
                       userID={userID}
                       currentUser={currentUser.email}
