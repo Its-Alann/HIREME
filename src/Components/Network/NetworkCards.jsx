@@ -57,7 +57,7 @@ export const NetworkCards = ({ connectedUserID }) => {
     <ThemeProvider theme={theme2}>
       <div>
         <Box sx={{ width: 300, minWidth: 100 }}>
-          <Card variant="outlined" sx={{ p: 1 }}>
+          <Card variant="outlined" sx={{ p: 1 }} data-cy="userProfileInNetwork">
             <>
               <CardHeader
                 avatar={

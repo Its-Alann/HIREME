@@ -11,18 +11,26 @@ describe("example to-do app", () => {
     cy.get('[data-testid="homeLink"]').click();
   });
 
-  describe("Some Test", () => {
-    it("Adds document to test_hello_world collection of Firestore", () => {
+  it("goes back to the home page and signs out", () => {
+    cy.visit("http://localhost:3000");
+    cy.get('[data-testid="homeLink"]').click();
+  });
+
+  describe("Adding document to the database Firebase", () => {
+    it("Adds document to test_hello_world collection of Firestore, logs in, custom log in, and tests create profile button", () => {
       cy.callFirestore("add", "group", { members: "newMember" });
-      //logs in with the UID found on cypress.env.json
+      //logs in and log out
       cy.login();
+      cy.get('[data-testid="homeLink"]').click();
 
       //custom login
       const uid = "EVgG5esZ4cRVNkf67eySrkJ1dVg1";
       const tenantId = "testacc2@mail.com";
-      cy.login(uid, undefined, tenantId);
+      cy.login(uid);
+
+      //edit profile button
+      cy.get('[style="display: grid;"] > a').click();
     });
   });
-
   //Integration test for firebase connection
 });

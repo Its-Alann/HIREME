@@ -191,7 +191,12 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             justifyContent="center"
             sx={{ display: "flex", height: 56 }}
           >
-            <FileUpload onFileChange={onFileChange} />
+            <FileUpload
+              onFileChange={onFileChange}
+              id="fileUpload"
+              name="fileUpload"
+              data-cy="fileUpload"
+            />
           </Grid>
         )}
 

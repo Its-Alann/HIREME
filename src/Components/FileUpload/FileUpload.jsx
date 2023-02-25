@@ -1,22 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
+import { Button } from "@mui/material";
 
 const FileUpload = ({ onFileChange }) => (
-  <label
-    className="chooseFile"
-    htmlFor="file_input"
-    style={{ cursor: "pointer" }}
-  >
-    <input
-      id="file_input"
-      name="file_input"
-      type="file"
-      onChange={onFileChange}
-      style={{ display: "none" }}
-    />
+  <Button variant="contained" component="label">
     <AttachFileSharpIcon />
-  </label>
+    <input
+      type="file"
+      hidden
+      onChange={onFileChange}
+      name="uploadInput"
+      id="upload"
+    />
+  </Button>
 );
 
 FileUpload.propTypes = {

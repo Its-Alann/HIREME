@@ -27,7 +27,7 @@ export const ViewNetwork = () => {
             const userData = docSnap.data();
             setConnectedUsersId(userData.connectedUsers);
           } catch (err) {
-            console.error("err:", err);
+            console.log("err:", err);
           }
         };
 
