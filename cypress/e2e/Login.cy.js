@@ -1,4 +1,5 @@
-import firebase from "firebase/compat";
+import { expect } from "chai";
+import { auth } from "../../src/Firebase/firebase";
 
 describe("Testing the login feature", () => {
   beforeEach(() => {
@@ -10,12 +11,39 @@ describe("Testing the login feature", () => {
   });
 
   describe("Testing the login feature", () => {
-    it("Logs In", () => {
+    it("tries to logs In with right email, wrong password", () => {
+      cy.logout();
       cy.visit("http://localhost:3000/login");
+      cy.get("#email").type("hypeboy@tok.ki");
+      cy.get("#password").type("1234");
+      cy.get(".MuiButton-contained").click();
+    });
+
+    it("tries to log In with wrong email, wrong password", () => {
+      cy.logout();
+      cy.visit("http://localhost:3000/login");
+      cy.get("#email").type("hypeboy@tokkkkk.ki");
+      cy.get(".MuiButton-contained").click();
+    });
+
+    it("has form validation for email", () => {
+      cy.logout();
+      cy.visit("http://localhost:3000/login");
+      cy.get("#email").type("hypeboy@tokkkk").tab();
+      cy.get("#email-helper-text").contains("Please enter valid credentials");
+    });
+
+    it("Logs In with right email, right password", () => {
+      cy.visit("http://localhost:3000");
+      cy.get('[data-testid="homeLink"]').click();
       cy.get("#email").type("hypeboy@tok.ki");
       cy.get("#password").type("newjeans");
       cy.get(".MuiButton-contained").click();
-      firebase.auth().currentUser;
+      //Better to have API calls end the tests
+    });
+    it("verifes account has logged in", () => {
+      const user = auth.currentUser.email;
+      expect(user).to.equal("hypeboy@tok.ki");
     });
   });
 });
