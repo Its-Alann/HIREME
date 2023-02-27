@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 const FileUpload = ({ onFileChange }) => (
-  <Button variant="contained" component="label">
-    <AttachFileSharpIcon />
+  <IconButton variant="contained" component="label">
+    <AttachFileSharpIcon color="primary" />
     <input
       type="file"
       hidden
@@ -13,7 +13,7 @@ const FileUpload = ({ onFileChange }) => (
       name="uploadInput"
       id="upload"
     />
-  </Button>
+  </IconButton>
 );
 
 FileUpload.propTypes = {

@@ -262,7 +262,7 @@ const Messaging = () => {
                 // scrollX: "hidden",
               }}
             >
-              <Stack sx={{ maxHeight: "100%" }}>
+              <Stack sx={{ height: "100%" }}>
                 <div
                   className="message-view-banner"
                   style={{ maxHeight: "64px" }}
@@ -293,7 +293,7 @@ const Messaging = () => {
                   sx={{
                     // border: "black solid 1px",
                     bgcolor: "white",
-                    // height: "calc(100% - 64px - 56px)",
+                    height: "100%",
                     overflow: "auto",
                     p: 0,
                     overflowX: "hidden",
