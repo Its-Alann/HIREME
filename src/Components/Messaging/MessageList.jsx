@@ -20,6 +20,7 @@ const MessageList = ({ messages }) => {
             <MessageListItem
               timestamp={message.timestamp.toDate()}
               content={message.content}
+              attachment={message.attachment}
               sender={message.sender}
               alignment={alignment}
             />
@@ -31,6 +32,6 @@ const MessageList = ({ messages }) => {
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.any),
+  messages: PropTypes.arrayOf(),
 };
 export default MessageList;

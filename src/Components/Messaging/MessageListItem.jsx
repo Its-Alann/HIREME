@@ -1,11 +1,25 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Stack, ListItemText } from "@mui/material";
+import {
+  Box,
+  Stack,
+  ListItemText,
+  Link,
+  ListItemButton,
+  ListItem,
+} from "@mui/material";
 import { Timestamp } from "firebase/firestore";
+import { attachCustomCommands } from "cypress-firebase";
 // import { auth } from "../../Firebase/firebase";
 
-const MessageListItem = ({ content, sender, timestamp, alignment }) => {
+const MessageListItem = ({
+  content,
+  attachment,
+  sender,
+  timestamp,
+  alignment,
+}) => {
   const antinos = "🖖";
   return (
     <Stack
@@ -27,11 +41,31 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
           borderRadius: 3,
         }}
       >
-        <ListItemText
-          sx={{ display: "inline-block" }}
-          primary={content}
-          align={alignment}
-        />
+        {attachment ? (
+          // <ListItemButton sx={{ p: 0 }}>
+          <ListItem disablePadding>
+            <ListItemText
+              sx={{
+                display: "inline-block",
+                "&:hover": {
+                  color: "blue",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                },
+              }}
+              primary={`🔗${attachment}`}
+              align={alignment}
+              // onClick={}
+            />
+          </ListItem>
+        ) : (
+          // </ListItemButton>
+          <ListItemText
+            sx={{ display: "inline-block" }}
+            primary={content}
+            align={alignment}
+          />
+        )}
       </Box>
       <ListItemText
         style={{ marginLeft: "12px", marginRight: "12px" }}
@@ -44,6 +78,7 @@ const MessageListItem = ({ content, sender, timestamp, alignment }) => {
 
 MessageListItem.propTypes = {
   content: PropTypes.string,
+  attachment: PropTypes.string,
   timestamp: PropTypes.instanceOf(Date),
   sender: PropTypes.string,
   alignment: PropTypes.string,
