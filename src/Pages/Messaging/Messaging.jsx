@@ -10,6 +10,7 @@ import {
   IconButton,
   Stack,
   useMediaQuery,
+  ListItemButton,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -23,6 +24,7 @@ import {
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
+import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
 import "./Messaging.css";
@@ -198,11 +200,15 @@ const Messaging = () => {
                   mediaMobile && selectedIndex > -1 ? "none" : "inline-block",
               }}
             >
-              <Box component={Grid} sx={{ boxShadow: "0 4px 4px -4px gray" }}>
-                <Typography color="primary" variant="h4">
+              <Box component={Grid}>
+                <Typography xs color="primary" variant="h4">
                   Messaging
                 </Typography>
+                <IconButton xs={1}>
+                  <BorderColorRoundedIcon />
+                </IconButton>
               </Box>
+              {/* <NewConvo /> */}
               <Grid
                 className="convo-list"
                 sx={{
@@ -214,11 +220,11 @@ const Messaging = () => {
               >
                 <List>
                   {chatProfiles.map((chat, i) => (
-                    <ListItem
+                    <ListItemButton
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
-                      button
+                      // button
                       selected={selectedIndex === i}
                       onClick={async () => {
                         setConvoId(
@@ -241,7 +247,7 @@ const Messaging = () => {
                       >
                         {chat.names}
                       </Typography>
-                    </ListItem>
+                    </ListItemButton>
                   ))}
                 </List>
               </Grid>
