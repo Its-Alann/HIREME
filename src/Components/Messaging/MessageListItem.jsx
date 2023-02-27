@@ -1,17 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
-import {
-  Box,
-  Stack,
-  ListItemText,
-  Link,
-  ListItemButton,
-  ListItem,
-} from "@mui/material";
-import { Timestamp } from "firebase/firestore";
-import { attachCustomCommands } from "cypress-firebase";
-// import { auth } from "../../Firebase/firebase";
+import { Box, Stack, ListItemText, ListItem } from "@mui/material";
 
 const MessageListItem = ({
   content,
@@ -19,8 +9,10 @@ const MessageListItem = ({
   sender,
   timestamp,
   alignment,
+  openAttachment,
 }) => {
   const antinos = "🖖";
+
   return (
     <Stack
       className="message-stack"
@@ -42,7 +34,6 @@ const MessageListItem = ({
         }}
       >
         {attachment ? (
-          // <ListItemButton sx={{ p: 0 }}>
           <ListItem disablePadding>
             <ListItemText
               sx={{
@@ -55,11 +46,10 @@ const MessageListItem = ({
               }}
               primary={`🔗${attachment}`}
               align={alignment}
-              // onClick={}
+              onClick={() => openAttachment(attachment)}
             />
           </ListItem>
         ) : (
-          // </ListItemButton>
           <ListItemText
             sx={{ display: "inline-block" }}
             primary={content}
@@ -82,5 +72,6 @@ MessageListItem.propTypes = {
   timestamp: PropTypes.instanceOf(Date),
   sender: PropTypes.string,
   alignment: PropTypes.string,
+  openAttachment: PropTypes.func,
 };
 export default MessageListItem;
