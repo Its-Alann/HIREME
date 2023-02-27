@@ -2,14 +2,17 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import { List, ListItem } from "@mui/material";
+import { getDownloadURL, ref } from "firebase/storage";
 import MessageListItem from "./MessageListItem";
-import { auth } from "../../Firebase/firebase";
+import { auth, storage } from "../../Firebase/firebase";
 
 const MessageList = ({ messages }) => {
-  // Very mysterious
-  // Without this hello, state won't update?????
-  // How??
-  const hello = "hello";
+  const openAttachment = (path) => {
+    getDownloadURL(ref(storage, `messages/${path}`)).then((url) =>
+      window.open(url, "_blank")
+    );
+  };
+
   return (
     <List>
       {messages.map((message, i) => {
@@ -23,6 +26,7 @@ const MessageList = ({ messages }) => {
               attachment={message.attachment}
               sender={message.sender}
               alignment={alignment}
+              openAttachment={openAttachment}
             />
           </ListItem>
         );
