@@ -200,11 +200,13 @@ const Messaging = () => {
                   mediaMobile && selectedIndex > -1 ? "none" : "inline-block",
               }}
             >
-              <Box component={Grid}>
-                <Typography xs color="primary" variant="h4">
+              <Box
+                sx={{ display: "flex", p: 1, justifyContent: "space-between" }}
+              >
+                <Typography color="primary" variant="h4">
                   Messaging
                 </Typography>
-                <IconButton xs={1}>
+                <IconButton>
                   <BorderColorRoundedIcon />
                 </IconButton>
               </Box>
@@ -216,6 +218,7 @@ const Messaging = () => {
                   // maxHeight: "calc(100% - 100px)",
                   height: "auto",
                   bgcolor: "white",
+                  p: 0,
                 }}
               >
                 <List>
@@ -303,6 +306,7 @@ const Messaging = () => {
                     overflow: "auto",
                     p: 0,
                     overflowX: "hidden",
+                    borderRadius: "0 0 8px 8px",
                   }}
                 >
                   <MessageList messages={messages} />
