@@ -41,9 +41,17 @@ describe("Testing the login feature", () => {
       cy.get(".MuiButton-contained").click();
       //Better to have API calls end the tests
     });
+
     it("verifes account has logged in", () => {
       const user = auth.currentUser.email;
       expect(user).to.equal("hypeboy@tok.ki");
+    });
+
+    it("Log in with Google", () => {
+      cy.logout();
+      cy.visit("http://localhost:3000/login");
+      cy.get('[data-testid="GoogleIcon"]').click();
+      // cy.get("input").type("teamate390@gmail.com");
     });
   });
 });
