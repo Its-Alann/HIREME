@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -183,6 +184,7 @@ const SignUp = () => {
               type="submit"
               fullWidth
               variant="contained"
+              id="submitBtn"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
