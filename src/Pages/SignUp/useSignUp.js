@@ -1,5 +1,3 @@
-//Author: ?
-
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../Firebase/firebase";

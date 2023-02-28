@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import useLogout from "../../context/useLogout";
 
 const pages = ["Home", "Messaging", "Network"];
 // const pages = [
@@ -27,6 +28,7 @@ const Navbar = ({ connected }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [redirectToPage, setRedirectToPage] = React.useState("");
+  const { logout } = useLogout();
   let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -158,6 +160,7 @@ const Navbar = ({ connected }) => {
               </Button>
             ))}
           </Box>
+          {connected && <Button onClick={logout}>Logout</Button>}
 
           {connected && (
             <Box sx={{ flexGrow: 0 }}>
