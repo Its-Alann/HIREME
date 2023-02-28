@@ -154,13 +154,7 @@ describe("Testing the networking feature of the app", () => {
 
     it("removes the sent invitation, checks whether invitation is present on possible connections page and sends invitation", () => {
       cy.logout();
-      //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
-      cy.wrap(null).then(() =>
-        AsyncRemoveReceivedInvitation(
-          "hypeboy@tok.ki",
-          "accountcreation@test.com"
-        )
-      );
+      //remove sent invitation of accountcreation@test.com from "hypeboy@to
 
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
