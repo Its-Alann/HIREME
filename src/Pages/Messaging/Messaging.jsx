@@ -25,7 +25,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
-import "./Messaging.css";
+// import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
 import { auth, db } from "../../Firebase/firebase";
 import NewConvo from "../../Components/NewConvo/NewConvo";
@@ -265,7 +265,16 @@ const Messaging = () => {
               <Stack sx={{ maxHeight: "100%" }}>
                 <div
                   className="message-view-banner"
-                  style={{ maxHeight: "64px" }}
+                  style={{
+                    maxHeight: "64px",
+                    backgroundColor: "#2b2f90",
+                    color: "white",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderRadius: "8px 8px 0 0",
+                    padding: "12px",
+                  }}
+                  // sx={{ backgroundColor }}
                 >
                   {mediaMobile && (
                     <IconButton
