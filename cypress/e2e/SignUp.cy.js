@@ -46,11 +46,21 @@ describe("Testing the login feature", () => {
     cy.get("#lastName-helper-text").contains("letters");
   });
 
-  it("shows error message when submitting with existing email", () => {
+  it("throws error when submitting with existing email", () => {
     cy.get("#firstName").type("sam");
     cy.get("#lastName").type("sung");
     cy.get("#email").type("sam@sung.com");
     cy.get("#password").type("Email123!");
+    //intercept API call
+    cy.intercept({
+      method: "POST",
+    }).as("responseRole");
     cy.get("#submitBtn").click();
+    // and wait for cypress to get the result as alias
+    cy.wait("@responseRole").then(({ request, response }) => {
+      //console.log(request.body);
+      expect(response.body.error.code).to.equal(400);
+      expect(response.body.error.message).to.equal("EMAIL_EXISTS");
+    });
   });
 });
