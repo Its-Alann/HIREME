@@ -22,6 +22,7 @@ import { Network } from "./Pages/Network/Network";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import Navbar from "./Components/Navbar/Navbar";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 
 const App = () => {
   const hello = "helloo";
@@ -48,14 +49,30 @@ const App = () => {
             <Route path="/" exact element={<Home />} />
             <Route path="/" exact element={<Background />} />
             <Route path="/" exact element={<AnotherPage />} />
-            <Route path="/login" exact element={<Login />} />
+            <Route
+              path="/login"
+              exact
+              element={
+                <ProtectedRoute redirect="/">
+                  <Login />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/signup" exact element={<SignUp />} />
             <Route
               path="/accountCreation"
               exact
               element={<AccountCreation />}
             />
-            <Route path="/editProfile" exact element={<EditProfile />} />
+            <Route
+              path="/editProfile"
+              exact
+              element={
+                <ProtectedRoute redirect="/">
+                  <EditProfile />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/network" exact element={<Network />} />
             <Route path="/messaging" export element={<Messaging />} />
             <Route path="/myNetwork" exact element={<ViewNetwork />} />
