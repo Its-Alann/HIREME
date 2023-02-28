@@ -163,7 +163,7 @@ const Navbar = ({ connected }) => {
               </Button>
             ))}
           </Box>
-          {user && <Typography>{user.displayName}</Typography>}
+          {user && <Typography>Hello {user.displayName} </Typography>}
 
           {user && (
             <Box sx={{ flexGrow: 0 }}>
