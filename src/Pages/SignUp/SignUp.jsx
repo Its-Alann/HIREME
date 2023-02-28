@@ -17,6 +17,7 @@ import * as EmailValidator from "email-validator";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
+import useSignUp from "./useSignUp";
 
 const theme = createTheme({
   palette: {
@@ -34,7 +35,7 @@ const SignUp = () => {
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
-  const navigate = useNavigate();
+  const { signup, isPending, error } = useSignUp();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -44,6 +45,8 @@ const SignUp = () => {
       password: data.get("password"),
       name: data.get("firstName"),
     };
+
+    signup(email, password, name);
   };
 
   return (
