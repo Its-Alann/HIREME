@@ -32,6 +32,7 @@
     "firebase-admin": "^11.5.0",
     "firestore": "^1.1.6",
     "formik": "^2.2.9",
+    "html-webpack-plugin": "^5.5.0",
     "nyc": "^15.1.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -82,9 +83,15 @@
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "@cypress/webpack-preprocessor": "^5.17.0",
+    "@expo/webpack-config": "^18.0.1",
     "@testing-library/cypress": "^9.0.0",
+    "babel-loader": "^9.1.2",
     "check-code-coverage": "^1.10.4",
     "cypress-file-upload": "^5.0.8",
+    "css-loader": "^6.7.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.6.0",
@@ -95,7 +102,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest-dom": "^4.0.0",
     "prettier": "^2.7.1",
+    "chai": "^4.3.7",
+    "style-loader": "^3.3.1",
     "testing-library-selector": "^0.2.1",
-    "chai": "^4.3.7"
+    "webpack": "^5.75.0"
   }
 }
