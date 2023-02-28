@@ -12,13 +12,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
+import useLogin from "../../context/useLogin";
+import useAuthContext from "../../context/useAuthContext";
 
 const theme = createTheme({
   palette: {
@@ -36,6 +38,8 @@ const Login = () => {
   const [emailError, setEmailError] = React.useState(false);
   const [authError, setAuthError] = React.useState(false);
   const [authErrorMsg, setAuthErrorMsg] = React.useState("");
+  const { login, isPending, error } = useLogin();
+  const { user } = useAuthContext();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,12 +54,7 @@ const Login = () => {
         password,
       });
       try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const { user } = userCredential;
+        login(email, password);
         console.log(user);
 
         navigate("/");
@@ -146,17 +145,22 @@ const Login = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, py: 1 }}
-              color="primary"
-              name="signIn"
-              inputProps={{ "aria-label": "signIn" }}
-            >
-              Sign In
-            </Button>
+            {isPending ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2, py: 1 }}
+                color="primary"
+                name="signIn"
+                inputProps={{ "aria-label": "signIn" }}
+              >
+                Sign In
+              </Button>
+            )}
+            {error && <Typography color="red">{error}</Typography>}
             <Stack container justifyContent="center" spacing={1}>
               <Link item xs align="center" href="/" variant="subtitle2">
                 Forgot password?
