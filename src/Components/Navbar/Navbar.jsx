@@ -15,6 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useLogout from "../../context/useLogout";
+import useAuthContext from "../../context/useAuthContext";
 
 const pages = ["Home", "Messaging", "Network"];
 // const pages = [
@@ -29,6 +30,8 @@ const Navbar = ({ connected }) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [redirectToPage, setRedirectToPage] = React.useState("");
   const { logout } = useLogout();
+  const { user } = useAuthContext();
+
   let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -160,9 +163,9 @@ const Navbar = ({ connected }) => {
               </Button>
             ))}
           </Box>
-          {connected && <Button onClick={logout}>Logout</Button>}
+          {user && <Typography>{user.displayName}</Typography>}
 
-          {connected && (
+          {user && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -185,11 +188,10 @@ const Navbar = ({ connected }) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem>Profile</MenuItem>
+                <MenuItem>Account</MenuItem>
+                <MenuItem>Dashboard</MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
               </Menu>
             </Box>
           )}

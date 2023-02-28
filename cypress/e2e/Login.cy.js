@@ -29,7 +29,8 @@ describe("Testing the login feature", () => {
     it("has form validation for email", () => {
       cy.logout();
       cy.visit("http://localhost:3000/login");
-      cy.get("#email").type("hypeboy@tokkkk").tab();
+      cy.get("#email").type("hypeboy@tokkkk");
+      cy.get("#password").focus();
       cy.get("#email-helper-text").contains("Please enter valid credentials");
     });
 
