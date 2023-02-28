@@ -15,7 +15,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as EmailValidator from "email-validator";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, redirect } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import useSignUp from "./useSignUp";
 
@@ -36,6 +36,7 @@ const SignUp = () => {
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const { signup, isPending, error } = useSignUp();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,6 +48,7 @@ const SignUp = () => {
     };
 
     signup(email, password, name);
+    navigate("/");
   };
 
   return (
@@ -183,15 +185,20 @@ const SignUp = () => {
               </Grid>
             </Grid>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              id="submitBtn"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
+            {isPending ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                id="submitBtn"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+            )}
+            {error && <Typography color="red">{error}</Typography>}
 
             <Grid container justifyContent="flex-end">
               <Grid item>

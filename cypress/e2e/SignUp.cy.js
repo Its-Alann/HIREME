@@ -1,5 +1,8 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 import { expect } from "chai";
+import { onAuthStateChanged, deleteUser } from "firebase/auth";
 import { auth } from "../../src/Firebase/firebase";
+import useSignUp from "../../src/Pages/SignUp/useSignUp";
 
 describe("Testing the login feature", () => {
   beforeEach(() => {
@@ -20,29 +23,32 @@ describe("Testing the login feature", () => {
   });
 
   it("shows helper text with wrong email format", () => {
-    cy.get("#email").type("abc@abc").tab();
+    cy.get("#email").type("abc@abc");
+    cy.get("#lastName").focus();
     cy.get("#email-helper-text").should("include.text", "valid email");
   });
 
   it("shows helper text with wrong email format", () => {
-    cy.get("#email").type("abc@abc").tab();
+    cy.get("#email").type("abc@abc");
+    cy.get("#lastName").focus();
     cy.get("#email-helper-text").should("include.text", "valid email");
   });
 
   it("shows helper text when typing a wrong password", () => {
     cy.get("#password").type("123546");
-    cy.get("input").tab();
+    cy.get("#lastName").focus();
     cy.get("#password-helper-text").contains("Please enter a password");
   });
 
   it("shows helper text when typing name with characters other than letters", () => {
-    cy.get("#firstName").type("abc12").tab();
+    cy.get("#firstName").type("abc12");
+    cy.get("#lastName").focus();
     cy.get("#firstName-helper-text").contains("letters");
   });
 
   it("shows helper text when typing name with characters other than letters", () => {
     cy.get("#lastName").type("abc12");
-    cy.get("input").tab().tab();
+    cy.get("#firstName").focus();
     cy.get("#lastName-helper-text").contains("letters");
   });
 
@@ -62,5 +68,43 @@ describe("Testing the login feature", () => {
       expect(response.body.error.code).to.equal(400);
       expect(response.body.error.message).to.equal("EMAIL_EXISTS");
     });
+  });
+
+  it("creating account when using valid information", () => {
+    cy.logout();
+    cy.get("#firstName").type("New");
+    cy.get("#lastName").type("User");
+    cy.get("#email").type("new@user.com");
+    cy.get("#password").type("Email123!");
+
+    //intercept API call
+    cy.intercept({
+      method: "POST",
+    }).as("responseRole");
+    cy.get("#submitBtn").click();
+    // and wait for cypress to get the result as alias
+    cy.wait("@responseRole").then(({ request, response }) => {
+      expect(response.body.email).to.equal("new@user.com");
+      expect(response.body.error).to.equal(undefined);
+    });
+    cy.visit("http://localhost:3000/");
+
+    const user = auth.currentUser;
+    expect(user.email).to.equal("new@user.com");
+    expect(user.displayName).to.equal("New");
+
+    //needs to be logged in to deleted account
+    cy.login(user.uid);
+    console.log("REACHED B");
+    //delete account
+    deleteUser(user.uid)
+      .then(() => {
+        console.log("REACHED C");
+        console.log("Successfully deleted user");
+      })
+      .catch((error) => {
+        console.log("REACHED D");
+        console.log("Error deleting user:", error);
+      });
   });
 });
