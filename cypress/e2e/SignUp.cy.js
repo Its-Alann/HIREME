@@ -1,9 +1,34 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable cypress/no-unnecessary-waiting */
 import { expect } from "chai";
-import { onAuthStateChanged, deleteUser } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  deleteUser,
+  updateProfile,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 import useAuthContext from "../../src/context/useAuthContext";
 import { auth } from "../../src/Firebase/firebase";
 import useSignUp from "../../src/Pages/SignUp/useSignUp";
+
+const deleteSignedUser = async (password) => {
+  const credential = EmailAuthProvider.credential(
+    auth.currentUser.email,
+    password
+  );
+
+  const result = await reauthenticateWithCredential(
+    auth.currentUser,
+    credential
+  );
+
+  // Pass result.user here
+  await deleteUser(result.user);
+
+  console.log("success in deleting");
+  localStorage.removeItem("user");
+};
 
 describe("Testing the login feature", () => {
   beforeEach(() => {
@@ -77,7 +102,8 @@ describe("Testing the login feature", () => {
     });
   });
 
-  it("creating account when using valid information", () => {
+  //IMPORTANT TO CHECK THAT THE ACCOUNT DOESN'T EXIST ALREADY
+  it("creating account when using valid information and verify it's logged in", () => {
     cy.visit("http://localhost:3000/SignUp");
     cy.logout();
     cy.get("#firstName").type("New");
@@ -92,26 +118,41 @@ describe("Testing the login feature", () => {
     cy.get("#submitBtn").click();
     // and wait for cypress to get the result as alias
     cy.wait("@responseRole").then(({ request, response }) => {
-      expect(response.body.email).to.equal("new@user.com");
       expect(response.body.error).to.equal(undefined);
     });
     cy.wait(500);
   });
 
   it("verifies account has been created and logged in then delete it", () => {
+    cy.wait(1000);
     expect(auth.currentUser.email).to.equal("new@user.com");
+    deleteSignedUser("Email123!");
+  });
 
-    //needs to be logged in to deleted account
-    cy.login(auth.currentUser.uid);
-    //delete account
-    deleteUser(auth.currentUser)
-      .then(() => {
-        console.log("Successfully deleted user");
-      })
-      .catch((error) => {
-        console.log("Error deleting user:", error);
-      });
+  it("creating account when using valid information and clicking somewhere else while submitting", () => {
+    cy.visit("http://localhost:3000/SignUp");
+    cy.logout();
+    cy.get("#firstName").type("New");
+    cy.get("#lastName").type("User");
+    cy.get("#email").type("new@user.com");
+    cy.get("#password").type("Email123!");
 
+    //intercept API call
+    cy.intercept({
+      method: "POST",
+    }).as("responseRole");
+    cy.get("#submitBtn").click();
+    cy.get(".css-1t6c9ts > :nth-child(3)").click();
+    // and wait for cypress to get the result as alias
+    cy.wait("@responseRole").then(({ request, response }) => {
+      expect(response.body.error).to.equal(undefined);
+    });
     cy.wait(500);
+  });
+
+  it("verifies account has been created and logged in then delete it", () => {
+    cy.wait(1000);
+    expect(auth.currentUser.email).to.equal("new@user.com");
+    deleteSignedUser("Email123!");
   });
 });
