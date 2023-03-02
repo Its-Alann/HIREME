@@ -16,12 +16,15 @@ import HomeOutlined from "@mui/icons-material/HomeOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../../Firebase/firebase";
 
 const pages = ["Home", "Network", "Possible Connections", "Messaging"];
+const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -39,6 +42,8 @@ const Navbar = () => {
         } catch (err) {
           console.error(err);
         }
+      } else {
+        setUserIsConnected(false);
       }
     });
   }, []);
@@ -69,18 +74,27 @@ const Navbar = () => {
         navigate("/possibleconnections");
         break;
       case "profile":
-        //to implement when page is created
+        //to implement
         break;
       case "account":
-        //to implement when page is created
+        //to implement
         break;
       case "dashboard":
-        //to implement when page is created
+        //to implement
         break;
       case "logout":
         setUserIsConnected(false);
         signOut(auth);
         navigate("/");
+        break;
+      case "jobs":
+        //to implement
+        break;
+      case "sign up":
+        navigate("/SignUp");
+        break;
+      case "log in":
+        navigate("/login");
         break;
       default:
         break;
@@ -101,7 +115,7 @@ const Navbar = () => {
             color="primary"
           />
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="a"
             href="/"
@@ -147,17 +161,30 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={() => {
-                    redirectToPage2 = page;
-                    handleCloseNavMenu();
-                  }}
-                >
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {userIsConnected &&
+                pages.map((page) => (
+                  <MenuItem
+                    key={page}
+                    onClick={() => {
+                      redirectToPage2 = page;
+                      handleCloseNavMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
+              {!userIsConnected &&
+                loggedOutPages.map((page) => (
+                  <MenuItem
+                    key={page}
+                    onClick={() => {
+                      redirectToPage2 = page;
+                      handleCloseNavMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
           <AdbIcon
@@ -168,7 +195,7 @@ const Navbar = () => {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -182,75 +209,110 @@ const Navbar = () => {
           >
             HIRE<i>ME</i>
           </Typography>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex", justifyContent: "end" },
-            }}
-          >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={() => {
-                  redirectToPage2 = page;
-                  handleCloseNavMenu();
-                }}
-                sx={{
-                  my: 2,
-                  color: "main",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {page === "Home" && <HomeOutlined />}
-                {page === "Messaging" && <MessageOutlinedIcon />}
-                {page === "Network" && <GroupsOutlinedIcon />}
-                {page === "Possible Connections" && <WorkOutlineOutlinedIcon />}
-                {page}
-              </Button>
-            ))}
-          </Box>
 
           {userIsConnected && (
-            <Box sx={{ flexGrow: 0, marginLeft: "1%" }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    style={{ border: "2px solid #2B2F90" }}
-                    alt={userData.values.firstName}
-                    src={userData.values.image}
-                  />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+            <>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: { xs: "none", md: "flex", justifyContent: "end" },
                 }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
+                {pages.map((page) => (
+                  <Button
+                    key={page}
                     onClick={() => {
-                      redirectToPage2 = setting;
-                      handleCloseUserMenu();
+                      redirectToPage2 = page;
                       handleCloseNavMenu();
                     }}
+                    sx={{
+                      my: 2,
+                      color: "main",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
                   >
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
+                    {page === "Home" && <HomeOutlined />}
+                    {page === "Messaging" && <MessageOutlinedIcon />}
+                    {page === "Network" && <GroupsOutlinedIcon />}
+                    {page === "Possible Connections" && (
+                      <WorkOutlineOutlinedIcon />
+                    )}
+                    {page}
+                  </Button>
                 ))}
-              </Menu>
+              </Box>
+
+              <Box sx={{ flexGrow: 0, marginLeft: "1%" }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      style={{ border: "2px solid #2B2F90" }}
+                      alt={userData.values.firstName}
+                      src={userData.values.image}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting}
+                      onClick={() => {
+                        redirectToPage2 = setting;
+                        handleCloseUserMenu();
+                        handleCloseNavMenu();
+                      }}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </>
+          )}
+
+          {!userIsConnected && (
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", md: "flex", justifyContent: "end" },
+              }}
+            >
+              {loggedOutPages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={() => {
+                    redirectToPage2 = page;
+                    handleCloseNavMenu();
+                  }}
+                  sx={{
+                    my: 2,
+                    color: "main",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  {page === "Jobs" && <WorkOutlineOutlinedIcon />}
+                  {page === "Sign Up" && <PersonOutlineOutlinedIcon />}
+                  {page === "Log In" && <LoginOutlinedIcon />}
+                  {page}
+                </Button>
+              ))}
             </Box>
           )}
         </Toolbar>
