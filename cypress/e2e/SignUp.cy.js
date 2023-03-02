@@ -8,6 +8,8 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
+import { useState } from "react";
+import { renderHook, act } from "@testing-library/react-hooks";
 import useAuthContext from "../../src/context/useAuthContext";
 import { auth } from "../../src/Firebase/firebase";
 import useSignUp from "../../src/Pages/SignUp/useSignUp";
@@ -154,5 +156,23 @@ describe("Testing the login feature", () => {
     cy.wait(1000);
     expect(auth.currentUser.email).to.equal("new@user.com");
     deleteSignedUser("Email123!");
+  });
+});
+
+describe("useSignUp", () => {
+  it("test hook", async () => {
+    const { result, waitForNextUpdate } = renderHook(() => useSignUp());
+
+    // Call the signup function with email, password and name
+    act(() => {
+      result.current.signup("user@test.com", "password", "User Test");
+    });
+
+    // Wait for the signup function to complete
+    await waitForNextUpdate();
+
+    // Assert that there is no error and it is not pending
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.isPending).toBe(false);
   });
 });

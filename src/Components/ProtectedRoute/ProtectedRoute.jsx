@@ -5,10 +5,11 @@ import PropTypes from "prop-types";
 import useAuthContext from "../../context/useAuthContext";
 
 const ProtectedRoute = ({ children, redirect }) => {
-  const { user } = useAuthContext();
+  const { user, authIsReady } = useAuthContext();
   console.log("USERR", user);
 
-  if (user !== null && user !== undefined) {
+  //check if user is null when auth is ready
+  if ((user === null || user === undefined) && authIsReady) {
     // user is not authenticated
     return <Navigate to={redirect} />;
   }

@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 describe("example to-do app", () => {
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
@@ -8,38 +9,42 @@ describe("example to-do app", () => {
   });
 
   it("clicks on navbar links", () => {
-    cy.get(".css-1t6c9ts > :nth-child(2)").click();
-    cy.url().should("eq", "http://localhost:3000/messaging");
-    cy.get(".css-1t6c9ts > :nth-child(3)").click();
-    cy.url().should("eq", "http://localhost:3000/network");
-    cy.get(".css-1t6c9ts > :nth-child(1)").click();
+    cy.get('[data-cy="Home-test"]').click();
     cy.url().should("eq", "http://localhost:3000/");
+    cy.get('[data-cy="Messaging-test"]').click();
+    cy.url().should("eq", "http://localhost:3000/messaging");
+    cy.get('[data-cy="Network-test"]').click();
+    cy.url().should("eq", "http://localhost:3000/network");
   });
 
   it("clicks on navbar links on mobile resolution", () => {
     cy.viewport(390, 844);
     //open menu
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
+    cy.get('[data-cy="phone-menu-test"]').within(() =>
+      cy.get("Button").click()
+    );
     //click first option
-    cy.get(".MuiList-root > :nth-child(2)", { timeout: 10000 })
-      .should("be.visible")
-      .click();
+    cy.get('[data-cy="Home-phone-test"]').should("be.visible").click();
     //verify link
-    cy.url().should("eq", "http://localhost:3000/messaging");
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    cy.get(".MuiList-root > :nth-child(3)", { timeout: 10000 })
-      .should("be.visible")
-      .click();
-    cy.url().should("eq", "http://localhost:3000/network");
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    cy.get('.MuiList-root > [tabindex="0"]', { timeout: 10000 })
-      .should("be.visible")
-      .click();
     cy.url().should("eq", "http://localhost:3000/");
 
-    //test closing menu
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    cy.get('[data-testid="homeLink"]').click("bottomLeft", { force: true });
+    //open menu
+    cy.get('[data-cy="phone-menu-test"]').within(() =>
+      cy.get("Button").click()
+    );
+    //click second option
+    cy.get('[data-cy="Messaging-phone-test"]').click();
+    //verify link
+    cy.url().should("eq", "http://localhost:3000/messaging");
+
+    //open menu
+    cy.get('[data-cy="phone-menu-test"]').within(() =>
+      cy.get("Button").click()
+    );
+    //click third option
+    cy.get('[data-cy="Network-phone-test"]').click();
+    //verify link
+    cy.url().should("eq", "http://localhost:3000/network");
   });
   //Integration test for firebase connection
 });

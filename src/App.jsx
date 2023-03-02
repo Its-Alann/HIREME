@@ -49,15 +49,7 @@ const App = () => {
             <Route path="/" exact element={<Home />} />
             <Route path="/" exact element={<Background />} />
             <Route path="/" exact element={<AnotherPage />} />
-            <Route
-              path="/login"
-              exact
-              element={
-                <ProtectedRoute redirect="/">
-                  <Login />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/login" exact element={<Login />} />
             <Route path="/signup" exact element={<SignUp />} />
             <Route
               path="/accountCreation"

@@ -86,7 +86,10 @@ const Navbar = ({ connected }) => {
             HIRE<i>ME</i>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            data-cy="phone-menu-test"
+          >
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -118,6 +121,7 @@ const Navbar = ({ connected }) => {
               {pages.map((page) => (
                 <MenuItem
                   key={page}
+                  data-cy={`${page}-phone-test`}
                   onClick={() => {
                     console.log(page);
                     // setRedirectToPage(page);
@@ -153,6 +157,7 @@ const Navbar = ({ connected }) => {
             {pages.map((page) => (
               <Button
                 key={page}
+                data-cy={`${page}-test`}
                 onClick={() => {
                   redirectToPage2 = page;
                   handleCloseNavMenu();

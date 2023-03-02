@@ -15,9 +15,9 @@
     "@mui/lab": "^5.0.0-alpha.120",
     "@mui/material": "^5.11.6",
     "@mui/x-date-pickers": "^5.0.17",
-    "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/react": "12.1.5",
+    "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^13.5.0",
     "babel-plugin-istanbul": "^6.1.1",
     "chai": "^4.3.7",
@@ -33,10 +33,11 @@
     "firestore": "^1.1.6",
     "formik": "^2.2.9",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.5.1",
     "nyc": "^15.1.0",
     "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-parallax-tilt": "^1.7.95",
     "react-router": "^6.8.1",
     "react-router-dom": "^6.7.0",
@@ -52,10 +53,21 @@
   "scripts": {
     "start": "react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
-    "test": "npx cypress open",
+    "test": "npm run test:jest && npm run test:cy",
+    "test:jest": "jest --verbose ../src/jest_tests/*",
+    "test:cy": "cypress run",
     "eject": "react-scripts eject",
     "dev": "start-server-and-test start http://localhost:3000 cy:open",
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "pretest": "rm -rf .nyc_output || true",
+    "posttest": "npm run report:combined",
+    "mkdir:reports": "mkdir reports || true",
+    "precopy:reports": "npm run mkdir:reports",
+    "copy:reports": "cp cypress-coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
+    "precombine:reports": "npm run copy:reports && mkdir .nyc_output || true",
+    "combine:reports": "npx nyc merge reports && mv coverage.json .nyc_output/out.json",
+    "prereport:combined": "npm run combine:reports",
+    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -75,6 +87,9 @@
       "last 1 safari version"
     ]
   },
+  "nyc": {
+    "report-dir": "cypress-coverage"
+  },
   "compilerOptions": {
     "lib": [
       "ES2021"
@@ -82,16 +97,18 @@
     "target": "ES2021"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.10.0",
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
+    "@cypress/code-coverage": "^3.10.0",
     "@cypress/webpack-preprocessor": "^5.17.0",
     "@expo/webpack-config": "^18.0.1",
     "@testing-library/cypress": "^9.0.0",
+    "babel-jest": "^29.4.3",
     "babel-loader": "^9.1.2",
+    "chai": "^4.3.7",
     "check-code-coverage": "^1.10.4",
-    "cypress-file-upload": "^5.0.8",
     "css-loader": "^6.7.3",
+    "cypress-file-upload": "^5.0.8",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.6.0",
@@ -102,7 +119,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest-dom": "^4.0.0",
     "prettier": "^2.7.1",
-    "chai": "^4.3.7",
     "style-loader": "^3.3.1",
     "testing-library-selector": "^0.2.1",
     "webpack": "^5.75.0"

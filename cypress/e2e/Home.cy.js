@@ -17,19 +17,25 @@ describe("example to-do app", () => {
   });
 
   describe("Adding document to the database Firebase", () => {
-    it("Adds document to test_hello_world collection of Firestore, logs in, custom log in, and tests create profile button", () => {
+    it("Adds document to test_hello_world collection of Firestore, manual log in/custom log in and click on edit profile", () => {
+      cy.visit("http://localhost:3000");
       cy.callFirestore("add", "group", { members: "newMember" });
       //logs in and log out
       cy.login();
-      cy.get('[data-testid="homeLink"]').click();
 
       //custom login
       const uid = "EVgG5esZ4cRVNkf67eySrkJ1dVg1";
       const tenantId = "testacc2@mail.com";
       cy.login(uid);
 
-      //edit profile button
-      cy.get('[style="display: grid;"] > a').click();
+      //either create profile or edit profile button
+      try {
+        if (cy.get('[data-testid="editProfileLink"]').should("be.visible")) {
+          cy.get('[data-testid="editProfileLink"]').click();
+        }
+      } catch (exception) {
+        cy.get('[data-testid="createProfileLink"]').click();
+      }
     });
   });
   //Integration test for firebase connection

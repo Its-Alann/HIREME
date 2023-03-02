@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 import { expect } from "chai";
 import { auth } from "../../src/Firebase/firebase";
 
@@ -40,6 +41,7 @@ describe("Testing the login feature", () => {
       cy.get("#email").type("hypeboy@tok.ki");
       cy.get("#password").type("newjeans");
       cy.get(".MuiButton-contained").click();
+      cy.wait(500);
       //Better to have API calls end the tests
     });
 
