@@ -9,6 +9,7 @@
 # testing
 /coverage
 /cypress-coverage
+/jest-coverage
 
 # production
 /build

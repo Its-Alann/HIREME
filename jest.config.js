@@ -5,7 +5,7 @@
 
 module.exports = {
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -26,6 +26,7 @@ module.exports = {
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "jest-coverage",
+  collectCoverage: true,
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
