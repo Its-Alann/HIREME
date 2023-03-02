@@ -6,6 +6,7 @@ describe("example to-do app", () => {
     // Since we want to visit the same URL at the start of all our tests,
     // we include it in our beforeEach function so that it runs before each test
     cy.visit("http://localhost:3000");
+    cy.login();
   });
 
   it("clicks on navbar links", () => {
@@ -46,5 +47,24 @@ describe("example to-do app", () => {
     //verify link
     cy.url().should("eq", "http://localhost:3000/network");
   });
+
+  it("open user menu and close it", () => {
+    cy.viewport(390, 844);
+    cy.get('[data-cy="userBox"]').within(() =>
+      cy.get('[data-cy="userMenu"]').click()
+    );
+
+    cy.visit("http://localhost:3000");
+  });
+
+  it("open user menu and log out", () => {
+    cy.viewport(390, 844);
+    cy.get('[data-cy="userBox"]').within(() =>
+      cy.get('[data-cy="userMenu"]').click()
+    );
+
+    cy.get('[data-cy="logout-test"]').click();
+  });
+
   //Integration test for firebase connection
 });
