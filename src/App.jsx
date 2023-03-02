@@ -43,7 +43,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <div className="App">
         <Router>
-          <Navbar> </Navbar>
+          <Navbar />
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/" exact element={<Background />} />

@@ -14,19 +14,34 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { getDoc, doc } from "firebase/firestore";
+import { db, auth } from "../../Firebase/firebase";
 
-const pages = ["Home", "Messaging", "Network"];
-// const pages = [
-//   { title: "Home", redirect: "/" },
-//   { title: "Messaging", redirect: "/messaging" },
-// ];
+const pages = ["Home", "Messaging", "Network", "Possible Connections"];
+
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const Navbar = ({ connected }) => {
+const Navbar = () => {
+  const [userIsConnected, setUserIsConnected] = React.useState(false);
+  const [userData, setUserData] = React.useState([]);
+  React.useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserIsConnected(true);
+        try {
+          const dbInfo = await getDoc(doc(db, "userProfiles", user.email));
+          const userInfo = dbInfo.data();
+          setUserData(userInfo);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    });
+  }, []);
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [redirectToPage, setRedirectToPage] = React.useState("");
   let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -36,7 +51,6 @@ const Navbar = ({ connected }) => {
   };
 
   const handleCloseNavMenu = () => {
-    console.log(redirectToPage);
     console.log("redirectToPage2", redirectToPage2);
     switch (redirectToPage2.toLowerCase()) {
       case "messaging":
@@ -47,6 +61,23 @@ const Navbar = ({ connected }) => {
         break;
       case "network":
         navigate("/network");
+        break;
+      case "possible connections":
+        navigate("/possibleconnections");
+        break;
+      case "profile":
+        //to implement when page is created
+        break;
+      case "account":
+        //to implement when page is created
+        break;
+      case "dashboard":
+        //to implement when page is created
+        break;
+      case "logout":
+        setUserIsConnected(false);
+        signOut(auth);
+        navigate("/");
         break;
       default:
         break;
@@ -159,11 +190,14 @@ const Navbar = ({ connected }) => {
             ))}
           </Box>
 
-          {connected && (
+          {userIsConnected && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={userData.values.firstName}
+                    src={userData.values.image}
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -183,7 +217,14 @@ const Navbar = ({ connected }) => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => {
+                      redirectToPage2 = setting;
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
@@ -196,8 +237,8 @@ const Navbar = ({ connected }) => {
   );
 };
 
-Navbar.propTypes = {
-  connected: PropTypes.bool,
-};
+// Navbar.propTypes = {
+//   connected: PropTypes.bool,
+// };
 
 export default Navbar;
