@@ -23,6 +23,7 @@ import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitatio
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import ToBeTested from "./Pages/ToBeTested/ToBeTested";
 
 const App = () => {
   const hello = "helloo";
@@ -75,6 +76,7 @@ const App = () => {
               exact
               element={<NetworkPossibleConnections />}
             />
+            <Route path="/testingOtherPages" exact element={<ToBeTested />} />
           </Routes>
         </Router>
       </div>

@@ -42,10 +42,11 @@ async function AsyncRemoveConnectedUser(RemoveAcc, fromAcc) {
 }
 
 describe("template spec", () => {
-  it("tests", () => {
+  it("test template and testing other pages via testingOtherPages ", () => {
     cy.logout();
     cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
     cy.visit("http://localhost:3000/possibleConnections");
+    cy.visit("http://localhost:3000/testingOtherPages");
   });
 });
 

@@ -59,10 +59,6 @@ const Navbar = ({ connected }) => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -171,9 +167,13 @@ const Navbar = ({ connected }) => {
           {user && <Typography>Hello {user.displayName} </Typography>}
 
           {user && (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0 }} data-cy="userBox">
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0 }}
+                  data-cy="userMenu"
+                >
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
@@ -191,12 +191,13 @@ const Navbar = ({ connected }) => {
                   horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
               >
                 <MenuItem>Profile</MenuItem>
                 <MenuItem>Account</MenuItem>
                 <MenuItem>Dashboard</MenuItem>
-                <MenuItem onClick={logout}>Logout</MenuItem>
+                <MenuItem onClick={logout} data-cy="logout-test">
+                  Logout
+                </MenuItem>
               </Menu>
             </Box>
           )}
