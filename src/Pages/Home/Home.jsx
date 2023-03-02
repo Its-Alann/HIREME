@@ -10,10 +10,14 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import Grid from "@mui/material/Grid";
+import { Box } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
 import { auth, app } from "../../Firebase/firebase";
+import HomepagePic from "../../Assets/images/homepage1.png";
+
+import Login from "../Login/Login";
 
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
@@ -66,67 +70,34 @@ const Home = () => {
     },
   });
 
-  return (
-    <ThemeProvider theme={theme}>
-      <div className="Home" id="Home">
-        {/* <div className="overlay" /> */}
-        <video src={mainVideo} autoPlay loop muted playsInline />
-        <div className="content">
-          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} gyroscope>
-            <div id="card">
-              <h1 id="title">
-                <span id="titleHire">
-                  <div id="gradient">HIRE</div>
-                </span>
-                <span id="titleME">ME</span>
-              </h1>
-              <div id="businessInfo">
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <LocalPhoneIcon />
-                      </td>
-                      <td>Contact clients, partners and contractors</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <LocationOnIcon />
-                      </td>
-                      <td>Search by location to find the nearest job</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <InsertLinkIcon />
-                      </td>
-                      <td>Add your contact information easily</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <br />
-                <br />
-                <div id="type">
-                  Connect with &#160;
-                  <Typewriter
-                    options={{
-                      strings: [
-                        "Peers",
-                        "Potential Employers",
-                        "Partners",
-                        "Clients",
-                      ],
-                      autoStart: true,
-                      loop: true,
-                      deleteSpeed: 50,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </Tilt>
+  // <ThemeProvider theme={theme}></ThemeProvider>
 
-          {user ? (
-            <div style={{ display: "grid" }}>
+  return (
+    <Grid>
+      <Grid container sx={{ bgcolor: "#EAEAEA" }}>
+        {user ? (
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              alignItems="center"
+              justifyContent="center"
+              display="flex"
+            >
+              <Box
+                component="img"
+                sx={{
+                  objectFit: "cover",
+                  width: 0.9,
+                  height: 0.9,
+                }}
+                src={HomepagePic}
+                // alt="Trees"
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
               <button
                 id="signout"
                 type="button"
@@ -140,18 +111,69 @@ const Home = () => {
                   Create your profile
                 </a>
               ) : (
-                <a href="/editProfile"> Edit your profile </a>
-                // <div> </div>
+                <a href="/editProfile" id="glass-btn">
+                  {" "}
+                  Edit your profile{" "}
+                </a>
               )}
-            </div>
-          ) : (
-            <a href="/login" data-testid="homeLink" id="glass-btn">
-              Sign In
-            </a>
-          )}
-        </div>
-      </div>
-    </ThemeProvider>
+            </Grid>
+          </Grid>
+        ) : (
+          <div>
+            <Grid container>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                alignItems="center"
+                justifyContent="center"
+                display="flex"
+              >
+                <Box
+                  component="img"
+                  sx={{
+                    objectFit: "cover",
+                    width: 0.9,
+                    height: 0.9,
+                  }}
+                  src={HomepagePic}
+                  // alt="Trees"
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6}>
+                <Login sx={{ bgcolor: "red" }} />
+              </Grid>
+            </Grid>
+          </div>
+        )}
+        {/* <Grid container>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              alignItems="center"
+              justifyContent="center"
+              display="flex"
+            >
+              <Box
+              component="img"
+                sx={{
+                  objectFit: "cover",
+                  width: 0.9,
+                  height: 0.9,
+                }}
+                src={HomepagePic}
+                // alt="Trees"
+              />
+              </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <Login />
+            </Grid>
+          </Grid> */}
+      </Grid>
+    </Grid>
   );
 };
 
