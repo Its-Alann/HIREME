@@ -23,7 +23,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../../Firebase/firebase";
 
-const pages = ["Home", "Network", "Possible Connections", "Messaging"];
+const pages = ["Home", "Network", "Jobs", "Messaging"];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -235,9 +235,7 @@ const Navbar = () => {
                     {page === "Home" && <HomeOutlined />}
                     {page === "Messaging" && <MessageOutlinedIcon />}
                     {page === "Network" && <GroupsOutlinedIcon />}
-                    {page === "Possible Connections" && (
-                      <WorkOutlineOutlinedIcon />
-                    )}
+                    {page === "Jobs" && <WorkOutlineOutlinedIcon />}
                     {page}
                   </Button>
                 ))}
