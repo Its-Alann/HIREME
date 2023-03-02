@@ -140,7 +140,10 @@ const Home = () => {
                   Create your profile
                 </a>
               ) : (
-                <a href="/editProfile"> Edit your profile </a>
+                <a href="/editProfile" data-testid="editProfileLink">
+                  {" "}
+                  Edit your profile{" "}
+                </a>
                 // <div> </div>
               )}
             </div>
