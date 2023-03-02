@@ -21,7 +21,6 @@ import "firebase/compat/database";
 import "firebase/compat/firestore";
 import { attachCustomCommands } from "cypress-firebase";
 
-import { mount } from "cypress/react18";
 // https://github.com/bahmutov/cypress-code-coverage
 import "@bahmutov/cypress-code-coverage/support";
 import "@cypress/code-coverage/support";
@@ -43,6 +42,5 @@ firebase.initializeApp(fbConfig);
 
 attachCustomCommands({ Cypress, cy, firebase });
 
-Cypress.Commands.add("mount", mount);
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

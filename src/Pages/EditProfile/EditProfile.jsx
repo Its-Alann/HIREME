@@ -223,6 +223,7 @@ const EditProfile = () => {
               style={{
                 color: "white",
               }}
+              data-cy="saveBtn"
             >
               Save Changes
             </Button>

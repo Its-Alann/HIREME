@@ -24,6 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "@testing-library/cypress/add-commands";
+import "@cypress/code-coverage/support";
 
 require("cypress-plugin-tab");
-import "@cypress/code-coverage/support";
