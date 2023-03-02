@@ -12,13 +12,16 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import PropTypes from "prop-types";
+import HomeOutlined from "@mui/icons-material/HomeOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../../Firebase/firebase";
 
-const pages = ["Home", "Messaging", "Network", "Possible Connections"];
+const pages = ["Home", "Network", "Possible Connections", "Messaging"];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -90,10 +93,13 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="background">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <AdbIcon
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            color="primary"
+          />
           <Typography
             variant="h6"
             noWrap
@@ -105,7 +111,7 @@ const Navbar = () => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "primary",
               textDecoration: "none",
             }}
           >
@@ -119,7 +125,7 @@ const Navbar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="primary"
             >
               <MenuIcon />
             </IconButton>
@@ -145,8 +151,6 @@ const Navbar = () => {
                 <MenuItem
                   key={page}
                   onClick={() => {
-                    console.log(page);
-                    // setRedirectToPage(page);
                     redirectToPage2 = page;
                     handleCloseNavMenu();
                   }}
@@ -156,7 +160,10 @@ const Navbar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <AdbIcon
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            color="primary"
+          />
           <Typography
             variant="h5"
             noWrap
@@ -169,13 +176,18 @@ const Navbar = () => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "primary",
               textDecoration: "none",
             }}
           >
             HIRE<i>ME</i>
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex", justifyContent: "end" },
+            }}
+          >
             {pages.map((page) => (
               <Button
                 key={page}
@@ -183,18 +195,28 @@ const Navbar = () => {
                   redirectToPage2 = page;
                   handleCloseNavMenu();
                 }}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{
+                  my: 2,
+                  color: "main",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
+                {page === "Home" && <HomeOutlined />}
+                {page === "Messaging" && <MessageOutlinedIcon />}
+                {page === "Network" && <GroupsOutlinedIcon />}
+                {page === "Possible Connections" && <WorkOutlineOutlinedIcon />}
                 {page}
               </Button>
             ))}
           </Box>
 
           {userIsConnected && (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, marginLeft: "1%" }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
+                    style={{ border: "2px solid #2B2F90" }}
                     alt={userData.values.firstName}
                     src={userData.values.image}
                   />
@@ -236,9 +258,5 @@ const Navbar = () => {
     </AppBar>
   );
 };
-
-// Navbar.propTypes = {
-//   connected: PropTypes.bool,
-// };
 
 export default Navbar;
