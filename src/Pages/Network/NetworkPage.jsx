@@ -11,6 +11,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
 import { SentInvitation } from "./Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Invitation/ReceivedInvitation";
+import { NetworkPossibleConnections } from "./NetworkPossibleConnections";
 
 const theme = createTheme({
   palette: {
@@ -65,6 +66,11 @@ const NetworkPage = () => {
                 value={2}
                 data-cy="SentInvitationTab"
               />
+              <Tab
+                label="Possible Connections"
+                value={3}
+                data-cy="PossibleConnectionsTab"
+              />
             </Tabs>
           </Box>
 
@@ -78,6 +84,10 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 2}>
             <SentInvitation />
+          </Box>
+
+          <Box sx={{ p: 3 }} hidden={value !== 3}>
+            <NetworkPossibleConnections />
           </Box>
         </Container>
       </ThemeProvider>
