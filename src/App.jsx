@@ -21,6 +21,8 @@ import { Network } from "./Pages/Network/Network";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import { CompanyCreation } from "./Pages/CompanyCreation/CompanyCreation";
+import { RecruiterAccountCreation } from "./Pages/RecruiterAccountCreation/RecruiterAccountCreation";
+
 import Messaging from "./Pages/Messaging/Messaging";
 import Navbar from "./Components/Navbar/Navbar";
 
@@ -71,6 +73,11 @@ const App = () => {
               path="/companyCreation"
               exact
               element={<CompanyCreation />}
+            />
+            <Route
+              path="/recruiterAccountCreation"
+              exact
+              element={<RecruiterAccountCreation />}
             />
           </Routes>
         </Router>

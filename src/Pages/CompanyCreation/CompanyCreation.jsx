@@ -3,21 +3,13 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import * as React from "react";
-import { Route, Link, Routes } from "react-router-dom";
-import {
-  doc,
-  addDoc,
-  setDoc,
-  getFirestore,
-  collection,
-} from "firebase/firestore";
-import { auth, db, app } from "../../Firebase/firebase";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
 
 async function handleSubmit(companyInformation) {
   await addDoc(collection(db, "companies"), companyInformation);
 }
 export const CompanyCreation = () => {
-  const hello = "hello";
   const [companyName, setCompanyName] = React.useState("Company Name");
   return (
     <Box>
