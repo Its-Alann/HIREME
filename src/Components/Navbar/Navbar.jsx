@@ -14,8 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import useLogout from "../../context/useLogout";
-import useAuthContext from "../../context/useAuthContext";
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { auth } from "../../Firebase/firebase";
 
 const pages = ["Home", "Messaging", "Network"];
 // const pages = [
@@ -29,8 +29,8 @@ const Navbar = ({ connected }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [redirectToPage, setRedirectToPage] = React.useState("");
-  const { logout } = useLogout();
-  const { user } = useAuthContext();
+  const [user, userLoading, userError] = useAuthState(auth);
+  const [signOut, logoutLoading, logoutError] = useSignOut(auth);
 
   let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
@@ -195,7 +195,7 @@ const Navbar = ({ connected }) => {
                 <MenuItem>Profile</MenuItem>
                 <MenuItem>Account</MenuItem>
                 <MenuItem>Dashboard</MenuItem>
-                <MenuItem onClick={logout} data-cy="logout-test">
+                <MenuItem onClick={signOut} data-cy="logout-test">
                   Logout
                 </MenuItem>
               </Menu>

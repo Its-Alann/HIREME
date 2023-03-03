@@ -8,7 +8,6 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import useAuthContext from "../../src/context/useAuthContext";
 import { auth } from "../../src/Firebase/firebase";
 
 const deleteSignedUser = async (password) => {
@@ -104,6 +103,8 @@ describe("Testing the login feature", () => {
       });
     });
 
+    //Replaced with jest unit tests
+    /*
     //IMPORTANT TO CHECK THAT THE ACCOUNT DOESN'T EXIST ALREADY
     it("creating account when using valid information and verify it's logged in", () => {
       cy.visit("http://localhost:3000/SignUp");
@@ -156,6 +157,6 @@ describe("Testing the login feature", () => {
       cy.wait(1000);
       expect(auth.currentUser.email).to.equal("new@user.com");
       deleteSignedUser("Email123!");
-    });
+    });*/
   });
 });

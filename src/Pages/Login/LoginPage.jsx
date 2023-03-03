@@ -13,14 +13,16 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CircularProgress, Stack } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
+import {
+  useAuthState,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
 import useLogin from "../../context/useLogin";
-import useAuthContext from "../../context/useAuthContext";
 
 const theme = createTheme({
   palette: {
@@ -33,13 +35,13 @@ const theme = createTheme({
   },
 });
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
   const [authError, setAuthError] = React.useState(false);
   const [authErrorMsg, setAuthErrorMsg] = React.useState("");
-  const { login, isPending, error } = useLogin();
-  const { user } = useAuthContext();
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,7 +56,7 @@ const Login = () => {
         password,
       });
       try {
-        login(email, password);
+        signInWithEmailAndPassword(email, password);
         console.log(user);
 
         navigate("/");
@@ -145,7 +147,7 @@ const Login = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            {isPending ? (
+            {loading ? (
               <CircularProgress />
             ) : (
               <Button
@@ -207,4 +209,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

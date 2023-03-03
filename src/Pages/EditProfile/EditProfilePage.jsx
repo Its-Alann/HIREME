@@ -16,7 +16,7 @@ import { app, auth, storage } from "../../Firebase/firebase";
 import "./EditProfile.css";
 import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
 
-const EditProfile = () => {
+const EditProfilePage = () => {
   // Set default value, because otherwise UI glitch + warning
 
   const theme = createTheme({
@@ -234,4 +234,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default EditProfilePage;
