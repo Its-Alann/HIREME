@@ -70,17 +70,11 @@ const Navbar = () => {
       case "network":
         navigate("/network");
         break;
-      case "possible connections":
-        navigate("/possibleconnections");
-        break;
       case "profile":
-        //to implement
         break;
       case "account":
-        //to implement
         break;
       case "dashboard":
-        //to implement
         break;
       case "logout":
         setUserIsConnected(false);
@@ -88,7 +82,6 @@ const Navbar = () => {
         navigate("/");
         break;
       case "jobs":
-        //to implement
         break;
       case "sign up":
         navigate("/SignUp");
