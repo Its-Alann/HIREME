@@ -15,7 +15,7 @@ import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogle
 import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
 import { auth, app } from "../../Firebase/firebase";
 
-const Home = () => {
+const HomePage = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
@@ -158,4 +158,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

@@ -42,7 +42,7 @@ const theme = createTheme({
   },
 });
 
-const Messaging = () => {
+const MessagingPage = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
@@ -342,4 +342,4 @@ const Messaging = () => {
   );
 };
 
-export default Messaging;
+export default MessagingPage;

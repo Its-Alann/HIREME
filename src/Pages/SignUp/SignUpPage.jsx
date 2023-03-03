@@ -16,8 +16,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as EmailValidator from "email-validator";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Navigate, useNavigate, redirect } from "react-router-dom";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import Navbar from "../../Components/Navbar/Navbar";
-import useSignUp from "./useSignUp";
+import { auth } from "../../Firebase/firebase";
 
 const theme = createTheme({
   palette: {
@@ -30,12 +31,13 @@ const theme = createTheme({
   },
 });
 
-const SignUp = () => {
+const SignUpPage = () => {
   const [emailError, setEmailError] = React.useState(false);
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
-  const { signup, isPending, error } = useSignUp();
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -47,7 +49,7 @@ const SignUp = () => {
       name: data.get("firstName"),
     };
 
-    signup(email, password, name);
+    createUserWithEmailAndPassword(email, password, name);
     navigate("/");
   };
 
@@ -185,7 +187,7 @@ const SignUp = () => {
               </Grid>
             </Grid>
 
-            {isPending ? (
+            {loading ? (
               <CircularProgress />
             ) : (
               <Button
@@ -214,4 +216,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUpPage;
