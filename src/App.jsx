@@ -18,7 +18,7 @@ import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import EditProfile from "./Pages/EditProfile/EditProfile";
 import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
-import { Network } from "./Pages/Network/Network";
+import Network from "./Pages/Network/Network";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import Navbar from "./Components/Navbar/Navbar";
 
