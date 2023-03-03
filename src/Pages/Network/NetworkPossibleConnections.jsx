@@ -86,7 +86,6 @@ export const NetworkPossibleConnections = () => {
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
       <ThemeProvider theme={theme}>
-        <Navbar />
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>

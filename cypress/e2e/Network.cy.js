@@ -158,6 +158,7 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       cy.get('[data-cy="NetworkTab"]').click();
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
     });
   });
 

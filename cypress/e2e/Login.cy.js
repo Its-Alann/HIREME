@@ -8,7 +8,6 @@ describe("Testing the login feature", () => {
     // so we must tell it to visit our website with the `cy.visit()` command.
     // Since we want to visit the same URL at the start of all our tests,
     // we include it in our beforeEach function so that it runs before each test
-    cy.visit("http://localhost:3000");
   });
 
   describe("Testing the login feature", () => {
@@ -46,6 +45,7 @@ describe("Testing the login feature", () => {
     });
 
     it("verifes account has logged in", () => {
+      cy.visit("http://localhost:3000");
       const user = auth.currentUser.email;
       expect(user).to.equal("hypeboy@tok.ki");
     });
@@ -54,7 +54,6 @@ describe("Testing the login feature", () => {
       cy.logout();
       cy.visit("http://localhost:3000/login");
       cy.get('[data-testid="GoogleIcon"]').click();
-      // cy.get("input").type("teamate390@gmail.com");
     });
   });
 });

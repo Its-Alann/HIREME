@@ -22,7 +22,6 @@ import {
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
-import useLogin from "../../context/useLogin";
 
 const theme = createTheme({
   palette: {
