@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -35,9 +35,42 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
 const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
   color: "#2B2F90",
 }));
+const ColorButtonRed = styled(Button)(({ theme }) => ({
+  backgroundColor: "red",
+  size: "15px",
+  fontSize: "10px",
+  color: "white",
+  border: "none",
+  "&:hover": {
+    backgroundColor: "red",
+    size: "15px",
+    fontSize: "10px",
+    color: "white",
+    border: "none",
+  },
+}));
 
-export const NetworkCards = ({ connectedUserID }) => {
+export const NetworkCards = ({ connectedUserID, currentUser }) => {
   const [connectedUser, setConnectedUser] = useState([]);
+
+  const removeConnection = async () => {
+    const currentUserNetworkRef = doc(db, "network", currentUser);
+    const connectedUserNetworkRef = doc(db, "network", connectedUserID);
+
+    try {
+      await updateDoc(currentUserNetworkRef, {
+        connectedUsers: arrayRemove(connectedUserID),
+      });
+
+      await updateDoc(connectedUserNetworkRef, {
+        connectedUsers: arrayRemove(currentUser),
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     const getConnectedUsers = async () => {
@@ -84,13 +117,21 @@ export const NetworkCards = ({ connectedUserID }) => {
                 }
               />
               {/*moves the buttons to the right*/}
-              <Box display="flex" justifyContent="flex-end">
+              <Box display="flex" flexDirection="column">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
+
                   <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
-                  <ColorButtonLightBlue size="medium" variant="outlined">
+                  <ColorButtonLightBlue variant="outlined">
                     Message
                   </ColorButtonLightBlue>
+                  <ColorButtonRed
+                    size="medium"
+                    variant="outlined"
+                    onClick={removeConnection}
+                  >
+                    Remove Connection
+                  </ColorButtonRed>
                 </CardActions>
               </Box>
             </>
@@ -103,6 +144,7 @@ export const NetworkCards = ({ connectedUserID }) => {
 
 NetworkCards.propTypes = {
   connectedUserID: PropTypes.string.isRequired,
+  currentUser: PropTypes.string.isRequired,
 };
 
 export default NetworkCards;
