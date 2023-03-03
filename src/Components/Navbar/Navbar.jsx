@@ -40,6 +40,11 @@ const Navbar = ({ connected }) => {
     setAnchorElUser(event.currentTarget);
   };
 
+  const logout = () => {
+    signOut();
+    navigate("/");
+  };
+
   const handleCloseNavMenu = () => {
     console.log(redirectToPage);
     console.log("redirectToPage2", redirectToPage2);

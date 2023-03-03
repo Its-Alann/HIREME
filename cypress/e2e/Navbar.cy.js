@@ -58,7 +58,6 @@ describe("example to-do app", () => {
   });
 
   it("open user menu and log out", () => {
-    cy.viewport(390, 844);
     cy.get('[data-cy="userBox"]').within(() =>
       cy.get('[data-cy="userMenu"]').click()
     );

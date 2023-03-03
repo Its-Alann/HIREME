@@ -30,7 +30,7 @@ describe("example to-do app", () => {
 
       //either create profile or edit profile button
       try {
-        if (cy.get('[data-testid="editProfileLink"]').should("be.visible")) {
+        if (cy.find("button[data-cy=editProfileLink]").length > 0) {
           cy.get('[data-testid="editProfileLink"]').click();
         }
       } catch (exception) {

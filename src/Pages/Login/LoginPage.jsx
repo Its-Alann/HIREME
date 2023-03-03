@@ -60,15 +60,6 @@ const LoginPage = () => {
 
         navigate("/");
       } catch (err) {
-        setAuthError(true);
-        console.log(err.code);
-        if (err.code.includes("user-not-found")) {
-          setAuthErrorMsg("An account with that email does not exist");
-        } else if (err.code.includes("wrong-password")) {
-          setAuthErrorMsg("Wrong password");
-        } else {
-          setAuthErrorMsg(err.code);
-        }
         console.error(err.code, err.message);
       }
     }
