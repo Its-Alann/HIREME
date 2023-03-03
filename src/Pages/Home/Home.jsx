@@ -1,30 +1,29 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import "./Home.css";
-import Typewriter from "typewriter-effect";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import Tilt from "react-parallax-tilt";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import Grid from "@mui/material/Grid";
+import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
-import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
 import { auth, app } from "../../Firebase/firebase";
+import HomepagePic from "../../Assets/images/homepage1.png";
+
+import Login from "../Login/Login";
 
 const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
   const checkFormCompletion = async (email) => {
     const docRef = doc(db, "userProfiles", email);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setFormCompleted(true);
+      setFirstName(docSnap.data().values.firstName);
     }
   };
 
@@ -32,8 +31,8 @@ const Home = () => {
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { uid, email } = authUser;
-        console.log("uid", uid);
-        console.log("email", email);
+        // console.log("uid", uid);
+        // console.log("email", email);
         setUser(uid);
         checkFormCompletion(email);
       } else {
@@ -46,7 +45,7 @@ const Home = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
-        console.log("signed out");
+        // console.log("signed out");
       })
       .catch((error) => {
         // An error happened.
@@ -66,94 +65,187 @@ const Home = () => {
     },
   });
 
+  // <ThemeProvider theme={theme}></ThemeProvider>
+
   return (
     <ThemeProvider theme={theme}>
-      <div className="Home" id="Home">
-        {/* <div className="overlay" /> */}
-        <video src={mainVideo} autoPlay loop muted playsInline />
-        <div className="content">
-          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} gyroscope>
-            <div id="card">
-              <h1 id="title">
-                <span id="titleHire">
-                  <div id="gradient">HIRE</div>
-                </span>
-                <span id="titleME">ME</span>
-              </h1>
-              <div id="businessInfo">
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <LocalPhoneIcon />
-                      </td>
-                      <td>Contact clients, partners and contractors</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <LocationOnIcon />
-                      </td>
-                      <td>Search by location to find the nearest job</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <InsertLinkIcon />
-                      </td>
-                      <td>Add your contact information easily</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <br />
-                <br />
-                <div id="type">
-                  Connect with &#160;
-                  <Typewriter
-                    options={{
-                      strings: [
-                        "Peers",
-                        "Potential Employers",
-                        "Partners",
-                        "Clients",
-                      ],
-                      autoStart: true,
-                      loop: true,
-                      deleteSpeed: 50,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </Tilt>
-
+      <Grid>
+        <Grid container sx={{ bgcolor: "#EAEAEA" }}>
           {user ? (
-            <div style={{ display: "grid" }}>
-              <button
-                id="signout"
-                type="button"
-                data-testid="homeLink"
-                onClick={handleSignOut}
+            <Grid container>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                alignItems="center"
+                justifyContent="center"
+                display="flex"
               >
-                Sign Out
-              </button>
-              {formCompleted === false ? (
-                <a href="/accountCreation" data-testid="createProfileLink">
-                  Create your profile
-                </a>
-              ) : (
-                <a href="/editProfile" data-testid="editProfileLink">
-                  {" "}
-                  Edit your profile{" "}
-                </a>
-                // <div> </div>
-              )}
-            </div>
+                <Box
+                  component="img"
+                  sx={{
+                    objectFit: "cover",
+                    width: 0.9,
+                    height: 0.9,
+                  }}
+                  src={HomepagePic}
+                  // alt="Trees"
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                align="center"
+                justify="center"
+                alignItems="center"
+                display="flex"
+                direction="column"
+              >
+                <Grid
+                  item
+                  s={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Typography variant="h4">
+                    {" "}
+                    Welcome Back {firstName}!{" "}
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <div>
+                    <Typography variant="h6"> Done for the day? </Typography>
+                    <Button
+                      fullWidth
+                      id="signout"
+                      data-testid="homeLink"
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2, py: 1 }}
+                      color="primary"
+                      inputProps={{ "aria-label": "signIn" }}
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  {formCompleted === false ? (
+                    <div>
+                      <Typography variant="h6">
+                        Looks like you&apos;re new!
+                      </Typography>
+                      <Button
+                        fullWidth
+                        data-testid="createProfileLink"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = "/accountCreation";
+                        }}
+                      >
+                        Create your profile
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Typography variant="h6">
+                        {" "}
+                        Need to make some changes?{" "}
+                      </Typography>
+                      <Button
+                        fullWidth
+                        data-testid="editProfileButton"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = "/editProfile";
+                        }}
+                      >
+                        Edit your profile
+                      </Button>
+                    </div>
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
           ) : (
-            <a href="/login" data-testid="homeLink" id="glass-btn">
-              Sign In
-            </a>
+            <div>
+              <Grid container>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  alignItems="center"
+                  justifyContent="center"
+                  display="flex"
+                >
+                  <Box
+                    component="img"
+                    sx={{
+                      objectFit: "cover",
+                      width: 0.9,
+                      height: 0.9,
+                    }}
+                    src={HomepagePic}
+                    // alt="Trees"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                  <Login sx={{ bgcolor: "red" }} />
+                </Grid>
+              </Grid>
+            </div>
           )}
-        </div>
-      </div>
+          {/* <Grid container>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              alignItems="center"
+              justifyContent="center"
+              display="flex"
+            >
+              <Box
+              component="img"
+                sx={{
+                  objectFit: "cover",
+                  width: 0.9,
+                  height: 0.9,
+                }}
+                src={HomepagePic}
+                // alt="Trees"
+              />
+              </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <Login />
+            </Grid>
+          </Grid> */}
+        </Grid>
+      </Grid>
     </ThemeProvider>
   );
 };
