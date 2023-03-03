@@ -34,6 +34,22 @@ describe("Testing the login feature", () => {
       cy.get("#email-helper-text").contains("Please enter valid credentials");
     });
 
+    it("tries to log in with right email, wrong password", () => {
+      cy.visit("http://localhost:3000");
+      cy.get('[data-testid="homeLink"]').click();
+      cy.get("#email").type("hypeboy@tok.ki");
+      cy.get("#password").type("jeans");
+      cy.get(".MuiButton-contained").click();
+      cy.wait(500);
+      //Better to have API calls end the tests
+    });
+
+    it("Log in with Google", () => {
+      cy.logout();
+      cy.visit("http://localhost:3000/login");
+      cy.get('[data-testid="GoogleIcon"]').click();
+    });
+
     it("Logs In with right email, right password", () => {
       cy.visit("http://localhost:3000");
       cy.get('[data-testid="homeLink"]').click();
@@ -44,16 +60,13 @@ describe("Testing the login feature", () => {
       //Better to have API calls end the tests
     });
 
-    it("verifes account has logged in", () => {
+    it("verifies account has logged in and log out", () => {
       cy.visit("http://localhost:3000");
+      cy.wait(500);
       const user = auth.currentUser.email;
       expect(user).to.equal("hypeboy@tok.ki");
-    });
-
-    it("Log in with Google", () => {
-      cy.logout();
-      cy.visit("http://localhost:3000/login");
-      cy.get('[data-testid="GoogleIcon"]').click();
+      cy.wait(500);
+      cy.get('[data-testid="homeLink"]').click();
     });
   });
 });
