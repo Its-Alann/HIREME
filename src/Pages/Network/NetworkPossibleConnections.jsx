@@ -8,7 +8,6 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
-import Navbar from "../../Components/Navbar/Navbar";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
