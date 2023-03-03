@@ -163,7 +163,10 @@ const Messaging = () => {
   }, [myUser]);
 
   React.useEffect(() => {
-    scrollToBottom();
+    //wont scroll to bottom if there are no chats selected
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   return (
