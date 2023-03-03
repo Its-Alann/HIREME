@@ -8,9 +8,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./Pages/Background/Background";
 import Home from "./Pages/Home/Home";
-import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import Messaging from "./Pages/Messaging/Messaging";
@@ -46,8 +44,6 @@ const App = () => {
           <Navbar> </Navbar>
           <Routes>
             <Route path="/" exact element={<Home />} />
-            <Route path="/" exact element={<Background />} />
-            <Route path="/" exact element={<AnotherPage />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/signup" exact element={<SignUp />} />
             <Route
