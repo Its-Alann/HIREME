@@ -111,7 +111,11 @@ const Home = () => {
                   Create your profile
                 </a>
               ) : (
-                <a href="/editProfile" id="glass-btn">
+                <a
+                  href="/editProfile"
+                  id="glass-btn"
+                  data-testid="editProfileLink"
+                >
                   {" "}
                   Edit your profile{" "}
                 </a>
