@@ -1,19 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import "./Home.css";
-import Typewriter from "typewriter-effect";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import Tilt from "react-parallax-tilt";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import Grid from "@mui/material/Grid";
 import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
-import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
 import { auth, app } from "../../Firebase/firebase";
 import HomepagePic from "../../Assets/images/homepage1.png";
 
@@ -38,8 +31,8 @@ const Home = () => {
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { uid, email } = authUser;
-        console.log("uid", uid);
-        console.log("email", email);
+        // console.log("uid", uid);
+        // console.log("email", email);
         setUser(uid);
         checkFormCompletion(email);
       } else {
@@ -52,7 +45,7 @@ const Home = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
-        console.log("signed out");
+        // console.log("signed out");
       })
       .catch((error) => {
         // An error happened.
@@ -157,14 +150,28 @@ const Home = () => {
                   alignItems="center"
                 >
                   {formCompleted === false ? (
-                    <a href="/accountCreation" data-testid="createProfileLink">
-                      Create your profile
-                    </a>
+                    <div>
+                      <Typography variant="h6">
+                        Looks like you&apos;re new!
+                      </Typography>
+                      <Button
+                        fullWidth
+                        data-testid="createProfileLink"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = "/accountCreation";
+                        }}
+                      >
+                        Create your profile
+                      </Button>
+                    </div>
                   ) : (
                     <div>
                       <Typography variant="h6">
                         {" "}
-                        Want to edit your profile?{" "}
+                        Need to make some changes?{" "}
                       </Typography>
                       <Button
                         fullWidth
