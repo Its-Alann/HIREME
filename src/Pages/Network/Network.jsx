@@ -11,6 +11,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
 import { SentInvitation } from "./Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Invitation/ReceivedInvitation";
+import { NetworkPossibleConnections } from "./NetworkPossibleConnections";
 
 const theme = createTheme({
   palette: {
@@ -18,12 +19,12 @@ const theme = createTheme({
     background: { main: "#EAEAEA" },
     gray: { main: "#757575" },
   },
-  typography: {
+  /* typography: {
     fontFamily: ["Proxima Nova"],
-  },
+  },*/
 });
 
-const LinkTab = (props) => (
+/*const LinkTab = (props) => (
   <Tab
     component={Link}
     to={props.href}
@@ -33,9 +34,9 @@ const LinkTab = (props) => (
     // eslint-disable-next-line react/jsx-props-no-spreading
     {...props}
   />
-);
+);*/
 
-export const Network = () => {
+const Network = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -54,9 +55,22 @@ export const Network = () => {
               onChange={handleChange}
               aria-label="nav tabs example"
             >
-              <LinkTab label="My Network" value={0} />
-              <Tab label="Received Invitations" value={1} />
-              <Tab label="Sent Invitation" value={2} />
+              <Tab label="My Network" value={0} data-cy="NetworkTab" />
+              <Tab
+                label="Received Invitations"
+                value={1}
+                data-cy="ReceivedInvitationTab"
+              />
+              <Tab
+                label="Sent Invitation"
+                value={2}
+                data-cy="SentInvitationTab"
+              />
+              <Tab
+                label="Possible Connections"
+                value={3}
+                data-cy="PossibleConnectionsTab"
+              />
             </Tabs>
           </Box>
 
@@ -71,14 +85,18 @@ export const Network = () => {
           <Box sx={{ p: 3 }} hidden={value !== 2}>
             <SentInvitation />
           </Box>
+
+          <Box sx={{ p: 3 }} hidden={value !== 3}>
+            <NetworkPossibleConnections />
+          </Box>
         </Container>
       </ThemeProvider>
     </div>
   );
 };
 
-LinkTab.propTypes = {
+/*LinkTab.propTypes = {
   href: PropTypes.string.isRequired,
-};
+};*/
 
 export default Network;
