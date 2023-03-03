@@ -20,7 +20,6 @@ import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { Network } from "./Pages/Network/Network";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
-import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import Navbar from "./Components/Navbar/Navbar";
 
 const App = () => {
@@ -61,11 +60,6 @@ const App = () => {
             <Route path="/myNetwork" exact element={<ViewNetwork />} />
             <Route path="/invitations" exact element={<ReceivedInvitation />} />
             <Route path="/sentRequests" exact element={<SentInvitation />} />
-            <Route
-              path="/possibleConnections"
-              exact
-              element={<NetworkPossibleConnections />}
-            />
           </Routes>
         </Router>
       </div>
