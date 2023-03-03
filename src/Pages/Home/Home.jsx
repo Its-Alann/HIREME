@@ -10,7 +10,7 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import Grid from "@mui/material/Grid";
-import { Box } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import mainVideo from "../../Assets/videos/AdobeStock_Video1.mov";
@@ -23,12 +23,14 @@ const Home = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
   const checkFormCompletion = async (email) => {
     const docRef = doc(db, "userProfiles", email);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setFormCompleted(true);
+      setFirstName(docSnap.data().values.firstName);
     }
   };
 
@@ -73,57 +75,10 @@ const Home = () => {
   // <ThemeProvider theme={theme}></ThemeProvider>
 
   return (
-    <Grid>
-      <Grid container sx={{ bgcolor: "#EAEAEA" }}>
-        {user ? (
-          <Grid container>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              md={6}
-              alignItems="center"
-              justifyContent="center"
-              display="flex"
-            >
-              <Box
-                component="img"
-                sx={{
-                  objectFit: "cover",
-                  width: 0.9,
-                  height: 0.9,
-                }}
-                src={HomepagePic}
-                // alt="Trees"
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <button
-                id="signout"
-                type="button"
-                data-testid="homeLink"
-                onClick={handleSignOut}
-              >
-                Sign Out
-              </button>
-              {formCompleted === false ? (
-                <a href="/accountCreation" data-testid="createProfileLink">
-                  Create your profile
-                </a>
-              ) : (
-                <a
-                  href="/editProfile"
-                  id="glass-btn"
-                  data-testid="editProfileLink"
-                >
-                  {" "}
-                  Edit your profile{" "}
-                </a>
-              )}
-            </Grid>
-          </Grid>
-        ) : (
-          <div>
+    <ThemeProvider theme={theme}>
+      <Grid>
+        <Grid container sx={{ bgcolor: "#EAEAEA" }}>
+          {user ? (
             <Grid container>
               <Grid
                 item
@@ -145,13 +100,119 @@ const Home = () => {
                   // alt="Trees"
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={6}>
-                <Login sx={{ bgcolor: "red" }} />
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                align="center"
+                justify="center"
+                alignItems="center"
+                display="flex"
+                direction="column"
+              >
+                <Grid
+                  item
+                  s={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Typography variant="h4">
+                    {" "}
+                    Welcome Back {firstName}!{" "}
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <div>
+                    <Typography variant="h6"> Done for the day? </Typography>
+                    <Button
+                      fullWidth
+                      id="signout"
+                      data-testid="homeLink"
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2, py: 1 }}
+                      color="primary"
+                      inputProps={{ "aria-label": "signIn" }}
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  {formCompleted === false ? (
+                    <a href="/accountCreation" data-testid="createProfileLink">
+                      Create your profile
+                    </a>
+                  ) : (
+                    <div>
+                      <Typography variant="h6">
+                        {" "}
+                        Want to edit your profile?{" "}
+                      </Typography>
+                      <Button
+                        fullWidth
+                        data-testid="editProfileButton"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = "/editProfile";
+                        }}
+                      >
+                        Edit your profile
+                      </Button>
+                    </div>
+                  )}
+                </Grid>
               </Grid>
             </Grid>
-          </div>
-        )}
-        {/* <Grid container>
+          ) : (
+            <div>
+              <Grid container>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  alignItems="center"
+                  justifyContent="center"
+                  display="flex"
+                >
+                  <Box
+                    component="img"
+                    sx={{
+                      objectFit: "cover",
+                      width: 0.9,
+                      height: 0.9,
+                    }}
+                    src={HomepagePic}
+                    // alt="Trees"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                  <Login sx={{ bgcolor: "red" }} />
+                </Grid>
+              </Grid>
+            </div>
+          )}
+          {/* <Grid container>
             <Grid
               item
               xs={12}
@@ -176,8 +237,9 @@ const Home = () => {
               <Login />
             </Grid>
           </Grid> */}
+        </Grid>
       </Grid>
-    </Grid>
+    </ThemeProvider>
   );
 };
 
