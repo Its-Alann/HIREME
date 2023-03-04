@@ -34,16 +34,6 @@ describe("Testing the login feature", () => {
       cy.get("#email-helper-text").contains("Please enter valid credentials");
     });
 
-    it("tries to log in with right email, wrong password", () => {
-      cy.visit("http://localhost:3000");
-      cy.get('[data-testid="homeLink"]').click();
-      cy.get("#email").type("hypeboy@tok.ki");
-      cy.get("#password").type("jeans");
-      cy.get(".MuiButton-contained").click();
-      cy.wait(500);
-      //Better to have API calls end the tests
-    });
-
     it("Log in with Google", () => {
       cy.logout();
       cy.visit("http://localhost:3000/login");
@@ -51,8 +41,7 @@ describe("Testing the login feature", () => {
     });
 
     it("Logs In with right email, right password", () => {
-      cy.visit("http://localhost:3000");
-      cy.get('[data-testid="homeLink"]').click();
+      cy.visit("http://localhost:3000/login");
       cy.get("#email").type("hypeboy@tok.ki");
       cy.get("#password").type("newjeans");
       cy.get(".MuiButton-contained").click();

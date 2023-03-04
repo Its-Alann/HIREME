@@ -12,19 +12,41 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import PropTypes from "prop-types";
+import HomeOutlined from "@mui/icons-material/HomeOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import { useNavigate } from "react-router-dom";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
-import { auth } from "../../Firebase/firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { db, auth } from "../../Firebase/firebase";
 
-const pages = ["Home", "Messaging", "Network"];
-// const pages = [
-//   { title: "Home", redirect: "/" },
-//   { title: "Messaging", redirect: "/messaging" },
-// ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["Home", "Network", "Jobs", "Messaging"];
+const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
+const settings = ["Profile", "Account", "Dashboard"];
 
-const Navbar = ({ connected }) => {
+const Navbar = () => {
+  const [userIsConnected, setUserIsConnected] = React.useState(false);
+  const [userData, setUserData] = React.useState([]);
+  React.useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserIsConnected(true);
+        try {
+          const dbInfo = await getDoc(doc(db, "userProfiles", user.email));
+          const userInfo = dbInfo.data();
+          setUserData(userInfo);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        setUserIsConnected(false);
+      }
+    });
+  }, []);
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -40,9 +62,8 @@ const Navbar = ({ connected }) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const logout = () => {
-    signOut();
-    navigate("/");
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   const handleCloseNavMenu = () => {
@@ -58,6 +79,26 @@ const Navbar = ({ connected }) => {
       case "network":
         navigate("/network");
         break;
+      /*
+      case "profile":
+        break;
+      case "account":
+        break;
+      case "dashboard":
+        break;*/
+      case "logout":
+        setUserIsConnected(false);
+        signOut(auth);
+        navigate("/");
+        break;
+      case "jobs":
+        break;
+      case "sign up":
+        navigate("/SignUp");
+        break;
+      case "log in":
+        navigate("/login");
+        break;
       default:
         break;
     }
@@ -65,12 +106,15 @@ const Navbar = ({ connected }) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="background">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <AdbIcon
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            color="primary"
+          />
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="a"
             href="/"
@@ -80,7 +124,7 @@ const Navbar = ({ connected }) => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "primary",
               textDecoration: "none",
             }}
           >
@@ -97,12 +141,13 @@ const Navbar = ({ connected }) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="primary"
             >
               <MenuIcon />
             </IconButton>
             <Menu
               id="menu-appbar"
+              data-cy="phone-appbar-test"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "bottom",
@@ -119,28 +164,43 @@ const Navbar = ({ connected }) => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  data-cy={`${page}-phone-test`}
-                  onClick={() => {
-                    console.log(page);
-                    // setRedirectToPage(page);
-                    redirectToPage2 = page;
-                    handleCloseNavMenu();
-                  }}
-                >
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {userIsConnected &&
+                pages.map((page) => (
+                  <MenuItem
+                    key={page}
+                    data-cy={`${page}-phone-test`}
+                    onClick={() => {
+                      redirectToPage2 = page;
+                      handleCloseNavMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
+              {!userIsConnected &&
+                loggedOutPages.map((page) => (
+                  <MenuItem
+                    key={page}
+                    data-cy={`${page}-logged-out-test`}
+                    onClick={() => {
+                      redirectToPage2 = page;
+                      handleCloseNavMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <AdbIcon
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            color="primary"
+          />
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -148,72 +208,134 @@ const Navbar = ({ connected }) => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "primary",
               textDecoration: "none",
             }}
           >
             HIRE<i>ME</i>
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                data-cy={`${page}-test`}
-                onClick={() => {
-                  redirectToPage2 = page;
-                  handleCloseNavMenu();
-                }}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-          {user && <Typography>Hello {user.displayName} </Typography>}
 
-          {user && (
-            <Box sx={{ flexGrow: 0 }} data-cy="userBox">
-              <Tooltip title="Open settings">
-                <IconButton
-                  onClick={handleOpenUserMenu}
-                  sx={{ p: 0 }}
-                  data-cy="userMenu"
-                >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+          {userIsConnected && (
+            <>
+              <Box
+                data-cy="connected-box-test"
+                sx={{
+                  flexGrow: 1,
+                  display: { xs: "none", md: "flex", justifyContent: "end" },
                 }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
               >
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>Account</MenuItem>
-                <MenuItem>Dashboard</MenuItem>
-                <MenuItem onClick={signOut} data-cy="logout-test">
-                  Logout
-                </MenuItem>
-              </Menu>
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    data-cy={`${page}-test`}
+                    onClick={() => {
+                      redirectToPage2 = page;
+                      handleCloseNavMenu();
+                    }}
+                    sx={{
+                      my: 2,
+                      color: "main",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    {page === "Home" && <HomeOutlined />}
+                    {page === "Messaging" && <MessageOutlinedIcon />}
+                    {page === "Network" && <GroupsOutlinedIcon />}
+                    {page === "Jobs" && <WorkOutlineOutlinedIcon />}
+                    {page}
+                  </Button>
+                ))}
+              </Box>
+
+              <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
+                <Tooltip title="Open settings">
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0 }}
+                    data-cy="userMenu"
+                  >
+                    <Avatar
+                      style={{ border: "2px solid #2B2F90" }}
+                      alt={userData.values.firstName}
+                      src={userData.values.image}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting}
+                      data-cy={`${setting}-phone-test`}
+                      onClick={() => {}}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                  <MenuItem
+                    onClick={() => {
+                      redirectToPage2 = "logout";
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                    data-cy="logout-test"
+                  >
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </>
+          )}
+
+          {!userIsConnected && (
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", md: "flex", justifyContent: "end" },
+              }}
+            >
+              {loggedOutPages.map((page) => (
+                <Button
+                  key={page}
+                  data-cy={`${page}-test`}
+                  onClick={() => {
+                    redirectToPage2 = page;
+                    handleCloseNavMenu();
+                  }}
+                  sx={{
+                    my: 2,
+                    color: "main",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  {page === "Jobs" && <WorkOutlineOutlinedIcon />}
+                  {page === "Sign Up" && <PersonOutlineOutlinedIcon />}
+                  {page === "Log In" && <LoginOutlinedIcon />}
+                  {page}
+                </Button>
+              ))}
             </Box>
           )}
         </Toolbar>
       </Container>
     </AppBar>
   );
-};
-
-Navbar.propTypes = {
-  connected: PropTypes.bool,
 };
 
 export default Navbar;

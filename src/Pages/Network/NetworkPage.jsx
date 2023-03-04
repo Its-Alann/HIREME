@@ -46,9 +46,7 @@ const NetworkPage = () => {
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
       <ThemeProvider theme={theme}>
-        {/* <Navbar /> */}
         <Container component="main" maxWidth={false} sx={{ m: 2 }}>
-          <CssBaseline />
           <Box sx={{ width: "100%" }}>
             <Tabs
               value={value}

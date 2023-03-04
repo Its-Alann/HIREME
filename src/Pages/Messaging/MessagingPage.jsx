@@ -23,12 +23,12 @@ import {
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
-import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
 import { auth, db } from "../../Firebase/firebase";
 import NewConvo from "../../Components/NewConvo/NewConvo";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const theme = createTheme({
   palette: {
@@ -163,7 +163,10 @@ const MessagingPage = () => {
   }, [myUser]);
 
   React.useEffect(() => {
-    scrollToBottom();
+    //wont scroll to bottom if there are no chats selected
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   return (

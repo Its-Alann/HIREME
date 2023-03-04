@@ -53,7 +53,7 @@ describe("Testing the networking features of the app", () => {
   describe("Testing the invitation feature between hypeboy and accountcreation@test by sending the invitation from hypeboy to accountcreation@test and ignoring it on accountcreation", () => {
     it("removes the SENT invitation if present, removes the connection between the two accounts if present", () => {
       //logout and login to hypeboy@tok.ki account
-      cy.visit("http://localhost:3000/");
+      cy.visit("http://localhost:3000/network");
       cy.logout();
       cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
       cy.wait(2000);
@@ -87,10 +87,8 @@ describe("Testing the networking features of the app", () => {
       const uid = "g7aTo5gtRCYjx3ggCJLOWnxVRFp2";
       //login to hypeboy's account
       cy.login(uid);
-
-      //visit both possible connections and network pages
-      cy.visit("http://localhost:3000/possibleConnections");
       cy.visit("http://localhost:3000/network");
+
       //click on view profile of the first user
       //needs to be modified
       cy.get(
@@ -101,14 +99,15 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
 
-      //revisit the pages
+      //visit network and check if invitation button exists
       cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
       cy.get('[data-cy="invitationButton"]').should("be.visible");
     });
 
     it("removes the RECEIVED invitation of hypeboy from accountcreation and the connection between the two accounts", () => {
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
       cy.get('[data-cy="invitationButton"]').click();
 
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
@@ -134,8 +133,8 @@ describe("Testing the networking features of the app", () => {
 
     it("sends the invitation from hypeboy's account", () => {
       //send invitation
-      //needs to be specified
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
       cy.get('[data-cy="invitationButton"]').click();
       cy.wait(500);
     });
@@ -191,9 +190,9 @@ describe("Testing the networking features of the app", () => {
       //login to hypeboy@tok.ki account
       cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
 
-      //vist both pages
+      //vist network
       cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
 
       //send invitation
       cy.get('[data-cy="invitationButton"]').should("be.visible").click();
@@ -249,21 +248,20 @@ describe("Testing the networking features of the app", () => {
       //login to hypeboy@tok.ki account
       cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
 
-      //vist both pages
+      //vist page
       cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
 
       //send invitation
-      //needs to be specified
-      cy.visit("http://localhost:3000/possibleConnections");
       cy.get('[data-cy="invitationButton"]').click();
       cy.wait(500);
       //WEIRD CYPRESS BUG: TEST MUST END AFTER INVITATION CLICK FOR IT TO TAKE EFFECT
     });
 
     it("visits the page again to ensure the user is not present on possible connections anymore", () => {
-      //visit all tabs
-      cy.visit("http://localhost:3000/possibleConnections");
+      //visit Possible Connections Tab and check if correct message exists
+      cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
       cy.get(".MuiContainer-maxWidthXxl > .MuiBox-root").contains(
         "No connections yet :/"
       );
@@ -276,9 +274,9 @@ describe("Testing the networking features of the app", () => {
         "No connections yet :/"
       );
 
-      //visit sent invitation tab
+      //visit sent invitation tab and Possible Connections Tab
       cy.get('[data-cy="SentInvitationTab"]').click();
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
     });
 
     it("logs out, logs in to createaccount containing the invitation and accepts it", () => {
