@@ -154,6 +154,7 @@ const EditProfilePage = () => {
                 placeholder="First Name"
                 value={profile.values.firstName}
                 readOnly
+                data-cy="firstName-test"
               />
               <InputBase
                 id="standard-basic"

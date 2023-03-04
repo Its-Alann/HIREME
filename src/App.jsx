@@ -8,9 +8,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./Pages/Background/Background";
 import HomePage from "./Pages/Home/HomePage";
-import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import LoginPage from "./Pages/Login/LoginPage";
 import SignUpPage from "./Pages/SignUp/SignUpPage";
 import MessagingPage from "./Pages/Messaging/MessagingPage";
@@ -18,12 +16,10 @@ import AccountCreationPage from "./Pages/AccountCreation/AccountCreationPage";
 import EditProfilePage from "./Pages/EditProfile/EditProfilePage";
 import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
-import NetworkPage from "./Pages/Network/NetworkPage";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
-import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
-import ToBeTested from "./Pages/ToBeTested/ToBeTested";
+import NetworkPage from "./Pages/Network/NetworkPage";
 
 const App = () => {
   const hello = "helloo";
@@ -45,11 +41,9 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <div className="App">
         <Router>
-          <Navbar> </Navbar>
+          <Navbar />
           <Routes>
             <Route path="/" exact element={<HomePage />} />
-            <Route path="/" exact element={<Background />} />
-            <Route path="/" exact element={<AnotherPage />} />
             <Route path="/login" exact element={<LoginPage />} />
             <Route path="/signup" exact element={<SignUpPage />} />
             <Route
@@ -71,12 +65,6 @@ const App = () => {
             <Route path="/myNetwork" exact element={<ViewNetwork />} />
             <Route path="/invitations" exact element={<ReceivedInvitation />} />
             <Route path="/sentRequests" exact element={<SentInvitation />} />
-            <Route
-              path="/possibleConnections"
-              exact
-              element={<NetworkPossibleConnections />}
-            />
-            <Route path="/testingOtherPages" exact element={<ToBeTested />} />
           </Routes>
         </Router>
       </div>
