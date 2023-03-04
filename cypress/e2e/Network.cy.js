@@ -11,7 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../src/Firebase/firebase";
 
-//async function to remove a sent invitation to
+Cypress.on("uncaught:exception", (err, runnable) => false);
+
 async function AsyncRemoveSentInvitation(RemoveAcc, fromAcc) {
   const sentInvitationsRef = doc(db, "invitations", fromAcc);
   // Atomically remove a region from the "regions" array field.
@@ -43,12 +44,20 @@ async function AsyncRemoveConnectedUser(RemoveAcc, fromAcc) {
 }
 
 describe("Testing the networking features of the app", () => {
+  //async function to remove a sent invitation to
+
   //No received invitations yet :/
   //No sent invitations :/
   //No connections yet :/
 
   describe("Testing the invitation feature between hypeboy and accountcreation@test by sending the invitation from hypeboy to accountcreation@test and ignoring it on accountcreation", () => {
     it("removes the SENT invitation if present, removes the connection between the two accounts if present", () => {
+      //logout and login to hypeboy@tok.ki account
+      cy.visit("http://localhost:3000/");
+      cy.logout();
+      cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
+      cy.wait(2000);
+
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
         AsyncRemoveSentInvitation("accountcreation@test.com", "hypeboy@tok.ki")

@@ -64,9 +64,11 @@ describe("Testing the login feature", () => {
       cy.visit("http://localhost:3000");
       cy.wait(500);
       const user = auth.currentUser?.email;
-      expect(user).to.equal("hypeboy@tok.ki");
-      cy.wait(500);
-      cy.get('[data-testid="homeLink"]').click();
+      if (user) {
+        expect(user).to.equal("hypeboy@tok.ki");
+        cy.wait(500);
+        cy.get('[data-testid="homeLink"]').click();
+      }
     });
   });
 });

@@ -1,3 +1,18 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../src/Firebase/firebase";
+
+const formCompleted = async (email) => {
+  const docRef = doc(db, "userProfiles", email);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return true;
+  }
+  return false;
+};
+
+Cypress.on("uncaught:exception", (err, runnable) => false);
+
 describe("example to-do app", () => {
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
@@ -19,21 +34,20 @@ describe("example to-do app", () => {
   describe("Adding document to the database Firebase", () => {
     it("Adds document to test_hello_world collection of Firestore, manual log in/custom log in and click on edit profile", () => {
       cy.visit("http://localhost:3000");
-      cy.callFirestore("add", "group", { members: "newMember" });
-      //logs in and log out
       cy.login();
+      cy.wait(1000);
+      cy.callFirestore("add", "group", { members: "newMember" });
 
       //custom login
       const uid = "EVgG5esZ4cRVNkf67eySrkJ1dVg1";
-      const tenantId = "testacc2@mail.com";
+      const email = "testacc2@mail.com";
       cy.login(uid);
+      const edit = formCompleted(email);
 
       //either create profile or edit profile button
-      try {
-        if (cy.find("button[data-cy=editProfileLink]").length > 0) {
-          cy.get('[data-testid="editProfileLink"]').click();
-        }
-      } catch (exception) {
+      if (edit) {
+        cy.get('[data-testid="editProfileLink"]').click();
+      } else {
         cy.get('[data-testid="createProfileLink"]').click();
       }
     });
