@@ -46,6 +46,7 @@ export const RecruiterAccountCreation = () => {
         required
         id="TextField-FirstName"
         variant="standard"
+        placeholder="Your First Name"
         fullWidth
         value={recruiterInformation.firstName}
         onChange={(e) =>
@@ -61,6 +62,7 @@ export const RecruiterAccountCreation = () => {
         required
         id="TextField-LastName"
         variant="standard"
+        placeholder="Your Last Name"
         fullWidth
         value={recruiterInformation.lastName}
         onChange={(e) =>
