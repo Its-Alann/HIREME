@@ -9,9 +9,9 @@ import { auth, db } from "../../Firebase/firebase";
 
 export const RecruiterAccountCreation = () => {
   const [recruiterInformation, setRecruiterInformation] = React.useState({
-    firstName: "Recruiter First Name",
-    lastName: "Recruiter Last Name",
-    workFor: "Company ID",
+    firstName: "",
+    lastName: "",
+    workFor: "",
   });
   const [companyList, setCompanyList] = React.useState([]);
 
@@ -45,7 +45,6 @@ export const RecruiterAccountCreation = () => {
       <TextField
         required
         id="TextField-FirstName"
-        placeholder="Recruiter First Name"
         variant="standard"
         fullWidth
         value={recruiterInformation.firstName}
@@ -61,7 +60,6 @@ export const RecruiterAccountCreation = () => {
       <TextField
         required
         id="TextField-LastName"
-        placeholder="Recruiter Last Name"
         variant="standard"
         fullWidth
         value={recruiterInformation.lastName}
@@ -75,7 +73,7 @@ export const RecruiterAccountCreation = () => {
 
       <Autocomplete
         options={companyList}
-        id="comboBox-companyList"
+        id="ComboBox-CompanyList"
         renderInput={(params) => (
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
@@ -91,7 +89,7 @@ export const RecruiterAccountCreation = () => {
           })
         }
       />
-      <Button id="ButtonSave" onClick={() => handleSubmit()}>
+      <Button id="Button-Save" onClick={() => handleSubmit()}>
         Save
       </Button>
     </Box>
