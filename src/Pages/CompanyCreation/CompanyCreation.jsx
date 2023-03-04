@@ -6,11 +6,13 @@ import * as React from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
-async function handleSubmit(companyInformation) {
-  await addDoc(collection(db, "companies"), companyInformation);
-}
 export const CompanyCreation = () => {
-  const [companyName, setCompanyName] = React.useState("Company Name");
+  const [companyInformation, setCompanyInformation] = React.useState({
+    name: "",
+  });
+  async function handleSubmit() {
+    await addDoc(collection(db, "companies"), companyInformation);
+  }
   return (
     <Box>
       <Typography>Company Creation</Typography>
@@ -21,13 +23,10 @@ export const CompanyCreation = () => {
         placeholder="Company Name"
         variant="standard"
         fullWidth
-        value={companyName}
-        onChange={(e) => setCompanyName(e.target.value)}
+        value={companyInformation.name}
+        onChange={(e) => setCompanyInformation({ name: e.target.value })}
       />
-      <Button
-        id="ButtonSave"
-        onClick={() => handleSubmit({ name: companyName })}
-      >
+      <Button id="ButtonSave" onClick={() => handleSubmit()}>
         Save
       </Button>
     </Box>
