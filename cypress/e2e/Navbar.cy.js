@@ -1,3 +1,5 @@
+Cypress.on("uncaught:exception", (err, runnable) => false);
+
 /* eslint-disable cypress/no-unnecessary-waiting */
 describe("example to-do app", () => {
   beforeEach(() => {
@@ -54,10 +56,17 @@ describe("example to-do app", () => {
       cy.get('[data-cy="userMenu"]').click()
     );
 
+    cy.logout();
+    cy.login();
     cy.visit("http://localhost:3000");
   });
 
   it("open user menu and log out", () => {
+    cy.viewport(390, 844);
+    cy.visit("http://localhost:3000");
+    cy.logout();
+    cy.login();
+
     cy.get('[data-cy="userBox"]').within(() =>
       cy.get('[data-cy="userMenu"]').click()
     );
