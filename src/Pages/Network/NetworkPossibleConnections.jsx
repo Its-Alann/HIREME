@@ -8,7 +8,6 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
-import Navbar from "../../Components/Navbar/Navbar";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
@@ -86,9 +85,7 @@ export const NetworkPossibleConnections = () => {
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
       <ThemeProvider theme={theme}>
-        <Navbar />
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
-          <CssBaseline />
           <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>
             People you may know
           </Typography>
