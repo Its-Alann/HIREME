@@ -8,22 +8,19 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./Pages/Background/Background";
 import Home from "./Pages/Home/Home";
-import AnotherPage from "./Pages/AnotherPage/AnotherPage";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
+import Messaging from "./Pages/Messaging/Messaging";
 import AccountCreation from "./Pages/AccountCreation/AccountCreation";
 import EditProfile from "./Pages/EditProfile/EditProfile";
 import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
-import { Network } from "./Pages/Network/Network";
+import Network from "./Pages/Network/Network";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import { CompanyCreation } from "./Pages/CompanyCreation/CompanyCreation";
 import { RecruiterAccountCreation } from "./Pages/RecruiterAccountCreation/RecruiterAccountCreation";
-
-import Messaging from "./Pages/Messaging/Messaging";
 import Navbar from "./Components/Navbar/Navbar";
 
 const App = () => {
@@ -46,11 +43,9 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <div className="App">
         <Router>
-          <Navbar> </Navbar>
+          <Navbar />
           <Routes>
             <Route path="/" exact element={<Home />} />
-            <Route path="/" exact element={<Background />} />
-            <Route path="/" exact element={<AnotherPage />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/signup" exact element={<SignUp />} />
             <Route
