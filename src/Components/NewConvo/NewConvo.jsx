@@ -59,7 +59,7 @@ const NewConvo = ({ selectConvo, getConversationId, getOtherAuthors }) => {
     <Grid container spacing={1}>
       <Grid xs>
         <Autocomplete
-          // autoComplete
+          data-cy="selectConnections"
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
@@ -80,6 +80,7 @@ const NewConvo = ({ selectConvo, getConversationId, getOtherAuthors }) => {
       </Grid>
       <Grid>
         <IconButton
+          data-cy="submitConnections"
           size="small"
           sx={{ p: 0 }}
           onClick={handleClick}

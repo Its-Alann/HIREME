@@ -246,7 +246,10 @@ const Messaging = () => {
                 <Typography color="primary" variant="h4">
                   Messaging
                 </Typography>
-                <IconButton onClick={() => setNewConvo(!newConvo)}>
+                <IconButton
+                  data-cy="startNewConvo"
+                  onClick={() => setNewConvo(!newConvo)}
+                >
                   <AddCommentIcon />
                 </IconButton>
               </Box>
