@@ -21,6 +21,7 @@ import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitatio
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import { CompanyCreation } from "./Pages/CompanyCreation/CompanyCreation";
 import { RecruiterAccountCreation } from "./Pages/RecruiterAccountCreation/RecruiterAccountCreation";
+import { JobCreation } from "./Pages/Job/JobCreation";
 import Navbar from "./Components/Navbar/Navbar";
 
 const App = () => {
@@ -74,6 +75,7 @@ const App = () => {
               exact
               element={<RecruiterAccountCreation />}
             />
+            <Route path="/jobCreation" exact element={<JobCreation />} />
           </Routes>
         </Router>
       </div>
