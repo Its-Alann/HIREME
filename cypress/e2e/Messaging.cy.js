@@ -77,5 +77,9 @@ describe("example to-do app", () => {
     });
   });
 
+  describe("Starting a new conversation", () => {
+    it("opens ");
+  });
+
   //Integration test for firebase connection
 });
