@@ -8,11 +8,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import * as React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
-  updateDoc,
   arrayUnion,
   writeBatch,
 } from "firebase/firestore";
@@ -87,8 +85,6 @@ export const JobCreation = () => {
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log(user.uid, " OnAuthStateChangedCalled");
-      console.log(jobInformation.publishedAt, jobInformation.publishedAt.$d);
       if (user) {
         getCompanyIDAndRecruiterID();
       }
@@ -192,6 +188,7 @@ export const JobCreation = () => {
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
+          id="DatePicker-Deadline"
           label="Application Deadline"
           value={jobInformation.deadline}
           onChange={(newValue) => {
