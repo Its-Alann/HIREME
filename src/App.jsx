@@ -8,20 +8,21 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Home from "./Pages/Home/Home";
-import Login from "./Pages/Login/Login";
-import SignUp from "./Pages/SignUp/SignUp";
-import Messaging from "./Pages/Messaging/Messaging";
-import AccountCreation from "./Pages/AccountCreation/AccountCreation";
-import EditProfile from "./Pages/EditProfile/EditProfile";
+import HomePage from "./Pages/Home/HomePage";
+import LoginPage from "./Pages/Login/LoginPage";
+import SignUpPage from "./Pages/SignUp/SignUpPage";
+import MessagingPage from "./Pages/Messaging/MessagingPage";
+import AccountCreationPage from "./Pages/AccountCreation/AccountCreationPage";
+import EditProfilePage from "./Pages/EditProfile/EditProfilePage";
 import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
-import Network from "./Pages/Network/Network";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import Navbar from "./Components/Navbar/Navbar";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import NetworkPage from "./Pages/Network/NetworkPage";
 
 const App = () => {
-  const hello = "hello";
+  const hello = "helloo";
 
   //asds//
 
@@ -42,17 +43,25 @@ const App = () => {
         <Router>
           <Navbar />
           <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/login" exact element={<Login />} />
-            <Route path="/signup" exact element={<SignUp />} />
+            <Route path="/" exact element={<HomePage />} />
+            <Route path="/login" exact element={<LoginPage />} />
+            <Route path="/signup" exact element={<SignUpPage />} />
             <Route
               path="/accountCreation"
               exact
-              element={<AccountCreation />}
+              element={<AccountCreationPage />}
             />
-            <Route path="/editProfile" exact element={<EditProfile />} />
-            <Route path="/network" exact element={<Network />} />
-            <Route path="/messaging" export element={<Messaging />} />
+            <Route
+              path="/editProfile"
+              exact
+              element={
+                <ProtectedRoute redirect="/">
+                  <EditProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/network" exact element={<NetworkPage />} />
+            <Route path="/messaging" export element={<MessagingPage />} />
             <Route path="/myNetwork" exact element={<ViewNetwork />} />
             <Route path="/invitations" exact element={<ReceivedInvitation />} />
             <Route path="/sentRequests" exact element={<SentInvitation />} />

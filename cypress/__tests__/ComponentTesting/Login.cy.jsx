@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import Login from "../../../src/Pages/Login/Login";
+import LoginPage from "../../../src/Pages/Login/LoginPage";
 
 describe("<Login />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-react
     cy.mount(
       <BrowserRouter>
-        <Login />
+        <LoginPage />
       </BrowserRouter>
     );
   });
@@ -15,7 +15,7 @@ describe("<Login />", () => {
   beforeEach(() => {
     cy.mount(
       <BrowserRouter>
-        <Login />
+        <LoginPage />
       </BrowserRouter>
     );
   });
