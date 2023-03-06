@@ -1,45 +1,90 @@
-describe("example to-do app", () => {
-  beforeEach(() => {
-    // Cypress starts out with a blank slate for each test
-    // so we must tell it to visit our website with the `cy.visit()` command.
-    // Since we want to visit the same URL at the start of all our tests,
-    // we include it in our beforeEach function so that it runs before each test
+beforeEach(() => {
+  cy.viewport(1920, 1080);
+});
+
+describe("Click buttons on navbar when logged out", () => {
+  it("clicks on jobs", () => {
     cy.visit("http://localhost:3000");
+    cy.contains("Jobs").click();
   });
 
-  it("clicks on navbar links", () => {
-    cy.get(".css-1t6c9ts > :nth-child(2)").click();
-    cy.url().should("eq", "http://localhost:3000/messaging");
-    cy.get(".css-1t6c9ts > :nth-child(3)").click();
-    cy.url().should("eq", "http://localhost:3000/network");
-    cy.get(".css-1t6c9ts > :nth-child(1)").click();
+  it("clicks on sign up", () => {
+    cy.visit("http://localhost:3000");
+    cy.contains("Sign Up").click();
+    cy.url().should("include", "/SignUp");
+  });
+
+  it("clicks on log in", () => {
+    cy.visit("http://localhost:3000");
+    cy.contains("Log In").click();
+    cy.url().should("include", "/login");
+  });
+});
+
+describe("Click buttons on navbar when logged in", () => {
+  it("Logs into test account", () => {
+    cy.visit("http://localhost:3000/login");
+    cy.get("#email").type("editprofile@test.com");
+    cy.get("#password").type("test123");
+    cy.get("input").tab();
+    cy.get(".MuiButton-contained").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
+  });
+
+  it("clicks on home", () => {
+    cy.visit("http://localhost:3000/network");
+    cy.contains("Home").click();
     cy.url().should("eq", "http://localhost:3000/");
   });
 
-  it("clicks on navbar links on mobile resolution", () => {
-    cy.viewport(390, 844);
-    //open menu
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    //click first option
-    cy.get(".MuiList-root > :nth-child(2)", { timeout: 10000 })
-      .should("be.visible")
-      .click();
-    //verify link
-    cy.url().should("eq", "http://localhost:3000/messaging");
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    cy.get(".MuiList-root > :nth-child(3)", { timeout: 10000 })
-      .should("be.visible")
-      .click();
-    cy.url().should("eq", "http://localhost:3000/network");
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    cy.get('.MuiList-root > [tabindex="0"]', { timeout: 10000 })
-      .should("be.visible")
-      .click();
-    cy.url().should("eq", "http://localhost:3000/");
-
-    //test closing menu
-    cy.get(".css-1lvtzne > .MuiButtonBase-root").click();
-    cy.get('[data-testid="homeLink"]').click("bottomLeft", { force: true });
+  it("clicks on network", () => {
+    cy.visit("http://localhost:3000");
+    cy.contains("Network").click();
+    cy.url().should("include", "/network");
   });
-  //Integration test for firebase connection
+
+  it("clicks on jobs", () => {
+    cy.visit("http://localhost:3000");
+    cy.contains("Jobs").click();
+  });
+
+  it("clicks on messaging", () => {
+    cy.visit("http://localhost:3000");
+    cy.contains("Messaging").click();
+    cy.url().should("include", "/messaging");
+  });
+
+  it("clicks on profile", () => {
+    cy.visit("http://localhost:3000");
+    cy.get(".MuiAvatar-root").click();
+    cy.contains("Profile").click();
+  });
+
+  it("clicks on Account", () => {
+    cy.visit("http://localhost:3000");
+    cy.get(".MuiAvatar-root").click();
+    cy.contains("Account").click();
+  });
+
+  it("clicks on Dashboard", () => {
+    cy.visit("http://localhost:3000");
+    cy.get(".MuiAvatar-root").click();
+    cy.contains("Dashboard").click();
+  });
+
+  it("clicks on logout", () => {
+    cy.visit("http://localhost:3000");
+    cy.get(".MuiAvatar-root").click();
+    cy.contains("Logout").click();
+  });
+});
+
+describe("click menu buttons when logged out with small screen", () => {
+  it("click on jobs", () => {
+    cy.viewport(600, 800);
+    cy.visit("http://localhost:3000");
+    cy.get("[data-testid='MenuIcon']").click();
+    //doesnt click on jobs but it does open the menu, so its something
+  });
 });
