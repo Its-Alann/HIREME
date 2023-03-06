@@ -36,7 +36,22 @@ describe("example to-do app", () => {
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
         .selectFile(fileName, { force: true });
+
+      cy.get('[data-testid="ClearIcon"]').click();
+
+      //send image
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000);
+      cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
+        .find("input")
+        .selectFile(fileName, { force: true });
+
       cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-testid="messageListItem"]')
+        .last()
+        .get('[data-testid="attachment"]')
+        .last()
+        .click();
     });
 
     it("shows message if user is not signed in", () => {
@@ -78,8 +93,21 @@ describe("example to-do app", () => {
   });
 
   describe("Starting a new conversation", () => {
-    it("opens ");
+    it("opens new chat flow", () => {
+      cy.logout();
+      cy.login();
+
+      // cy.viewport(1920, 1080);
+      cy.visit("http://localhost:3000/messaging");
+      cy.get('[data-cy="startNewConvo"]').click();
+      cy.get('[data-cy="selectConnections"]').should("be.visible");
+      cy.get('[data-cy="submitConnections"]').should("be.disabled");
+      cy.get('[data-testid="ArrowDropDownIcon"]').click();
+      cy.get("#mui-3-option-0").click();
+      cy.get('[data-testid="CancelIcon"]').should("be.visible");
+      cy.get('[data-cy="submitConnections"]').click();
+    });
   });
 
-  //Integration test for firebase connection
+  // Integration test for firebase connection
 });

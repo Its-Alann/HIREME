@@ -10,6 +10,7 @@ const MessageListItem = ({
   timestamp,
   alignment,
   openAttachment,
+  index,
 }) => {
   const antinos = "🖖";
 
@@ -47,6 +48,7 @@ const MessageListItem = ({
               primary={`🔗${attachment}`}
               align={alignment}
               onClick={() => openAttachment(attachment)}
+              data-testid="attachment"
             />
           </ListItem>
         ) : (
@@ -73,5 +75,6 @@ MessageListItem.propTypes = {
   sender: PropTypes.string,
   alignment: PropTypes.string,
   openAttachment: PropTypes.func,
+  index: PropTypes.number,
 };
 export default MessageListItem;

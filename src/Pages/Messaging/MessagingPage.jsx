@@ -270,16 +270,7 @@ const Messaging = () => {
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
-                      // button
                       selected={selectedIndex === i}
-                      // onClick={async () => {
-                      //   setConvoId(
-                      //     await getConversationId([...chat.emails, myUser])
-                      //   );
-                      //   setName(chat.names);
-                      //   setSelectedIndex(i);
-                      //   scrollToBottom();
-                      // }}
                       onClick={async () => {
                         const conversationID = await getConversationId([
                           ...chat.emails,
