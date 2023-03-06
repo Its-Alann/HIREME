@@ -24,8 +24,7 @@ import {
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
-import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
-import Navbar from "../../Components/Navbar/Navbar";
+import AddCommentIcon from "@mui/icons-material/AddComment";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
@@ -130,6 +129,15 @@ const Messaging = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (newConvo) {
+      setSelectedIndex(-1);
+      setMessages([]);
+      setConvoId("");
+      setName("New Convo");
+    }
+  }, [newConvo]);
+
   // returns the ID of the currently selected conversation
   const getConversationId = async (authorsList) => {
     authorsList.sort();
@@ -175,7 +183,7 @@ const Messaging = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box className="page" sx={{ height: "100vh" }}>
+      <Box className="page">
         <Box>
           <Grid
             container
@@ -211,10 +219,10 @@ const Messaging = () => {
                   Messaging
                 </Typography>
                 <IconButton onClick={() => setNewConvo(!newConvo)}>
-                  <BorderColorRoundedIcon />
+                  <AddCommentIcon />
                 </IconButton>
               </Box>
-              {/* <NewConvo /> */}
+
               <Grid
                 className="convo-list"
                 sx={{
@@ -226,36 +234,40 @@ const Messaging = () => {
                 }}
               >
                 <List>
-                  {chatProfiles.map((chat, i) => (
-                    <ListItemButton
-                      className="sidebar-item"
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={i}
-                      // button
-                      selected={selectedIndex === i}
-                      onClick={async () => {
-                        setConvoId(
-                          await getConversationId([...chat.emails, myUser])
-                        );
-                        setName(chat.names);
-                        setSelectedIndex(i);
-                        scrollToBottom();
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar
-                          alt="sumn random"
-                          src="https://picsum.photos/200/300"
-                        />
-                      </ListItemAvatar>
-                      <Typography
-                        sx={{ textTransform: "lowercase" }}
-                        variant="body1"
+                  {chatProfiles.map((chat, i) => {
+                    // eslint-disable-next-line no-param-reassign
+                    i += 1;
+                    return (
+                      <ListItemButton
+                        className="sidebar-item"
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={i}
+                        // button
+                        selected={selectedIndex === i}
+                        onClick={async () => {
+                          setConvoId(
+                            await getConversationId([...chat.emails, myUser])
+                          );
+                          setName(chat.names);
+                          setSelectedIndex(i);
+                          scrollToBottom();
+                        }}
                       >
-                        {chat.names}
-                      </Typography>
-                    </ListItemButton>
-                  ))}
+                        <ListItemAvatar>
+                          <Avatar
+                            alt="sumn random"
+                            src="https://picsum.photos/200/300"
+                          />
+                        </ListItemAvatar>
+                        <Typography
+                          sx={{ textTransform: "lowercase" }}
+                          variant="body1"
+                        >
+                          {chat.names}
+                        </Typography>
+                      </ListItemButton>
+                    );
+                  })}
                 </List>
               </Grid>
             </Grid>
@@ -309,7 +321,7 @@ const Messaging = () => {
                     src="https://picsum.photos/200/300"
                   />
                 </div>
-                {newConvo && <NewConvo />}
+                {newConvo && <NewConvo setConvoId={setConvoId} />}
                 <Box
                   id="message-chats"
                   sx={{
