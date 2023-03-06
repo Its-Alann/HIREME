@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { Autocomplete, TextField, Button } from "@mui/material";
+import {
+  collection,
+  query,
+  where,
+  getDoc,
+  getDocs,
+  doc,
+  addDoc,
+} from "firebase/firestore";
+import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
+import { Autocomplete, TextField, IconButton } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { auth, db } from "../../Firebase/firebase";
 
@@ -19,7 +28,7 @@ const messagesRef = collection(db, "messages");
 // arr = [alice, jo]
 const findConversation = async (authorsList) => {
   authorsList.sort();
-  // console.log(authorsList);
+  console.log(authorsList);
 
   // THE AUTHORS MUST BE IN THE DB IN ALPHABETICAL ORDER
   // JUST DO .sort ON THE ARRAY BEFORE WRITING TO THE DOC
@@ -51,30 +60,48 @@ const findConversation = async (authorsList) => {
   return querySnapshot.docs[0].id;
 };
 
-// ! authors will be a list of authors without the current user
-const handleClick = async (authors) => {
-  const conversationID = await findConversation([
-    "ryan.p.wong2000@gmail.com",
-    "rck2021@gmail.com",
-  ]);
-  // authors.sort();
-  // const conversationID = await findConversation(authors);
-
-  console.log(conversationID);
-};
-
-const NewConvo = () => {
+const NewConvo = ({ setConvoId }) => {
   // const [authors, setAuthors] = useState([auth.currentUser.email]);
   const antinos = "🖖";
+
+  const [connections, setConnections] = useState([]);
+
+  const [value, setValue] = useState();
+
+  const getConnections = async (currentUser) => {
+    const docRef = doc(db, "network", currentUser);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log(docSnap.data());
+      setConnections(docSnap.data().connectedUsers);
+    } else {
+      console.log("No connection doc found for user", currentUser);
+    }
+  };
+
+  useEffect(() => {
+    console.log("emiail", auth.currentUser.email);
+    getConnections(auth.currentUser.email);
+  }, []);
+
+  // ! authors will be a list of authors without the current user
+  const handleClick = async () => {
+    setConvoId(await findConversation([auth.currentUser.email, ...value]));
+  };
   //TODO make a form that allows the currentuser to select from a list of contacts (should be a multiselect to allow group chats)
   //TODO add the emails from the search bar to authors state
   return (
-    <Grid container>
+    <Grid container spacing={1}>
       <Grid xs>
         <Autocomplete
-          autoComplete
+          // autoComplete
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
           multiple
-          options={["so", "wiz khalifa", "macklemore"]} //TODO get a list of contacts
+          options={connections} //TODO get a list of contacts
           size="small"
           filterSelectedOptions
           renderInput={(params) => (
@@ -87,19 +114,17 @@ const NewConvo = () => {
           )}
         />
       </Grid>
-      {/* <Grid item align="right" xs={1}>
-        <Fab
-          aria-label="add"
-          type="button"
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          <AddBoxIcon />
-        </Fab>
-      </Grid> */}
+      <Grid>
+        <IconButton size="small" sx={{ p: 0 }} onClick={handleClick}>
+          <BorderColorRoundedIcon />
+        </IconButton>
+      </Grid>
     </Grid>
   );
+};
+
+NewConvo.propTypes = {
+  setConvoId: PropTypes.func,
 };
 
 export default NewConvo;
