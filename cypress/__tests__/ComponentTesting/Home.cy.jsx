@@ -1,14 +1,14 @@
 import React from "react";
-import Home from "../../../src/Pages/Home/Home";
+import HomePage from "../../../src/Pages/Home/HomePage";
 
 describe("<Home />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<Home />);
+    cy.mount(<HomePage />);
   });
 
   beforeEach(() => {
-    cy.mount(<Home />);
+    cy.mount(<HomePage />);
   });
 
   it("changes route when clicking on the sign in button", () => {

@@ -3,6 +3,9 @@ module.exports = {
     browser: true,
     es2021: true,
   },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
