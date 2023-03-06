@@ -16,7 +16,7 @@ import { app, auth, storage } from "../../Firebase/firebase";
 import "./EditProfile.css";
 import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
 
-const EditProfile = () => {
+const EditProfilePage = () => {
   // Set default value, because otherwise UI glitch + warning
 
   const theme = createTheme({
@@ -154,6 +154,7 @@ const EditProfile = () => {
                 placeholder="First Name"
                 value={profile.values.firstName}
                 readOnly
+                data-cy="firstName-test"
               />
               <InputBase
                 id="standard-basic"
@@ -223,6 +224,7 @@ const EditProfile = () => {
               style={{
                 color: "white",
               }}
+              data-cy="saveBtn"
             >
               Save Changes
             </Button>
@@ -233,4 +235,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default EditProfilePage;

@@ -23,12 +23,12 @@ import {
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
-import Navbar from "../../Components/Navbar/Navbar";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
 import { auth, db } from "../../Firebase/firebase";
 import NewConvo from "../../Components/NewConvo/NewConvo";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const theme = createTheme({
   palette: {
@@ -42,7 +42,7 @@ const theme = createTheme({
   },
 });
 
-const Messaging = () => {
+const MessagingPage = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
@@ -121,7 +121,7 @@ const Messaging = () => {
         console.log("user.email", user.email);
         // getAllReceivers();
       } else {
-        console.err("User must be signed in");
+        console.log("User must be signed in");
       }
     });
   }, []);
@@ -282,6 +282,7 @@ const Messaging = () => {
                   {mediaMobile && (
                     <IconButton
                       aria-label="back"
+                      id="ChevronIcon"
                       onClick={() => {
                         setSelectedIndex(-1);
                       }}
@@ -330,6 +331,8 @@ const Messaging = () => {
                       conversationID={convoId}
                       myUser={myUser}
                       selectedIndex={selectedIndex}
+                      id="sendChat"
+                      data-cy="sendChat"
                     />
                   </Box>
                 )}
@@ -342,4 +345,4 @@ const Messaging = () => {
   );
 };
 
-export default Messaging;
+export default MessagingPage;
