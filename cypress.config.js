@@ -1,4 +1,8 @@
+/* eslint-disable import/no-import-module-exports */
 const { defineConfig } = require("cypress");
+const cypressFirebasePlugin = require("cypress-firebase").plugin;
+const admin = require("firebase-admin");
+const webpackPreprocessor = require("@cypress/webpack-preprocessor");
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
@@ -70,9 +74,10 @@ module.exports = defineConfig({
     // viewportWidth: 1920,
     // viewportHeight: 1080,
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
+    baseUrl: "http://localhost:3000",
+
     setupNodeEvents(on, config) {
       console.log("setupNodeEvents for components");
-
       // https://github.com/bahmutov/cypress-code-coverage
       // eslint-disable-next-line global-require
       require("@bahmutov/cypress-code-coverage/plugin")(on, config);
@@ -81,10 +86,9 @@ module.exports = defineConfig({
       // eslint-disable-next-line global-require
       on("file:preprocessor", require("@cypress/code-coverage/use-babelrc"));
 
-      return {
-        close: () => {},
-        config,
-      };
+      return cypressFirebasePlugin(on, config, admin, {
+        projectId: "team-ate",
+      });
     },
 
     env: {

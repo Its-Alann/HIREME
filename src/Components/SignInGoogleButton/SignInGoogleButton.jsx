@@ -9,30 +9,20 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
 import { auth, provider } from "../../Firebase/firebase";
 
-const signInWithFirebaseRedirect = () => {
-  getRedirectResult(auth).then((result) => {
-    if (!result) {
-      signInWithRedirect(auth, provider);
-    } else {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-
-      // The signed-in user info.
-      console.log("user", result.user);
-    }
-  });
-};
-
 const SignInButton = () => {
   const navigate = useNavigate();
+  const signInWithFirebaseRedirect = async () => {
+    await signInWithRedirect(auth, provider);
+  };
 
-  useEffect(() => {
-    getRedirectResult(auth).then((result) => {
-      if (result) {
-        navigate("/");
-      }
-    });
-  }, []);
+  const checkRedirect = async () => {
+    const result = await getRedirectResult(auth);
+    if (result) {
+      navigate("/");
+    }
+  };
+
+  useEffect(() => checkRedirect, []);
 
   return (
     <IconButton xs onClick={signInWithFirebaseRedirect}>
