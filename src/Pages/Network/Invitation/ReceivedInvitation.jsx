@@ -28,7 +28,7 @@ export const ReceivedInvitation = () => {
             setReceivedInvitations(userData.receivedInvitations);
             console.log(receivedInvitations);
           } catch (err) {
-            console.error(err);
+            console.log(err);
           }
         };
         getReceivedInvitationUsers();

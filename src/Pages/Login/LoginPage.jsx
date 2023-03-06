@@ -12,10 +12,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Stack } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { CircularProgress, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
+import {
+  useAuthState,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -31,11 +34,13 @@ const theme = createTheme({
   },
 });
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
   const [authError, setAuthError] = React.useState(false);
   const [authErrorMsg, setAuthErrorMsg] = React.useState("");
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,25 +55,11 @@ const Login = () => {
         password,
       });
       try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const { user } = userCredential;
+        signInWithEmailAndPassword(email, password);
         console.log(user);
 
         navigate("/");
       } catch (err) {
-        setAuthError(true);
-        console.log(err.code);
-        if (err.code.includes("user-not-found")) {
-          setAuthErrorMsg("An account with that email does not exist");
-        } else if (err.code.includes("wrong-password")) {
-          setAuthErrorMsg("Wrong password");
-        } else {
-          setAuthErrorMsg(err.code);
-        }
         console.error(err.code, err.message);
       }
     }
@@ -146,17 +137,22 @@ const Login = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, py: 1 }}
-              color="primary"
-              name="signIn"
-              inputProps={{ "aria-label": "signIn" }}
-            >
-              Sign In
-            </Button>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2, py: 1 }}
+                color="primary"
+                name="signIn"
+                inputProps={{ "aria-label": "signIn" }}
+              >
+                Sign In
+              </Button>
+            )}
+            {error && <Typography color="red">{error}</Typography>}
             <Stack container justifyContent="center" spacing={1}>
               <Link item xs align="center" href="/" variant="subtitle2">
                 Forgot password?
@@ -171,6 +167,7 @@ const Login = () => {
               >
                 or you can sign in with
               </Typography>
+              {/* eslint-disable-next-line*/}
               <div align="center">
                 <SignInGoogleButton sx={{ m: "auto" }} data-cy="GoogleTest" />
               </div>
@@ -202,4 +199,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
