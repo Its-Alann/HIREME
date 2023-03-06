@@ -14,12 +14,16 @@ const MessageList = ({ messages }) => {
   };
 
   return (
-    <List>
+    <List data-cy="messageList">
       {messages.map((message, i) => {
         const alignment =
           message.sender === auth.currentUser.email ? "right" : "left";
         return (
-          <ListItem key={i} style={{ justifyContent: alignment }}>
+          <ListItem
+            data-testid="messageListItem"
+            key={i}
+            style={{ justifyContent: alignment }}
+          >
             <MessageListItem
               timestamp={message.timestamp.toDate()}
               content={message.content}
@@ -27,6 +31,7 @@ const MessageList = ({ messages }) => {
               sender={message.sender}
               alignment={alignment}
               openAttachment={openAttachment}
+              index={i}
             />
           </ListItem>
         );
