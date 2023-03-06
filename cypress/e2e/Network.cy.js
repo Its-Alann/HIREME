@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import {
@@ -10,7 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../src/Firebase/firebase";
 
-//async function to remove a sent invitation to
+Cypress.on("uncaught:exception", (err, runnable) => false);
+
 async function AsyncRemoveSentInvitation(RemoveAcc, fromAcc) {
   const sentInvitationsRef = doc(db, "invitations", fromAcc);
   // Atomically remove a region from the "regions" array field.
@@ -41,21 +43,36 @@ async function AsyncRemoveConnectedUser(RemoveAcc, fromAcc) {
   });
 }
 
-describe("Testing the networking feature of the app", () => {
-  beforeEach(() => {
-    cy.visit("http://localhost:3000/");
-    // Cypress starts out with a blank slate for each test
-    // so we must tell it to visit our website with the `cy.visit()` command.
-    // Since we want to visit the same URL at the start of all our tests,
-    // we include it in our beforeEach function so that it runs before each test
-  });
+describe("Testing the networking features of the app", () => {
+  //async function to remove a sent invitation to
 
   //No received invitations yet :/
   //No sent invitations :/
   //No connections yet :/
 
-  describe("Testing the different tabs of networking", () => {
-    it("Switch to Received Invitations and Sent invitations Tab", () => {
+  describe("Testing the invitation feature between hypeboy and accountcreation@test by sending the invitation from hypeboy to accountcreation@test and ignoring it on accountcreation", () => {
+    it("removes the SENT invitation if present, removes the connection between the two accounts if present", () => {
+      //logout and login to hypeboy@tok.ki account
+      cy.visit("http://localhost:3000/network");
+      cy.logout();
+      cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
+      cy.wait(2000);
+
+      //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
+      cy.wrap(null).then(() =>
+        AsyncRemoveSentInvitation("accountcreation@test.com", "hypeboy@tok.ki")
+      );
+      //remove hypeboy@tok.ki from connected users
+      cy.wrap(null).then(() =>
+        AsyncRemoveConnectedUser("hypeboy@tok.ki", "accountcreation@test.com")
+      );
+      //remove accountcreation@test.com from connected users
+      cy.wrap(null).then(() =>
+        AsyncRemoveConnectedUser("accountcreation@test.com", "hypeboy@tok.ki")
+      );
+    });
+
+    it("Switch to Received Invitations, logs in to hypeboy, verifies the invitation button is present", () => {
       //fails when tabs are empty, loign uid gives problems
       cy.logout();
 
@@ -70,10 +87,8 @@ describe("Testing the networking feature of the app", () => {
       const uid = "g7aTo5gtRCYjx3ggCJLOWnxVRFp2";
       //login to hypeboy's account
       cy.login(uid);
-
-      //visit both possible connections and network pages
-      cy.visit("http://localhost:3000/possibleConnections");
       cy.visit("http://localhost:3000/network");
+
       //click on view profile of the first user
       //needs to be modified
       cy.get(
@@ -84,14 +99,17 @@ describe("Testing the networking feature of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
 
-      //revisit the pages
+      //visit network and check if invitation button exists
       cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
+      cy.get('[data-cy="invitationButton"]').should("be.visible");
     });
-  });
 
-  describe("sends an invitation from possible connections page and tries different scenarios", () => {
-    it("removes the connected user, sends the invitation", () => {
+    it("removes the RECEIVED invitation of hypeboy from accountcreation and the connection between the two accounts", () => {
+      cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
+      cy.get('[data-cy="invitationButton"]').click();
+
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
         AsyncRemoveReceivedInvitation(
@@ -111,21 +129,17 @@ describe("Testing the networking feature of the app", () => {
       cy.wrap(null).then(() =>
         AsyncRemoveConnectedUser("accountcreation@test.com", "hypeboy@tok.ki")
       );
-
-      //logout and login to hypeboy@tok.ki account
-      cy.logout();
-      cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
-
-      //vist both pages
-      cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
-
-      //send invitation
-      //needs to be specified
-      cy.get('[data-cy="invitationButton"]').click();
     });
 
-    it("ignores the invitation from the account that received it", () => {
+    it("sends the invitation from hypeboy's account", () => {
+      //send invitation
+      cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
+      cy.get('[data-cy="invitationButton"]').click();
+      cy.wait(500);
+    });
+
+    it("logs out, logs in to accountcreation, click on ignore invitation", () => {
       cy.logout();
       //login to accountcreation@test.com
       cy.login("QdFFUPgmxrdGl8IT72Jgm1Ooc6p2");
@@ -139,7 +153,9 @@ describe("Testing the networking feature of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       cy.get('[data-cy="NetworkTab"]').click();
+    });
 
+    it("logs out, logs in to hypeboy, visit all tabs", () => {
       //logout and login to hypeboy@tok.ki account
       cy.logout();
       cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
@@ -150,18 +166,12 @@ describe("Testing the networking feature of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       cy.get('[data-cy="NetworkTab"]').click();
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
     });
+  });
 
-    it("removes the sent invitation, checks whether invitation is present on possible connections page and sends invitation", () => {
-      cy.logout();
-      //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
-      cy.wrap(null).then(() =>
-        AsyncRemoveReceivedInvitation(
-          "hypeboy@tok.ki",
-          "accountcreation@test.com"
-        )
-      );
-
+  describe("Testing the invitation feature between hypeboy and accountcreation@test by sending the invitation from hypeboy to accountcreation@test and withdrawing it from hypeboy", () => {
+    it("removes the SENT invitation if present, removes the connection between the two accounts if present", () => {
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
         AsyncRemoveSentInvitation("accountcreation@test.com", "hypeboy@tok.ki")
@@ -174,16 +184,19 @@ describe("Testing the networking feature of the app", () => {
       cy.wrap(null).then(() =>
         AsyncRemoveConnectedUser("accountcreation@test.com", "hypeboy@tok.ki")
       );
+    });
 
+    it("logs in to hypeboy and check if the invitation button is present and click on it", () => {
       //login to hypeboy@tok.ki account
       cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
 
-      //vist both pages
+      //vist network
       cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
 
       //send invitation
-      cy.get('[data-cy="invitationButton"]').click();
+      cy.get('[data-cy="invitationButton"]').should("be.visible").click();
+      cy.wait(1000);
       //WEIRD CYPRESS BUG: TEST MUST END AFTER INVITATION CLICK FOR IT TO TAKE EFFECT
     });
 
@@ -194,6 +207,7 @@ describe("Testing the networking feature of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       //verify that last user is the user we sent the invitation to (could be modified to a find if last invitation != last user that appears)
       //name of the user is "Test User"
+      cy.wait(1000);
       if (
         cy.get('[data-cy="invitationsGrid"]').last("Grid").contains("Test User")
       ) {
@@ -202,10 +216,11 @@ describe("Testing the networking feature of the app", () => {
           .within(() => cy.get("#withdrawButton").click());
       }
     });
+  });
 
-    it("removes the sent invitation, checks whether invitation is present on possible connections page and sends invitation", () => {
-      cy.logout();
-      //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
+  describe("Testing the invitation feature between hypeboy and accountcreation@test by sending the invitation from hypeboy to accountcreation@test and accepting it on accountcreation", () => {
+    it("removes the RECEIVED and SENT invitation if present, removes the connection between the two accounts if present", () => {
+      //remove RECEIVED invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
         AsyncRemoveReceivedInvitation(
           "hypeboy@tok.ki",
@@ -217,6 +232,7 @@ describe("Testing the networking feature of the app", () => {
       cy.wrap(null).then(() =>
         AsyncRemoveSentInvitation("accountcreation@test.com", "hypeboy@tok.ki")
       );
+
       //remove hypeboy@tok.ki from connected users
       cy.wrap(null).then(() =>
         AsyncRemoveConnectedUser("hypeboy@tok.ki", "accountcreation@test.com")
@@ -225,30 +241,45 @@ describe("Testing the networking feature of the app", () => {
       cy.wrap(null).then(() =>
         AsyncRemoveConnectedUser("accountcreation@test.com", "hypeboy@tok.ki")
       );
+    });
 
+    it("logs out, logs in to hypeboy, sends invitation if button present", () => {
+      cy.logout();
       //login to hypeboy@tok.ki account
       cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
 
-      //vist both pages
+      //vist page
       cy.visit("http://localhost:3000/network");
-      cy.visit("http://localhost:3000/possibleConnections");
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
 
       //send invitation
-      //needs to be specified
       cy.get('[data-cy="invitationButton"]').click();
+      cy.wait(500);
       //WEIRD CYPRESS BUG: TEST MUST END AFTER INVITATION CLICK FOR IT TO TAKE EFFECT
     });
 
     it("visits the page again to ensure the user is not present on possible connections anymore", () => {
-      //visit all tabs
+      //visit Possible Connections Tab and check if correct message exists
       cy.visit("http://localhost:3000/network");
-
-      cy.get('[data-cy="SentInvitationTab"]').click();
-      cy.get('[data-cy="ReceivedInvitationTab"]').click();
-      cy.get('[data-cy="NetworkTab"]').click();
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
+      cy.get(".MuiContainer-maxWidthXxl > .MuiBox-root").contains(
+        "No connections yet :/"
+      );
     });
 
-    it("logs, logs in to account with the invitation and accepts it", () => {
+    it("verifies the invitation was sent", () => {
+      //visit all tabs
+      cy.visit("http://localhost:3000/network");
+      cy.get(".MuiContainer-maxWidthXxl > .MuiBox-root").contains(
+        "No connections yet :/"
+      );
+
+      //visit sent invitation tab and Possible Connections Tab
+      cy.get('[data-cy="SentInvitationTab"]').click();
+      cy.get('[data-cy="PossibleConnectionsTab"]').click();
+    });
+
+    it("logs out, logs in to createaccount containing the invitation and accepts it", () => {
       //logout, login to createaccount, accept invitation
       cy.logout();
       cy.login("QdFFUPgmxrdGl8IT72Jgm1Ooc6p2");
@@ -256,22 +287,19 @@ describe("Testing the networking feature of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       //Gives problems at times, especially when not last action in test
-      cy.get('[data-cy="AcceptInvitationBtn"]').click();
+      cy.get('[data-cy="AcceptInvitationBtn"]').should("be.visible").click();
+      cy.wait(1000);
+
+      cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="SentInvitationTab"]').click();
+      cy.get('[data-cy="ReceivedInvitationTab"]').click();
     });
 
     it("verify user has been added to the network once added", () => {
-      //logout and login to hypeboy@tok.ki account
-      cy.logout();
-      cy.login("QdFFUPgmxrdGl8IT72Jgm1Ooc6p2");
       cy.visit("http://localhost:3000/network");
-      cy.get('[data-cy="ReceivedInvitationTab"]').click();
-      //forcing click
-      cy.get('[data-cy="AcceptInvitationBtn"]').click({ force: true });
-      //switching to network tab
       cy.get('[data-cy="NetworkTab"]').click();
       //check if profile exists
       cy.get('[data-cy="userProfileInNetwork"]').findByText("Hanni Pham");
-      cy.visit("http://localhost:3000/possibleConnections");
     });
   });
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 // import SignUp from "../Pages/SignUp/SignUp";
-import Messaging from "../../../src/Pages/Messaging/Messaging";
+import MessagingPage from "../../../src/Pages/Messaging/MessagingPage";
 //import "cypress-file-upload";
 
 describe("Login", () => {
@@ -9,7 +9,7 @@ describe("Login", () => {
     // see: https://on.cypress.io/mounting-react
     cy.mount(
       <BrowserRouter>
-        <Messaging />
+        <MessagingPage />
       </BrowserRouter>
     );
   });
@@ -24,7 +24,7 @@ describe("Login", () => {
 
     cy.mount(
       <BrowserRouter>
-        <Messaging />
+        <MessagingPage />
       </BrowserRouter>
     );
   });
