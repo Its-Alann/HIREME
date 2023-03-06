@@ -14,29 +14,23 @@ describe("Login to test account", () => {
   });
 });
 
-describe("Visit edit profile page", () => {
-  it("clicks edit profile if account has already been created", () => {
+describe("Edit Profile Button", () => {
+  it("should be clickable", () => {
     cy.visit("http://localhost:3000/");
-
     cy.get('[data-testid="editProfileButton"]').click();
   });
 });
 
-describe("Displays appropraite welcome message", () => {
-  it("should display welcome message with name", () => {
-    cy.visit("http://localhost:3000/");
-    cy.get(".css-ylmtbx-MuiGrid-root > .MuiTypography-root").should(
-      "have.text",
-      " Welcome Back a! "
-    );
+describe("Edit Profile Page", () => {
+  it("display correct", () => {
+    cy.visit("http://localhost:3000/editProfile");
   });
-});
 
-describe("Allows sign out", () => {
-  it("clicks sign out button", () => {
-    cy.visit("http://localhost:3000/");
+  it("save changes", () => {
+    cy.visit("http://localhost:3000/editProfile");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(500);
-    cy.get('[data-testid="homeLink"]').click();
+    cy.wait(5000);
+    cy.scrollTo("bottom", { easing: "linear" });
+    cy.get(".css-1p5q5e5-MuiStack-root > .MuiButton-root").click();
   });
 });

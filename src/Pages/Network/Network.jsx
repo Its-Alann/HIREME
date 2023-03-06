@@ -11,6 +11,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
 import { SentInvitation } from "./Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Invitation/ReceivedInvitation";
+import { NetworkPossibleConnections } from "./NetworkPossibleConnections";
 
 const theme = createTheme({
   palette: {
@@ -35,7 +36,7 @@ const theme = createTheme({
   />
 );*/
 
-export const Network = () => {
+const Network = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -45,9 +46,7 @@ export const Network = () => {
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
       <ThemeProvider theme={theme}>
-        {/* <Navbar /> */}
         <Container component="main" maxWidth={false} sx={{ m: 2 }}>
-          <CssBaseline />
           <Box sx={{ width: "100%" }}>
             <Tabs
               value={value}
@@ -65,6 +64,11 @@ export const Network = () => {
                 value={2}
                 data-cy="SentInvitationTab"
               />
+              <Tab
+                label="Possible Connections"
+                value={3}
+                data-cy="PossibleConnectionsTab"
+              />
             </Tabs>
           </Box>
 
@@ -78,6 +82,10 @@ export const Network = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 2}>
             <SentInvitation />
+          </Box>
+
+          <Box sx={{ p: 3 }} hidden={value !== 3}>
+            <NetworkPossibleConnections />
           </Box>
         </Container>
       </ThemeProvider>
