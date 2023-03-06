@@ -15,6 +15,7 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   doc,
+  addDoc,
   getDocs,
   getDoc,
   collection,
@@ -65,9 +66,31 @@ const Messaging = () => {
   // ref to dummy div under messageLIst
   const dummy = useRef();
 
+  // tracks when we use the new convo button
   const [newConvo, setNewConvo] = useState(false);
 
+  //to autoscroll
   const messageViewRef = useRef();
+  const scrollToBottom = () => {
+    dummy.current.scrollIntoView({ behaviour: "smooth" });
+  };
+
+  const getOtherAuthors = async (list) => {
+    const nameList = await Promise.all(
+      list.map(async (author) => {
+        const docSnap = await getDoc(doc(db, "userProfiles", author));
+        if (docSnap.exists()) {
+          return `${docSnap.data().values.firstName} ${
+            docSnap.data().values.lastName
+          }`;
+        }
+        return null;
+      })
+    );
+    const names = nameList.filter(Boolean).join(", ");
+    console.log("nascar", names);
+    return { names, emails: list };
+  };
 
   // get all names of user's receivers
   const getAllReceivers = async () => {
@@ -91,21 +114,7 @@ const Messaging = () => {
       });
 
       const allChatProfiles = await Promise.all(
-        allAuthorsList.map(async (list) => {
-          const nameList = await Promise.all(
-            list.map(async (author) => {
-              const docSnap = await getDoc(doc(db, "userProfiles", author));
-              if (docSnap.exists()) {
-                return `${docSnap.data().values.firstName} ${
-                  docSnap.data().values.lastName
-                }`;
-              }
-              return null;
-            })
-          );
-          const names = nameList.filter(Boolean).join(", ");
-          return { names, emails: list };
-        })
+        allAuthorsList.map(getOtherAuthors)
       );
       /*
       {
@@ -117,6 +126,44 @@ const Messaging = () => {
     });
   };
 
+  // returns the ID of the currently selected conversation
+  const getConversationId = async (authorsList) => {
+    authorsList.sort();
+    const messagesRef = collection(db, "messages");
+    const convoQuery = query(messagesRef, where("authors", "==", authorsList));
+    const querySnapshot = await getDocs(convoQuery);
+
+    // probably redundant cause it should exist
+    if (querySnapshot.empty) {
+      const docRef = await addDoc(collection(db, "messages"), {
+        authors: authorsList,
+        messages: [],
+      });
+      console.log(
+        "findConversation: no existing conversation found, creating new one between",
+        authorsList,
+        "new id:",
+        docRef.id
+      );
+      return docRef.id;
+    }
+    console.log(
+      "Existing conversations found between",
+      authorsList,
+      "id:",
+      querySnapshot.docs[0].id
+    );
+    return querySnapshot.docs[0].id;
+  };
+
+  const selectConvo = async (conversationId, names, index) => {
+    setConvoId(conversationId);
+    setName(names);
+    setSelectedIndex(index);
+    scrollToBottom();
+  };
+
+  // auth listener on load
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -129,6 +176,7 @@ const Messaging = () => {
     });
   }, []);
 
+  //can make this an onclick
   useEffect(() => {
     if (newConvo) {
       setSelectedIndex(-1);
@@ -138,43 +186,23 @@ const Messaging = () => {
     }
   }, [newConvo]);
 
-  // returns the ID of the currently selected conversation
-  const getConversationId = async (authorsList) => {
-    authorsList.sort();
-    const messagesRef = collection(db, "messages");
-    const convoQuery = query(messagesRef, where("authors", "==", authorsList));
-    const querySnapshot = await getDocs(convoQuery);
-
-    // probably redundant cause it should exist
-    if (querySnapshot.empty) {
-      const docRef = await getDocs(collection(db, "messages"), {
-        authors: authorsList,
-        messages: [],
-      });
-      return docRef.id;
-    }
-    return querySnapshot.docs[0].id;
-  };
-
-  const scrollToBottom = () => {
-    dummy.current.scrollIntoView({ behaviour: "smooth" });
-  };
-
   //set a listener to on the conversation document
-  React.useEffect(() => {
+  useEffect(() => {
     let unSub;
     if (convoId) {
+      setNewConvo(false);
       unSub = onSnapshot(doc(db, "messages", convoId), (document) => {
         setMessages(document.data().messages);
       });
     }
   }, [convoId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getAllReceivers();
   }, [myUser]);
 
-  React.useEffect(() => {
+  //if the conversations changes, scroll to bottom
+  useEffect(() => {
     //wont scroll to bottom if there are no chats selected
     if (messages.length > 0) {
       scrollToBottom();
@@ -234,40 +262,43 @@ const Messaging = () => {
                 }}
               >
                 <List>
-                  {chatProfiles.map((chat, i) => {
-                    // eslint-disable-next-line no-param-reassign
-                    i += 1;
-                    return (
-                      <ListItemButton
-                        className="sidebar-item"
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={i}
-                        // button
-                        selected={selectedIndex === i}
-                        onClick={async () => {
-                          setConvoId(
-                            await getConversationId([...chat.emails, myUser])
-                          );
-                          setName(chat.names);
-                          setSelectedIndex(i);
-                          scrollToBottom();
-                        }}
+                  {chatProfiles.map((chat, i) => (
+                    <ListItemButton
+                      className="sidebar-item"
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={i}
+                      // button
+                      selected={selectedIndex === i}
+                      // onClick={async () => {
+                      //   setConvoId(
+                      //     await getConversationId([...chat.emails, myUser])
+                      //   );
+                      //   setName(chat.names);
+                      //   setSelectedIndex(i);
+                      //   scrollToBottom();
+                      // }}
+                      onClick={async () => {
+                        const conversationID = await getConversationId([
+                          ...chat.emails,
+                          myUser,
+                        ]);
+                        await selectConvo(conversationID, chat.names, i);
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="sumn random"
+                          src="https://picsum.photos/200/300"
+                        />
+                      </ListItemAvatar>
+                      <Typography
+                        sx={{ textTransform: "lowercase" }}
+                        variant="body1"
                       >
-                        <ListItemAvatar>
-                          <Avatar
-                            alt="sumn random"
-                            src="https://picsum.photos/200/300"
-                          />
-                        </ListItemAvatar>
-                        <Typography
-                          sx={{ textTransform: "lowercase" }}
-                          variant="body1"
-                        >
-                          {chat.names}
-                        </Typography>
-                      </ListItemButton>
-                    );
-                  })}
+                        {chat.names}
+                      </Typography>
+                    </ListItemButton>
+                  ))}
                 </List>
               </Grid>
             </Grid>
@@ -321,7 +352,13 @@ const Messaging = () => {
                     src="https://picsum.photos/200/300"
                   />
                 </div>
-                {newConvo && <NewConvo setConvoId={setConvoId} />}
+                {newConvo && (
+                  <NewConvo
+                    selectConvo={selectConvo}
+                    getConversationId={getConversationId}
+                    getOtherAuthors={getOtherAuthors}
+                  />
+                )}
                 <Box
                   id="message-chats"
                   sx={{
