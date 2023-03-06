@@ -66,6 +66,8 @@ const Messaging = () => {
   // ref to dummy div under messageLIst
   const dummy = useRef();
 
+  const [newConvo, setNewConvo] = useState(false);
+
   const messageViewRef = useRef();
 
   // get all names of user's receivers
@@ -171,7 +173,6 @@ const Messaging = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box className="page" sx={{ height: "100vh" }}>
-        {/* <Navbar /> */}
         <Box>
           <Grid
             container
@@ -206,7 +207,7 @@ const Messaging = () => {
                 <Typography color="primary" variant="h4">
                   Messaging
                 </Typography>
-                <IconButton>
+                <IconButton onClick={() => setNewConvo(!newConvo)}>
                   <BorderColorRoundedIcon />
                 </IconButton>
               </Box>
@@ -296,7 +297,7 @@ const Messaging = () => {
                     src="https://picsum.photos/200/300"
                   />
                 </div>
-
+                {newConvo && <NewConvo />}
                 <Box
                   id="message-chats"
                   sx={{
@@ -312,7 +313,6 @@ const Messaging = () => {
                   <MessageList messages={messages} />
                   <div ref={dummy} />
                 </Box>
-
                 {selectedIndex > -1 && (
                   <Box
                     sx={{

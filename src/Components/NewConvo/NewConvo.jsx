@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { Autocomplete, Grid, TextField, Button } from "@mui/material";
+import { Autocomplete, TextField, Button } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import { auth, db } from "../../Firebase/firebase";
 
 const messagesRef = collection(db, "messages");
@@ -68,7 +70,7 @@ const NewConvo = () => {
   //TODO add the emails from the search bar to authors state
   return (
     <Grid container>
-      <Grid item xs={11}>
+      <Grid xs>
         <Autocomplete
           autoComplete
           multiple
@@ -85,7 +87,7 @@ const NewConvo = () => {
           )}
         />
       </Grid>
-      <Grid item align="right" xs={1}>
+      {/* <Grid item align="right" xs={1}>
         <Fab
           aria-label="add"
           type="button"
@@ -95,7 +97,7 @@ const NewConvo = () => {
         >
           <AddBoxIcon />
         </Fab>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
