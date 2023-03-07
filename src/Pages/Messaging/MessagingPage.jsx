@@ -88,7 +88,6 @@ const Messaging = () => {
       })
     );
     const names = nameList.filter(Boolean).join(", ");
-    console.log("nascar", names);
     return { names, emails: list };
   };
 
@@ -365,7 +364,7 @@ const Messaging = () => {
                     borderRadius: "0 0 8px 8px",
                   }}
                 >
-                  <MessageList messages={messages} />
+                  <MessageList messages={messages} convoId={convoId} />
                   <div ref={dummy} />
                 </Box>
                 {selectedIndex > -1 && (

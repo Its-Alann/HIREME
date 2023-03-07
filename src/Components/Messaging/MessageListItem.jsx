@@ -2,20 +2,21 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Stack, IconButton, Typography } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MessageOptions from "./MessageOptions";
 
 const MessageListItem = ({
-  content,
-  attachment,
-  sender,
-  timestamp,
+  message,
   alignment,
   openAttachment,
   index,
+  convoId,
+  reportMessage,
 }) => {
   const antinos = "🖖";
   const textGray = "rgba(0, 0, 0, 0.6)";
+
+  const timestamp = message.timestamp.toDate();
+  const { content, sender, attachment } = message;
 
   return (
     <Stack
@@ -36,7 +37,13 @@ const MessageListItem = ({
       </Box>
 
       <Box sx={{ display: "flex" }}>
-        {alignment === "right" && <MessageOptions />}
+        {alignment === "right" && (
+          <MessageOptions
+            index={index}
+            convoId={convoId}
+            reportMessage={reportMessage}
+          />
+        )}
         <Box
           xs
           sx={{
@@ -73,7 +80,7 @@ const MessageListItem = ({
             </Typography>
           )}
         </Box>
-        {alignment === "left" && <MessageOptions />}
+        {alignment === "left" && <MessageOptions index={index} />}
       </Box>
       <Typography
         style={{ marginLeft: "12px", marginRight: "12px" }}
@@ -88,12 +95,12 @@ const MessageListItem = ({
 };
 
 MessageListItem.propTypes = {
-  content: PropTypes.string,
-  attachment: PropTypes.string,
-  timestamp: PropTypes.instanceOf(Date),
-  sender: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  message: PropTypes.object,
   alignment: PropTypes.string,
   openAttachment: PropTypes.func,
   index: PropTypes.number,
+  convoId: PropTypes.string,
+  reportMessage: PropTypes.func,
 };
 export default MessageListItem;
