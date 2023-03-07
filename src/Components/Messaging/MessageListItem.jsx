@@ -1,7 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Stack, ListItemText, ListItem } from "@mui/material";
+import { Box, Stack, ListItemText, ListItem, Typography } from "@mui/material";
 
 const MessageListItem = ({
   content,
@@ -22,7 +22,13 @@ const MessageListItem = ({
       sx={{ maxWidth: "100%" }}
     >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
-        <ListItemText secondary={sender} align={alignment} />
+        <Typography
+          align={alignment}
+          variant="subtitle2"
+          color="rgba(0, 0, 0, 0.6)"
+        >
+          {sender}
+        </Typography>
       </Box>
 
       <Box
@@ -35,35 +41,39 @@ const MessageListItem = ({
         }}
       >
         {attachment ? (
-          <ListItem disablePadding>
-            <ListItemText
-              sx={{
-                display: "inline-block",
-                "&:hover": {
-                  color: "blue",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                },
-              }}
-              primary={`🔗${attachment}`}
-              align={alignment}
-              onClick={() => openAttachment(attachment)}
-              data-testid="attachment"
-            />
-          </ListItem>
+          <Typography
+            sx={{
+              display: "inline-block",
+              "&:hover": {
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+              },
+            }}
+            align={alignment}
+            onClick={() => openAttachment(attachment)}
+            data-testid="attachment"
+          >
+            {`🔗${attachment}`}
+          </Typography>
         ) : (
-          <ListItemText
+          <Typography
             sx={{ display: "inline-block" }}
             primary={content}
             align={alignment}
-          />
+          >
+            {content}
+          </Typography>
         )}
       </Box>
-      <ListItemText
+      <Typography
         style={{ marginLeft: "12px", marginRight: "12px" }}
         align={alignment}
-        secondary={timestamp.toLocaleString()}
-      />
+        variant="caption"
+        color="rgba(0, 0, 0, 0.6)"
+      >
+        {timestamp.toLocaleString()}
+      </Typography>
     </Stack>
   );
 };
