@@ -11,7 +11,7 @@ describe("example to-do app", () => {
   });
 
   describe("Testing the messaging feature", () => {
-    it("Logins, goes to messaging feature, sends message, sends file", () => {
+    it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
       //login and reach messaging page
@@ -52,7 +52,15 @@ describe("example to-do app", () => {
         .get('[data-testid="attachment"]')
         .last()
         .click();
+
+      cy.get(".messageOptions").last().click();
+      cy.get(".reportMsgButton").click();
     });
+
+    // it("report a message", () => {
+    //   cy.login();
+    //   cy.visit("http://localhost:3000/messaging");
+    // });
 
     it("shows message if user is not signed in", () => {
       cy.logout();

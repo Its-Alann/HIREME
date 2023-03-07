@@ -34,7 +34,7 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={handleClose}>
+        <MenuItem className="deleteMsgButton" onClick={handleClose}>
           <DeleteForeverIcon />
           Delete
         </MenuItem>
@@ -42,6 +42,7 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
           onClick={() => {
             reportMessage(index);
           }}
+          className="reportMsgButton"
         >
           <FlagIcon />
           Report
