@@ -27,6 +27,7 @@ const MessageListItem = ({
         maxWidth: "100%",
         "&:hover .messageOptions": {
           display: "inline-block",
+          color: "grey",
         },
       }}
     >
