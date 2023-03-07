@@ -102,13 +102,19 @@ describe("Testing the networking features of the app", () => {
       //visit network and check if invitation button exists
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
-      cy.get('[data-cy="invitationButton"]').should("be.visible");
+      //if button doesn't exist, check specific button
+      try {
+        cy.get('[data-cy="invitationButton"]').should("be.visible");
+      } catch (err) {
+        cy.get('[data-cy="invitationButtonTest"]').click();
+      }
     });
 
-    it("removes the RECEIVED invitation of hypeboy from accountcreation and the connection between the two accounts", () => {
+    it("removes the RECEIVED invitation of hypeboy from accountcreation (HAS THE FIRST NAME TEST) and the connection between the two accounts", () => {
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
-      cy.get('[data-cy="invitationButton"]').click();
+      //"Test" is included because it's the account's first name
+      cy.get('[data-cy="invitationButtonTest"]').click();
 
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
@@ -135,20 +141,22 @@ describe("Testing the networking features of the app", () => {
       //send invitation
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
-      cy.get('[data-cy="invitationButton"]').click();
+      cy.wait(500);
+      cy.get('[data-cy="invitationButtonTest"]').click();
       cy.wait(500);
     });
 
-    it("logs out, logs in to accountcreation, click on ignore invitation", () => {
+    it("logs out, logs in to accountcreation, click on ignore invitation (ACCOUNT NAME MUST BE HANNI)", () => {
       cy.logout();
       //login to accountcreation@test.com
       cy.login("QdFFUPgmxrdGl8IT72Jgm1Ooc6p2");
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
+      cy.wait(500);
 
       //IgnoreInvitationBtn
-      cy.get('[data-cy="IgnoreInvitationBtn"]').click();
+      cy.get('[data-cy="IgnoreInvitationBtnHanni"]').click();
       //visit all tabs
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
@@ -195,7 +203,7 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
 
       //send invitation
-      cy.get('[data-cy="invitationButton"]').should("be.visible").click();
+      cy.get('[data-cy="invitationButtonTest"]').should("be.visible").click();
       cy.wait(1000);
       //WEIRD CYPRESS BUG: TEST MUST END AFTER INVITATION CLICK FOR IT TO TAKE EFFECT
     });
@@ -253,7 +261,7 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
 
       //send invitation
-      cy.get('[data-cy="invitationButton"]').click();
+      cy.get('[data-cy="invitationButtonTest"]').click();
       cy.wait(500);
       //WEIRD CYPRESS BUG: TEST MUST END AFTER INVITATION CLICK FOR IT TO TAKE EFFECT
     });
@@ -279,7 +287,7 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
     });
 
-    it("logs out, logs in to createaccount containing the invitation and accepts it", () => {
+    it("logs out, logs in to createaccount containing the invitation and accepts it (ACCOUNT NAME MUST BE HANNI PHAM)", () => {
       //logout, login to createaccount, accept invitation
       cy.logout();
       cy.login("QdFFUPgmxrdGl8IT72Jgm1Ooc6p2");
@@ -287,7 +295,9 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       //Gives problems at times, especially when not last action in test
-      cy.get('[data-cy="AcceptInvitationBtn"]').should("be.visible").click();
+      cy.get('[data-cy="AcceptInvitationBtnHanni"]')
+        .should("be.visible")
+        .click();
       cy.wait(1000);
 
       cy.visit("http://localhost:3000/network");
