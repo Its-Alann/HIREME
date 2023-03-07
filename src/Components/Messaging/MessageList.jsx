@@ -36,7 +36,13 @@ const MessageList = ({ messages, convoId }) => {
           <ListItem
             data-testid="messageListItem"
             key={i}
-            style={{ justifyContent: alignment }}
+            sx={{
+              justifyContent: alignment,
+              "&:hover .messageOptions": {
+                display: "inline-block",
+                color: "grey",
+              },
+            }}
           >
             <MessageListItem
               message={message}
