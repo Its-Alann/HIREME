@@ -13,6 +13,7 @@ const MessageListItem = ({
   index,
 }) => {
   const antinos = "🖖";
+  const textGray = "rgba(0, 0, 0, 0.6)";
 
   return (
     <Stack
@@ -22,11 +23,7 @@ const MessageListItem = ({
       sx={{ maxWidth: "100%" }}
     >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
-        <Typography
-          align={alignment}
-          variant="subtitle2"
-          color="rgba(0, 0, 0, 0.6)"
-        >
+        <Typography align={alignment} variant="subtitle2" color={textGray}>
           {sender}
         </Typography>
       </Box>
@@ -70,7 +67,7 @@ const MessageListItem = ({
         style={{ marginLeft: "12px", marginRight: "12px" }}
         align={alignment}
         variant="caption"
-        color="rgba(0, 0, 0, 0.6)"
+        color={textGray}
       >
         {timestamp.toLocaleString()}
       </Typography>
