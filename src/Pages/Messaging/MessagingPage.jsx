@@ -211,7 +211,7 @@ const Messaging = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box className="page">
+      <Box className="page" sx={{ overflow: "hidden" }}>
         <Box>
           <Grid
             container
@@ -243,7 +243,7 @@ const Messaging = () => {
               <Box
                 sx={{ display: "flex", p: 1, justifyContent: "space-between" }}
               >
-                <Typography color="primary" variant="h4">
+                <Typography color="primary" variant="h4" noWrap>
                   Messaging
                 </Typography>
                 <IconButton
