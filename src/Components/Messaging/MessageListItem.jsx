@@ -23,13 +23,6 @@ const MessageListItem = ({
       className="message-stack"
       container
       alignItems={alignment === "right" ? "flex-end" : "flex-start"}
-      sx={{
-        maxWidth: "100%",
-        "&:hover .messageOptions": {
-          display: "inline-block",
-          color: "grey",
-        },
-      }}
     >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
         <Typography align={alignment} variant="subtitle2" color={textGray}>
@@ -37,7 +30,7 @@ const MessageListItem = ({
         </Typography>
       </Box>
 
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", maxWidth: "100%" }}>
         {alignment === "right" && (
           <MessageOptions
             index={index}
@@ -66,6 +59,7 @@ const MessageListItem = ({
                 },
               }}
               align={alignment}
+              noWrap
               onClick={() => openAttachment(attachment)}
               data-testid="attachment"
             >
@@ -81,7 +75,13 @@ const MessageListItem = ({
             </Typography>
           )}
         </Box>
-        {alignment === "left" && <MessageOptions index={index} />}
+        {alignment === "left" && (
+          <MessageOptions
+            index={index}
+            convoId={convoId}
+            reportMessage={reportMessage}
+          />
+        )}
       </Box>
       <Typography
         style={{ marginLeft: "12px", marginRight: "12px" }}
