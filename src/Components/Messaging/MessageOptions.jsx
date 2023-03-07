@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FlagIcon from "@mui/icons-material/Flag";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -10,8 +12,7 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (e) => {
-    console.log(e.currentTarget);
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -33,12 +34,16 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <DeleteForeverIcon />
+          Delete
+        </MenuItem>
         <MenuItem
           onClick={() => {
             reportMessage(index);
           }}
         >
+          <FlagIcon />
           Report
         </MenuItem>
       </Menu>
