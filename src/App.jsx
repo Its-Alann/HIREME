@@ -18,9 +18,10 @@ import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
-import { CompanyCreation } from "./Pages/CompanyCreation/CompanyCreation";
-import { RecruiterAccountCreation } from "./Pages/RecruiterAccountCreation/RecruiterAccountCreation";
-import { JobCreation } from "./Pages/Job/JobCreation";
+import { CreateCompany } from "./Pages/Company/CreateCompany";
+import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
+import { CreateJob } from "./Pages/Job/CreateJob";
+import { BrowseJobs } from "./Pages/Job/BrowseJobs";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
@@ -74,17 +75,14 @@ const App = () => {
               exact
               element={<NetworkPossibleConnections />}
             />
+            <Route path="/createCompany" exact element={<CreateCompany />} />
             <Route
-              path="/companyCreation"
+              path="/createRecruiter"
               exact
-              element={<CompanyCreation />}
+              element={<CreateRecruiter />}
             />
-            <Route
-              path="/recruiterAccountCreation"
-              exact
-              element={<RecruiterAccountCreation />}
-            />
-            <Route path="/jobCreation" exact element={<JobCreation />} />
+            <Route path="/createJob" exact element={<CreateJob />} />
+            <Route path="/browseJobs" exact element={<BrowseJobs />} />
           </Routes>
         </Router>
       </div>

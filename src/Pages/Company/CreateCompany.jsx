@@ -6,7 +6,7 @@ import * as React from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
-export const CompanyCreation = () => {
+export const CreateCompany = () => {
   const [companyInformation, setCompanyInformation] = React.useState({
     name: "",
   });
@@ -32,4 +32,4 @@ export const CompanyCreation = () => {
     </Box>
   );
 };
-export default CompanyCreation;
+export default CreateCompany;

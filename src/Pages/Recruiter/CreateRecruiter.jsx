@@ -7,7 +7,7 @@ import * as React from "react";
 import { setDoc, collection, query, getDocs, doc } from "firebase/firestore";
 import { auth, db } from "../../Firebase/firebase";
 
-export const RecruiterAccountCreation = () => {
+export const CreateRecruiter = () => {
   const [recruiterInformation, setRecruiterInformation] = React.useState({
     firstName: "",
     lastName: "",
@@ -97,4 +97,4 @@ export const RecruiterAccountCreation = () => {
     </Box>
   );
 };
-export default RecruiterAccountCreation;
+export default CreateRecruiter;

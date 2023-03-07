@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../Firebase/firebase";
 
-export const JobCreation = () => {
+export const CreateJob = () => {
   const [jobInformation, setJobInformation] = React.useState({
     companyID: "",
     deadline: new Date(),
@@ -57,6 +57,7 @@ export const JobCreation = () => {
     await batch.commit();
   }
 
+  // We need to include Recruiter ID & their company ID in the new Job
   async function getCompanyIDAndRecruiterID() {
     const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
     const recruiterSnapshot = await getDoc(recruiterRef);
@@ -207,4 +208,4 @@ export const JobCreation = () => {
     </Box>
   );
 };
-export default JobCreation;
+export default CreateJob;

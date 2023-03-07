@@ -1,0 +1,144 @@
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import {
+  collection,
+  query,
+  limitToLast,
+  getDocs,
+  orderBy,
+  startAfter,
+  endBefore,
+} from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
+
+export const BrowseJobs = () => {
+  const [jobs, setJobs] = React.useState([]);
+  const [lastJob, setLastJob] = React.useState(null);
+  const [firstJob, setFirstJob] = React.useState(null);
+  const [companiesName, setCompaniesName] = React.useState();
+
+  // The purpose of this query is to get jobs sorted descending by published date
+  // Firebase does not have desc orderby
+  // hence, use the ascending order & limit to last
+  // For example I have 7 jobs.
+  // 1 2 3 4 5 6 7
+  //     x x x x x
+  // these will be selected.
+  // then shown in reverse order.
+  const initialJobsQuery = query(
+    collection(db, "jobs"),
+    orderBy("publishedAt"),
+    limitToLast(5)
+  );
+
+  // The matter with firstJob & lastJob.
+  // After a query executed
+  // For example I have 7 jobs.
+  // 1 2 3 4 5 6 7
+  //     x x x x x
+  //     L       F
+  // x  is selected jobs.
+  // L is last job.
+  // F is first job.
+
+  // nextJobsQuery end the query before the lastJob
+  // For example, now I have 3 as lastJob
+  // 1 2 3 4 5 6 7
+  // x x
+  // these will be selected
+  // then
+  // L F
+  // 1 & 2 become the new lastJob & firstJob
+  const nextJobsQuery = query(
+    collection(db, "jobs"),
+    orderBy("publishedAt"),
+    endBefore(lastJob),
+    limitToLast(5)
+  );
+
+  // previousJobsQuery start the query after the firstJob
+  // For example, now I have 2 as firstJob
+  // 1 2 3 4 5 6 7
+  //     x x x x x
+  // these will be selected// then
+  //     L       F
+  // 3 & 7 become the new lastJob & firstJob
+  const previousJobsQuery = query(
+    collection(db, "jobs"),
+    orderBy("publishedAt"),
+    startAfter(firstJob),
+    limitToLast(5)
+  );
+
+  // The alternative way is to fetch the entire collection
+  // to the local machine, storing it in a list.
+  // But I don't want to do it that way.
+  // Because it can become heavy as the collection grows,
+  // and also may cause security issues.
+
+  async function getJobs(jobsQuery) {
+    const jobsSnapshot = await getDocs(jobsQuery);
+
+    setLastJob(jobsSnapshot.docs[0]);
+    setFirstJob(jobsSnapshot.docs[jobsSnapshot.docs.length - 1]);
+
+    const temp = [];
+    jobsSnapshot.docs.forEach((document) => {
+      temp.push({ ...document.data(), documentID: document.id });
+    });
+    temp.reverse();
+    setJobs(temp);
+  }
+
+  React.useEffect(() => {
+    getJobs(initialJobsQuery);
+  }, []);
+
+  return (
+    <Box>
+      <Typography>Browse Jobs</Typography>
+      <Typography>
+        This Page list all jobs, 5 per page. Everyone can access this page.
+      </Typography>
+      {jobs.map((job) => {
+        // Anti eslint
+        const hello = "hello";
+
+        // do this to show what is inside job
+        // console.log(job);
+        return (
+          <Box key={job.documentID}>
+            <Typography>Company ID: {job.companyID}</Typography>
+            <Typography>Title: {job.title}</Typography>
+            <Typography>Description: {job.description}</Typography>
+            <Typography>
+              Deadline:{" "}
+              {new Date(
+                job.deadline.seconds * 1000 + job.deadline.nanoseconds / 1000000
+              ).toDateString()}
+            </Typography>
+            <Typography>
+              Published At:{" "}
+              {new Date(
+                job.publishedAt.seconds * 1000 +
+                  job.publishedAt.nanoseconds / 1000000
+              ).toDateString()}
+            </Typography>
+            <Button id={`Button-${job.documentID}`}>
+              Apply (not implemented)
+            </Button>
+          </Box>
+        );
+      })}
+      <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
+        Previous
+      </Button>
+      <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
+        Next
+      </Button>
+    </Box>
+  );
+};
+export default BrowseJobs;
