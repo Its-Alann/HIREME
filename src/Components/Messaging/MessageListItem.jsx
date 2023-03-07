@@ -16,7 +16,7 @@ const MessageListItem = ({
   const textGray = "rgba(0, 0, 0, 0.6)";
 
   const timestamp = message.timestamp.toDate();
-  const { content, sender, attachment } = message;
+  const { content, sender, attachment, reported } = message;
 
   return (
     <Stack
