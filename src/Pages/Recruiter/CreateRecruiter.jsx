@@ -19,10 +19,13 @@ export const CreateRecruiter = () => {
 
   async function handleSubmit() {
     console.log(auth.currentUser.uid);
-    await setDoc(
-      doc(db, "recruiters", auth.currentUser.uid),
-      recruiterInformation
+    const recruiterId = recruiterInformation.workFor.concat(
+      "-",
+      recruiterInformation.lastName,
+      recruiterInformation.firstName
     );
+    const newDocRecruiterRef = doc(db, "recruiters", recruiterId);
+    await setDoc(newDocRecruiterRef, recruiterInformation, { merge: true });
   }
 
   async function getCompanies() {
