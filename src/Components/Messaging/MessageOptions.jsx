@@ -34,10 +34,10 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem className="deleteMsgButton" onClick={handleClose}>
+        {/* <MenuItem className="deleteMsgButton" onClick={handleClose}>
           <DeleteForeverIcon />
           Delete
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
           onClick={() => {
             reportMessage(index);
