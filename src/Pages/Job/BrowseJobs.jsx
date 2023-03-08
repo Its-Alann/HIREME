@@ -12,6 +12,7 @@ import {
   endBefore,
   doc,
   getDoc,
+  limit,
 } from "firebase/firestore";
 import Container from "@mui/material/Container";
 import { db } from "../../Firebase/firebase";
@@ -21,6 +22,8 @@ export const BrowseJobs = () => {
   const [lastJob, setLastJob] = React.useState(null);
   const [firstJob, setFirstJob] = React.useState(null);
   const [companiesName, setCompaniesName] = React.useState({});
+
+  const jobsPerPage = 5;
 
   // The purpose of this query is to get jobs sorted descending by published date
   // Firebase does not have desc orderby
@@ -33,7 +36,7 @@ export const BrowseJobs = () => {
   const initialJobsQuery = query(
     collection(db, "jobs"),
     orderBy("publishedAt"),
-    limitToLast(5)
+    limitToLast(jobsPerPage)
   );
 
   // The matter with firstJob & lastJob.
@@ -58,7 +61,7 @@ export const BrowseJobs = () => {
     collection(db, "jobs"),
     orderBy("publishedAt"),
     endBefore(lastJob),
-    limitToLast(5)
+    limitToLast(jobsPerPage)
   );
 
   // previousJobsQuery start the query after the firstJob
@@ -72,7 +75,7 @@ export const BrowseJobs = () => {
     collection(db, "jobs"),
     orderBy("publishedAt"),
     startAfter(firstJob),
-    limitToLast(5)
+    limit(jobsPerPage)
   );
 
   // The alternative way is to fetch the entire collection
@@ -130,7 +133,8 @@ export const BrowseJobs = () => {
           Browse Jobs
         </Typography>
         <Typography>
-          This Page list all jobs, 5 per page. Everyone can access this page.
+          This Page list all jobs, {jobsPerPage} per page. Everyone can access
+          this page.
         </Typography>
 
         {jobs.map((job) => {
