@@ -14,6 +14,8 @@ import {
   arrayUnion,
   writeBatch,
 } from "firebase/firestore";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateJob = () => {
@@ -93,119 +95,162 @@ export const CreateJob = () => {
   }, []);
 
   return (
-    <Box>
-      <Typography>Job Creation</Typography>
-      <Typography>
-        This page has purpose of creating a new job posting. If you are logged
-        in, and you are a Recruiter. Then, after you click SAVE, there should be
-        a new document under jobs collection, and its id will be updated to your
-        recruiter profile & the company profile.
-      </Typography>
-      <Typography>Job Title</Typography>
-      <TextField
-        required
-        id="TextField-Title"
-        variant="standard"
-        placeholder="Job Title"
-        fullWidth
-        value={jobInformation.title}
-        onChange={(e) =>
-          setJobInformation({
-            ...jobInformation,
-            title: e.target.value,
-          })
-        }
-      />
+    <Container maxWidth="md" sx={{ mb: 10 }}>
+      <Box sx={{ pt: 5 }}>
+        <Typography variant="h4" sx={{ pb: 2 }}>
+          Job Creation
+        </Typography>
+        {/* is this supposed to be a public comment? */}
+        <Typography gutterBottom>
+          This page has purpose of creating a new job posting. If you are logged
+          in, and you are a Recruiter. Then, after you click SAVE, there should
+          be a new document under jobs collection, and its id will be updated to
+          your recruiter profile & the company profile.
+        </Typography>
+        <Stack spacing={2}>
+          <Box>
+            <Typography>Job Title</Typography>
+            <TextField
+              required
+              id="TextField-Title"
+              variant="standard"
+              placeholder="Job Title"
+              fullWidth
+              value={jobInformation.title}
+              onChange={(e) =>
+                setJobInformation({
+                  ...jobInformation,
+                  title: e.target.value,
+                })
+              }
+            />
+          </Box>
 
-      <Typography>Description</Typography>
-      <TextField
-        required
-        id="TextField-Description"
-        variant="standard"
-        placeholder="Job Description"
-        fullWidth
-        value={jobInformation.description}
-        onChange={(e) =>
-          setJobInformation({
-            ...jobInformation,
-            description: e.target.value,
-          })
-        }
-      />
+          <Box>
+            <Typography>Company ID</Typography>
+            <TextField
+              required
+              id="TextField-CompanyID"
+              variant="standard"
+              placeholder="Company ID"
+              fullWidth
+              value={jobInformation.companyID}
+              InputProps={{ readOnly: true }}
+            />
+          </Box>
 
-      <Typography>Company ID</Typography>
-      <TextField
-        required
-        id="TextField-CompanyID"
-        variant="standard"
-        placeholder="Company ID"
-        fullWidth
-        value={jobInformation.companyID}
-        InputProps={{ readOnly: true }}
-      />
+          <Box>
+            <Typography>Company Name</Typography>
+            <TextField
+              required
+              id="TextField-CompanyName"
+              variant="standard"
+              placeholder="Company ID"
+              fullWidth
+              value={companyName.name}
+              InputProps={{ readOnly: true }}
+            />
+          </Box>
 
-      <Typography>Company Name</Typography>
-      <TextField
-        required
-        id="TextField-CompanyName"
-        variant="standard"
-        placeholder="Company ID"
-        fullWidth
-        value={companyName.name}
-        InputProps={{ readOnly: true }}
-      />
+          <Box>
+            <Typography>Location</Typography>
+            <TextField
+              required
+              id="TextField-Location"
+              variant="standard"
+              placeholder="Location"
+              fullWidth
+              value={jobInformation.location}
+              onChange={(e) =>
+                setJobInformation({
+                  ...jobInformation,
+                  location: e.target.value,
+                })
+              }
+            />
+          </Box>
 
-      <Typography>Location</Typography>
-      <TextField
-        required
-        id="TextField-Location"
-        variant="standard"
-        placeholder="Location"
-        fullWidth
-        value={jobInformation.location}
-        onChange={(e) =>
-          setJobInformation({
-            ...jobInformation,
-            location: e.target.value,
-          })
-        }
-      />
+          <Box>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                id="DatePicker-Deadline"
+                label="Application Deadline"
+                value={jobInformation.deadline}
+                onChange={(newValue) => {
+                  setJobInformation({
+                    ...jobInformation,
+                    deadline: newValue.$d,
+                  });
+                }}
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+          </Box>
 
-      <Typography>Requirement</Typography>
-      <TextField
-        required
-        id="TextField-Requirement"
-        variant="standard"
-        placeholder="Location"
-        fullWidth
-        value={jobInformation.requirement}
-        onChange={(e) =>
-          setJobInformation({
-            ...jobInformation,
-            requirement: e.target.value,
-          })
-        }
-      />
+          <Box>
+            <Typography>Job description</Typography>
+            {/*<TextField
+              required
+              id="TextField-Description"
+              variant="standard"
+              placeholder="Job Description"
+              fullWidth
+              multiline
+              value={jobInformation.description}
+              onChange={(e) =>
+                setJobInformation({
+                  ...jobInformation,
+                  description: e.target.value,
+                })
+              }
+            /> */}
+            <TextField
+              required
+              id="TextField-Description"
+              fullWidth
+              multiline
+              rows={4}
+              value={jobInformation.description}
+              onChange={(e) =>
+                setJobInformation({
+                  ...jobInformation,
+                  description: e.target.value,
+                })
+              }
+            />
+          </Box>
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          id="DatePicker-Deadline"
-          label="Application Deadline"
-          value={jobInformation.deadline}
-          onChange={(newValue) => {
-            setJobInformation({
-              ...jobInformation,
-              deadline: newValue.$d,
-            });
-          }}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-      <Button id="Button-Save" onClick={() => handleSubmit()}>
-        Save
-      </Button>
-    </Box>
+          <Box>
+            <Typography>Job requirements</Typography>
+            <TextField
+              required
+              id="TextField-Requirement"
+              fullWidth
+              multiline
+              rows={2}
+              value={jobInformation.requirement}
+              onChange={(e) =>
+                setJobInformation({
+                  ...jobInformation,
+                  requirement: e.target.value,
+                })
+              }
+            />
+          </Box>
+        </Stack>
+
+        <Button
+          variant="contained"
+          size="medium"
+          id="Button-Save"
+          sx={{ mt: 2 }}
+          onClick={() => handleSubmit()}
+        >
+          Save
+        </Button>
+      </Box>
+    </Container>
   );
 };
 export default CreateJob;
