@@ -179,14 +179,6 @@ export const BrowseJobs = () => {
         <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
           Next
         </Button>
-        <Button
-          id="Button-Temp"
-          onClick={() => {
-            console.log(companiesName);
-          }}
-        >
-          Temp
-        </Button>
       </Box>
     </Container>
   );
