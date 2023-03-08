@@ -15,7 +15,11 @@ const MessageList = ({ messages, convoId }) => {
   };
 
   const reportMessage = async (index) => {
-    if (messages[index].sender === auth.currentUser.email) {
+    // users cant unreport their own messages
+    if (
+      messages[index].sender === auth.currentUser.email &&
+      messages[index].reported
+    ) {
       return;
     }
     const convoRef = doc(db, "messages", convoId);
