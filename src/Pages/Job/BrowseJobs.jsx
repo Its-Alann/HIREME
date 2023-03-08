@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { TextField } from "@mui/material";
 import * as React from "react";
 import {
   collection,
@@ -10,6 +11,8 @@ import {
   orderBy,
   startAfter,
   endBefore,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
@@ -17,7 +20,7 @@ export const BrowseJobs = () => {
   const [jobs, setJobs] = React.useState([]);
   const [lastJob, setLastJob] = React.useState(null);
   const [firstJob, setFirstJob] = React.useState(null);
-  const [companiesName, setCompaniesName] = React.useState();
+  const [companiesName, setCompaniesName] = React.useState({});
 
   // The purpose of this query is to get jobs sorted descending by published date
   // Firebase does not have desc orderby
@@ -77,9 +80,13 @@ export const BrowseJobs = () => {
   // But I don't want to do it that way.
   // Because it can become heavy as the collection grows,
   // and also may cause security issues.
-
   async function getJobs(jobsQuery) {
     const jobsSnapshot = await getDocs(jobsQuery);
+
+    // if none document returned, skip
+    if (jobsSnapshot.docs.length < 1) {
+      return;
+    }
 
     setLastJob(jobsSnapshot.docs[0]);
     setFirstJob(jobsSnapshot.docs[jobsSnapshot.docs.length - 1]);
@@ -92,6 +99,23 @@ export const BrowseJobs = () => {
     setJobs(temp);
   }
 
+  function getCompaniesName() {
+    const temp = companiesName;
+    jobs.forEach(async (job) => {
+      if (!temp[job.companyID]) {
+        temp[job.companyID] = "querying";
+        const companyRef = doc(db, "companies", job.companyID);
+        const companySnapshot = await getDoc(companyRef);
+        temp[job.companyID] = companySnapshot.data().name;
+        setCompaniesName({ ...temp });
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    getCompaniesName();
+  }, [jobs]);
+
   React.useEffect(() => {
     getJobs(initialJobsQuery);
   }, []);
@@ -102,6 +126,7 @@ export const BrowseJobs = () => {
       <Typography>
         This Page list all jobs, 5 per page. Everyone can access this page.
       </Typography>
+
       {jobs.map((job) => {
         // Anti eslint
         const hello = "hello";
@@ -111,6 +136,9 @@ export const BrowseJobs = () => {
         return (
           <Box key={job.documentID}>
             <Typography>Company ID: {job.companyID}</Typography>
+            <Typography>
+              Company Name: {companiesName[job.companyID]}
+            </Typography>
             <Typography>Title: {job.title}</Typography>
             <Typography>Description: {job.description}</Typography>
             <Typography>
@@ -137,6 +165,14 @@ export const BrowseJobs = () => {
       </Button>
       <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
         Next
+      </Button>
+      <Button
+        id="Button-Temp"
+        onClick={() => {
+          console.log(companiesName);
+        }}
+      >
+        Temp
       </Button>
     </Box>
   );
