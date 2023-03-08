@@ -13,6 +13,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+import Container from "@mui/material/Container";
 import { db } from "../../Firebase/firebase";
 
 export const BrowseJobs = () => {
@@ -123,52 +124,71 @@ export const BrowseJobs = () => {
   }, []);
 
   return (
-    <Box>
-      <Typography>Browse Jobs</Typography>
-      <Typography>
-        This Page list all jobs, 5 per page. Everyone can access this page.
-      </Typography>
+    <Container sx={{ mb: 10 }}>
+      <Box sx={{ pt: 5 }}>
+        <Typography variant="h4" sx={{ pb: 2 }}>
+          Browse Jobs
+        </Typography>
+        <Typography>
+          This Page list all jobs, 5 per page. Everyone can access this page.
+        </Typography>
 
-      {jobs.map((job) => {
-        // Anti eslint
-        const hello = "hello";
+        {jobs.map((job) => {
+          // Anti eslint
+          const hello = "hello";
 
-        // do this to show what is inside job
-        // console.log(job);
-        return (
-          <Box key={job.documentID}>
-            <Typography>Company ID: {job.companyID}</Typography>
-            <Typography>
-              Company Name: {companiesName[job.companyID]}
-            </Typography>
-            <Typography>Title: {job.title}</Typography>
-            <Typography>Description: {job.description}</Typography>
-            <Typography>
-              Deadline:{" "}
-              {new Date(
-                job.deadline.seconds * 1000 + job.deadline.nanoseconds / 1000000
-              ).toDateString()}
-            </Typography>
-            <Typography>
-              Published At:{" "}
-              {new Date(
-                job.publishedAt.seconds * 1000 +
-                  job.publishedAt.nanoseconds / 1000000
-              ).toDateString()}
-            </Typography>
-            <Button id={`Button-Apply-${job.documentID}`}>
-              Apply (not implemented)
-            </Button>
-          </Box>
-        );
-      })}
-      <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
-        Previous
-      </Button>
-      <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
-        Next
-      </Button>
-    </Box>
+          // do this to show what is inside job
+          // console.log(job);
+          return (
+            // Create cards instead
+            <Box key={job.documentID}>
+              <Typography>Company ID: {job.companyID}</Typography>
+              <Typography>
+                Company Name: {companiesName[job.companyID]}
+              </Typography>
+              <Typography>Title: {job.title}</Typography>
+              <Typography>Description: {job.description}</Typography>
+              <Typography>
+                Deadline:{" "}
+                {new Date(
+                  job.deadline.seconds * 1000 +
+                    job.deadline.nanoseconds / 1000000
+                ).toDateString()}
+              </Typography>
+              <Typography>
+                Published At:{" "}
+                {new Date(
+                  job.publishedAt.seconds * 1000 +
+                    job.publishedAt.nanoseconds / 1000000
+                ).toDateString()}
+              </Typography>
+              <Button
+                variant="contained"
+                size="medium"
+                sx={{ mt: 2 }}
+                id={`Button-${job.documentID}`}
+              >
+                Apply (not implemented)
+              </Button>
+            </Box>
+          );
+        })}
+        <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
+          Previous
+        </Button>
+        <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
+          Next
+        </Button>
+        <Button
+          id="Button-Temp"
+          onClick={() => {
+            console.log(companiesName);
+          }}
+        >
+          Temp
+        </Button>
+      </Box>
+    </Container>
   );
 };
 export default BrowseJobs;
