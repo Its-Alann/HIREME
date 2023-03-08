@@ -42,8 +42,9 @@ const MessageListItem = ({
           badgeContent="!"
           color="warning"
           anchorOrigin={{ vertical: "top", horizontal: alignment }}
-          invisible={!message.reported}
+          invisible={!reported}
           sx={{ flexGrow: 1 }}
+          data-testid="reportedBadge"
         >
           <Box
             xs
@@ -66,7 +67,6 @@ const MessageListItem = ({
                   },
                 }}
                 align={alignment}
-                // noWrap
                 onClick={() => openAttachment(attachment)}
                 data-testid="attachment"
               >
