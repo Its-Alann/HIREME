@@ -20,13 +20,23 @@ export const MyJobs = () => {
   const [companiesName, setCompaniesName] = React.useState({});
   const [cursorPosition, setCursorPosition] = React.useState(0);
 
-  const jobsPerPage = 2;
+  const jobsPerPage = 4;
 
   // Go to the recruiter, and get his list of jobs he posted
   async function getMyJobsID() {
     const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
     const recruiterSnapshot = await getDoc(recruiterRef);
-    setMyJobsID(recruiterSnapshot.data().jobs);
+    const tempArray = [...recruiterSnapshot.data().jobs];
+
+    // Sort the list of jobID based on the publishedAt, newest first
+    tempArray.sort((a, b) => {
+      if (a.publishedAt.seconds === b.publishedAt.seconds) {
+        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
+      }
+      return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
+    });
+
+    setMyJobsID(tempArray);
   }
 
   // Get companies' name using the companyID of each Job
@@ -45,6 +55,9 @@ export const MyJobs = () => {
     });
   }
 
+  // Using the list of jobsID & the cursor position
+  // determine 5 jobID
+  // Then query jobs whose ID within the 5 jobID
   async function getJobs() {
     if (cursorPosition >= myJobsID.length) {
       return;
@@ -59,9 +72,7 @@ export const MyJobs = () => {
 
     const jobsQuery = query(
       collection(db, "jobs"),
-      //orderBy(documentId()),
       where(documentId(), "in", tempJobIDList)
-      //orderBy("publishedAt")
     );
 
     const jobsSnapshot = await getDocs(jobsQuery);
@@ -70,7 +81,14 @@ export const MyJobs = () => {
     jobsSnapshot.docs.forEach((document) => {
       temp.push({ ...document.data(), documentID: document.id });
     });
-    temp.reverse();
+
+    // Sort the list of jobs based on the publishedAt, newest first
+    temp.sort((a, b) => {
+      if (a.publishedAt.seconds === b.publishedAt.seconds) {
+        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
+      }
+      return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
+    });
     setJobs(temp);
   }
 
