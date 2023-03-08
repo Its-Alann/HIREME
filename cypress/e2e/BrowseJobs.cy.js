@@ -1,0 +1,13 @@
+beforeEach(() => {
+  cy.viewport(1920, 1080);
+});
+
+describe("Browse Jobs", () => {
+  it("Browse Jobs", () => {
+    cy.visit("http://localhost:3000/browseJobs");
+    cy.get("#Button-Next").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
+    cy.get("#Button-Previous").click();
+  });
+});

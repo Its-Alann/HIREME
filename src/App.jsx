@@ -22,6 +22,7 @@ import { CreateCompany } from "./Pages/Company/CreateCompany";
 import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
 import { CreateJob } from "./Pages/Job/CreateJob";
 import { BrowseJobs } from "./Pages/Job/BrowseJobs";
+import { MyJobs } from "./Pages/Job/MyJobs";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
@@ -83,6 +84,7 @@ const App = () => {
             />
             <Route path="/createJob" exact element={<CreateJob />} />
             <Route path="/browseJobs" exact element={<BrowseJobs />} />
+            <Route path="/myJobs" exact element={<MyJobs />} />
           </Routes>
         </Router>
       </div>
