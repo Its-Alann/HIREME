@@ -19,7 +19,7 @@ const MessageList = ({ messages, convoId }) => {
     const updatedMessages = messages;
     updatedMessages[index] = {
       ...messages[index],
-      reported: true,
+      reported: !messages[index].reported,
     };
     console.log("updatedMessages", updatedMessages);
     await updateDoc(convoRef, {
