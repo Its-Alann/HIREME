@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
 import * as React from "react";
 import {
   collection,
@@ -99,6 +98,9 @@ export const BrowseJobs = () => {
     setJobs(temp);
   }
 
+  // Get companies' name using the companyID of each Job
+  // And store them.
+  // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
     jobs.forEach(async (job) => {
@@ -154,7 +156,7 @@ export const BrowseJobs = () => {
                   job.publishedAt.nanoseconds / 1000000
               ).toDateString()}
             </Typography>
-            <Button id={`Button-${job.documentID}`}>
+            <Button id={`Button-Apply-${job.documentID}`}>
               Apply (not implemented)
             </Button>
           </Box>
@@ -165,14 +167,6 @@ export const BrowseJobs = () => {
       </Button>
       <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
         Next
-      </Button>
-      <Button
-        id="Button-Temp"
-        onClick={() => {
-          console.log(companiesName);
-        }}
-      >
-        Temp
       </Button>
     </Box>
   );
