@@ -55,6 +55,7 @@ describe("example to-do app", () => {
 
       cy.get(".messageOptions").last().click();
       cy.get(".reportMsgButton").click();
+      cy.get('[data-testid="reportedBadge"]').should("be.visible");
     });
 
     // it("report a message", () => {
