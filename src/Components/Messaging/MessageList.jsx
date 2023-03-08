@@ -15,6 +15,9 @@ const MessageList = ({ messages, convoId }) => {
   };
 
   const reportMessage = async (index) => {
+    if (messages[index].sender === auth.currentUser.email) {
+      return;
+    }
     const convoRef = doc(db, "messages", convoId);
     const updatedMessages = messages;
     updatedMessages[index] = {
