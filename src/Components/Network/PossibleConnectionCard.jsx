@@ -105,7 +105,9 @@ export const PossibleConnectionCard = ({
               <ColorButtonBlue
                 size="medium"
                 onClick={sendInvitation}
-                data-cy="invitationButton"
+                data-cy={`invitationButton${
+                  possibleConnectionUser?.values?.firstName ?? ""
+                }`}
               >
                 Send Invitation
               </ColorButtonBlue>
