@@ -20,6 +20,8 @@ export const MyJobs = () => {
   const [companiesName, setCompaniesName] = React.useState({});
   const [cursorPosition, setCursorPosition] = React.useState(0);
 
+  const jobsPerPage = 2;
+
   // Go to the recruiter, and get his list of jobs he posted
   async function getMyJobsID() {
     const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
@@ -48,7 +50,7 @@ export const MyJobs = () => {
       return;
     }
     const tempJobIDList = [];
-    for (let i = cursorPosition; i < cursorPosition + 5; i += 1) {
+    for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
       if (i >= myJobsID.length) {
         break;
       }
@@ -73,14 +75,14 @@ export const MyJobs = () => {
   }
 
   function setCursorToNextPosition() {
-    const nextPosition = cursorPosition + 5;
+    const nextPosition = cursorPosition + jobsPerPage;
     if (nextPosition >= myJobsID.length) {
       return;
     }
     setCursorPosition(nextPosition);
   }
   function setCursorToPreviousPosition() {
-    let previousPosition = cursorPosition - 5;
+    let previousPosition = cursorPosition - jobsPerPage;
     if (previousPosition < 0) {
       previousPosition = 0;
     }
@@ -123,8 +125,8 @@ export const MyJobs = () => {
     <Box>
       <Typography>My Jobs</Typography>
       <Typography>
-        This Page list all jobs belong to me, 5 per page. Only me should be able
-        to see the page.
+        This Page list all jobs belong to me, {jobsPerPage} per page. Only me
+        should be able to see the page.
       </Typography>
 
       {jobs.map((job) => {
