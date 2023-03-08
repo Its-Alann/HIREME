@@ -1,7 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Stack, IconButton, Typography } from "@mui/material";
+import { Box, Stack, IconButton, Typography, Badge } from "@mui/material";
 import MessageOptions from "./MessageOptions";
 
 const MessageListItem = ({
@@ -38,43 +38,51 @@ const MessageListItem = ({
             reportMessage={reportMessage}
           />
         )}
-        <Box
-          xs
-          sx={{
-            bgcolor: alignment === "right" ? "secondary.main" : "gray.main",
-            width: "fit-content",
-            maxWidth: "calc(100% - 24px)",
-            p: 1.5,
-            borderRadius: 3,
-          }}
+        <Badge
+          badgeContent="!"
+          color="warning"
+          anchorOrigin={{ vertical: "top", horizontal: alignment }}
+          invisible={!message.reported}
+          sx={{ flexGrow: 1 }}
         >
-          {attachment ? (
-            <Typography
-              sx={{
-                display: "inline-block",
-                "&:hover": {
-                  color: "blue",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                },
-              }}
-              align={alignment}
-              noWrap
-              onClick={() => openAttachment(attachment)}
-              data-testid="attachment"
-            >
-              {`🔗${attachment}`}
-            </Typography>
-          ) : (
-            <Typography
-              sx={{ display: "inline-block" }}
-              primary={content}
-              align={alignment}
-            >
-              {content}
-            </Typography>
-          )}
-        </Box>
+          <Box
+            xs
+            sx={{
+              bgcolor: alignment === "right" ? "secondary.main" : "gray.main",
+              width: "fit-content",
+              maxWidth: "calc(100% - 24px)",
+              p: 1.5,
+              borderRadius: 3,
+            }}
+          >
+            {attachment ? (
+              <Typography
+                sx={{
+                  display: "inline-block",
+                  "&:hover": {
+                    color: "blue",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  },
+                }}
+                align={alignment}
+                // noWrap
+                onClick={() => openAttachment(attachment)}
+                data-testid="attachment"
+              >
+                {`🔗${attachment}`}
+              </Typography>
+            ) : (
+              <Typography
+                sx={{ display: "inline-block", flexShrink: 0 }}
+                primary={content}
+                align={alignment}
+              >
+                {content}
+              </Typography>
+            )}
+          </Box>
+        </Badge>
         {alignment === "left" && (
           <MessageOptions
             index={index}
