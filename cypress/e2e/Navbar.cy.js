@@ -212,6 +212,7 @@ describe("Test the navbar component", () => {
 
   describe("Click buttons on navbar when logged in with mobile resolution", () => {
     it("clicks on home", () => {
+      cy.wait(1000);
       cy.login();
       cy.wait(1000);
       cy.viewport(390, 844);
