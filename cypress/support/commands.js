@@ -26,18 +26,4 @@
 import "@testing-library/cypress/add-commands";
 import "@cypress/code-coverage/support";
 
-//command added from https://github.com/cypress-io/cypress/issues/395
-
-function ifExistsClick(selector) {
-  cy.document().then(($document) => {
-    const documentResult = $document.querySelectorAll(selector);
-    if (documentResult.length) {
-      // Do something
-      documentResult.click();
-    }
-  });
-}
-
-Cypress.Commands.add("ifExistsClick", ifExistsClick);
-
 require("cypress-plugin-tab");
