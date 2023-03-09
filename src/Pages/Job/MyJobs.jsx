@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
@@ -12,6 +13,8 @@ import {
   documentId,
   where,
 } from "firebase/firestore";
+import { EditJob } from "./EditJob";
+import { CreateJob } from "./CreateJob";
 import { db, auth } from "../../Firebase/firebase";
 
 export const MyJobs = () => {
@@ -116,7 +119,7 @@ export const MyJobs = () => {
     });
   }, []);
 
-  // when cursor position change, get the jobs to display
+  // when cursor position change jobs to display
   React.useEffect(() => {
     getJobs();
   }, [cursorPosition, myJobsID]);
@@ -174,9 +177,14 @@ export const MyJobs = () => {
                   job.publishedAt.nanoseconds / 1000000
               ).toDateString()}
             </Typography>
-            <Button id={`Button-Edit-${job.documentID}`}>
-              Edit (not implemented)
-            </Button>
+
+            <Link
+              to={{
+                pathname: `/editJob/${job.documentID}`,
+              }}
+            >
+              <Button id={`Button-Edit-${job.documentID}`}>Edit</Button>
+            </Link>
           </Box>
         );
       })}
