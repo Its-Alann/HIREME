@@ -145,7 +145,7 @@ export const CreateJob = () => {
               required
               id="TextField-CompanyName"
               variant="standard"
-              placeholder="Company ID"
+              placeholder="Company Name"
               fullWidth
               value={companyName.name}
               InputProps={{ readOnly: true }}
@@ -168,24 +168,6 @@ export const CreateJob = () => {
                 })
               }
             />
-          </Box>
-
-          <Box>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                id="DatePicker-Deadline"
-                label="Application Deadline"
-                value={jobInformation.deadline}
-                onChange={(newValue) => {
-                  setJobInformation({
-                    ...jobInformation,
-                    deadline: newValue.$d,
-                  });
-                }}
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
           </Box>
 
           <Box>
@@ -237,6 +219,24 @@ export const CreateJob = () => {
                 })
               }
             />
+          </Box>
+
+          <Box>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                id="DatePicker-Deadline"
+                label="Application Deadline"
+                value={jobInformation.deadline}
+                onChange={(newValue) => {
+                  setJobInformation({
+                    ...jobInformation,
+                    deadline: newValue.$d,
+                  });
+                }}
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
           </Box>
         </Stack>
 
