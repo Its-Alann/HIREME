@@ -20,6 +20,7 @@ import Stack from "@mui/material/Stack";
 // import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
 import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
+import "./Job.css";
 
 export const BrowseJobs = () => {
   const [jobs, setJobs] = React.useState([]);
@@ -156,6 +157,7 @@ export const BrowseJobs = () => {
 
                   <Typography>{companiesName[job.companyID]}</Typography>
 
+                  {/* change to country and city */}
                   <Typography>{job.location}</Typography>
 
                   {/* do we need to show company id? */}
@@ -180,9 +182,14 @@ export const BrowseJobs = () => {
                       sx={{ my: 1 }}
                       id={`Button-${job.documentID}`}
                     >
-                      <Link to={`/viewJobPostingApplicants/${job.documentID}`}>
+                      <Link
+                        to={`/viewJobPostingApplicants/${job.documentID}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
                         {/* <Link to="/job/1"> */}
-                        View job (NOT IMPLEMENTED)
+                        View job (redirects to recruiter&apos;s view)
                       </Link>
                     </Button>
                     <Typography>
