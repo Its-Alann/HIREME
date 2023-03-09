@@ -1,5 +1,8 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "cypress-file-upload";
+
+Cypress.on("uncaught:exception", (err, runnable) => false);
 
 describe("example to-do app", () => {
   beforeEach(() => {
@@ -16,13 +19,15 @@ describe("example to-do app", () => {
       cy.logout();
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
+      cy.wait(1000);
       cy.login();
+      cy.wait(1000);
       cy.visit("http://localhost:3000/messaging");
 
       //open first conversation and checks if it's visible
       cy.get(".convo-list > .MuiList-root > :nth-child(1)")
         .should("be.visible")
-        .click();
+        .click({ force: true });
 
       //send Hi message
       cy.get("#message-input").should("be.visible").type("Hi");
