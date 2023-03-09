@@ -12,9 +12,8 @@ import { PropTypes } from "prop-types";
 import { Divider } from "@mui/material";
 import { db } from "../../Firebase/firebase";
 
-export const JobPostingApplicants = (/*{ jobId }*/) => {
+export const JobPostingApplicants = () => {
   const pageID = useParams();
-  const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
 
   const [job, setJob] = React.useState([]);
@@ -22,8 +21,7 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
 
   const getCompanyName = async (companyID) => {
     try {
-      // const companySnapshot = await getDoc(doc(db, "companies", companyID)); // hardcoded, implement navigation and pass in the prop
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID)); // hardcoded, implement navigation and pass in the prop
+      const companySnapshot = await getDoc(doc(db, "companies", companyID)); // hardcoded, implement navigation and pass in the prop
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
     } catch (error) {
@@ -41,7 +39,7 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
         const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
         const jobData = jobsSnapshot.data();
         setJob(jobData);
-        console.log(jobData);
+        // console.log(jobData);
       } catch (err) {
         console.log(err);
       }
@@ -132,9 +130,5 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
     </Stack>
   );
 };
-
-// JobPostingApplicants.propTypes = {
-//   jobId: PropTypes.string.isRequired,
-// };
 
 export default JobPostingApplicants;

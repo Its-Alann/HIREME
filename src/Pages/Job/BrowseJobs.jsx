@@ -152,7 +152,6 @@ export const BrowseJobs = () => {
             <Box key={job.documentID} sx={{ py: 1 }}>
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
-                  {console.log(job)}
                   <Typography variant="h4">{job.title}</Typography>
 
                   <Typography>{companiesName[job.companyID]}</Typography>
@@ -181,9 +180,7 @@ export const BrowseJobs = () => {
                       sx={{ my: 1 }}
                       id={`Button-${job.documentID}`}
                     >
-                      <Link
-                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
-                      >
+                      <Link to={`/viewJobPostingApplicants/${job.documentID}`}>
                         {/* <Link to="/job/1"> */}
                         View job (NOT IMPLEMENTED)
                       </Link>
