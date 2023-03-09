@@ -164,7 +164,7 @@ export const CreateJob = () => {
                 variant="standard"
                 placeholder="City"
                 fullWidth
-                value={jobInformation.location}
+                value={jobInformation.city}
                 onChange={(e) =>
                   setJobInformation({
                     ...jobInformation,
@@ -182,7 +182,7 @@ export const CreateJob = () => {
                 variant="standard"
                 placeholder="Country"
                 fullWidth
-                value={jobInformation.location}
+                value={jobInformation.country}
                 onChange={(e) =>
                   setJobInformation({
                     ...jobInformation,
