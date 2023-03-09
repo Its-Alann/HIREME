@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -12,12 +13,17 @@ import { Divider } from "@mui/material";
 import { db } from "../../Firebase/firebase";
 
 export const JobPostingApplicants = (/*{ jobId }*/) => {
+  const pageID = useParams();
+  const pageCompanyID = useParams().companyID;
+  const pageJobID = useParams().jobID;
+
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
 
   const getCompanyName = async (companyID) => {
     try {
-      const companySnapshot = await getDoc(doc(db, "companies", companyID)); // hardcoded, implement navigation and pass in the prop
+      // const companySnapshot = await getDoc(doc(db, "companies", companyID)); // hardcoded, implement navigation and pass in the prop
+      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID)); // hardcoded, implement navigation and pass in the prop
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
     } catch (error) {
@@ -29,9 +35,10 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
     const getJobs = async () => {
       try {
         //const jobsSnapshot = await getDoc(doc(db, "jobs", jobId));
-        const jobsSnapshot = await getDoc(
-          doc(db, "jobs", "4QwjqeYxPRuDw7fOnKBj")
-        ); // hardcoded, implement navigation and pass in the prop
+        // const jobsSnapshot = await getDoc(
+        //   doc(db, "jobs", "4QwjqeYxPRuDw7fOnKBj")
+        // ); // hardcoded, implement navigation and pass in the prop
+        const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
         const jobData = jobsSnapshot.data();
         setJob(jobData);
         console.log(jobData);
@@ -69,7 +76,7 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
                 </Typography>
                 <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
               </Stack>
-              <Typography sx={{ fontSize: 16 }}>
+              {/* <Typography sx={{ fontSize: 16 }}>
                 {new Date(
                   job.deadline.seconds * 1000 +
                     job.deadline.nanoseconds / 1000000
@@ -79,7 +86,7 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
                   day: "numeric",
                   timeZone: "UTC",
                 })}
-              </Typography>
+              </Typography> */}
             </Box>
 
             <Divider />
@@ -102,6 +109,22 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
           <Box sx={{ m: 2 }}>
             <Box sx={{ pb: 2 }}>
               <Typography variant="h4">Applicants</Typography>
+              {/* <Typography>{job.applicants}</Typography> */}
+              {/* <Typography>
+                {job.applicants.map((el) => (
+                  <Typography> {el} </Typography>
+                ))}
+              </Typography> */}
+              {/* {console.log(applicants)} */}
+              {/* {applicants.length > 0 && applicants != null ? ( */}
+              {/* <Typography>
+                {job.applicants.map((el) => (
+                  <Typography> {el} </Typography>
+                ))}
+              </Typography> */}
+              {/* ) : (
+                <Typography>No applicants yet :/</Typography>
+              )} */}
             </Box>
           </Box>
         </Card>
