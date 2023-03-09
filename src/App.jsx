@@ -26,6 +26,7 @@ import { MyJobs } from "./Pages/Job/MyJobs";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
+import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 
 const App = () => {
   const hello = "helloo";
@@ -85,6 +86,7 @@ const App = () => {
             <Route path="/createJob" exact element={<CreateJob />} />
             <Route path="/browseJobs" exact element={<BrowseJobs />} />
             <Route path="/myJobs" exact element={<MyJobs />} />
+            <Route path="/jobApplication" exact element={<JobApplication />} />
           </Routes>
         </Router>
       </div>
