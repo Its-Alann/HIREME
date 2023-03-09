@@ -56,7 +56,7 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" alignItems="flex-start" justifyContent="center">
       {/* Job information */}
       <Box sx={{ minWidth: 700, p: 5 }}>
         <Card variant="outlined">
@@ -69,7 +69,7 @@ export const JobPostingApplicants = (/*{ jobId }*/) => {
                 </Typography>
                 <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
               </Stack>
-              <Typography sx={{ fontSize: 14 }}>
+              <Typography sx={{ fontSize: 16 }}>
                 {new Date(
                   job.deadline.seconds * 1000 +
                     job.deadline.nanoseconds / 1000000
