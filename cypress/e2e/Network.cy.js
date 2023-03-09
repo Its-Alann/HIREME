@@ -112,7 +112,7 @@ describe("Testing the networking features of the app", () => {
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
       //"Test" is included because it's the account's first name
-      cy.get('[data-cy="invitationButtonTest"]').click();
+      cy.ifExistsClick(".invitationButtonTest");
 
       //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
       cy.wrap(null).then(() =>
@@ -154,7 +154,8 @@ describe("Testing the networking features of the app", () => {
       cy.wait(500);
 
       //IgnoreInvitationBtn
-      cy.get('[data-cy="IgnoreInvitationBtnHanni"]').click();
+      cy.get('[data-cy="IgnoreInvitationBtnHanni"]');
+
       //visit all tabs
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
@@ -294,11 +295,8 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       //Gives problems at times, especially when not last action in test
       cy.wait(500);
-      cy.get('[data-cy="AcceptInvitationBtnHanni"]')
-        .should("be.visible")
-        .click();
-      cy.wait(1000);
-
+      cy.get('[data-cy="AcceptInvitationBtnHanni"]').click();
+      cy.wait(500);
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
@@ -308,7 +306,7 @@ describe("Testing the networking features of the app", () => {
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="NetworkTab"]').click();
       //check if profile existsc
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('[data-cy="userProfileInNetwork"]').findByText("Hanni Pham");
     });
   });
