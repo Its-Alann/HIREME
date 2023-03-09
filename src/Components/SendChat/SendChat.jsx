@@ -205,9 +205,10 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
           align="center"
           justifyContent="center"
           sx={{ display: "flex", height: 56 }}
+          data-cy="messagingGrid"
         >
           <IconButton
-            data-cy="send-button"
+            data-cy="sendUploadBtn"
             color="primary"
             aria-label="add"
             type="button"

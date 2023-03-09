@@ -26,7 +26,9 @@ describe("example to-do app", () => {
 
       //send Hi message
       cy.get("#message-input").should("be.visible").type("Hi");
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="messagingGrid"]').within(() =>
+        cy.get("Button").click()
+      );
       cy.get("#message-chats").last().should("contain", "Hi");
 
       //send image
@@ -36,7 +38,9 @@ describe("example to-do app", () => {
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
         .selectFile(fileName, { force: true });
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="messagingGrid"]').within(() =>
+        cy.get("Button").click()
+      );
     });
 
     it("shows message if user is not signed in", () => {
