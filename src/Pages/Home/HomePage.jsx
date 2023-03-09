@@ -5,6 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { auth, app } from "../../Firebase/firebase";
@@ -188,6 +189,15 @@ const HomePage = () => {
                     </div>
                   )}
                 </Grid>
+                <div>
+                  <Link
+                    onClick={() => {
+                      window.location.href = "/createRecruiter";
+                    }}
+                  >
+                    I&apos;m a recruiter
+                  </Link>
+                </div>
               </Grid>
             </Grid>
           ) : (
