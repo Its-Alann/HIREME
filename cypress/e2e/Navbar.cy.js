@@ -218,6 +218,7 @@ describe("Test the navbar component", () => {
       cy.get('[data-cy="phone-menu-test"]').within(() =>
         cy.get("Button").click()
       );
+      cy.wait(500);
       cy.get('[data-cy="Home-phone-test"]').click();
       cy.wait(500);
       cy.url().should("eq", "http://localhost:3000/");

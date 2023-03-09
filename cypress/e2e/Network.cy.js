@@ -103,11 +103,9 @@ describe("Testing the networking features of the app", () => {
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click();
       //if button doesn't exist, check specific button
-      try {
-        cy.get('[data-cy="invitationButton"]').should("be.visible");
-      } catch (err) {
-        cy.get('[data-cy="invitationButtonTest"]').click();
-      }
+
+      cy.ifExistsClick(".invitationButton");
+      cy.ifExistsClick(".invitationButtonTest");
     });
 
     it("removes the RECEIVED invitation of hypeboy from accountcreation (HAS THE FIRST NAME TEST) and the connection between the two accounts", () => {
@@ -295,6 +293,7 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="SentInvitationTab"]').click();
       cy.get('[data-cy="ReceivedInvitationTab"]').click();
       //Gives problems at times, especially when not last action in test
+      cy.wait(500);
       cy.get('[data-cy="AcceptInvitationBtnHanni"]')
         .should("be.visible")
         .click();
@@ -308,7 +307,8 @@ describe("Testing the networking features of the app", () => {
     it("verify user has been added to the network once added", () => {
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="NetworkTab"]').click();
-      //check if profile exists
+      //check if profile existsc
+      cy.wait(500);
       cy.get('[data-cy="userProfileInNetwork"]').findByText("Hanni Pham");
     });
   });
