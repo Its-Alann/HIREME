@@ -24,10 +24,13 @@ export const CreateJob = () => {
     deadline: new Date(),
     description: "",
     location: "",
+    country: "",
+    city: "",
     owner: "",
     publishedAt: new Date(),
     requirement: "",
     title: "",
+    benefits: "",
   });
   const [companyName, setCompanyName] = React.useState({
     name: "",
@@ -152,7 +155,45 @@ export const CreateJob = () => {
             />
           </Box>
 
-          <Box>
+          <Stack direction="row" justifyContent="flex-start">
+            <Box sx={{ pr: 2 }}>
+              <Typography>City</Typography>
+              <TextField
+                required
+                id="TextField-City"
+                variant="standard"
+                placeholder="City"
+                fullWidth
+                value={jobInformation.location}
+                onChange={(e) =>
+                  setJobInformation({
+                    ...jobInformation,
+                    city: e.target.value,
+                  })
+                }
+              />
+            </Box>
+
+            <Box>
+              <Typography>Country</Typography>
+              <TextField
+                required
+                id="TextField-Country"
+                variant="standard"
+                placeholder="Country"
+                fullWidth
+                value={jobInformation.location}
+                onChange={(e) =>
+                  setJobInformation({
+                    ...jobInformation,
+                    country: e.target.value,
+                  })
+                }
+              />
+            </Box>
+          </Stack>
+
+          {/* <Box>
             <Typography>Location</Typography>
             <TextField
               required
@@ -168,7 +209,7 @@ export const CreateJob = () => {
                 })
               }
             />
-          </Box>
+          </Box> */}
 
           <Box>
             <Typography>Job description</Typography>
@@ -216,6 +257,23 @@ export const CreateJob = () => {
                 setJobInformation({
                   ...jobInformation,
                   requirement: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box>
+            <Typography>Benefits</Typography>
+            <TextField
+              id="TextField-Benefits"
+              fullWidth
+              multiline
+              rows={2}
+              value={jobInformation.benefits}
+              onChange={(e) =>
+                setJobInformation({
+                  ...jobInformation,
+                  benefits: e.target.value,
                 })
               }
             />
