@@ -27,6 +27,7 @@ import { EditJob } from "./Pages/Job/EditJob";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
+import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 
 const App = () => {
   const hello = "helloo";
@@ -87,6 +88,11 @@ const App = () => {
             <Route path="/browseJobs" exact element={<BrowseJobs />} />
             <Route path="/myJobs" exact element={<MyJobs />} />
             <Route path="/editJob/:jobID" exact element={<EditJob />} />
+            <Route
+              path="/viewJobPostingApplicants"
+              exact
+              element={<JobPostingApplicants />}
+            />
           </Routes>
         </Router>
       </div>
