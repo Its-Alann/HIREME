@@ -89,7 +89,12 @@ export const NetworkPossibleConnections = () => {
           <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>
             People you may know
           </Typography>
-          <Box justifyContent="center" alignItems="center" display="flex">
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            display="flex"
+            data-cy="connectionsBox"
+          >
             {nonConnectedUsersArr.length > 0 && nonConnectedUsersArr != null ? (
               <Grid
                 container
@@ -97,12 +102,14 @@ export const NetworkPossibleConnections = () => {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
+                data-cy="connectionGrid"
               >
                 {nonConnectedUsersArr.map((possibleConnectionUserID) => (
                   <Grid item>
                     <PossibleConnectionCard
                       possibleConnectionUserId={possibleConnectionUserID.id}
                       currentUser={currentUser.email}
+                      data-cy={`gridItem${possibleConnectionUserID}`}
                     />
                   </Grid>
                 ))}
