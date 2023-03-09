@@ -17,7 +17,8 @@ import {
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
+// import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
+import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 
 export const BrowseJobs = () => {
@@ -151,6 +152,7 @@ export const BrowseJobs = () => {
             <Box key={job.documentID} sx={{ py: 1 }}>
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
+                  {console.log(job)}
                   <Typography variant="h4">{job.title}</Typography>
 
                   <Typography>{companiesName[job.companyID]}</Typography>
@@ -179,7 +181,12 @@ export const BrowseJobs = () => {
                       sx={{ my: 1 }}
                       id={`Button-${job.documentID}`}
                     >
-                      View job (NOT IMPLEMENTED)
+                      <Link
+                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job (NOT IMPLEMENTED)
+                      </Link>
                     </Button>
                     <Typography>
                       Deadline:{" "}
