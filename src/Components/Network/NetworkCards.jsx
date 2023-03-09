@@ -10,6 +10,13 @@ import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -52,6 +59,15 @@ const ColorButtonRed = styled(Button)(({ theme }) => ({
 
 export const NetworkCards = ({ connectedUserID, currentUser }) => {
   const [connectedUser, setConnectedUser] = useState([]);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
 
   const removeConnection = async () => {
     const currentUserNetworkRef = doc(db, "network", currentUser);
@@ -120,7 +136,6 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
               <Box display="flex" flexDirection="column">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
-
                   <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
                   <ColorButtonLightBlue variant="outlined">
                     Message
@@ -128,10 +143,36 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                   <ColorButtonRed
                     size="medium"
                     variant="outlined"
-                    onClick={removeConnection}
+                    onClick={handleClickOpen}
                   >
                     Remove Connection
                   </ColorButtonRed>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Remove{" "}
+                      {`${connectedUser?.values?.firstName ?? ""} ${
+                        connectedUser?.values?.lastname ?? ""
+                      }`}
+                      from your connections?
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        The user will not be notified that you have removed him
+                        from your connections
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={removeConnection} autoFocus>
+                        Remove user
+                      </Button>
+                      <Button onClick={handleClose}>Cancel</Button>
+                    </DialogActions>
+                  </Dialog>
                 </CardActions>
               </Box>
             </>
