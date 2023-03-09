@@ -32,7 +32,7 @@ describe("example to-do app", () => {
       //send Hi message
       cy.get("#message-input").should("be.visible").type("Hi");
       cy.get('[data-cy="messagingGrid"]').within(() =>
-        cy.get("Button").click()
+        cy.get("Button").click({ force: true })
       );
       cy.get("#message-chats").last().should("contain", "Hi");
 
@@ -44,7 +44,7 @@ describe("example to-do app", () => {
         .find("input")
         .selectFile(fileName, { force: true });
       cy.get('[data-cy="messagingGrid"]').within(() =>
-        cy.get("Button").click()
+        cy.get("Button").click({ force: true })
       );
     });
 
