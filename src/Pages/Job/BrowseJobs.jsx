@@ -143,7 +143,6 @@ export const BrowseJobs = () => {
         </Typography>
 
         {jobs.map((job) => {
-          // Anti eslint
           const hello = "hello";
 
           // do this to show what is inside job
@@ -163,13 +162,6 @@ export const BrowseJobs = () => {
                   {/* do we need to show company id? */}
                   {/* <Typography>Company ID: {job.companyID}</Typography> */}
 
-                  {/* <Typography>
-                    Published At:{" "}
-                    {new Date(
-                      job.publishedAt.seconds * 1000 +
-                        job.publishedAt.nanoseconds / 1000000
-                    ).toDateString()}
-                  </Typography> */}
                   <Stack
                     direction="row"
                     justifyContent="space-between"
