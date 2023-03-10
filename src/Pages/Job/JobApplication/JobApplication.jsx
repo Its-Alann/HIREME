@@ -55,67 +55,151 @@ const JobApplication = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container>
-        <Grid item md={12} sm={12} xs={12}>
-          <Typography variant="h3"> Your Application </Typography>
-        </Grid>
-        <Grid item md={12} sm={12} xs={12}>
-          <Typography variant="h6">
-            You are applying for: Nuance Product Manager
-          </Typography>
-        </Grid>
-        <Grid item>
-          <List>
-            <ListItem disableGutters>
-              <ListItemText sx={{ mr: 5 }}> Resume </ListItemText>
-              <FileUpload
-                onFileChange={(e) => onFileChange(e, "resume")}
-                data-testid="upload-resume"
-              />
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText sx={{ mr: 5 }}> Cover Letter </ListItemText>
-              <FileUpload
-                onFileChange={(e) => onFileChange(e, "coverLetter")}
-                data-testid="upload-coverLetter"
-              />
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText sx={{ mr: 5 }}> Transcript </ListItemText>
-              <FileUpload
-                onFileChange={(e) => onFileChange(e, "transcript")}
-                data-testid="upload-transcript"
-              />
-            </ListItem>
-          </List>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12} spacing={5}>
-          <Grid item>
-            <TextField
-              id="standard-basic"
-              label="First Name"
-              variant="standard"
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="standard-basic"
-              label="Last Name"
-              variant="standard"
-            />
-          </Grid>
-        </Grid>
-        <Grid item md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" variant="standard" />
-        </Grid>
-        <Grid item md={12} sm={12} xs={12} sx={{ my: 5 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            data-testid="submit-button"
+      <Grid
+        item
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          maxWidth: 600,
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            
+            bgcolor: "white",
+            maxWidth: 600,
+          }}
+        >
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            Submit
-          </Button>
+            <Typography variant="h3"> Your Application </Typography>
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">
+              You are applying for: Nuance Product Manager
+            </Typography>
+          </Grid>
+          <Grid item>
+            <List>
+              <ListItem disableGutters>
+                <ListItemText sx={{ mr: 5 }}> Resume </ListItemText>
+                <FileUpload
+                  onFileChange={(e) => onFileChange(e, "resume")}
+                  data-testid="upload-resume"
+                />
+              </ListItem>
+              <ListItem disableGutters>
+                <ListItemText sx={{ mr: 5 }}> Cover Letter </ListItemText>
+                <FileUpload
+                  onFileChange={(e) => onFileChange(e, "coverLetter")}
+                  data-testid="upload-coverLetter"
+                />
+              </ListItem>
+              <ListItem disableGutters>
+                <ListItemText sx={{ mr: 5 }}> Transcript </ListItemText>
+                <FileUpload
+                  onFileChange={(e) => onFileChange(e, "transcript")}
+                  data-testid="upload-transcript"
+                />
+              </ListItem>
+            </List>
+          </Grid>
+          {/* <Grid container md={12} sm={12} xs={12} spacing={5}>
+          <Grid item>
+            <TextField id="standard-basic" label="Email" variant="standard" />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="standard-basic"
+              label="Phone Number"
+              variant="standard"
+            />
+          </Grid>
+        </Grid> */}
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TextField id="standard-basic" label="Email" variant="standard" />
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TextField
+              id="standard-basic"
+              label="Phone Number"
+              variant="standard"
+            />
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TextField id="standard-basic" label="Address" variant="standard" />
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              my: 5,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              data-testid="submit-button"
+            >
+              Submit
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </ThemeProvider>
