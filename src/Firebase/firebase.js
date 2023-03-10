@@ -37,6 +37,6 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const storage = getStorage(app);
 
-connectAuthEmulator(auth, "http://localhost:9099");
+//connectAuthEmulator(auth, "http://localhost:9099");
 
 export { auth, provider, app, db, storage };
