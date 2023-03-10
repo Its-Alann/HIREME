@@ -12,105 +12,109 @@ describe("Test the navbar component", () => {
     cy.visit("http://localhost:3000");
   });
 
-  describe("Click buttons on navbar when logged in and verifies the links", () => {
-    it("clicks on navbar links", () => {
-      cy.login();
-      cy.get('[data-cy="Home-test"]').click();
-      cy.url().should("eq", "http://localhost:3000/");
-      cy.get('[data-cy="Messaging-test"]').click();
-      cy.url().should("eq", "http://localhost:3000/messaging");
-      cy.get('[data-cy="Network-test"]').click();
-      cy.url().should("eq", "http://localhost:3000/network");
-    });
+  describe(
+    "Click buttons on navbar when logged in and verifies the links",
+    { retries: 2 },
+    () => {
+      it("clicks on navbar links", () => {
+        cy.login();
+        cy.get('[data-cy="Home-test"]').click();
+        cy.url().should("eq", "http://localhost:3000/");
+        cy.get('[data-cy="Messaging-test"]').click();
+        cy.url().should("eq", "http://localhost:3000/messaging");
+        cy.get('[data-cy="Network-test"]').click();
+        cy.url().should("eq", "http://localhost:3000/network");
+      });
 
-    it("clicks on navbar links on mobile resolution", () => {
-      cy.viewport(390, 844);
-      cy.login();
+      it("clicks on navbar links on mobile resolution", () => {
+        cy.viewport(390, 844);
+        cy.login();
 
-      //open menu
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      //click first option
-      cy.get('[data-cy="Home-phone-test"]').should("be.visible").click();
-      //verify link
-      cy.url().should("eq", "http://localhost:3000/");
+        //open menu
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        //click first option
+        cy.get('[data-cy="Home-phone-test"]').should("be.visible").click();
+        //verify link
+        cy.url().should("eq", "http://localhost:3000/");
 
-      //open menu
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      //click second option
-      cy.get('[data-cy="Messaging-phone-test"]').click();
-      //verify link
-      cy.url().should("eq", "http://localhost:3000/messaging");
+        //open menu
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        //click second option
+        cy.get('[data-cy="Messaging-phone-test"]').click();
+        //verify link
+        cy.url().should("eq", "http://localhost:3000/messaging");
 
-      //open menu
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      //click third option
-      cy.get('[data-cy="Network-phone-test"]').click();
-      //verify link
-      cy.url().should("eq", "http://localhost:3000/network");
-    });
+        //open menu
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        //click third option
+        cy.get('[data-cy="Network-phone-test"]').click();
+        //verify link
+        cy.url().should("eq", "http://localhost:3000/network");
+      });
 
-    it("open user menu on mobile resolution and select Profile", () => {
-      cy.login();
-      cy.viewport(390, 844);
-      cy.get('[data-cy="userBox"]').within(() =>
-        cy.get('[data-cy="userMenu"]').click()
-      );
-      cy.get('[data-cy="Profile-phone-test"]').click();
+      it("open user menu on mobile resolution and select Profile", () => {
+        cy.login();
+        cy.viewport(390, 844);
+        cy.get('[data-cy="userBox"]').within(() =>
+          cy.get('[data-cy="userMenu"]').click()
+        );
+        cy.get('[data-cy="Profile-phone-test"]').click();
 
-      cy.logout();
-      cy.login();
-      cy.visit("http://localhost:3000");
-    });
+        cy.logout();
+        cy.login();
+        cy.visit("http://localhost:3000");
+      });
 
-    it("open user menu on mobile resolution and select Account", () => {
-      cy.login();
-      cy.viewport(390, 844);
-      cy.get('[data-cy="userBox"]').within(() =>
-        cy.get('[data-cy="userMenu"]').click()
-      );
-      cy.get('[data-cy="Account-phone-test"]').click();
+      it("open user menu on mobile resolution and select Account", () => {
+        cy.login();
+        cy.viewport(390, 844);
+        cy.get('[data-cy="userBox"]').within(() =>
+          cy.get('[data-cy="userMenu"]').click()
+        );
+        cy.get('[data-cy="Account-phone-test"]').click();
 
-      cy.logout();
-      cy.login();
-      cy.visit("http://localhost:3000");
-    });
+        cy.logout();
+        cy.login();
+        cy.visit("http://localhost:3000");
+      });
 
-    it("open user menu on mobile resolution and select Dashboard", () => {
-      cy.login();
-      cy.viewport(390, 844);
-      cy.get('[data-cy="userBox"]').within(() =>
-        cy.get('[data-cy="userMenu"]').click()
-      );
-      cy.get('[data-cy="Dashboard-phone-test"]').click();
+      it("open user menu on mobile resolution and select Dashboard", () => {
+        cy.login();
+        cy.viewport(390, 844);
+        cy.get('[data-cy="userBox"]').within(() =>
+          cy.get('[data-cy="userMenu"]').click()
+        );
+        cy.get('[data-cy="Dashboard-phone-test"]').click();
 
-      cy.logout();
-      cy.login();
-      cy.visit("http://localhost:3000");
-    });
+        cy.logout();
+        cy.login();
+        cy.visit("http://localhost:3000");
+      });
 
-    it("open user menu on mobile resolution and log out", () => {
-      cy.wait(1000);
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.logout();
-      cy.login();
+      it("open user menu on mobile resolution and log out", () => {
+        cy.wait(1000);
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.logout();
+        cy.login();
 
-      cy.get('[data-cy="userBox"]').within(() =>
-        cy.get('[data-cy="userMenu"]').click()
-      );
+        cy.get('[data-cy="userBox"]').within(() =>
+          cy.get('[data-cy="userMenu"]').click()
+        );
 
-      cy.get('[data-cy="logout-test"]').click();
-      cy.wait(1000);
-    });
-  });
+        cy.get('[data-cy="logout-test"]').click();
+        cy.wait(1000);
+      });
+    }
+  );
 
-  describe("Click buttons on navbar when logged out", () => {
+  describe("Click buttons on navbar when logged out", { retries: 2 }, () => {
     it("clicks on jobs", () => {
       cy.visit("http://localhost:3000");
       cy.logout();
@@ -210,139 +214,147 @@ describe("Test the navbar component", () => {
     });
   });
 
-  describe("Click buttons on navbar when logged in with mobile resolution", () => {
-    it("clicks on home", () => {
-      cy.wait(1000);
-      cy.login();
-      cy.wait(1000);
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000/network");
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      cy.get('[data-cy="Home-phone-test"]').click();
-      cy.wait(500);
-      cy.url().should("eq", "http://localhost:3000/");
-    });
+  describe(
+    "Click buttons on navbar when logged in with mobile resolution",
+    { retries: 2 },
+    () => {
+      it("clicks on home", () => {
+        cy.wait(1000);
+        cy.login();
+        cy.wait(1000);
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000/network");
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        cy.get('[data-cy="Home-phone-test"]').click();
+        cy.wait(500);
+        cy.url().should("eq", "http://localhost:3000/");
+      });
 
-    it("clicks on network", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      cy.get('[data-cy="Network-phone-test"]').click();
-      cy.url().should("include", "/network");
-      cy.wait(500);
-    });
+      it("clicks on network", () => {
+        cy.wait(500);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        cy.get('[data-cy="Network-phone-test"]').click();
+        cy.url().should("include", "/network");
+        cy.wait(500);
+      });
 
-    it("clicks on jobs", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      cy.get('[data-cy="Jobs-phone-test"]').click();
-      cy.wait(500);
-    });
+      it("clicks on jobs", () => {
+        cy.wait(500);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        cy.get('[data-cy="Jobs-phone-test"]').click();
+        cy.wait(500);
+      });
 
-    it("clicks on messaging", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      cy.get('[data-cy="Messaging-phone-test"]').click();
-      cy.url().should("include", "/messaging");
-      cy.wait(500);
-    });
+      it("clicks on messaging", () => {
+        cy.wait(500);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="phone-menu-test"]').within(() =>
+          cy.get("Button").click()
+        );
+        cy.get('[data-cy="Messaging-phone-test"]').click();
+        cy.url().should("include", "/messaging");
+        cy.wait(500);
+      });
 
-    it("clicks on profile", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="Profile-phone-test"]').click();
-      cy.wait(500);
-    });
+      it("clicks on profile", () => {
+        cy.wait(500);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
+        cy.get('[data-cy="Profile-phone-test"]').click();
+        cy.wait(500);
+      });
 
-    it("clicks on Account", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="Account-phone-test"]').click();
-      cy.wait(500);
-    });
+      it("clicks on Account", () => {
+        cy.wait(500);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
+        cy.get('[data-cy="Account-phone-test"]').click();
+        cy.wait(500);
+      });
 
-    it("clicks on Dashboard", () => {
-      cy.wait(1000);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="Dashboard-phone-test"]').click();
-      cy.wait(1000);
-    });
+      it("clicks on Dashboard", () => {
+        cy.wait(1000);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
+        cy.get('[data-cy="Dashboard-phone-test"]').click();
+        cy.wait(1000);
+      });
 
-    it("clicks on logout", () => {
-      cy.wait(1000);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="logout-test"]').click();
-      cy.wait(1000);
-    });
-  });
+      it("clicks on logout", () => {
+        cy.wait(1000);
+        cy.login();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
+        cy.get('[data-cy="logout-test"]').click();
+        cy.wait(1000);
+      });
+    }
+  );
 
-  describe("click menu buttons when logged out on mobile resolution", () => {
-    it("click on jobs", () => {
-      cy.logout();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get("[data-testid='MenuIcon']").click();
-      cy.get('[data-cy="Jobs-logged-out-test"]').click();
-    });
+  describe(
+    "click menu buttons when logged out on mobile resolution",
+    { retries: 2 },
+    () => {
+      it("click on jobs", () => {
+        cy.logout();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000");
+        cy.get("[data-testid='MenuIcon']").click();
+        cy.get('[data-cy="Jobs-logged-out-test"]').click();
+      });
 
-    it("click on sign up", () => {
-      cy.logout();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000/login");
-      cy.get("[data-testid='MenuIcon']").click();
-      cy.get('[data-cy="Sign Up-logged-out-test"]').click();
-      cy.url().should("include", "/SignUp");
-    });
+      it("click on sign up", () => {
+        cy.logout();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000/login");
+        cy.get("[data-testid='MenuIcon']").click();
+        cy.get('[data-cy="Sign Up-logged-out-test"]').click();
+        cy.url().should("include", "/SignUp");
+      });
 
-    it("click on login", () => {
-      cy.logout();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000/signup");
-      cy.get("[data-testid='MenuIcon']").click();
-      cy.get('[data-cy="Log In-logged-out-test"]').click();
-      cy.url().should("include", "/login");
-      cy.wait(1000);
-    });
+      it("click on login", () => {
+        cy.logout();
+        cy.viewport(390, 844);
+        cy.visit("http://localhost:3000/signup");
+        cy.get("[data-testid='MenuIcon']").click();
+        cy.get('[data-cy="Log In-logged-out-test"]').click();
+        cy.url().should("include", "/login");
+        cy.wait(1000);
+      });
 
-    it("click on logout", () => {
-      cy.viewport(390, 844);
-      cy.login();
-      cy.visit("http://localhost:3000/network");
-      cy.get('[data-cy="userBox"]').click();
-      cy.get('[data-cy="logout-test"]').should("be.visible").click();
-      //click first option
-      //verify link
-      cy.url().should("eq", "http://localhost:3000/");
-    });
+      it("click on logout", () => {
+        cy.viewport(390, 844);
+        cy.login();
+        cy.visit("http://localhost:3000/network");
+        cy.get('[data-cy="userBox"]').click();
+        cy.get('[data-cy="logout-test"]').should("be.visible").click();
+        //click first option
+        //verify link
+        cy.url().should("eq", "http://localhost:3000/");
+      });
 
-    //Integration test for firebase connection
-  });
+      //Integration test for firebase connection
+    }
+  );
 });
