@@ -70,17 +70,19 @@ export const JobPostingApplicants = () => {
                 </Typography>
                 <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
               </Stack>
-              {/* <Typography sx={{ fontSize: 16 }}>
-                {new Date(
-                  job.deadline.seconds * 1000 +
-                    job.deadline.nanoseconds / 1000000
-                ).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  timeZone: "UTC",
-                })}
-              </Typography> */}
+              {job.deadline && (
+                <Typography sx={{ fontSize: 16 }}>
+                  {new Date(
+                    (job.deadline.seconds ?? 0) * 1000 +
+                      (job.deadline.nanoseconds ?? 0) / 1000000
+                  ).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  })}
+                </Typography>
+              )}
             </Box>
 
             <Divider />
