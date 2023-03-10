@@ -326,6 +326,7 @@ describe("Testing the networking features of the app", () => {
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
         cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
+        cy.wait(1000);
         //Gives problems at times, especially when not last action in test
         cy.get('[data-cy="AcceptInvitationBtnHanni"]')
           .should("be.visible")
@@ -341,6 +342,7 @@ describe("Testing the networking features of the app", () => {
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="NetworkTab"]').click({ force: true });
         //check if profile exists
+        cy.wait(1000);
         cy.get('[data-cy="userProfileInNetwork"]').findByText("Hanni Pham");
       });
     }
