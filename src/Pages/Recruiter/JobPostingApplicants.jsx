@@ -19,6 +19,7 @@ export const JobPostingApplicants = () => {
 
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
+  const [applicants, setApplicants] = React.useState({});
 
   const getJobData = async () => {
     try {
@@ -26,6 +27,7 @@ export const JobPostingApplicants = () => {
       const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
       const jobData = jobsSnapshot.data();
       setJob(jobData);
+
       console.log(jobData);
     } catch (error) {
       console.log(error);
@@ -43,10 +45,53 @@ export const JobPostingApplicants = () => {
     }
   };
 
+  const getApplicationStatuses = async () => {
+    const listOfApplicants = job.applicants;
+    console.log(listOfApplicants);
+
+    const tempArray = [];
+
+    if (listOfApplicants != null) {
+      await Promise.all(
+        listOfApplicants.map(async (applicant) => {
+          const applicantSnapshot = await getDoc(
+            doc(db, "applications", applicant)
+          );
+          const applicantApplications = applicantSnapshot.data().jobs;
+
+          const applicantNameSnapshot = await getDoc(
+            doc(db, "userProfiles", applicant)
+          );
+
+          let applicationStatus = "";
+          applicantApplications.forEach((jobApplication) => {
+            if (jobApplication.jobID === pageJobID) {
+              applicationStatus = jobApplication.status;
+            }
+          });
+
+          tempArray.push({
+            applicantStatus: applicationStatus,
+            applicantFirstName: applicantNameSnapshot.data().values.firstName,
+            applicantLasttName: applicantNameSnapshot.data().values.lastName,
+          });
+        })
+      );
+    } else {
+      console.log("no applicants");
+    }
+    setApplicants(tempArray);
+    // console.log(tempArray);
+  };
+
   useEffect(() => {
     getJobData();
-    getCompanyName();
+    getCompanyName(); // try to fix this
   }, []);
+
+  useEffect(() => {
+    getApplicationStatuses();
+  }, [job]);
 
   // For application statuses
   // 1. Get the array of applications from jobs
@@ -59,7 +104,7 @@ export const JobPostingApplicants = () => {
   return (
     <Stack direction="row" alignItems="flex-start" justifyContent="center">
       {/* Job information */}
-      <Box sx={{ minWidth: 700, p: 5 }}>
+      <Box sx={{ width: 700, p: 5 }}>
         <Card variant="outlined">
           <Box sx={{ m: 2 }}>
             <Box sx={{ pb: 2 }}>
@@ -98,27 +143,27 @@ export const JobPostingApplicants = () => {
         </Card>
       </Box>
       {/* List of applicants and their statuses */}
-      <Box sx={{ minWidth: 500, p: 5 }}>
+      <Box sx={{ width: 500, p: 5 }}>
         <Card variant="outlined">
           <Box sx={{ m: 2 }}>
             <Box sx={{ pb: 2 }}>
               <Typography variant="h4">Applicants</Typography>
-              {/* <Typography>{job.applicants}</Typography> */}
-              {/* <Typography>
-                {job.applicants.map((el) => (
-                  <Typography> {el} </Typography>
-                ))}
-              </Typography> */}
-              {/* {console.log(applicants)} */}
-              {/* {applicants.length > 0 && applicants != null ? ( */}
-              {/* <Typography>
-                {job.applicants.map((el) => (
-                  <Typography> {el} </Typography>
-                ))}
-              </Typography> */}
-              {/* ) : (
-                <Typography>No applicants yet :/</Typography>
-              )} */}
+
+              {applicants.map((applicant) => {
+                const hello = "hello";
+
+                return (
+                  <Stack direction="row">
+                    <Typography>
+                      {`${applicant.applicantFirstName} ${applicant.applicantLastName}`}
+                    </Typography>
+
+                    <Typography>{applicant.applicantStatus}</Typography>
+                  </Stack>
+                );
+              })}
+              {console.log(applicants)}
+              {console.log(typeof applicants)}
             </Box>
           </Box>
         </Card>
