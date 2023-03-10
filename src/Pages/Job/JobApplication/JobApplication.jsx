@@ -25,12 +25,16 @@ const JobApplication = () => {
   });
 
   // Define state variables for the form input fields and files to be uploaded
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
   const [transcript, setTranscript] = useState(null);
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phonePattern = /^\d{10}$/;
+  const addressPattern = /^.+$/;
 
   // Event handler function to update the state variables when a file is selected for upload
   const onFileChange = (e, fileType) => {
@@ -52,6 +56,35 @@ const JobApplication = () => {
         break;
 
       default:
+    }
+  };
+
+  const onSubmit = () => {
+    if (
+      (emailPattern.test(email) &&
+        phonePattern.test(phoneNumber) &&
+        addressPattern.test(address)) === false
+    ) {
+      if (!emailPattern.test(email)) {
+        console.log("enter a valid email format");
+      }
+      if (!phonePattern.test(phoneNumber)) {
+        console.log("enter a valid phone number");
+      }
+      if (!addressPattern.test(address)) {
+        console.log("enter a valid address");
+      }
+    } else {
+      console.log("completed");
+      console.log(
+        "Data packet",
+        resume,
+        coverLetter,
+        transcript,
+        phoneNumber,
+        address,
+        email
+      );
     }
   };
 
@@ -110,17 +143,56 @@ const JobApplication = () => {
           </List>
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" variant="standard" />
-        </Grid>
-        <Grid item md={12} sm={12} xs={12}>
           <TextField
-            id="standard-basic"
-            label="Phone Number"
+            label="Email"
             variant="standard"
+            InputLabelProps={{ required: true }}
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailPattern.test(email) === false}
+            helperText={
+              emailPattern.test(email) === false
+                ? "Please enter a valid email"
+                : ""
+            }
           />
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Address" variant="standard" />
+          <TextField
+            label="Phone Number"
+            variant="standard"
+            InputLabelProps={{ required: true }}
+            inputProps={{
+              onKeyPress: (event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              },
+              maxLength: 10,
+              inputMode: "numeric",
+            }}
+            placeholder="123-123-1234"
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            error={phonePattern.test(phoneNumber) === false}
+            helperText={
+              phonePattern.test(phoneNumber) === false
+                ? "Please enter a valid number"
+                : ""
+            }
+          />
+        </Grid>
+        <Grid item md={12} sm={12} xs={12}>
+          <TextField
+            label="Address"
+            variant="standard"
+            InputLabelProps={{ required: true }}
+            onChange={(e) => setAddress(e.target.value)}
+            error={addressPattern.test(address) === false}
+            helperText={
+              addressPattern.test(address) === false
+                ? "Please enter a valid address"
+                : ""
+            }
+          />
         </Grid>
         <Grid
           item
@@ -135,6 +207,7 @@ const JobApplication = () => {
             variant="contained"
             color="primary"
             data-testid="submit-button"
+            onClick={onSubmit}
           >
             Submit
           </Button>
