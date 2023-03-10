@@ -24,6 +24,7 @@ describe("Login to test account", () => {
 describe("Visit edit profile page", () => {
   it("clicks edit profile if account has already been created and get name", () => {
     cy.visit("http://localhost:3000/");
+    cy.wait(1000);
     cy.get('[data-testid="editProfileButton"]').click();
   });
 });
@@ -42,7 +43,7 @@ describe("Allows sign out", () => {
   it("clicks sign out button", () => {
     cy.visit("http://localhost:3000/");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(500);
+    cy.wait(1000);
     cy.get('[data-testid="homeLink"]').click();
   });
 });
