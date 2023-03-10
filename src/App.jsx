@@ -89,7 +89,7 @@ const App = () => {
             <Route path="/myJobs" exact element={<MyJobs />} />
             <Route path="/editJob/:jobID" exact element={<EditJob />} />
             <Route
-              path="/viewJobPostingApplicants/:jobID"
+              path="/viewJobPostingApplicants/:companyID/:jobID"
               exact
               element={<JobPostingApplicants />}
             />

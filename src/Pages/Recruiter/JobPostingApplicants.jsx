@@ -14,14 +14,28 @@ import { db } from "../../Firebase/firebase";
 
 export const JobPostingApplicants = () => {
   const pageID = useParams();
+  const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
 
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
 
-  const getCompanyName = async (companyID) => {
+  const getJobData = async () => {
     try {
-      const companySnapshot = await getDoc(doc(db, "companies", companyID)); // hardcoded, implement navigation and pass in the prop
+      // Gets the job data using the jobID from the URL
+      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
+      const jobData = jobsSnapshot.data();
+      setJob(jobData);
+      console.log(jobData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCompanyName = async () => {
+    try {
+      // Gets the name of the company from the companyID in job data
+      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID)); // hardcoded, implement navigation and pass in the prop
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
     } catch (error) {
@@ -30,27 +44,9 @@ export const JobPostingApplicants = () => {
   };
 
   useEffect(() => {
-    const getJobs = async () => {
-      try {
-        //const jobsSnapshot = await getDoc(doc(db, "jobs", jobId));
-        // const jobsSnapshot = await getDoc(
-        //   doc(db, "jobs", "4QwjqeYxPRuDw7fOnKBj")
-        // ); // hardcoded, implement navigation and pass in the prop
-        const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
-        const jobData = jobsSnapshot.data();
-        setJob(jobData);
-        // console.log(jobData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getJobs();
+    getJobData();
+    getCompanyName();
   }, []);
-
-  useEffect(() => {
-    getCompanyName(job.companyID);
-  }, [job]);
 
   // For application statuses
   // 1. Get the array of applications from jobs

@@ -183,7 +183,7 @@ export const BrowseJobs = () => {
                       id={`Button-${job.documentID}`}
                     >
                       <Link
-                        to={`/viewJobPostingApplicants/${job.documentID}`}
+                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
                         className="link"
                         underline="none"
                         style={{ textDecoration: "none" }}
