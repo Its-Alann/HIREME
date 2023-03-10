@@ -28,3 +28,9 @@ yarn-error.log*
 serviceAccount.json
 from-cypress.json
 from-jest.json
+
+database-debug.log
+firebase-debug.log
+firestore-debug.log
+pubsub-debug.log
+ui-debug.log
