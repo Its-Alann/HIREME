@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+import { doc, updateDoc, getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -213,7 +213,7 @@ const AccountCreationPage = () => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      await setDoc(doc(db, "userProfiles", user.email), {
+      await updateDoc(doc(db, "userProfiles", user.email), {
         values,
       });
     } catch (error) {

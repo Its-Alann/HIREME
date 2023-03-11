@@ -64,21 +64,20 @@ export const NetworkPossibleConnections = () => {
 
   useEffect(() => {
     getPossibleConnections(currentUser);
-    //console.log(currentUser);
+    console.log("networkPossibleConnections", currentUser);
   }, [currentUser]);
 
   useEffect(() => {
     try {
       //create a new array of users that isnt connected with the currentUser
-      allUsers.forEach(() => {
-        const newNonConnectedUsersArr = allUsers.filter(
-          (user) =>
-            !connectedUsersId?.includes(user?.id) &&
-            !sentInvitationsId?.includes(user?.id) &&
-            currentUser.email !== user.id
-        );
-        setNonConnectedUsersArr(newNonConnectedUsersArr);
-      });
+      const newNonConnectedUsersArr = allUsers.filter(
+        (user) =>
+          !connectedUsersId?.includes(user?.id) &&
+          !sentInvitationsId?.includes(user?.id) &&
+          currentUser.email !== user.id
+      );
+      setNonConnectedUsersArr(newNonConnectedUsersArr);
+      console.log("networkPossibleConnections", newNonConnectedUsersArr);
     } catch (error) {
       console.log(error);
     }

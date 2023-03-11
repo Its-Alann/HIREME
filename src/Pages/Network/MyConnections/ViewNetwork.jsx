@@ -26,6 +26,7 @@ export const ViewNetwork = () => {
             const docSnap = await getDoc(doc(db, "network", user.email));
             const userData = docSnap.data();
             setConnectedUsersId(userData.connectedUsers);
+            console.log("ViewNetwork", userData?.connectedUsers);
           } catch (err) {
             console.log("err:", err);
           }

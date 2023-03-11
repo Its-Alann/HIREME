@@ -26,7 +26,7 @@ export const ReceivedInvitation = () => {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
             setReceivedInvitations(userData.receivedInvitations);
-            console.log(receivedInvitations);
+            console.log("ReceivedInvitation", userData.receivedInvitations);
           } catch (err) {
             console.log(err);
           }
