@@ -15,6 +15,7 @@ import {
   arrayRemove,
   updateDoc,
   arrayUnion,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
@@ -79,11 +80,11 @@ export const ReceivedInvitationCard = ({
     );
 
     try {
-      await updateDoc(currentUserReceivedInvitationsRef, {
+      await setDoc(currentUserReceivedInvitationsRef, {
         receivedInvitations: arrayRemove(receivedInvitationUserID),
       });
 
-      await updateDoc(userSentInvitationRef, {
+      await setDoc(userSentInvitationRef, {
         sentInvitations: arrayRemove(currentUser),
       });
 
@@ -112,20 +113,20 @@ export const ReceivedInvitationCard = ({
 
     try {
       //remove received invitation from current user array
-      await updateDoc(currentUserInvitationRef, {
+      await setDoc(currentUserInvitationRef, {
         receivedInvitations: arrayRemove(receivedInvitationUserID),
       });
       //add user that sent the invitation to current user network
-      await updateDoc(currentUserNetworkRef, {
+      await setDoc(currentUserNetworkRef, {
         connectedUsers: arrayUnion(receivedInvitationUserID),
       });
 
       //remove current user from the sent invitation array of the user that send the invitation
-      await updateDoc(userSentInvitiationRef, {
+      await setDoc(userSentInvitiationRef, {
         sentInvitations: arrayRemove(currentUser),
       });
       //add current user that to the network of the user sent the invitation
-      await updateDoc(userSentInvitationNetworkRef, {
+      await setDoc(userSentInvitationNetworkRef, {
         connectedUsers: arrayUnion(currentUser),
       });
       window.location.reload();

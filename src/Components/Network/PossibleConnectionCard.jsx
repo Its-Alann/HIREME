@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
 import { db } from "../../Firebase/firebase";
 
@@ -53,11 +53,11 @@ export const PossibleConnectionCard = ({
     );
 
     try {
-      await updateDoc(currentUserSendingInvitationRef, {
+      await setDoc(currentUserSendingInvitationRef, {
         sentInvitations: arrayUnion(possibleConnectionUserId),
       });
 
-      await updateDoc(userReceivingInvitationRef, {
+      await setDoc(userReceivingInvitationRef, {
         receivedInvitations: arrayUnion(currentUser),
       });
 

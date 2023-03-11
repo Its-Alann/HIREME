@@ -40,8 +40,6 @@ describe("Testing the login feature", () => {
   describe("Testing the form, form validation and the helper texts", () => {
     it("Loads the sign up form", () => {
       cy.visit("http://localhost:3000/SignUp");
-      cy.get("#firstName").should("be.visible");
-      cy.get("#lastName").should("be.visible");
       cy.get("#email").should("be.visible");
       cy.get("#password").should("be.visible");
       cy.get("#submitBtn").should("be.visible");
@@ -50,44 +48,28 @@ describe("Testing the login feature", () => {
     it("shows helper text with wrong email format", () => {
       cy.visit("http://localhost:3000/SignUp");
       cy.get("#email").type("abc@abc");
-      cy.get("#lastName").focus();
+      cy.get("#password").focus();
       cy.get("#email-helper-text").should("include.text", "valid email");
     });
 
     it("shows helper text with wrong email format", () => {
       cy.visit("http://localhost:3000/SignUp");
       cy.get("#email").type("abc@abc");
-      cy.get("#lastName").focus();
+      cy.get("#password").focus();
       cy.get("#email-helper-text").should("include.text", "valid email");
     });
 
     it("shows helper text when typing a wrong password", () => {
       cy.visit("http://localhost:3000/SignUp");
       cy.get("#password").type("123546");
-      cy.get("#lastName").focus();
+      cy.get("#email").focus();
       cy.get("#password-helper-text").contains("Please enter a password");
-    });
-
-    it("shows helper text when typing name with characters other than letters", () => {
-      cy.visit("http://localhost:3000/SignUp");
-      cy.get("#firstName").type("abc12");
-      cy.get("#lastName").focus();
-      cy.get("#firstName-helper-text").contains("letters");
-    });
-
-    it("shows helper text when typing name with characters other than letters", () => {
-      cy.visit("http://localhost:3000/SignUp");
-      cy.get("#lastName").type("abc12");
-      cy.get("#firstName").focus();
-      cy.get("#lastName-helper-text").contains("letters");
     });
   });
 
   describe("Testing signing up api calls (IMPORTANT:new@user.com MUST NOT EXIST)", () => {
     it("throws error when submitting with existing email", () => {
       cy.visit("http://localhost:3000/SignUp");
-      cy.get("#firstName").type("sam");
-      cy.get("#lastName").type("sung");
       cy.get("#email").type("sam@sung.com");
       cy.get("#password").type("Email123!");
       cy.wait(1000);

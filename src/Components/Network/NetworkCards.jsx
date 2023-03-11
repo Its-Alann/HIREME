@@ -9,7 +9,13 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  updateDoc,
+  arrayRemove,
+  setDoc,
+} from "firebase/firestore";
 import {
   Dialog,
   DialogActions,
@@ -74,11 +80,11 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
     const connectedUserNetworkRef = doc(db, "network", connectedUserID);
 
     try {
-      await updateDoc(currentUserNetworkRef, {
+      await setDoc(currentUserNetworkRef, {
         connectedUsers: arrayRemove(connectedUserID),
       });
 
-      await updateDoc(connectedUserNetworkRef, {
+      await setDoc(connectedUserNetworkRef, {
         connectedUsers: arrayRemove(currentUser),
       });
 
