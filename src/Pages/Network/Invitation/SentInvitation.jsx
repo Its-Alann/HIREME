@@ -25,7 +25,7 @@ export const SentInvitation = () => {
           try {
             const docSnap = await getDoc(doc(db, "invitations", user.email));
             const userData = docSnap.data();
-            setSentRequestsUserID(userData.sentInvitations);
+            setSentRequestsUserID(userData?.sentInvitations);
             //console.log(userData.sentRequests);
           } catch (err) {
             console.log(err);
@@ -46,7 +46,7 @@ export const SentInvitation = () => {
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
-            {sentRequestsUserID.length > 0 && sentRequestsUserID != null ? (
+            {sentRequestsUserID?.length > 0 && sentRequestsUserID != null ? (
               <Grid
                 container
                 spacing={3}

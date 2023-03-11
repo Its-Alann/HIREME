@@ -1,5 +1,11 @@
 import { React, useState, useEffect } from "react";
-import { doc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getFirestore,
+  getDoc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Stack, Button, InputBase } from "@mui/material";
 import { ref, getDownloadURL } from "firebase/storage";
@@ -129,7 +135,7 @@ const EditProfilePage = () => {
     console.log(profile);
     if (currentUserEmail != null) {
       const userProfileDocRef = doc(database, "userProfiles", currentUserEmail);
-      await updateDoc(userProfileDocRef, profile);
+      await setDoc(userProfileDocRef, profile);
       console.log("Update finished");
     }
   }

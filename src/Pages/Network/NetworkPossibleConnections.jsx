@@ -26,22 +26,25 @@ export const NetworkPossibleConnections = () => {
       //get list of user connections of current user
       const networkDocSnap = await getDoc(doc(db, "network", user.email));
       const currentUserNetworkData = networkDocSnap.data();
-      setConnectedUsersId(currentUserNetworkData.connectedUsers);
+
+      setConnectedUsersId(currentUserNetworkData?.connectedUsers);
 
       //get list of users that the current user sent invitations to
       const sentInvitationsDocSnap = await getDoc(
         doc(db, "invitations", user.email)
       );
       const sentInvitationsData = sentInvitationsDocSnap.data();
-      setSentInvitationsId(sentInvitationsData.sentInvitations);
+      setSentInvitationsId(sentInvitationsData?.sentInvitations);
 
       // get all users in userProfiles
       const usersRef = collection(db, "userProfiles");
       const data = await getDocs(usersRef);
+
       const users = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
+
       setAllUsers(users);
     } catch (err) {
       console.error("err:", err);
@@ -70,12 +73,11 @@ export const NetworkPossibleConnections = () => {
       allUsers.forEach(() => {
         const newNonConnectedUsersArr = allUsers.filter(
           (user) =>
-            !connectedUsersId.includes(user.id) &&
-            !sentInvitationsId.includes(user.id) &&
+            !connectedUsersId?.includes(user?.id) &&
+            !sentInvitationsId?.includes(user?.id) &&
             currentUser.email !== user.id
         );
         setNonConnectedUsersArr(newNonConnectedUsersArr);
-        //console.log(newNonConnectedUsersArr);
       });
     } catch (error) {
       console.log(error);
