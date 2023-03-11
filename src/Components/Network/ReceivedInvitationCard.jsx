@@ -174,7 +174,7 @@ export const ReceivedInvitationCard = ({
                     data-cy={`AcceptInvitationBtn${
                       receivedInvitationUser?.values?.firstName ?? ""
                     }`}
-                    class={`AcceptInvitationBtn${
+                    id={`AcceptInvitationBtn${
                       receivedInvitationUser?.values?.firstName ?? ""
                     }`}
                   >
@@ -187,7 +187,7 @@ export const ReceivedInvitationCard = ({
                     data-cy={`IgnoreInvitationBtn${
                       receivedInvitationUser?.values?.firstName ?? ""
                     }`}
-                    class={`IgnoreInvitationBtn${
+                    id={`IgnoreInvitationBtn${
                       receivedInvitationUser?.values?.firstName ?? ""
                     }`}
                   >
