@@ -110,6 +110,7 @@ export const NetworkPossibleConnections = () => {
                       possibleConnectionUserId={possibleConnectionUserID.id}
                       currentUser={currentUser.email}
                       data-cy={`gridItem${possibleConnectionUserID}`}
+                      id={`gridItem${possibleConnectionUserID}`}
                     />
                   </Grid>
                 ))}

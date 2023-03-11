@@ -1,4 +1,5 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
+import { assert } from "chai";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import {
@@ -108,12 +109,23 @@ describe("Testing the networking features of the app", () => {
         //visit network and check if invitation button exists
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
+        cy.wait(3000);
         //if button doesn't exist, check specific button
-        try {
-          cy.get('[data-cy="invitationButton"]').should("be.visible");
-        } catch (err) {
-          cy.get('[data-cy="invitationButtonTest"]').click({ force: true });
-        }
+
+        //either invitationButton or invitationButtonTest must be clicked
+        cy.document().then((document) => {
+          try {
+            const documentResult = document.getElementById("invitationButton");
+            documentResult.click();
+            console.log("A");
+          } catch (e) {
+            const documentSecondResult = document.getElementById(
+              "invitationButtonTest"
+            );
+            documentSecondResult.click();
+            console.log("B");
+          }
+        });
       });
 
       it("removes the RECEIVED invitation of hypeboy from accountcreation (HAS THE FIRST NAME TEST) and the connection between the two accounts", () => {
@@ -167,14 +179,23 @@ describe("Testing the networking features of the app", () => {
           cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
           cy.wait(500);
 
-          //IgnoreInvitationBtn
-          try {
-            cy.get('[data-cy="IgnoreInvitationBtnHanni"]').click({
-              force: true,
-            });
-          } catch (e) {
-            cy.get('[data-cy="IgnoreInvitationBtn"]').click({ force: true });
-          }
+          //either IgnoreInvitationBtn or IgnoreInvitationBtnHanni must be clicked
+          cy.document().then((document) => {
+            try {
+              const documentResult = document.getElementById(
+                "IgnoreInvitationBtn"
+              );
+              documentResult.click();
+              console.log("A");
+            } catch (e) {
+              const documentSecondResult = document.getElementById(
+                "IgnoreInvitationBtnHanni"
+              );
+              documentSecondResult.click();
+              console.log("B");
+            }
+          });
+
           //visit all tabs
           cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
           cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
@@ -333,16 +354,25 @@ describe("Testing the networking features of the app", () => {
         cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
         cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
         cy.wait(1000);
+
         //Gives problems at times, especially when not last action in test
-        try {
-          cy.get('[data-cy="AcceptInvitationBtnHanni"]')
-            .should("be.visible")
-            .click({ force: true });
-        } catch (e) {
-          cy.get('[data-cy="AcceptInvitationBtn"]')
-            .should("be.visible")
-            .click({ force: true });
-        }
+        //either AcceptInvitationBtnHanni or AcceptInvitationBtn must be clicked
+        //either IgnoreInvitationBtn or IgnoreInvitationBtnHanni must be clicked
+        cy.document().then((document) => {
+          try {
+            const documentResult = document.getElementById(
+              "AcceptInvitationBtn"
+            );
+            documentResult.click();
+            console.log("A");
+          } catch (e) {
+            const documentSecondResult = document.getElementById(
+              "AcceptInvitationBtnHanni"
+            );
+            documentSecondResult.click();
+            console.log("B");
+          }
+        });
 
         cy.wait(1000);
 
