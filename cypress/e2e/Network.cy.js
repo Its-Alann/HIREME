@@ -56,12 +56,6 @@ describe("Testing the networking features of the app", () => {
     { retries: 2 },
     () => {
       it("removes the SENT invitation if present, removes the connection between the two accounts if present", () => {
-        //logout and login to hypeboy@tok.ki account
-        cy.visit("http://localhost:3000/network");
-        cy.logout();
-        cy.login("g7aTo5gtRCYjx3ggCJLOWnxVRFp2");
-        cy.wait(2000);
-
         //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
         cy.wrap(null).then(() =>
           AsyncRemoveSentInvitation(
@@ -132,7 +126,21 @@ describe("Testing the networking features of the app", () => {
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
         //"Test" is included because it's the account's first name
-        cy.get('[data-cy="invitationButtonTest"]').click({ force: true });
+
+        //either invitationButton or invitationButtonTest must be clicked
+        cy.document().then((document) => {
+          try {
+            const documentResult = document.getElementById("invitationButton");
+            documentResult.click();
+            console.log("A");
+          } catch (e) {
+            const documentSecondResult = document.getElementById(
+              "invitationButtonTest"
+            );
+            documentSecondResult.click();
+            console.log("B");
+          }
+        });
 
         //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
         cy.wrap(null).then(() =>
