@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
 import { db } from "../../Firebase/firebase";
 
@@ -35,6 +35,7 @@ export const PossibleConnectionCard = ({
         );
         const userData = docSnap.data();
         setPossibleConnectionUser(userData);
+        console.log("PossibleConnectinCard");
         //console.log(userData);
       } catch (err) {
         console.log(err);
@@ -42,7 +43,7 @@ export const PossibleConnectionCard = ({
     };
 
     getSentRequestUsers();
-  }, []);
+  }, [possibleConnectionUserId]);
 
   const sendInvitation = async () => {
     const currentUserSendingInvitationRef = doc(db, "invitations", currentUser);
@@ -53,11 +54,11 @@ export const PossibleConnectionCard = ({
     );
 
     try {
-      await setDoc(currentUserSendingInvitationRef, {
+      await updateDoc(currentUserSendingInvitationRef, {
         sentInvitations: arrayUnion(possibleConnectionUserId),
       });
 
-      await setDoc(userReceivingInvitationRef, {
+      await updateDoc(userReceivingInvitationRef, {
         receivedInvitations: arrayUnion(currentUser),
       });
 

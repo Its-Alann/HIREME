@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  Timestamp,
-  setDoc,
-} from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { IconButton, Stack, Box, TextField, Typography } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import Fab from "@mui/material/Fab";
@@ -124,7 +118,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
 
     // SENDS TO THE DB
     // ex id: "17k4dPDcymw3GcNjSCSG"
-    await setDoc(doc(db, "messages", conversationID), {
+    await updateDoc(doc(db, "messages", conversationID), {
       messages: arrayUnion(newMessage),
     });
 

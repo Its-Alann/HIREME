@@ -30,6 +30,7 @@ const ContactInfoCard = ({ setProfile, profile, currentUserEmail }) => {
 
   useEffect(() => {
     getBday();
+    console.log("ContactInfoCard");
   }, [profile]);
 
   return (

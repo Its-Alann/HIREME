@@ -9,13 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import {
-  getDoc,
-  doc,
-  arrayRemove,
-  updateDoc,
-  setDoc,
-} from "firebase/firestore";
+import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -67,11 +61,11 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
     const userReceivedInvitationRef = doc(db, "invitations", userID);
 
     try {
-      await setDoc(currentUserInvitationRed, {
+      await updateDoc(currentUserInvitationRed, {
         sentInvitations: arrayRemove(userID),
       });
 
-      await setDoc(userReceivedInvitationRef, {
+      await updateDoc(userReceivedInvitationRef, {
         receivedInvitations: arrayRemove(currentUser),
       });
 
