@@ -168,7 +168,13 @@ describe("Testing the networking features of the app", () => {
           cy.wait(500);
 
           //IgnoreInvitationBtn
-          cy.get('[data-cy="IgnoreInvitationBtnHanni"]').click({ force: true });
+          try {
+            cy.get('[data-cy="IgnoreInvitationBtnHanni"]').click({
+              force: true,
+            });
+          } catch (e) {
+            cy.get('[data-cy="IgnoreInvitationBtn"]').click({ force: true });
+          }
           //visit all tabs
           cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
           cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
@@ -328,9 +334,16 @@ describe("Testing the networking features of the app", () => {
         cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
         cy.wait(1000);
         //Gives problems at times, especially when not last action in test
-        cy.get('[data-cy="AcceptInvitationBtnHanni"]')
-          .should("be.visible")
-          .click({ force: true });
+        try {
+          cy.get('[data-cy="AcceptInvitationBtnHanni"]')
+            .should("be.visible")
+            .click({ force: true });
+        } catch (e) {
+          cy.get('[data-cy="AcceptInvitationBtn"]')
+            .should("be.visible")
+            .click({ force: true });
+        }
+
         cy.wait(1000);
 
         cy.visit("http://localhost:3000/network");

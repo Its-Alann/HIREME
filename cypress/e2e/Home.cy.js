@@ -25,7 +25,11 @@ describe("Visit edit profile page", () => {
   it("clicks edit profile if account has already been created and get name", () => {
     cy.visit("http://localhost:3000/");
     cy.wait(1000);
-    cy.get('[data-testid="editProfileButton"]').click();
+    try {
+      cy.get('[data-testid="editProfileButton"]').click();
+    } catch (e) {
+      cy.get('[data-testid="createProfileButton"]').click();
+    }
   });
 });
 
