@@ -20,6 +20,7 @@ describe("Login to test account", () => {
 
 describe("Edit Profile Button", () => {
   it("should be clickable", () => {
+    cy.login("Lwp8PXEtGFc3u5fvYcVC9QflRc12");
     cy.visit("http://localhost:3000/");
     cy.wait(1000);
     cy.get('[data-testid="editProfileButton"]').click();
