@@ -56,6 +56,8 @@ describe("Testing the networking features of the app", () => {
     { retries: 2 },
     () => {
       it("removes the SENT invitation if present, removes the connection between the two accounts if present", () => {
+        cy.login();
+        cy.wait(2000);
         //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
         cy.wrap(null).then(() =>
           AsyncRemoveSentInvitation(
@@ -103,7 +105,7 @@ describe("Testing the networking features of the app", () => {
         //visit network and check if invitation button exists
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
-        cy.wait(3000);
+        cy.wait(2000);
         //if button doesn't exist, check specific button
 
         //either invitationButton or invitationButtonTest must be clicked
