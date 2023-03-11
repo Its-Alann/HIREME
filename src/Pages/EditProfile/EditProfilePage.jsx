@@ -40,11 +40,11 @@ const EditProfilePage = () => {
       country: "",
       postalCode: "",
       dob: "",
-      school: "",
-      degree: "",
-      program: "",
-      startDateEdu: "",
-      endDateEdu: "",
+      //school: "",
+      //degree: "",
+      //program: "",
+      //startDateEdu: "",
+      //endDateEdu: "",
       courses: "",
       company: "",
       jobPosition: "",
@@ -118,10 +118,9 @@ const EditProfilePage = () => {
     fetchData();
   }, [currentUserEmail, database]);
 
-  // Whenever profile changes, log profile
+  //Whenever profile changes, log profile
   useEffect(() => {
-    console.log("User Profile");
-    console.log(profile);
+    console.log("User Profile", profile);
   }, [profile]);
 
   // Update user's profile with data inside "profile"
@@ -133,6 +132,56 @@ const EditProfilePage = () => {
       console.log("Update finished");
     }
   }
+
+  const getEductionCards = () => {
+    const cards = [];
+    if (profile.values.schoolNum === undefined) {
+      setProfile({
+        values: {
+          ...profile.values,
+          schoolNum: 1,
+        },
+      });
+      handleTempButton();
+    }
+    for (let i = 0; i < profile.values.schoolNum; i += 1) {
+      cards.push(
+        <EducationCard
+          setProfile={setProfile}
+          profile={profile}
+          currentUserEmail={currentUserEmail}
+          cardNum={i}
+          isLast={i + 1 === profile.values.schoolNum}
+        />
+      );
+    }
+    return cards;
+  };
+
+  const getExperienceCards = () => {
+    const cards = [];
+    if (profile.values.ExpNum === undefined) {
+      setProfile({
+        values: {
+          ...profile.values,
+          ExpNum: 1,
+        },
+      });
+      handleTempButton();
+    }
+    for (let i = 0; i < profile.values.ExpNum; i += 1) {
+      cards.push(
+        <ExperienceCard
+          setProfile={setProfile}
+          profile={profile}
+          currentUserEmail={currentUserEmail}
+          cardNum={i}
+          isLast={i + 1 === profile.values.ExpNum}
+        />
+      );
+    }
+    return cards;
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -197,16 +246,18 @@ const EditProfilePage = () => {
               profile={profile}
               currentUserEmail={currentUserEmail}
             />
-            <EducationCard
+            {/* <EducationCard
               setProfile={setProfile}
               profile={profile}
               currentUserEmail={currentUserEmail}
-            />
-            <ExperienceCard
+            /> */}
+            {getEductionCards()}
+            {/* <ExperienceCard
               setProfile={setProfile}
               profile={profile}
               currentUserEmail={currentUserEmail}
-            />
+            /> */}
+            {getExperienceCards()}
             <SkillsCard
               setProfile={setProfile}
               profile={profile}

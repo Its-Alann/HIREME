@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { React, useEffect, useState } from "react";
 import {
   Grid,
@@ -7,16 +8,29 @@ import {
   Typography,
   Chip,
   TextField,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
+const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
+  const schName = `schoolName${cardNum}`;
+  const schDegree = `schoolDegree${cardNum}`;
+  const schProgram = `schoolProgram${cardNum}`;
+  const schStartDate = `schoolStartDate${cardNum}`;
+  const schEndDate = `schoolEndDate${cardNum}`;
   const courses = [profile.values.courses];
+  const [deleteAlert, setDeleteAlert] = useState(false);
   const [startYear, setStartYear] = useState("");
   const [endYear, setEndYear] = useState("");
   const [editButton, setEditButton] = useState(false);
@@ -24,26 +38,43 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
   const getDates = async () => {
     if (profile.values) {
       setStartYear(
-        profile.values.startDateEdu instanceof Date
-          ? await dayjs.unix(profile.values.startDateEdu.valueOf() / 1000)
-          : await dayjs.unix(profile.values.startDateEdu.seconds)
+        profile.values[schStartDate] instanceof Date
+          ? await dayjs.unix(profile.values[schStartDate].valueOf() / 1000)
+          : await dayjs.unix(profile.values[schStartDate].seconds)
       );
       setEndYear(
-        profile.values.endDateEdu instanceof Date
-          ? await dayjs.unix(profile.values.endDateEdu.valueOf() / 1000)
-          : await dayjs.unix(profile.values.endDateEdu.seconds)
+        profile.values[schEndDate] instanceof Date
+          ? await dayjs.unix(profile.values[schEndDate].valueOf() / 1000)
+          : await dayjs.unix(profile.values[schEndDate].seconds)
       );
     }
   };
 
+  const handleClickOpen = () => {
+    setDeleteAlert(true);
+  };
+
+  const handleClose = () => {
+    setDeleteAlert(false);
+  };
+
+  const handleClearCardInfo = () => {
+    handleClose();
+    const newCardNum = profile.values.schoolNum - 1;
+    setProfile({
+      values: {
+        ...profile.values,
+        schoolNum: newCardNum,
+      },
+    });
+  };
+
   useEffect(() => {
-    // console.log("profile", profile);
     getDates();
   }, [profile]);
 
   return (
     <Box>
-      {/* {console.log(courses)} */}
       <Card variant="outlined" sx={{ mx: 5 }}>
         <CardContent>
           <Grid container justifyContent="space-between">
@@ -63,12 +94,15 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
                 label="School name"
                 variant="standard"
                 size="small"
-                value={profile.values.school}
-                onChange={(e) =>
+                value={profile.values[schName]}
+                onChange={(e) => {
                   setProfile({
-                    values: { ...profile.values, school: e.target.value },
-                  })
-                }
+                    values: {
+                      ...profile.values,
+                      [schName]: e.target.value,
+                    },
+                  });
+                }}
                 InputProps={{
                   readOnly: !editButton,
                   error: editButton,
@@ -80,13 +114,15 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
                 <DatePicker
                   label="Start Date"
                   value={startYear && startYear}
+                  readOnly={!editButton}
                   onChange={(newValue) => {
                     setProfile({
                       values: {
                         ...profile.values,
-                        startDateEdu: newValue && newValue.$d,
+                        [schStartDate]: newValue.$d,
                       },
                     });
+                    console.log(newValue);
                   }}
                   // eslint-disable-next-line react/jsx-props-no-spreading
                   renderInput={(params) => <TextField {...params} />}
@@ -102,13 +138,15 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
                 <DatePicker
                   label="End Date"
                   value={endYear && endYear}
+                  readOnly={!editButton}
                   onChange={(newValue) => {
                     setProfile({
                       values: {
                         ...profile.values,
-                        endDateEdu: newValue && newValue.$d,
+                        [schEndDate]: newValue.$d,
                       },
                     });
+                    console.log(newValue.$d);
                   }}
                   // eslint-disable-next-line react/jsx-props-no-spreading
                   renderInput={(params) => <TextField {...params} />}
@@ -126,10 +164,13 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
                 label="Degree"
                 variant="standard"
                 size="small"
-                value={profile.values.degree}
+                value={profile.values[schDegree]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, degree: e.target.value },
+                    values: {
+                      ...profile.values,
+                      [schDegree]: e.target.value,
+                    },
                   })
                 }
                 InputProps={{
@@ -140,13 +181,16 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
             </Grid>
             <Grid item>
               <TextField
-                label="Degree"
+                label="Program"
                 variant="standard"
                 size="small"
-                value={profile.values.program}
+                value={profile.values[schProgram]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, program: e.target.value },
+                    values: {
+                      ...profile.values,
+                      [schProgram]: e.target.value,
+                    },
                   })
                 }
                 InputProps={{
@@ -163,6 +207,39 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
                 <Chip color="info" label={data} variant="outlined" />
               </Grid>
             ))}
+            {isLast && (
+              <>
+                <DeleteIcon
+                  sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
+                  onClick={handleClickOpen}
+                />
+
+                <Dialog open={deleteAlert} onClose={handleClose}>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to delete this card?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                  </DialogActions>
+                </Dialog>
+
+                <AddIcon
+                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  onClick={() => {
+                    const newCardNum = profile.values.schoolNum + 1;
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        schoolNum: newCardNum,
+                      },
+                    });
+                  }}
+                />
+              </>
+            )}
           </Grid>
         </CardContent>
       </Card>
@@ -171,6 +248,7 @@ const EducationCard = ({ setProfile, profile, currentUserEmail }) => {
 };
 
 EducationCard.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
   currentUserEmail: PropTypes.string,
