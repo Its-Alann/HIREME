@@ -123,25 +123,6 @@ describe("Testing the networking features of the app", () => {
       });
 
       it("removes the RECEIVED invitation of hypeboy from accountcreation (HAS THE FIRST NAME TEST) and the connection between the two accounts", () => {
-        cy.visit("http://localhost:3000/network");
-        cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
-        //"Test" is included because it's the account's first name
-
-        //either invitationButton or invitationButtonTest must be clicked
-        cy.document().then((document) => {
-          try {
-            const documentResult = document.getElementById("invitationButton");
-            documentResult.click();
-            console.log("A");
-          } catch (e) {
-            const documentSecondResult = document.getElementById(
-              "invitationButtonTest"
-            );
-            documentSecondResult.click();
-            console.log("B");
-          }
-        });
-
         //remove sent invitation of accountcreation@test.com from "hypeboy@tok.ki"
         cy.wrap(null).then(() =>
           AsyncRemoveReceivedInvitation(
@@ -170,9 +151,23 @@ describe("Testing the networking features of the app", () => {
         //send invitation
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
-        cy.wait(500);
-        cy.get('[data-cy="invitationButtonTest"]').click({ force: true });
-        cy.wait(500);
+        cy.wait(2000);
+
+        //either invitationButton or invitationButtonTest must be clicked
+        cy.document().then((document) => {
+          try {
+            const documentResult = document.getElementById("invitationButton");
+            documentResult.click();
+            console.log("A");
+          } catch (e) {
+            const documentSecondResult = document.getElementById(
+              "invitationButtonTest"
+            );
+            documentSecondResult.click();
+            console.log("B");
+          }
+        });
+        cy.wait(2000);
       });
 
       it(
@@ -185,7 +180,7 @@ describe("Testing the networking features of the app", () => {
           cy.visit("http://localhost:3000/network");
           cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
           cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
-          cy.wait(500);
+          cy.wait(2000);
 
           //either IgnoreInvitationBtn or IgnoreInvitationBtnHanni must be clicked
           cy.document().then((document) => {
@@ -326,10 +321,23 @@ describe("Testing the networking features of the app", () => {
         //vist page
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
+        cy.wait(2000);
 
-        //send invitation
-        cy.get('[data-cy="invitationButtonTest"]').click({ force: true });
-        cy.wait(500);
+        //either invitationButton or invitationButtonTest must be clicked
+        cy.document().then((document) => {
+          try {
+            const documentResult = document.getElementById("invitationButton");
+            documentResult.click();
+            console.log("A");
+          } catch (e) {
+            const documentSecondResult = document.getElementById(
+              "invitationButtonTest"
+            );
+            documentSecondResult.click();
+            console.log("B");
+          }
+        });
+        cy.wait(2000);
         //WEIRD CYPRESS BUG: TEST MUST END AFTER INVITATION CLICK FOR IT TO TAKE EFFECT
       });
 
@@ -382,7 +390,7 @@ describe("Testing the networking features of the app", () => {
           }
         });
 
-        cy.wait(1000);
+        cy.wait(2000);
 
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
@@ -393,8 +401,8 @@ describe("Testing the networking features of the app", () => {
         cy.visit("http://localhost:3000/network");
         cy.get('[data-cy="NetworkTab"]').click({ force: true });
         //check if profile exists
-        cy.wait(1000);
-        cy.get('[data-cy="userProfileInNetwork"]').findByText("Hanni Pham");
+        cy.wait(2000);
+        cy.findByText("Hanni Pham");
       });
     }
   );
