@@ -10,26 +10,15 @@ import { Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
+import { useAuth } from "../../../context/AuthContext";
 
 const theme = createTheme();
 
 export const ReceivedInvitation = () => {
-  const [currentUser, setCurrentUser] = useState({});
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
+  const { currentUser } = useAuth();
 
   const fetchReceivedInvitations = async (user) => {
     if (user) {
-      setCurrentUser(user);
       // READ DATA
       try {
         const docSnap = await getDoc(doc(db, "invitations", user.email));
@@ -53,9 +42,7 @@ export const ReceivedInvitation = () => {
   } = useQuery(
     ["ReceivedInvitation", currentUser],
     () => fetchReceivedInvitations(currentUser),
-    {
-      staleTime: 6000,
-    }
+    { staleTime: Infinity }
   );
 
   return (

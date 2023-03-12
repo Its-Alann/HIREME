@@ -12,22 +12,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useQuery } from "react-query";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
+import { useAuth } from "../../context/AuthContext";
 
 const theme = createTheme();
 
 export const NetworkPossibleConnections = () => {
-  const [currentUser, setCurrentUser] = useState({});
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
+  const { currentUser } = useAuth();
 
   const fetchPossibleConnections = async (user) => {
     if (user !== null && user !== undefined) {
@@ -83,9 +73,7 @@ export const NetworkPossibleConnections = () => {
   } = useQuery(
     ["possibleConnections", currentUser],
     () => fetchPossibleConnections(currentUser),
-    {
-      staleTime: 6000,
-    }
+    { staleTime: Infinity }
   );
 
   return (

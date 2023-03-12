@@ -10,22 +10,12 @@ import { Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { SentInvitationCard } from "../../../Components/Network/SentInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
+import { useAuth } from "../../../context/AuthContext";
 
 const theme = createTheme();
 
 export const SentInvitation = () => {
-  const [currentUser, setCurrentUser] = useState({});
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
+  const { currentUser } = useAuth();
 
   const fetchSentInvitations = async (user) => {
     if (user) {
@@ -52,9 +42,7 @@ export const SentInvitation = () => {
   } = useQuery(
     ["sentInvitations", currentUser],
     () => fetchSentInvitations(currentUser),
-    {
-      staleTime: 6000,
-    }
+    { staleTime: Infinity }
   );
 
   return (
