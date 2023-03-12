@@ -20,6 +20,7 @@ import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitatio
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
+import FlaggedMessages from "./Pages/Admin/FlaggedMessages";
 
 const App = () => {
   const hello = "helloo";
@@ -65,6 +66,11 @@ const App = () => {
             <Route path="/myNetwork" exact element={<ViewNetwork />} />
             <Route path="/invitations" exact element={<ReceivedInvitation />} />
             <Route path="/sentRequests" exact element={<SentInvitation />} />
+            <Route
+              path="/admin/flaggedMessages"
+              exact
+              element={<FlaggedMessages />}
+            />
           </Routes>
         </Router>
       </div>
