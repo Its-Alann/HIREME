@@ -10,13 +10,11 @@ import { createWebStoragePersistor } from "react-query/createWebStoragePersistor
 import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
 
-const cacheTime = 60 * 60 * 1000;
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      cacheTime,
+      cacheTime: 60 * 60 * 1000,
     },
   },
 });
@@ -27,6 +25,10 @@ const localStoragePersistor = createWebStoragePersistor({
 
 persistQueryClient({
   queryClient,
+  maxAge: 1000 * 60 * 60 * 24, // 24 hours
+  buster: "",
+  hydrateOptions: undefined,
+  dehydrateOptions: undefined,
   persister: localStoragePersistor,
 });
 

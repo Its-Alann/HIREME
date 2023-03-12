@@ -39,10 +39,8 @@ export const SentInvitation = () => {
     isLoading,
     data: sentRequestsUserID,
     error,
-  } = useQuery(
-    ["sentInvitations", currentUser],
-    () => fetchSentInvitations(currentUser),
-    { staleTime: Infinity }
+  } = useQuery(["sentInvitations", currentUser], () =>
+    fetchSentInvitations(currentUser)
   );
 
   return (

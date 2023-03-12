@@ -24,7 +24,6 @@ export const ReceivedInvitation = () => {
         const docSnap = await getDoc(doc(db, "invitations", user.email));
         const userData = docSnap.data();
         console.log("ReceivedInvitation", userData.receivedInvitations);
-        return userData.receivedInvitations;
       } catch (err) {
         console.log(err);
       }
@@ -39,10 +38,8 @@ export const ReceivedInvitation = () => {
     isLoading,
     data: receivedInvitations,
     error,
-  } = useQuery(
-    ["ReceivedInvitation", currentUser],
-    () => fetchReceivedInvitations(currentUser),
-    { staleTime: Infinity }
+  } = useQuery(["ReceivedInvitation", currentUser], () =>
+    fetchReceivedInvitations(currentUser)
   );
 
   return (

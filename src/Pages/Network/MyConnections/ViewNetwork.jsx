@@ -40,9 +40,7 @@ export const ViewNetwork = () => {
     isLoading,
     data: connectedUsersId,
     error,
-  } = useQuery(["connections", currentUser], () => fetchNetworks(currentUser), {
-    staleTime: Infinity,
-  });
+  } = useQuery(["connections", currentUser], () => fetchNetworks(currentUser));
 
   // If you absolutely need to cache the mutated data you can do the below. But
   // most of the time you won't need to use useMemo at all.
