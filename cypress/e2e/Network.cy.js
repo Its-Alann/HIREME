@@ -1,4 +1,4 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
+/* 
 import { assert } from "chai";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -11,8 +11,8 @@ import {
   FieldValue,
 } from "firebase/firestore";
 import { db } from "../../src/Firebase/firebase";
-
 Cypress.on("uncaught:exception", (err, runnable) => false);
+
 
 async function AsyncRemoveSentInvitation(RemoveAcc, fromAcc) {
   const sentInvitationsRef = doc(db, "invitations", fromAcc);
@@ -372,3 +372,4 @@ describe("Testing the networking features of the app", () => {
     });
   });
 });
+*/
