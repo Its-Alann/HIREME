@@ -60,7 +60,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
         const downloadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setUrl(downloadedUrl);
         setIsUploading(false);
-        setMessageContent(downloadedUrl);
+        // setMessageContent(downloadedUrl);
         console.log(`uploaded ${file.name} to storage!`);
       }
     );
@@ -96,7 +96,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   };
 
   const handleSend = async () => {
-    if (!messageContent) {
+    if (!messageContent && !file) {
       console.log("NO CONTETN");
       return;
     }
@@ -106,13 +106,19 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
       console.log(myUser);
     } else {
       console.log("Not exist current user");
+      return;
     }
     const sender = myUser;
     const newMessage = {
-      content: messageContent,
       timestamp,
       sender,
     };
+
+    if (file) {
+      newMessage.attachment = file.name;
+    } else {
+      newMessage.content = messageContent;
+    }
 
     console.log(newMessage, newMessage.timestamp.toDate());
 
