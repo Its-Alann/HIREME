@@ -23,6 +23,7 @@ describe("Testing the login feature", () => {
       cy.logout();
       cy.visit("http://localhost:3000/login");
       cy.get("#email").type("hypeboy@tokkkkk.ki");
+      cy.get("#password").type("1234");
       cy.get(".MuiButton-contained").click();
     });
 
