@@ -38,16 +38,4 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const storage = getStorage(app);
 
-/* UNCOMMENT TO ADD EMULATOR
-
-const dbEmulator = getDatabase();
-const firestoreEmulator = getFirestore(app);
-connectAuthEmulator(auth, "http://localhost:9099");
-if (window.location.hostname === "localhost") {
-  // Point to the RTDB emulator running on localhost.
-  connectDatabaseEmulator(dbEmulator, "localhost", 9000);
-}
-connectFirestoreEmulator(firestoreEmulator, "localhost", 8080);
-*/
-
 export { auth, provider, app, db, storage };
