@@ -16,9 +16,6 @@ import { PossibleConnectionCard } from "../../Components/Network/PossibleConnect
 const theme = createTheme();
 
 export const NetworkPossibleConnections = () => {
-  const [connectedUsersId, setConnectedUsersId] = useState([]);
-  const [sentInvitationsId, setSentInvitationsId] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
@@ -33,40 +30,46 @@ export const NetworkPossibleConnections = () => {
   }, []);
 
   const fetchPossibleConnections = async (user) => {
-    try {
-      //get list of user connections of current user
-      const networkDocSnap = await getDoc(doc(db, "network", user.email));
-      const currentUserNetworkData = networkDocSnap.data();
+    if (user !== null && user !== undefined) {
+      try {
+        //get list of user connections of current user
+        const networkDocSnap = await getDoc(doc(db, "network", user.email));
+        const currentUserNetworkData = networkDocSnap.data();
+        //console.log("currentUserNetworkData", currentUserNetworkData);
 
-      setConnectedUsersId(currentUserNetworkData?.connectedUsers);
+        const connectedUsersId = currentUserNetworkData?.connectedUsers;
+        //console.log("connectedUsersId", connectedUsersId);
 
-      //get list of users that the current user sent invitations to
-      const sentInvitationsDocSnap = await getDoc(
-        doc(db, "invitations", user.email)
-      );
-      const sentInvitationsData = sentInvitationsDocSnap.data();
-      setSentInvitationsId(sentInvitationsData?.sentInvitations);
+        //get list of users that the current user sent invitations to
+        const sentInvitationsDocSnap = await getDoc(
+          doc(db, "invitations", user.email)
+        );
+        const sentInvitationsData = sentInvitationsDocSnap.data();
+        const sentInvitationsId = sentInvitationsData?.sentInvitations;
+        //console.log("sentInvitationsId", sentInvitationsId);
 
-      // get all users in userProfiles
-      const usersRef = collection(db, "userProfiles");
-      const data = await getDocs(usersRef);
+        // get all users in userProfiles
+        const usersRef = collection(db, "userProfiles");
+        const data = await getDocs(usersRef);
+        //console.log("data", data);
 
-      const users = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
+        const users = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
 
-      setAllUsers(users);
+        const allUsers = users;
 
-      //create a new array of users that isnt connected with the currentUser
-      return allUsers.filter(
-        (eachUser) =>
-          !connectedUsersId.includes(eachUser.id) &&
-          !sentInvitationsId.includes(eachUser.id) &&
-          user.email !== eachUser.id
-      );
-    } catch (e) {
-      console.log(e);
+        //create a new array of users that isnt connected with the currentUser
+        return allUsers.filter(
+          (eachUser) =>
+            !connectedUsersId.includes(eachUser.id) &&
+            !sentInvitationsId.includes(eachUser.id) &&
+            user.email !== eachUser.id
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
     return undefined;
   };

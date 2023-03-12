@@ -7,37 +7,56 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import { useQuery } from "react-query";
 import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 
 const theme = createTheme();
 
 export const ReceivedInvitation = () => {
-  const [receivedInvitations, setReceivedInvitations] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
-        const getReceivedInvitationUsers = async () => {
-          // READ DATA
-          try {
-            const docSnap = await getDoc(doc(db, "invitations", user.email));
-            const userData = docSnap.data();
-            setReceivedInvitations(userData.receivedInvitations);
-            console.log("ReceivedInvitation", userData.receivedInvitations);
-          } catch (err) {
-            console.log(err);
-          }
-        };
-        getReceivedInvitationUsers();
       } else {
         //take you back to the homepage
-        //console.log("2:", user);
+        //console.log(user);
       }
     });
   }, []);
+
+  const fetchReceivedInvitations = async (user) => {
+    if (user) {
+      setCurrentUser(user);
+      // READ DATA
+      try {
+        const docSnap = await getDoc(doc(db, "invitations", user.email));
+        const userData = docSnap.data();
+        console.log("ReceivedInvitation", userData.receivedInvitations);
+        return userData.receivedInvitations;
+      } catch (err) {
+        console.log(err);
+      }
+      return undefined;
+    }
+    return undefined;
+  };
+
+  const {
+    isError,
+    isSuccess,
+    isLoading,
+    data: receivedInvitations,
+    error,
+  } = useQuery(
+    ["ReceivedInvitation", currentUser],
+    () => fetchReceivedInvitations(currentUser),
+    {
+      staleTime: 6000,
+    }
+  );
 
   return (
     <div>
