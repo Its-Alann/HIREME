@@ -31,13 +31,14 @@ const MessageListItem = ({
       </Box>
 
       <Box sx={{ display: "flex", maxWidth: "100%" }}>
-        {alignment === "right" && (
+        {/* {alignment === "right" && (
           <MessageOptions
             index={index}
             convoId={convoId}
             reportMessage={reportMessage}
+            reported={reported}
           />
-        )}
+        )} */}
         <Badge
           badgeContent="!"
           color="warning"
@@ -88,6 +89,7 @@ const MessageListItem = ({
             index={index}
             convoId={convoId}
             reportMessage={reportMessage}
+            reported={reported}
           />
         )}
       </Box>
