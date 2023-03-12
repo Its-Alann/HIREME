@@ -55,7 +55,8 @@ const LoginPage = () => {
         password,
       });
       try {
-        UseLogin(email, password);
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useSignInWithEmailAndPassword(email, password);
         console.log(user);
 
         navigate("/");
