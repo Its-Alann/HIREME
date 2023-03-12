@@ -257,8 +257,8 @@ const Navbar = () => {
                   >
                     <Avatar
                       style={{ border: "2px solid #2B2F90" }}
-                      alt={userData.values.firstName}
-                      src={userData.values.image}
+                      alt={userData?.values?.firstName}
+                      src={userData?.values?.image}
                     />
                   </IconButton>
                 </Tooltip>

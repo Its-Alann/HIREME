@@ -45,7 +45,7 @@ export const ViewNetwork = () => {
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
-            {connectedUsersId.length > 0 && connectedUsersId != null ? (
+            {connectedUsersId?.length > 0 && connectedUsersId != null ? (
               <Grid
                 container
                 spacing={3}
