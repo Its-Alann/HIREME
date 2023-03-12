@@ -97,7 +97,6 @@ describe("Testing the networking features of the app", () => {
       cy.get('[data-cy="ReceivedInvitationTab"]').click({ force: true });
 
       //visit network and check if invitation button exists
-      cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
       cy.wait(2000);
       //if button doesn't exist, check specific button
@@ -231,6 +230,7 @@ describe("Testing the networking features of the app", () => {
       //vist network
       cy.visit("http://localhost:3000/network");
       cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
+      cy.wait(2000);
 
       //send invitation invitationButtonTest
       //either invitationButtonTest or invitationButton must be clicked
@@ -253,9 +253,7 @@ describe("Testing the networking features of the app", () => {
     });
 
     it("withdraws the invitation that was sent from the right account", () => {
-      //vist network page and all tabs
       cy.visit("http://localhost:3000/network");
-      //visit all tabs
       cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
       //verify that last user is the user we sent the invitation to (could be modified to a find if last invitation != last user that appears)
       //name of the user is "Test User"
@@ -330,18 +328,6 @@ describe("Testing the networking features of the app", () => {
       cy.get(".MuiContainer-maxWidthXxl > .MuiBox-root").contains(
         "No connections yet :/"
       );
-    });
-
-    it("verifies the invitation was sent", () => {
-      //visit all tabs
-      cy.visit("http://localhost:3000/network");
-      cy.get(".MuiContainer-maxWidthXxl > .MuiBox-root").contains(
-        "No connections yet :/"
-      );
-
-      //visit sent invitation tab and Possible Connections Tab
-      cy.get('[data-cy="SentInvitationTab"]').click({ force: true });
-      cy.get('[data-cy="PossibleConnectionsTab"]').click({ force: true });
     });
 
     it("logs out, logs in to createaccount containing the invitation and accepts it (ACCOUNT NAME MUST BE HANNI PHAM)", () => {
