@@ -7,9 +7,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 import { useAuth } from "../../context/AuthContext";
@@ -17,10 +18,19 @@ import { useAuth } from "../../context/AuthContext";
 const theme = createTheme();
 
 export const NetworkPossibleConnections = () => {
+  const queryClient = useQueryClient();
   const { currentUser } = useAuth();
 
   const fetchPossibleConnections = async (user) => {
-    if (user !== null && user !== undefined) {
+    const cacheKey = ["possibleConnections", user.email];
+    const cachedData = localStorage.getItem(cacheKey.join("."));
+    if (cachedData) {
+      console.log("using cached data");
+      return JSON.parse(cachedData);
+    }
+
+    console.log("fetching data from server");
+    if (user !== null && user !== undefined && !cachedData) {
       try {
         //get list of user connections of current user
         const networkDocSnap = await getDoc(doc(db, "network", user.email));
@@ -51,30 +61,59 @@ export const NetworkPossibleConnections = () => {
         const allUsers = users;
 
         //create a new array of users that isnt connected with the currentUser
-        return allUsers.filter(
+        const nonConnectedUsersArr = allUsers.filter(
           (eachUser) =>
             !connectedUsersId.includes(eachUser.id) &&
             !sentInvitationsId.includes(eachUser.id) &&
             user.email !== eachUser.id
         );
+
+        // cache the data
+        localStorage.setItem(
+          cacheKey.join("."),
+          JSON.stringify(nonConnectedUsersArr)
+        );
+
+        return nonConnectedUsersArr;
       } catch (e) {
         console.log(e);
       }
     }
     return undefined;
   };
-
   const {
     isError,
     isSuccess,
     isLoading,
     data: nonConnectedUsersArr,
     error,
+    refetch,
   } = useQuery(
     ["possibleConnections", currentUser],
     () => fetchPossibleConnections(currentUser),
-    { staleTime: Infinity }
+    { manual: true }
   );
+
+  //refetch button
+  const handleClearCache = () => {
+    const cacheKey = ["possibleConnections", currentUser.email];
+    localStorage.removeItem(cacheKey.join("."));
+    queryClient.invalidateQueries(["possibleConnections", currentUser]);
+    refetch();
+  };
+
+  // automatically clear cache and refetch after 5 minutes
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const cacheKey = ["possibleConnections", currentUser.email];
+      localStorage.removeItem(cacheKey.join("."));
+      queryClient.invalidateQueries(["possibleConnections", currentUser]);
+    }, 5 * 60 * 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [currentUser, queryClient]);
 
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
@@ -83,6 +122,9 @@ export const NetworkPossibleConnections = () => {
           <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>
             People you may know
           </Typography>
+          <Button onClick={handleClearCache}>
+            <RefreshIcon />
+          </Button>
           <Box
             justifyContent="center"
             alignItems="center"
