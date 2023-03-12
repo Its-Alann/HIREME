@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
   FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,8 +22,6 @@ import PropTypes from "prop-types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { CheckBox } from "@mui/icons-material";
 
 const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
   const expName = `expName${cardNum}`;
@@ -31,30 +30,35 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
   const expDescription = `expDesc${cardNum}`;
   const expStartDate = `expStartDate${cardNum}`;
   const expEndDate = `expEndDate${cardNum}`;
+  const expWorkHere = `expWorkHere${cardNum}`;
+  const [tempStartDate, setTempStartDate] = useState("");
+  const [tempEndDate, setTempEndDate] = useState("");
   const [deleteAlert, setDeleteAlert] = useState(false);
-  const [startYear, setStartYear] = useState("");
-  const [endYear, setEndYear] = useState("");
   const [editButton, setEditButton] = useState(false);
   const [isCurrentlyEmployed, setIsCurrentlyEmployed] = useState(false);
 
-  const getDates = async () => {
-    if (profile.values) {
-      setStartYear(
-        profile.values.startDateExp instanceof Date
-          ? await dayjs.unix(profile.values[expStartDate].valueOf() / 1000)
-          : await dayjs.unix(profile.values[expStartDate].seconds)
-      );
-      setEndYear(
-        profile.values.endDateExp instanceof Date
-          ? await dayjs.unix(profile.values[expEndDate].valueOf() / 1000)
-          : await dayjs.unix(profile.values[expEndDate].seconds)
-      );
+  useEffect(() => {
+    console.log(profile);
+    if (profile.values[expStartDate] !== undefined) {
+      setTempStartDate(profile.values[expStartDate]);
     }
-  };
+    if (profile.values[expEndDate] !== undefined) {
+      setTempEndDate(profile.values[expEndDate]);
+    }
+    if (profile.values[expWorkHere] !== undefined) {
+      setIsCurrentlyEmployed(profile.values[expWorkHere]);
+    } else {
+      setProfile({
+        values: {
+          ...profile.values,
+          [expWorkHere]: false,
+        },
+      });
+    }
+  }, []);
 
   const handleClickOpen = () => {
     setDeleteAlert(true);
-    console.log(isCurrentlyEmployed);
   };
 
   const handleClose = () => {
@@ -73,14 +77,14 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
   };
 
   const handleCheckbox = () => {
-    console.log(isCurrentlyEmployed);
+    setProfile({
+      values: {
+        ...profile.values,
+        [expWorkHere]: !isCurrentlyEmployed,
+      },
+    });
     setIsCurrentlyEmployed(!isCurrentlyEmployed);
-    console.log(isCurrentlyEmployed);
   };
-
-  useEffect(() => {
-    getDates();
-  }, [profile]);
 
   return (
     <Box>
@@ -119,13 +123,14 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Start Date"
-                  value={startYear && startYear}
+                  value={tempStartDate}
                   readOnly={!editButton}
                   onChange={(newValue) => {
+                    setTempStartDate(newValue.$d.toISOString());
                     setProfile({
                       values: {
                         ...profile.values,
-                        [expStartDate]: newValue.$d,
+                        [expStartDate]: newValue.$d.toISOString(),
                       },
                     });
                   }}
@@ -138,38 +143,39 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid item>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="End Date"
-                  value={endYear && endYear}
-                  readOnly={!editButton}
-                  onChange={(newValue) => {
-                    setProfile({
-                      values: {
-                        ...profile.values,
-                        [expEndDate]: newValue.$d,
-                      },
-                    });
-                  }}
-                  // eslint-disable-next-line react/jsx-props-no-spreading
-                  renderInput={(params) => <TextField {...params} />}
-                  InputProps={{
-                    readOnly: !editButton,
-                    error: editButton,
-                  }}
-                />
-              </LocalizationProvider>
-            </Grid>
+            {!isCurrentlyEmployed && (
+              <Grid item>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="End Date"
+                    value={tempEndDate}
+                    readOnly={!editButton}
+                    onChange={(newValue) => {
+                      setTempEndDate(newValue.$d.toISOString());
+                      setProfile({
+                        values: {
+                          ...profile.values,
+                          [expEndDate]: newValue.$d.toISOString(),
+                        },
+                      });
+                    }}
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    renderInput={(params) => <TextField {...params} />}
+                    InputProps={{
+                      readOnly: !editButton,
+                      error: editButton,
+                    }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            )}
             <Grid item>
               <FormControlLabel
-                sx={{ m: "auto" }}
                 control={
-                  <CheckBox
+                  <Checkbox
                     name="workCheck"
                     checked={isCurrentlyEmployed}
                     onChange={handleCheckbox}
-                    unchecked
                   />
                 }
                 label="I currently work here"
@@ -237,13 +243,16 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                 readOnly: !editButton,
                 error: editButton,
               }}
+              sx={{ mr: "auto" }}
             />
             {isLast && (
               <>
-                <DeleteIcon
-                  sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
-                  onClick={handleClickOpen}
-                />
+                {cardNum > 0 && (
+                  <DeleteIcon
+                    sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
+                    onClick={handleClickOpen}
+                  />
+                )}
 
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
@@ -261,6 +270,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                   sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
                   onClick={() => {
                     const newCardNum = profile.values.expNum + 1;
+                    console.log(newCardNum);
                     setProfile({
                       values: {
                         ...profile.values,

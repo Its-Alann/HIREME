@@ -29,26 +29,20 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
   const schProgram = `schoolProgram${cardNum}`;
   const schStartDate = `schoolStartDate${cardNum}`;
   const schEndDate = `schoolEndDate${cardNum}`;
-  const courses = [profile.values.courses];
+  const [tempStartDate, setTempStartDate] = useState("");
+  const [tempEndDate, setTempEndDate] = useState("");
   const [deleteAlert, setDeleteAlert] = useState(false);
-  const [startYear, setStartYear] = useState("");
-  const [endYear, setEndYear] = useState("");
   const [editButton, setEditButton] = useState(false);
 
-  const getDates = async () => {
-    if (profile.values) {
-      setStartYear(
-        profile.values[schStartDate] instanceof Date
-          ? await dayjs.unix(profile.values[schStartDate].valueOf() / 1000)
-          : await dayjs.unix(profile.values[schStartDate].seconds)
-      );
-      setEndYear(
-        profile.values[schEndDate] instanceof Date
-          ? await dayjs.unix(profile.values[schEndDate].valueOf() / 1000)
-          : await dayjs.unix(profile.values[schEndDate].seconds)
-      );
+  useEffect(() => {
+    console.log(profile);
+    if (profile.values[schStartDate] !== undefined) {
+      setTempStartDate(profile.values[schStartDate]);
     }
-  };
+    if (profile.values[schEndDate] !== undefined) {
+      setTempEndDate(profile.values[schEndDate]);
+    }
+  }, []);
 
   const handleClickOpen = () => {
     setDeleteAlert(true);
@@ -68,10 +62,6 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
       },
     });
   };
-
-  useEffect(() => {
-    getDates();
-  }, [profile]);
 
   return (
     <Box>
@@ -113,13 +103,14 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Start Date"
-                  value={startYear && startYear}
+                  value={tempStartDate}
                   readOnly={!editButton}
                   onChange={(newValue) => {
+                    setTempStartDate(newValue.$d.toISOString());
                     setProfile({
                       values: {
                         ...profile.values,
-                        [schStartDate]: newValue.$d,
+                        [schStartDate]: newValue.$d.toISOString(),
                       },
                     });
                     console.log(newValue);
@@ -137,13 +128,14 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="End Date"
-                  value={endYear && endYear}
+                  value={tempEndDate}
                   readOnly={!editButton}
                   onChange={(newValue) => {
+                    setTempEndDate(newValue.$d.toISOString());
                     setProfile({
                       values: {
                         ...profile.values,
-                        [schEndDate]: newValue.$d,
+                        [schEndDate]: newValue.$d.toISOString(),
                       },
                     });
                     console.log(newValue.$d);
@@ -201,18 +193,20 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
             </Grid>
           </Grid>
           {/* I would like to make these into tags that you can delete */}
-          <Grid container spacing={1}>
-            {courses.map((data) => (
+          <Grid container spacing={1} justifyContent="end">
+            {/* {courses.map((data) => (
               <Grid item>
                 <Chip color="info" label={data} variant="outlined" />
               </Grid>
-            ))}
+            ))} */}
             {isLast && (
               <>
-                <DeleteIcon
-                  sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
-                  onClick={handleClickOpen}
-                />
+                {cardNum > 0 && (
+                  <DeleteIcon
+                    sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
+                    onClick={handleClickOpen}
+                  />
+                )}
 
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>

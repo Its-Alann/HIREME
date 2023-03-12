@@ -17,8 +17,6 @@ import "./EditProfile.css";
 import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
 
 const EditProfilePage = () => {
-  // Set default value, because otherwise UI glitch + warning
-
   const theme = createTheme({
     palette: {
       primary: { main: "#2B2F90" },
@@ -54,13 +52,13 @@ const EditProfilePage = () => {
       workingHere: "",
       description: "",
       skills: "",
-      language: "",
+      //language: "",
       proficiency: "",
-      project: "",
-      projectDesc: "",
+      //project: "",
+      //projectDesc: "",
       organization: "",
       dateVolunt: "",
-      voluntDesc: "",
+      //voluntDesc: "",
       awardTitle: "",
       issuer: "",
       dateAward: "",
@@ -70,6 +68,12 @@ const EditProfilePage = () => {
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
   const [url, setUrl] = useState();
+  const [infoAvailable, setInfoAvailable] = useState(false);
+
+  //callback function to make sure setState updates state before its next use (i think)
+  // function outputProfile() {
+  //   console.log(profile);
+  // }
 
   // Only once, attach listener to onAuthStateChanged
   useEffect(() => {
@@ -118,11 +122,6 @@ const EditProfilePage = () => {
     fetchData();
   }, [currentUserEmail, database]);
 
-  //Whenever profile changes, log profile
-  useEffect(() => {
-    console.log("User Profile", profile);
-  }, [profile]);
-
   // Update user's profile with data inside "profile"
   async function handleTempButton() {
     console.log(profile);
@@ -132,6 +131,14 @@ const EditProfilePage = () => {
       console.log("Update finished");
     }
   }
+
+  //wait until info is retrieved from db before loading cards
+  useEffect(() => {
+    console.log("User Profile", profile);
+    if (profile.values.firstName !== "") {
+      setInfoAvailable(true);
+    }
+  }, [profile]);
 
   const getEductionCards = () => {
     const cards = [];
@@ -160,23 +167,119 @@ const EditProfilePage = () => {
 
   const getExperienceCards = () => {
     const cards = [];
-    if (profile.values.ExpNum === undefined) {
+    if (profile.values.expNum === undefined) {
       setProfile({
         values: {
           ...profile.values,
-          ExpNum: 1,
+          expNum: 1,
         },
       });
       handleTempButton();
     }
-    for (let i = 0; i < profile.values.ExpNum; i += 1) {
+    for (let i = 0; i < profile.values.expNum; i += 1) {
       cards.push(
         <ExperienceCard
           setProfile={setProfile}
           profile={profile}
           currentUserEmail={currentUserEmail}
           cardNum={i}
-          isLast={i + 1 === profile.values.ExpNum}
+          isLast={i + 1 === profile.values.expNum}
+        />
+      );
+    }
+    return cards;
+  };
+
+  const getAwardsCards = () => {
+    const cards = [];
+    if (profile.values.awardsNum === undefined) {
+      setProfile({
+        values: {
+          ...profile.values,
+          awardsNum: 1,
+        },
+      });
+      handleTempButton();
+    }
+    for (let i = 0; i < profile.values.awardsNum; i += 1) {
+      cards.push(
+        <AwardsCard
+          profile={profile}
+          setProfile={setProfile}
+          cardNum={i}
+          isLast={i + 1 === profile.values.awardsNum}
+        />
+      );
+    }
+    return cards;
+  };
+
+  const getLanguageCards = () => {
+    const cards = [];
+    if (profile.values.languageNum === undefined) {
+      setProfile({
+        values: {
+          ...profile.values,
+          languageNum: 1,
+        },
+      });
+      handleTempButton();
+    }
+    for (let i = 0; i < profile.values.languageNum; i += 1) {
+      cards.push(
+        <LanguagesCard
+          profile={profile}
+          setProfile={setProfile}
+          cardNum={i}
+          isLast={i + 1 === profile.values.languageNum}
+        />
+      );
+    }
+    return cards;
+  };
+
+  const getProjectsCards = () => {
+    const cards = [];
+    if (profile.values.projectNum === undefined) {
+      setProfile({
+        values: {
+          ...profile.values,
+          projectNum: 1,
+        },
+      });
+      handleTempButton();
+    }
+    for (let i = 0; i < profile.values.projectNum; i += 1) {
+      cards.push(
+        <ProjectsCard
+          profile={profile}
+          setProfile={setProfile}
+          cardNum={i}
+          isLast={i + 1 === profile.values.projectNum}
+        />
+      );
+    }
+    return cards;
+  };
+
+  const getVolunteeringCard = () => {
+    const cards = [];
+    if (profile.values.volunteerNum === undefined) {
+      setProfile({
+        values: {
+          ...profile.values,
+          volunteerNum: 1,
+        },
+      });
+      handleTempButton();
+    }
+    for (let i = 0; i < profile.values.volunteerNum; i += 1) {
+      cards.push(
+        <VolunteeringCard
+          profile={profile}
+          setProfile={setProfile}
+          cardNum={i}
+          isLast={i + 1 === profile.values.volunteerNum}
         />
       );
     }
@@ -187,7 +290,7 @@ const EditProfilePage = () => {
     <ThemeProvider theme={theme}>
       <Grid display="flex" style={{ minWidth: "100vh" }}>
         <div id="profile-container">
-          <Grid container columnSpacing={2}>
+          <Grid container columnSpacing={2} sx={{ marginBottom: "1.5%" }}>
             <Grid
               item
               justifyContent="center"
@@ -241,44 +344,53 @@ const EditProfilePage = () => {
             </Grid>
           </Grid>
           <Stack spacing={2}>
-            <ContactInfoCard
-              setProfile={setProfile}
-              profile={profile}
-              currentUserEmail={currentUserEmail}
-            />
-            {/* <EducationCard
-              setProfile={setProfile}
-              profile={profile}
-              currentUserEmail={currentUserEmail}
-            /> */}
-            {getEductionCards()}
-            {/* <ExperienceCard
-              setProfile={setProfile}
-              profile={profile}
-              currentUserEmail={currentUserEmail}
-            /> */}
-            {getExperienceCards()}
-            <SkillsCard
-              setProfile={setProfile}
-              profile={profile}
-              currentUserEmail={currentUserEmail}
-            />
-            <LanguagesCard profile={profile} setProfile={setProfile} />
-            <ProjectsCard profile={profile} setProfile={setProfile} />
-            <VolunteeringCard profile={profile} setProfile={setProfile} />
-            <AwardsCard profile={profile} setProfile={setProfile} />
-            <Button
-              onClick={() => {
-                console.log("Button Save Clicked");
-                handleTempButton();
-              }}
-              style={{
-                color: "white",
-              }}
-              data-cy="saveBtn"
-            >
-              Save Changes
-            </Button>
+            {infoAvailable && (
+              <>
+                <ContactInfoCard setProfile={setProfile} profile={profile} />
+
+                {/* <EducationCard
+                setProfile={setProfile}
+                profile={profile}
+                currentUserEmail={currentUserEmail}
+                /> */}
+                {getEductionCards()}
+
+                {/* <ExperienceCard
+                setProfile={setProfile}
+                profile={profile}
+                currentUserEmail={currentUserEmail}
+                /> */}
+                {getExperienceCards()}
+
+                <SkillsCard profile={profile} setProfile={setProfile} />
+
+                {/* <LanguagesCard profile={profile} setProfile={setProfile} /> */}
+                {getLanguageCards()}
+
+                {/* <ProjectsCard profile={profile} setProfile={setProfile} /> */}
+                {getProjectsCards()}
+
+                {/* <VolunteeringCard profile={profile} setProfile={setProfile} /> */}
+                {getVolunteeringCard()}
+
+                {/* <AwardsCard profile={profile} setProfile={setProfile} /> */}
+                {getAwardsCards()}
+
+                <Button
+                  onClick={() => {
+                    console.log("Button Save Clicked");
+                    handleTempButton();
+                  }}
+                  style={{
+                    color: "white",
+                  }}
+                  data-cy="saveBtn"
+                >
+                  Save Changes
+                </Button>
+              </>
+            )}
+            {!infoAvailable && <p>Loading</p>}
           </Stack>
         </div>
       </Grid>
