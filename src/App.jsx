@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import HomePage from "./Pages/Home/HomePage";
 import LoginPage from "./Pages/Login/LoginPage";
 import SignUpPage from "./Pages/SignUp/SignUpPage";
@@ -20,6 +21,8 @@ import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitatio
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const hello = "helloo";
@@ -39,35 +42,41 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
-        <Router>
-          <Navbar />
-          <Routes>
-            <Route path="/" exact element={<HomePage />} />
-            <Route path="/login" exact element={<LoginPage />} />
-            <Route path="/signup" exact element={<SignUpPage />} />
-            <Route
-              path="/accountCreation"
-              exact
-              element={<AccountCreationPage />}
-            />
-            <Route
-              path="/editProfile"
-              exact
-              element={
-                <ProtectedRoute redirect="/">
-                  <EditProfilePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/network" exact element={<NetworkPage />} />
-            <Route path="/messaging" export element={<MessagingPage />} />
-            <Route path="/myNetwork" exact element={<ViewNetwork />} />
-            <Route path="/invitations" exact element={<ReceivedInvitation />} />
-            <Route path="/sentRequests" exact element={<SentInvitation />} />
-          </Routes>
-        </Router>
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div className="App">
+          <Router>
+            <Navbar />
+            <Routes>
+              <Route path="/" exact element={<HomePage />} />
+              <Route path="/login" exact element={<LoginPage />} />
+              <Route path="/signup" exact element={<SignUpPage />} />
+              <Route
+                path="/accountCreation"
+                exact
+                element={<AccountCreationPage />}
+              />
+              <Route
+                path="/editProfile"
+                exact
+                element={
+                  <ProtectedRoute redirect="/">
+                    <EditProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/network" exact element={<NetworkPage />} />
+              <Route path="/messaging" export element={<MessagingPage />} />
+              <Route path="/myNetwork" exact element={<ViewNetwork />} />
+              <Route
+                path="/invitations"
+                exact
+                element={<ReceivedInvitation />}
+              />
+              <Route path="/sentRequests" exact element={<SentInvitation />} />
+            </Routes>
+          </Router>
+        </div>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 };

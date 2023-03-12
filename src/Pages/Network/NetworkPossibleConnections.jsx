@@ -8,6 +8,8 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useQuery } from "react-query";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
@@ -17,11 +19,20 @@ export const NetworkPossibleConnections = () => {
   const [connectedUsersId, setConnectedUsersId] = useState([]);
   const [sentInvitationsId, setSentInvitationsId] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
 
-  const getPossibleConnections = async (user) => {
-    // READ DATA
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        //take you back to the homepage
+        //console.log(user);
+      }
+    });
+  }, []);
+
+  const fetchPossibleConnections = async (user) => {
     try {
       //get list of user connections of current user
       const networkDocSnap = await getDoc(doc(db, "network", user.email));
@@ -46,42 +57,33 @@ export const NetworkPossibleConnections = () => {
       }));
 
       setAllUsers(users);
-    } catch (err) {
-      console.error("err:", err);
+
+      //create a new array of users that isnt connected with the currentUser
+      return allUsers.filter(
+        (eachUser) =>
+          !connectedUsersId.includes(eachUser.id) &&
+          !sentInvitationsId.includes(eachUser.id) &&
+          user.email !== eachUser.id
+      );
+    } catch (e) {
+      console.log(e);
     }
+    return undefined;
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    getPossibleConnections(currentUser);
-    console.log("networkPossibleConnections", currentUser);
-  }, [currentUser]);
-
-  useEffect(() => {
-    try {
-      //create a new array of users that isnt connected with the currentUser
-      const newNonConnectedUsersArr = allUsers.filter(
-        (user) =>
-          !connectedUsersId?.includes(user?.id) &&
-          !sentInvitationsId?.includes(user?.id) &&
-          currentUser.email !== user.id
-      );
-      setNonConnectedUsersArr(newNonConnectedUsersArr);
-      console.log("networkPossibleConnections", newNonConnectedUsersArr);
-    } catch (error) {
-      console.log(error);
+  const {
+    isError,
+    isSuccess,
+    isLoading,
+    data: nonConnectedUsersArr,
+    error,
+  } = useQuery(
+    ["possibleConnections", currentUser],
+    () => fetchPossibleConnections(currentUser),
+    {
+      staleTime: 6000,
     }
-  }, [connectedUsersId, sentInvitationsId, allUsers, currentUser]);
+  );
 
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
@@ -96,7 +98,8 @@ export const NetworkPossibleConnections = () => {
             display="flex"
             data-cy="connectionsBox"
           >
-            {nonConnectedUsersArr.length > 0 && nonConnectedUsersArr != null ? (
+            {nonConnectedUsersArr?.length > 0 &&
+            nonConnectedUsersArr != null ? (
               <Grid
                 container
                 spacing={3}
