@@ -12,11 +12,12 @@ import { QueryClient, useQuery } from "react-query";
 import { Error } from "@mui/icons-material";
 import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
+import { useAuth } from "../../../context/AuthContext";
 
 const theme = createTheme();
 
 export const ViewNetwork = () => {
-  const [currentUser, setCurrentUser] = useState();
+  const { currentUser } = useAuth();
 
   const fetchNetworks = async (user) => {
     if (user) {
@@ -33,17 +34,6 @@ export const ViewNetwork = () => {
     return undefined;
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
-
   const {
     isError,
     isSuccess,
@@ -51,7 +41,7 @@ export const ViewNetwork = () => {
     data: connectedUsersId,
     error,
   } = useQuery(["connections", currentUser], () => fetchNetworks(currentUser), {
-    staleTime: 6000,
+    staleTime: Infinity,
   });
 
   // If you absolutely need to cache the mutated data you can do the below. But

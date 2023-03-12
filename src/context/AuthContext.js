@@ -3,6 +3,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
+import {
+  useCreateUserWithEmailAndPassword,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
 import { auth } from "../Firebase/firebase";
 
 const AuthContext = createContext();
@@ -15,20 +24,20 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
-  function login(email, password) {
-    return auth.signInWithEmailAndPassword(email, password);
+  function UseLogin(email, password) {
+    signInWithEmailAndPassword(auth, email, password);
   }
 
   function signOut() {
     return auth.signOut();
   }
 
-  function signUp(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password);
+  function UseSignUp(email, password) {
+    createUserWithEmailAndPassword(auth, email, password);
   }
 
   function getUser() {
-    return auth.currentUser;
+    return currentUser;
   }
 
   function isAdmin() {
@@ -55,9 +64,9 @@ export const AuthProvider = ({ children }) => {
   const value = {
     currentUser,
     getUser,
-    login,
+    UseLogin,
     signOut,
-    signUp,
+    UseSignUp,
   };
 
   return (

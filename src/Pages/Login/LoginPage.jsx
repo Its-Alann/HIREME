@@ -22,6 +22,7 @@ import {
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import { auth, provider } from "../../Firebase/firebase";
 import Navbar from "../../Components/Navbar/Navbar";
+import { useAuth } from "../../context/AuthContext";
 
 const theme = createTheme({
   palette: {
@@ -39,8 +40,7 @@ const LoginPage = () => {
   const [emailError, setEmailError] = React.useState(false);
   const [authError, setAuthError] = React.useState(false);
   const [authErrorMsg, setAuthErrorMsg] = React.useState("");
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const { UseLogin, getUser: user } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,7 +55,7 @@ const LoginPage = () => {
         password,
       });
       try {
-        signInWithEmailAndPassword(email, password);
+        UseLogin(email, password);
         console.log(user);
 
         navigate("/");
@@ -137,7 +137,7 @@ const LoginPage = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            {loading ? (
+            {false ? (
               <CircularProgress />
             ) : (
               <Button
@@ -152,7 +152,6 @@ const LoginPage = () => {
                 Sign In
               </Button>
             )}
-            {error && <Typography color="red">{error}</Typography>}
             <Stack container justifyContent="center" spacing={1}>
               <Link item xs align="center" href="/" variant="subtitle2">
                 Forgot password?

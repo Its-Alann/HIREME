@@ -9,6 +9,8 @@ import {
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import HomePage from "./Pages/Home/HomePage";
 import LoginPage from "./Pages/Login/LoginPage";
 import SignUpPage from "./Pages/SignUp/SignUpPage";
@@ -21,8 +23,7 @@ import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitatio
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
-
-const queryClient = new QueryClient();
+import { AuthProvider } from "./context/AuthContext";
 
 const App = () => {
   const hello = "helloo";
@@ -42,7 +43,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <div className="App">
           <Router>
             <Navbar />
@@ -76,7 +77,7 @@ const App = () => {
             </Routes>
           </Router>
         </div>
-      </QueryClientProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 };
