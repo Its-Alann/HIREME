@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,43 +7,59 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { auth, db } from "../../Firebase/firebase";
 
 const FlaggedMessages = (props) => {
-  const antinos = "🖖";
-  const tempData = [
-    {
-      email: "hypeboy@tok.ki",
-      message: "im definitely a munch",
-    },
-  ];
+  // array of reported message objects
+  const [reportedMessages, setReportedMessages] = useState([]);
 
-  const messagesRef = collection(db, "messages");
+  const getReportedMessages = async () => {
+    const reportedMessagesRef = collection(db, "reportedMessages");
 
-  
-  const reportedQuery = 
+    const reportedQuerySnapshot = await getDocs(reportedMessagesRef);
+    const temp = [];
+    reportedQuerySnapshot.forEach((document) => {
+      // const resData =
+      temp.push(document.data());
+      // console.log(document.data());
+      // console.log("useState", reportedMessages);
+    });
+
+    setReportedMessages(temp);
+  };
+
+  useEffect(() => {
+    getReportedMessages();
+  }, []);
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Flagged Message</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tempData.map((data) => (
+    <>
+      <TableContainer>
+        <Table>
+          <TableHead>
             <TableRow>
-              <TableCell>{data.email}</TableCell>
-              <TableCell>{data.message}</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Flagged Message 🚩</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {reportedMessages.map((data) => (
+              <TableRow>
+                <TableCell>{data.sender}</TableCell>
+                <TableCell>
+                  {data.content
+                    ? data.content
+                    : data.attachment && data.attachment}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* <button onClick={getReportedMessages} /> */}
+    </>
   );
 };
 
