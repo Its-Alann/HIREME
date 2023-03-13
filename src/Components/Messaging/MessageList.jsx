@@ -2,26 +2,61 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import { List, ListItem } from "@mui/material";
+import { getDownloadURL, ref } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
 import MessageListItem from "./MessageListItem";
-import { auth } from "../../Firebase/firebase";
+import { auth, storage, db } from "../../Firebase/firebase";
 
-const MessageList = ({ messages }) => {
-  // Very mysterious
-  // Without this hello, state won't update?????
-  // How??
-  const hello = "hello";
+const MessageList = ({ messages, convoId }) => {
+  const openAttachment = (path) => {
+    getDownloadURL(ref(storage, `messages/${path}`)).then((url) =>
+      window.open(url, "_blank")
+    );
+  };
+
+  const reportMessage = async (index) => {
+    // users cant unreport their own messages
+    if (
+      messages[index].sender === auth.currentUser.email &&
+      messages[index].reported
+    ) {
+      return;
+    }
+    const convoRef = doc(db, "messages", convoId);
+    const updatedMessages = messages;
+    updatedMessages[index] = {
+      ...messages[index],
+      reported: !messages[index].reported,
+    };
+    // console.log("updatedMessages", updatedMessages);
+    await updateDoc(convoRef, {
+      messages: updatedMessages,
+    });
+  };
+
   return (
-    <List>
+    <List data-cy="messageList">
       {messages.map((message, i) => {
         const alignment =
           message.sender === auth.currentUser.email ? "right" : "left";
         return (
-          <ListItem key={i} style={{ justifyContent: alignment }}>
+          <ListItem
+            data-testid="messageListItem"
+            key={i}
+            sx={{
+              justifyContent: alignment,
+              "&:hover .messageOptions": {
+                display: "inline-block",
+                color: "grey",
+              },
+            }}
+          >
             <MessageListItem
-              timestamp={message.timestamp.toDate()}
-              content={message.content}
-              sender={message.sender}
+              message={message}
               alignment={alignment}
+              openAttachment={openAttachment}
+              index={i}
+              reportMessage={reportMessage}
             />
           </ListItem>
         );
@@ -31,6 +66,7 @@ const MessageList = ({ messages }) => {
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.any),
+  messages: PropTypes.arrayOf(),
+  convoId: PropTypes.string,
 };
 export default MessageList;
