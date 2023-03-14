@@ -56,8 +56,6 @@ const LoginPage = () => {
       });
       try {
         signInWithEmailAndPassword(email, password);
-        console.log(user);
-
         navigate("/");
       } catch (err) {
         console.error(err.code, err.message);
@@ -67,9 +65,7 @@ const LoginPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <Navbar /> */}
       <Container component="main" maxWidth="xs">
-        {/* <CssBaseline /> */}
         <Box
           sx={{
             marginTop: 5,
