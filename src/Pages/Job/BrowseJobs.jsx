@@ -168,6 +168,24 @@ export const BrowseJobs = () => {
                     alignItems="flex-end"
                     sx={{ pt: 2 }}
                   >
+                    {/* Added this button for candidate's view */}
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ my: 1 }}
+                      id={`Button-${job.documentID}`}
+                    >
+                      <Link
+                        to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job (redirects to candidate&apos;s view)
+                      </Link>
+                    </Button>
+                    {/* button for recruiter's view */}
                     <Button
                       variant="contained"
                       size="medium"
