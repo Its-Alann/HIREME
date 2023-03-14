@@ -102,9 +102,21 @@ describe("example to-do app", () => {
   });
 
   describe("Starting a new conversation", () => {
+    // after(() => {
+    //   cy.log("yurrr");
+    //   cy.callFirestore("get", "messages", {
+    //     where: ["authors", "==", ["billybob@gmail.com", "messaging@test.com"]],
+    //   }).then((r) => {
+    //     const idToDelete = r[0].id;
+    //     const pathToDelete = `messages/${idToDelete}`;
+    //     cy.log("pathToDelete", pathToDelete);
+    //     cy.callFirestore("delete", pathToDelete);
+    //   });
+    // });
+
     it("opens new chat flow", () => {
       cy.logout();
-      cy.login();
+      cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
 
       // cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000/messaging");
@@ -112,7 +124,7 @@ describe("example to-do app", () => {
       cy.get('[data-cy="selectConnections"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').should("be.disabled");
       cy.get('[data-testid="ArrowDropDownIcon"]').click();
-      cy.get("#mui-3-option-0").click();
+      cy.get("li.MuiAutocomplete-option").click();
       cy.get('[data-testid="CancelIcon"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').click();
     });
