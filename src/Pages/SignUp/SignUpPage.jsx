@@ -55,7 +55,6 @@ const SignUpPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <Navbar /> */}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

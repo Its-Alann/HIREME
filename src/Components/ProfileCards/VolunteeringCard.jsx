@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { React, useState, useEffect } from "react";
 import {
   Grid,
@@ -6,32 +7,53 @@ import {
   CardContent,
   Typography,
   TextField,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
 
-const VolunteeringCard = ({ profile, setProfile }) => {
-  const [startYear, setStartYear] = useState("");
+const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
+  const volunteerOrg = `volunteer${cardNum}org`;
+  const volunteerDesc = `volunteer${cardNum}desc`;
+  const volunteerDate = `volunteer${cardNum}date`;
   const [editButton, setEditButton] = useState(false);
-
-  const getDates = async () => {
-    if (profile.values) {
-      setStartYear(
-        profile.values.dateVolunt instanceof Date
-          ? await dayjs.unix(profile.values.dateVolunt.valueOf() / 1000)
-          : await dayjs.unix(profile.values.dateVolunt.seconds)
-      );
-    }
-  };
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [tempVolDate, setTempVolDate] = useState("");
 
   useEffect(() => {
-    // console.log("profile", profile);
-    getDates();
-  }, [profile]);
+    if (profile.values[volunteerDate] !== undefined) {
+      setTempVolDate(profile.values[volunteerDate]);
+    }
+  }, []);
+
+  const handleClickOpen = () => {
+    setDeleteAlert(true);
+  };
+
+  const handleClose = () => {
+    setDeleteAlert(false);
+  };
+
+  const handleClearCardInfo = () => {
+    handleClose();
+    const newCardNum = profile.values.volunteerNum - 1;
+    setProfile({
+      values: {
+        ...profile.values,
+        volunteerNum: newCardNum,
+      },
+    });
+  };
+
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -53,10 +75,13 @@ const VolunteeringCard = ({ profile, setProfile }) => {
                 label="Project Title"
                 variant="standard"
                 size="small"
-                value={profile.values.organization}
+                value={profile.values[volunteerOrg]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, organization: e.target.value },
+                    values: {
+                      ...profile.values,
+                      [volunteerOrg]: e.target.value,
+                    },
                   })
                 }
                 InputProps={{
@@ -68,13 +93,14 @@ const VolunteeringCard = ({ profile, setProfile }) => {
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Date Awarded"
-                  value={startYear}
+                  label="Volunteering Date"
+                  value={tempVolDate}
                   onChange={(newValue) => {
+                    setTempVolDate(newValue.$d.toISOString());
                     setProfile({
                       values: {
                         ...profile.values,
-                        dateVolunt: newValue && newValue.$d,
+                        [volunteerDate]: newValue.$d.toISOString(),
                       },
                     });
                   }}
@@ -89,17 +115,20 @@ const VolunteeringCard = ({ profile, setProfile }) => {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item>
+            <Grid item sx={{ mr: "auto" }}>
               <TextField
                 label="Project Description"
                 variant="standard"
                 size="small"
                 multiline
                 maxRows={4}
-                value={profile.values.voluntDesc}
+                value={profile.values[volunteerDesc]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, voluntDesc: e.target.value },
+                    values: {
+                      ...profile.values,
+                      [volunteerDesc]: e.target.value,
+                    },
                   })
                 }
                 InputProps={{
@@ -108,6 +137,42 @@ const VolunteeringCard = ({ profile, setProfile }) => {
                 }}
               />
             </Grid>
+            {isLast && (
+              <>
+                {cardNum > 0 && (
+                  <DeleteIcon
+                    sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
+                    onClick={handleClickOpen}
+                  />
+                )}
+
+                <Dialog open={deleteAlert} onClose={handleClose}>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to delete this card?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                  </DialogActions>
+                </Dialog>
+
+                <AddIcon
+                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  onClick={() => {
+                    const newCardNum = profile.values.volunteerNum + 1;
+                    console.log(newCardNum);
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        volunteerNum: newCardNum,
+                      },
+                    });
+                  }}
+                />
+              </>
+            )}
           </Grid>
         </CardContent>
       </Card>
@@ -116,6 +181,7 @@ const VolunteeringCard = ({ profile, setProfile }) => {
 };
 
 VolunteeringCard.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
 };
