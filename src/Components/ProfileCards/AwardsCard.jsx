@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { React, useEffect, useState } from "react";
 import {
   Grid,
@@ -6,32 +7,54 @@ import {
   CardContent,
   Typography,
   TextField,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const AwardsCard = ({ profile, setProfile }) => {
-  const [startYear, setStartYear] = useState("");
+const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
+  const awardTitle = `awardTitle${cardNum}`;
+  const awardIssuer = `awardIssuer${cardNum}`;
+  const awardDescription = `awardDescription${cardNum}`;
+  const awardDate = `awardDate${cardNum}`;
   const [editButton, setEditButton] = useState(false);
-
-  const getDates = async () => {
-    if (profile.values) {
-      setStartYear(
-        profile.values.dateAward instanceof Date
-          ? await dayjs.unix(profile.values.dateAward.valueOf() / 1000)
-          : await dayjs.unix(profile.values.dateAward.seconds)
-      );
-    }
-  };
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [tempAwardDate, setTempAwardDate] = useState("");
 
   useEffect(() => {
-    // console.log("profile", profile);
-    getDates();
-  }, [profile]);
+    if (profile.values[awardDate] !== undefined) {
+      setTempAwardDate(profile.values[awardDate]);
+    }
+  }, []);
+
+  const handleClickOpen = () => {
+    setDeleteAlert(true);
+  };
+
+  const handleClose = () => {
+    setDeleteAlert(false);
+  };
+
+  const handleClearCardInfo = () => {
+    handleClose();
+    const newCardNum = profile.values.awardsNum - 1;
+    setProfile({
+      values: {
+        ...profile.values,
+        awardsNum: newCardNum,
+      },
+    });
+  };
+
   return (
     <Box>
       <Card variant="outlined" sx={{ mx: 5 }}>
@@ -53,10 +76,10 @@ const AwardsCard = ({ profile, setProfile }) => {
                 label="Award Title"
                 variant="standard"
                 size="small"
-                value={profile.values.awardTitle}
+                value={profile.values[awardTitle]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, awardTitle: e.target.value },
+                    values: { ...profile.values, [awardTitle]: e.target.value },
                   })
                 }
                 InputProps={{
@@ -72,10 +95,13 @@ const AwardsCard = ({ profile, setProfile }) => {
                 label="Award Issuer"
                 variant="standard"
                 size="small"
-                value={profile.values.issuer}
+                value={profile.values[awardIssuer]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, issuer: e.target.value },
+                    values: {
+                      ...profile.values,
+                      [awardIssuer]: e.target.value,
+                    },
                   })
                 }
                 InputProps={{
@@ -87,13 +113,15 @@ const AwardsCard = ({ profile, setProfile }) => {
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Start Date"
-                  value={startYear}
-                  onChange={(newValue) => {
+                  label="new date"
+                  value={tempAwardDate}
+                  readOnly={!editButton}
+                  onChange={(newVal) => {
+                    setTempAwardDate(newVal.$d.toISOString());
                     setProfile({
                       values: {
                         ...profile.values,
-                        dateAward: newValue && newValue.$d,
+                        [awardDate]: newVal.$d.toISOString(),
                       },
                     });
                   }}
@@ -108,17 +136,20 @@ const AwardsCard = ({ profile, setProfile }) => {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item>
+            <Grid item sx={{ mr: "auto" }}>
               <TextField
                 label="Award Description"
                 variant="standard"
                 size="small"
                 multiline
                 maxRows={4}
-                value={profile.values.awardDesc}
+                value={profile.values[awardDescription]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, awardDesc: e.target.value },
+                    values: {
+                      ...profile.values,
+                      [awardDescription]: e.target.value,
+                    },
                   })
                 }
                 InputProps={{
@@ -127,6 +158,42 @@ const AwardsCard = ({ profile, setProfile }) => {
                 }}
               />
             </Grid>
+            {isLast && (
+              <>
+                {cardNum > 0 && (
+                  <DeleteIcon
+                    sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
+                    onClick={handleClickOpen}
+                  />
+                )}
+
+                <Dialog open={deleteAlert} onClose={handleClose}>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to delete this card?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                  </DialogActions>
+                </Dialog>
+
+                <AddIcon
+                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  onClick={() => {
+                    const newCardNum = profile.values.awardsNum + 1;
+                    console.log(newCardNum);
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        awardsNum: newCardNum,
+                      },
+                    });
+                  }}
+                />
+              </>
+            )}
           </Grid>
         </CardContent>
       </Card>
@@ -135,6 +202,7 @@ const AwardsCard = ({ profile, setProfile }) => {
 };
 
 AwardsCard.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
 };
