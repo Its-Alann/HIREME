@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 beforeEach(() => {
   cy.viewport(1920, 1080);
 });
