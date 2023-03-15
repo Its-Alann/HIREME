@@ -24,6 +24,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../Firebase/firebase";
 
+//lists of pages accesible from the navbar
 const pages = ["Home", "Network", "Jobs", "Messaging"];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
 const settings = ["Profile", "Account", "Dashboard"];
@@ -31,14 +32,15 @@ const settings = ["Profile", "Account", "Dashboard"];
 const Navbar = () => {
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  //getting user information
   React.useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUserIsConnected(true);
         try {
           const dbInfo = await getDoc(doc(db, "userProfiles", user.email));
           const userInfo = dbInfo.data();
           setUserData(userInfo);
+          setUserIsConnected(true);
         } catch (err) {
           console.log(err);
         }
@@ -47,17 +49,19 @@ const Navbar = () => {
       }
     });
   }, []);
+
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [redirectToPage, setRedirectToPage] = React.useState("");
-  const [user, userLoading, userError] = useAuthState(auth);
+  //const [redirectToPage, setRedirectToPage] = React.useState("");
+  //const [user, userLoading, userError] = useAuthState(auth);
   const [signOut, logoutLoading, logoutError] = useSignOut(auth);
 
   let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -66,8 +70,8 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  //navigation to other pages
   const handleCloseNavMenu = () => {
-    console.log(redirectToPage);
     console.log("redirectToPage2", redirectToPage2);
     switch (redirectToPage2.toLowerCase()) {
       case "messaging":
@@ -257,8 +261,19 @@ const Navbar = () => {
                   >
                     <Avatar
                       style={{ border: "2px solid #2B2F90" }}
-                      alt={userData.values.firstName}
-                      src={userData.values.image}
+                      alt={
+                        //making sure info is defined
+                        userData !== undefined &&
+                        userData.values !== undefined &&
+                        userData.values.firstName !== undefined &&
+                        userData.values.firstName
+                      }
+                      src={
+                        userData !== undefined &&
+                        userData.values !== undefined &&
+                        userData.values.image !== undefined &&
+                        userData.values.image
+                      }
                     />
                   </IconButton>
                 </Tooltip>

@@ -15,7 +15,12 @@ import {
   limit,
 } from "firebase/firestore";
 import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+// import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
+import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
+import "./Job.css";
 
 export const BrowseJobs = () => {
   const [jobs, setJobs] = React.useState([]);
@@ -138,42 +143,75 @@ export const BrowseJobs = () => {
         </Typography>
 
         {jobs.map((job) => {
-          // Anti eslint
           const hello = "hello";
 
           // do this to show what is inside job
           // console.log(job);
           return (
             // Create cards instead
-            <Box key={job.documentID}>
-              <Typography>Company ID: {job.companyID}</Typography>
-              <Typography>
-                Company Name: {companiesName[job.companyID]}
-              </Typography>
-              <Typography>Title: {job.title}</Typography>
-              <Typography>Description: {job.description}</Typography>
-              <Typography>
-                Deadline:{" "}
-                {new Date(
-                  job.deadline.seconds * 1000 +
-                    job.deadline.nanoseconds / 1000000
-                ).toDateString()}
-              </Typography>
-              <Typography>
-                Published At:{" "}
-                {new Date(
-                  job.publishedAt.seconds * 1000 +
-                    job.publishedAt.nanoseconds / 1000000
-                ).toDateString()}
-              </Typography>
-              <Button
-                variant="contained"
-                size="medium"
-                sx={{ mt: 2 }}
-                id={`Button-${job.documentID}`}
-              >
-                Apply (not implemented)
-              </Button>
+            <Box key={job.documentID} sx={{ py: 1 }}>
+              <Card variant="outlined">
+                <Box sx={{ m: 3 }}>
+                  <Typography variant="h4">{job.title}</Typography>
+
+                  <Typography>{companiesName[job.companyID]}</Typography>
+
+                  {/* change to country and city */}
+                  <Typography>{job.location}</Typography>
+
+                  {/* do we need to show company id? */}
+                  {/* <Typography>Company ID: {job.companyID}</Typography> */}
+
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-end"
+                    sx={{ pt: 2 }}
+                  >
+                    {/* Added this button for candidate's view */}
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ my: 1 }}
+                      id={`Button-${job.documentID}`}
+                    >
+                      <Link
+                        to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job (redirects to candidate&apos;s view)
+                      </Link>
+                    </Button>
+                    {/* button for recruiter's view */}
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ my: 1 }}
+                      id={`Button-${job.documentID}`}
+                    >
+                      <Link
+                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job (redirects to recruiter&apos;s view)
+                      </Link>
+                    </Button>
+                    <Typography>
+                      Deadline:{" "}
+                      {new Date(
+                        job.deadline.seconds * 1000 +
+                          job.deadline.nanoseconds / 1000000
+                      ).toDateString()}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Card>
             </Box>
           );
         })}
