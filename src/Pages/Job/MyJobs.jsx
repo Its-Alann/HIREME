@@ -2,6 +2,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import {
@@ -22,6 +25,7 @@ export const MyJobs = () => {
   const [jobs, setJobs] = React.useState([]);
   const [companiesName, setCompaniesName] = React.useState({});
   const [cursorPosition, setCursorPosition] = React.useState(0);
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const jobsPerPage = 4;
 
@@ -110,6 +114,17 @@ export const MyJobs = () => {
     setCursorPosition(previousPosition);
   }
 
+  // Load the logo of each company that has job listings
+  function loadLogoCompany() {
+    const temp = companiesLogo;
+    jobs.forEach(async (job) => {
+      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
+      temp[job.companyID] = querySnapshot.data().logoPath;
+      // triggers a re-render and display the newly loaded logos
+      setCompaniesLogo({ ...temp });
+    });
+  }
+
   // when auth change, get the list of job id from recruiter
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -127,6 +142,7 @@ export const MyJobs = () => {
   // when jobs change, get the companies names
   React.useEffect(() => {
     getCompaniesName();
+    loadLogoCompany();
   }, [jobs]);
 
   // Uncomment this code to verify infinite loop of query
@@ -143,61 +159,111 @@ export const MyJobs = () => {
   //     console.log(companiesName);
   //   }, [companiesName]);
   return (
-    <Box>
-      <Typography>My Jobs</Typography>
-      <Typography>
-        This Page list all jobs belong to me, {jobsPerPage} per page. Only me
-        should be able to see the page.
-      </Typography>
+    <Container sx={{ mb: 10 }}>
+      <Box sx={{ pt: 5 }}>
+        <Typography variant="h4" sx={{ pb: 2 }}>
+          My Jobs
+        </Typography>
+        <Typography>
+          This Page list all jobs belong to me, {jobsPerPage} per page. Only me
+          should be able to see the page.
+        </Typography>
 
-      {jobs.map((job) => {
-        // Anti eslint
-        const hello = "hello";
+        {jobs.map((job) => {
+          // Anti eslint
+          const hello = "hello";
 
-        // do this to show what is inside job
-        // console.log(job);
-        return (
-          <Box key={job.documentID}>
-            <Typography>Company ID: {job.companyID}</Typography>
-            <Typography>
-              Company Name: {companiesName[job.companyID]}
-            </Typography>
-            <Typography>Title: {job.title}</Typography>
-            <Typography>Description: {job.description}</Typography>
-            <Typography>
-              Deadline:{" "}
-              {new Date(
-                job.deadline.seconds * 1000 + job.deadline.nanoseconds / 1000000
-              ).toDateString()}
-            </Typography>
-            <Typography>
-              Published At:{" "}
-              {new Date(
-                job.publishedAt.seconds * 1000 +
-                  job.publishedAt.nanoseconds / 1000000
-              ).toDateString()}
-            </Typography>
+          // do this to show what is inside job
+          // console.log(job);
+          return (
+            <Box key={job.documentID} sx={{ py: 1 }}>
+              <Card variant="outlined">
+                <Box sx={{ m: 3 }}>
+                  <Stack direction="row" alignItems="center">
+                    {job.companyID === undefined ? (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "0.25",
+                          height: "0.25",
+                          mr: 2,
+                        }}
+                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                      />
+                    ) : (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo[job.companyID]}
+                      />
+                    )}
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Typography>{job.location}</Typography>
+                    </Box>
+                  </Stack>
 
-            <Link
-              to={{
-                pathname: `/editJob/${job.documentID}`,
-              }}
-            >
-              <Button id={`Button-Edit-${job.documentID}`}>Edit</Button>
-            </Link>
-          </Box>
-        );
-      })}
-      <Button
-        id="Button-Previous"
-        onClick={() => setCursorToPreviousPosition()}
-      >
-        Previous
-      </Button>
-      <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
-        Next
-      </Button>
-    </Box>
+                  {/* <Link
+                    to={{
+                      pathname: `/editJob/${job.documentID}`,
+                    }}
+                  >
+                    <Button id={`Button-Edit-${job.documentID}`}>Edit</Button>
+                  </Link> */}
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-end"
+                    sx={{ pt: 2 }}
+                  >
+                    {/* button for recruiter's view */}
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ my: 1 }}
+                      id={`Button-${job.documentID}`}
+                    >
+                      <Link
+                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job
+                      </Link>
+                    </Button>
+                    <Typography>
+                      Deadline:{" "}
+                      {new Date(
+                        job.deadline.seconds * 1000 +
+                          job.deadline.nanoseconds / 1000000
+                      ).toDateString()}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Card>
+            </Box>
+          );
+        })}
+        <Button
+          id="Button-Previous"
+          onClick={() => setCursorToPreviousPosition()}
+        >
+          Previous
+        </Button>
+        <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
+          Next
+        </Button>
+      </Box>
+    </Container>
   );
 };
 export default MyJobs;

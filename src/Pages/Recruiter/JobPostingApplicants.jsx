@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import ReactDOM from "react-dom";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import { useParams, Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Box,
+  Button,
+  Modal,
+  Select,
+  MenuItem,
+  Typography,
+  IconButton,
+  Divider,
+  Stack,
+  Card,
+  CardActionArea,
+  CardContent,
+} from "@mui/material";
 import * as React from "react";
 import { getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardContent from "@mui/material/CardContent";
-import Stack from "@mui/material/Stack";
-import { Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { db } from "../../Firebase/firebase";
 
@@ -80,7 +82,6 @@ export const JobPostingApplicants = () => {
       console.log("no applicants");
     }
     setApplicants(tempArray);
-    console.log(tempArray);
   };
 
   const getJobData = async () => {
@@ -192,49 +193,61 @@ export const JobPostingApplicants = () => {
           <Card variant="outlined">
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
-                <Grid
-                  container
-                  spacing={-0.5}
-                  direction="row"
-                  alignItems="center"
-                >
-                  <Grid>
-                    {job.companyID === undefined ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "0.25",
-                          height: "0.25",
-                          mr: 2,
-                        }}
-                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                      />
-                    ) : (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo}
-                      />
-                    )}
+                <Stack direction="row" justifyContent="space-between">
+                  <Grid
+                    container
+                    spacing={-0.5}
+                    direction="row"
+                    alignItems="center"
+                  >
+                    <Grid>
+                      {job.companyID === undefined ? (
+                        <Box
+                          component="img"
+                          sx={{
+                            // objectFit: "cover",
+                            width: "0.25",
+                            height: "0.25",
+                            mr: 2,
+                          }}
+                          src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                        />
+                      ) : (
+                        <Box
+                          component="img"
+                          sx={{
+                            // objectFit: "cover",
+                            width: "6rem",
+                            height: "6rem",
+                            mr: 2,
+                          }}
+                          src={companiesLogo}
+                        />
+                      )}
+                    </Grid>
+                    <Grid>
+                      <Box xs={12} sm={12} md={6}>
+                        <Typography variant="h4">{job.title}</Typography>
+                        <Typography sx={{ fontSize: 18 }}>
+                          {companyName.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: 18 }}>
+                          {job.location}
+                        </Typography>
+                      </Box>
+                    </Grid>
                   </Grid>
-                  <Grid>
-                    <Box xs={12} sm={12} md={6}>
-                      <Typography variant="h4">{job.title}</Typography>
-                      <Typography sx={{ fontSize: 18 }}>
-                        {companyName.name}
-                      </Typography>
-                      <Typography sx={{ fontSize: 18 }}>
-                        {job.location}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
+                  <Link
+                    to={{
+                      pathname: `/editJob/${pageJobID}`,
+                    }}
+                  >
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                </Stack>
+
                 {job.deadline && (
                   <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
                     {new Date(
