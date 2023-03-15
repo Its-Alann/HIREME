@@ -56,7 +56,7 @@ describe("Display unique job posting", () => {
     cy.wait(1000);
     cy.get(".css-1mhd35f-MuiStack-root > :nth-child(2)").should(
       "have.text",
-      "microsoft"
+      "Microsoft"
     );
   });
 
