@@ -15,6 +15,7 @@ import AwardsCard from "../../Components/ProfileCards/AwardsCard";
 import { app, auth, storage } from "../../Firebase/firebase";
 import "./EditProfile.css";
 import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
+import Resume from "../../Components/ProfileCards/Resume";
 
 const EditProfilePage = () => {
   const theme = createTheme({
@@ -67,7 +68,8 @@ const EditProfilePage = () => {
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
-  const [url, setUrl] = useState();
+  const [imageUrl, setImageUrl] = useState();
+  const [resumeUrl, setResumeUrl] = useState();
   const [infoAvailable, setInfoAvailable] = useState(false);
 
   //callback function to make sure setState updates state before its next use (i think)
@@ -109,11 +111,23 @@ const EditProfilePage = () => {
         const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
         getDownloadURL(imageRef)
           // eslint-disable-next-line no-shadow
-          .then((url) => {
-            setUrl(url);
+          .then((imageUrl) => {
+            setImageUrl(imageUrl);
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
+          });
+
+        //Get user resume from firebase
+        const resumeLink = `${currentUserEmail}-resume`;
+        const resumeRef = ref(storage, `resumes/${resumeLink}`);
+        getDownloadURL(resumeRef)
+          // eslint-disable-next-line no-shadow
+          .then((resumeUrl) => {
+            setResumeUrl(resumeUrl);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the resume url");
           });
       }
     }
@@ -297,7 +311,7 @@ const EditProfilePage = () => {
               alignItems="center"
               display="flex"
             >
-              <ProfilePicture urlProfilePicture={url} />
+              <ProfilePicture urlProfilePicture={imageUrl} />
             </Grid>
             <Grid item xs={6} container>
               <InputBase
@@ -343,6 +357,10 @@ const EditProfilePage = () => {
               />
             </Grid>
           </Grid>
+
+          {/* Resume section for user to add,modify or remove */}
+          <Resume resumeUrl={resumeUrl}> </Resume>
+
           <Stack spacing={2}>
             {infoAvailable && (
               <>
