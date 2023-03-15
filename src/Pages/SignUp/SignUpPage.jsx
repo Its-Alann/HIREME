@@ -15,8 +15,10 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as EmailValidator from "email-validator";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, redirect } from "react-router-dom";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import Navbar from "../../Components/Navbar/Navbar";
+import { auth } from "../../Firebase/firebase";
 
 const theme = createTheme({
   palette: {
@@ -29,11 +31,13 @@ const theme = createTheme({
   },
 });
 
-const SignUp = () => {
+const SignUpPage = () => {
   const [emailError, setEmailError] = React.useState(false);
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -44,11 +48,13 @@ const SignUp = () => {
       password: data.get("password"),
       name: data.get("firstName"),
     };
+
+    createUserWithEmailAndPassword(email, password, name);
+    navigate("/");
   };
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <Navbar /> */}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -73,55 +79,6 @@ const SignUp = () => {
             data-cy="formTest"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  data-cy="firstNameTest"
-                  autoFocus
-                  onBlur={(e) => {
-                    setFirstNameError(
-                      e.target.value === ""
-                        ? false
-                        : !/^[a-zA-Z]+$/.test(e.target.value)
-                    );
-                  }}
-                  error={firstNameError}
-                  helperText={
-                    !firstNameError
-                      ? ""
-                      : "Please enter a valid name (letters only)"
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  data-cy="lastNameTest"
-                  onBlur={(e) => {
-                    setLastNameError(
-                      e.target.value === ""
-                        ? false
-                        : !/^[a-zA-Z]+$/.test(e.target.value)
-                    );
-                  }}
-                  error={lastNameError}
-                  helperText={
-                    !lastNameError
-                      ? ""
-                      : "Please enter a valid name (letters only)"
-                  }
-                  autoComplete="family-name"
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -180,14 +137,20 @@ const SignUp = () => {
               </Grid>
             </Grid>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                id="submitBtn"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+            )}
+            {error && <Typography color="red">{error}</Typography>}
 
             <Grid container justifyContent="flex-end">
               <Grid item>
@@ -203,4 +166,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUpPage;

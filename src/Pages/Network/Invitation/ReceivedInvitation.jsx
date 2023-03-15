@@ -28,7 +28,7 @@ export const ReceivedInvitation = () => {
             setReceivedInvitations(userData.receivedInvitations);
             console.log(receivedInvitations);
           } catch (err) {
-            console.error(err);
+            console.log(err);
           }
         };
         getReceivedInvitationUsers();
@@ -46,7 +46,7 @@ export const ReceivedInvitation = () => {
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
             {/*The array will contain all the connected users*/}
-            {receivedInvitations.length > 0 && receivedInvitations != null ? (
+            {receivedInvitations?.length > 0 && receivedInvitations != null ? (
               <Grid
                 container
                 spacing={3}

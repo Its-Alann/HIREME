@@ -19,45 +19,58 @@ import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../Firebase/firebase";
 
+//lists of pages accesible from the navbar
 const pages = ["Home", "Network", "Jobs", "Messaging"];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
-
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 
 const Navbar = () => {
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  //getting user information
   React.useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUserIsConnected(true);
         try {
           const dbInfo = await getDoc(doc(db, "userProfiles", user.email));
           const userInfo = dbInfo.data();
           setUserData(userInfo);
+          setUserIsConnected(true);
         } catch (err) {
-          console.error(err);
+          console.log(err);
         }
       } else {
         setUserIsConnected(false);
       }
     });
   }, []);
+
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  //const [redirectToPage, setRedirectToPage] = React.useState("");
+  //const [user, userLoading, userError] = useAuthState(auth);
+  const [signOut, logoutLoading, logoutError] = useSignOut(auth);
+
   let redirectToPage2 = "";
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  //navigation to other pages
   const handleCloseNavMenu = () => {
     console.log("redirectToPage2", redirectToPage2);
     switch (redirectToPage2.toLowerCase()) {
@@ -70,12 +83,13 @@ const Navbar = () => {
       case "network":
         navigate("/network");
         break;
+      /*
       case "profile":
         break;
       case "account":
         break;
       case "dashboard":
-        break;
+        break;*/
       case "logout":
         setUserIsConnected(false);
         signOut(auth);
@@ -93,10 +107,6 @@ const Navbar = () => {
         break;
     }
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -125,7 +135,10 @@ const Navbar = () => {
             HIRE<i>ME</i>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            data-cy="phone-menu-test"
+          >
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -138,6 +151,7 @@ const Navbar = () => {
             </IconButton>
             <Menu
               id="menu-appbar"
+              data-cy="phone-appbar-test"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "bottom",
@@ -158,6 +172,7 @@ const Navbar = () => {
                 pages.map((page) => (
                   <MenuItem
                     key={page}
+                    data-cy={`${page}-phone-test`}
                     onClick={() => {
                       redirectToPage2 = page;
                       handleCloseNavMenu();
@@ -170,6 +185,7 @@ const Navbar = () => {
                 loggedOutPages.map((page) => (
                   <MenuItem
                     key={page}
+                    data-cy={`${page}-logged-out-test`}
                     onClick={() => {
                       redirectToPage2 = page;
                       handleCloseNavMenu();
@@ -206,6 +222,7 @@ const Navbar = () => {
           {userIsConnected && (
             <>
               <Box
+                data-cy="connected-box-test"
                 sx={{
                   flexGrow: 1,
                   display: { xs: "none", md: "flex", justifyContent: "end" },
@@ -214,6 +231,7 @@ const Navbar = () => {
                 {pages.map((page) => (
                   <Button
                     key={page}
+                    data-cy={`${page}-test`}
                     onClick={() => {
                       redirectToPage2 = page;
                       handleCloseNavMenu();
@@ -234,13 +252,28 @@ const Navbar = () => {
                 ))}
               </Box>
 
-              <Box sx={{ flexGrow: 0, marginLeft: "1%" }}>
+              <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0 }}
+                    data-cy="userMenu"
+                  >
                     <Avatar
                       style={{ border: "2px solid #2B2F90" }}
-                      alt={userData.values.firstName}
-                      src={userData.values.image}
+                      alt={
+                        //making sure info is defined
+                        userData !== undefined &&
+                        userData.values !== undefined &&
+                        userData.values.firstName !== undefined &&
+                        userData.values.firstName
+                      }
+                      src={
+                        userData !== undefined &&
+                        userData.values !== undefined &&
+                        userData.values.image !== undefined &&
+                        userData.values.image
+                      }
                     />
                   </IconButton>
                 </Tooltip>
@@ -263,15 +296,22 @@ const Navbar = () => {
                   {settings.map((setting) => (
                     <MenuItem
                       key={setting}
-                      onClick={() => {
-                        redirectToPage2 = setting;
-                        handleCloseUserMenu();
-                        handleCloseNavMenu();
-                      }}
+                      data-cy={`${setting}-phone-test`}
+                      onClick={() => {}}
                     >
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
+                  <MenuItem
+                    onClick={() => {
+                      redirectToPage2 = "logout";
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                    data-cy="logout-test"
+                  >
+                    Logout
+                  </MenuItem>
                 </Menu>
               </Box>
             </>
@@ -287,6 +327,7 @@ const Navbar = () => {
               {loggedOutPages.map((page) => (
                 <Button
                   key={page}
+                  data-cy={`${page}-test`}
                   onClick={() => {
                     redirectToPage2 = page;
                     handleCloseNavMenu();

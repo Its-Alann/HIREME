@@ -67,16 +67,14 @@ export const NetworkPossibleConnections = () => {
   useEffect(() => {
     try {
       //create a new array of users that isnt connected with the currentUser
-      allUsers.forEach(() => {
-        const newNonConnectedUsersArr = allUsers.filter(
-          (user) =>
-            !connectedUsersId.includes(user.id) &&
-            !sentInvitationsId.includes(user.id) &&
-            currentUser.email !== user.id
-        );
-        setNonConnectedUsersArr(newNonConnectedUsersArr);
-        //console.log(newNonConnectedUsersArr);
-      });
+      const newNonConnectedUsersArr = allUsers.filter(
+        (user) =>
+          !connectedUsersId.includes(user.id) &&
+          !sentInvitationsId.includes(user.id) &&
+          currentUser.email !== user.id
+      );
+      setNonConnectedUsersArr(newNonConnectedUsersArr);
+      //console.log(newNonConnectedUsersArr);
     } catch (error) {
       console.log(error);
     }
@@ -89,20 +87,29 @@ export const NetworkPossibleConnections = () => {
           <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>
             People you may know
           </Typography>
-          <Box justifyContent="center" alignItems="center" display="flex">
-            {nonConnectedUsersArr.length > 0 && nonConnectedUsersArr != null ? (
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            display="flex"
+            data-cy="connectionsBox"
+          >
+            {nonConnectedUsersArr?.length > 0 &&
+            nonConnectedUsersArr != null ? (
               <Grid
                 container
                 spacing={3}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
+                data-cy="connectionGrid"
               >
                 {nonConnectedUsersArr.map((possibleConnectionUserID) => (
                   <Grid item>
                     <PossibleConnectionCard
                       possibleConnectionUserId={possibleConnectionUserID.id}
                       currentUser={currentUser.email}
+                      data-cy={`gridItem${possibleConnectionUserID}`}
+                      id={`gridItem${possibleConnectionUserID}`}
                     />
                   </Grid>
                 ))}
