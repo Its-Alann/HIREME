@@ -42,6 +42,8 @@ const FlaggedMessages = (props) => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Flagged Message 🚩</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -52,6 +54,12 @@ const FlaggedMessages = (props) => {
                   {data.content
                     ? data.content
                     : data.attachment && data.attachment}
+                </TableCell>
+                <TableCell>
+                  {data.content ? "text" : data.attachment && "attachment"}
+                </TableCell>
+                <TableCell>
+                  {data.timestamp.toDate().toLocaleString()}
                 </TableCell>
               </TableRow>
             ))}
