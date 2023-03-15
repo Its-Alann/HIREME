@@ -11,7 +11,7 @@ describe("example to-do app", () => {
   });
 
   describe("Testing the messaging feature", () => {
-    it("Logins, goes to messaging feature, sends message, sends file", () => {
+    it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
       //login and reach messaging page
@@ -36,8 +36,32 @@ describe("example to-do app", () => {
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
         .selectFile(fileName, { force: true });
+
+      cy.get('[data-testid="ClearIcon"]').click();
+
+      //send image
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000);
+      cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
+        .find("input")
+        .selectFile(fileName, { force: true });
+
       cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-testid="messageListItem"]')
+        .last()
+        .get('[data-testid="attachment"]')
+        .last()
+        .click();
+
+      cy.get(".messageOptions").last().click();
+      cy.get(".reportMsgButton").click();
+      cy.get('[data-testid="reportedBadge"]').should("be.visible");
     });
+
+    // it("report a message", () => {
+    //   cy.login();
+    //   cy.visit("http://localhost:3000/messaging");
+    // });
 
     it("shows message if user is not signed in", () => {
       cy.logout();
@@ -77,5 +101,34 @@ describe("example to-do app", () => {
     });
   });
 
-  //Integration test for firebase connection
+  describe("Starting a new conversation", () => {
+    // after(() => {
+    //   cy.log("yurrr");
+    //   cy.callFirestore("get", "messages", {
+    //     where: ["authors", "==", ["billybob@gmail.com", "messaging@test.com"]],
+    //   }).then((r) => {
+    //     const idToDelete = r[0].id;
+    //     const pathToDelete = `messages/${idToDelete}`;
+    //     cy.log("pathToDelete", pathToDelete);
+    //     cy.callFirestore("delete", pathToDelete);
+    //   });
+    // });
+
+    it("opens new chat flow", () => {
+      cy.logout();
+      cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
+
+      // cy.viewport(1920, 1080);
+      cy.visit("http://localhost:3000/messaging");
+      cy.get('[data-cy="startNewConvo"]').click();
+      cy.get('[data-cy="selectConnections"]').should("be.visible");
+      cy.get('[data-cy="submitConnections"]').should("be.disabled");
+      cy.get('[data-testid="ArrowDropDownIcon"]').click();
+      cy.get("li.MuiAutocomplete-option").click();
+      cy.get('[data-testid="CancelIcon"]').should("be.visible");
+      cy.get('[data-cy="submitConnections"]').click();
+    });
+  });
+
+  // Integration test for firebase connection
 });

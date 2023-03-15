@@ -171,7 +171,12 @@ export const ReceivedInvitationCard = ({
                   <ColorButtonBlue
                     size="medium"
                     onClick={acceptInvite}
-                    data-cy="AcceptInvitationBtn"
+                    data-cy={`AcceptInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
+                    id={`AcceptInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
                   >
                     Accept
                   </ColorButtonBlue>
@@ -179,7 +184,12 @@ export const ReceivedInvitationCard = ({
                     size="medium"
                     variant="outlined"
                     onClick={ignoreInvite}
-                    data-cy="IgnoreInvitationBtn"
+                    data-cy={`IgnoreInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
+                    id={`IgnoreInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
                   >
                     Ignore
                   </ColorButtonLightBlue>
