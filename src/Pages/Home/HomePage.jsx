@@ -5,14 +5,14 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { auth, app } from "../../Firebase/firebase";
 import HomepagePic from "../../Assets/images/homepage1.png";
+import LoginPage from "../Login/LoginPage";
 
-import Login from "../Login/Login";
-
-const Home = () => {
+const HomePage = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
@@ -111,8 +111,9 @@ const Home = () => {
                   md={12}
                   display="flex"
                   alignItems="center"
+                  data-cy="grid-test"
                 >
-                  <Typography variant="h4">
+                  <Typography variant="h4" data-cy="message-test">
                     {" "}
                     Welcome Back {firstName}!{" "}
                   </Typography>
@@ -188,6 +189,15 @@ const Home = () => {
                     </div>
                   )}
                 </Grid>
+                <div>
+                  <Link
+                    onClick={() => {
+                      window.location.href = "/createRecruiter";
+                    }}
+                  >
+                    I&apos;m a recruiter
+                  </Link>
+                </div>
               </Grid>
             </Grid>
           ) : (
@@ -214,7 +224,7 @@ const Home = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
-                  <Login sx={{ bgcolor: "red" }} />
+                  <LoginPage sx={{ bgcolor: "red" }} />
                 </Grid>
               </Grid>
             </div>
@@ -250,4 +260,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

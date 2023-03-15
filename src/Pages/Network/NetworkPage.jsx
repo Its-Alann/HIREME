@@ -36,7 +36,7 @@ const theme = createTheme({
   />
 );*/
 
-const Network = () => {
+const NetworkPage = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -97,4 +97,4 @@ const Network = () => {
   href: PropTypes.string.isRequired,
 };*/
 
-export default Network;
+export default NetworkPage;

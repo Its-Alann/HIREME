@@ -28,7 +28,7 @@ export const SentInvitation = () => {
             setSentRequestsUserID(userData.sentInvitations);
             //console.log(userData.sentRequests);
           } catch (err) {
-            console.error(err);
+            console.log(err);
           }
         };
         //console.log(sentRequestsUserID);
@@ -46,7 +46,7 @@ export const SentInvitation = () => {
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
-            {sentRequestsUserID.length > 0 && sentRequestsUserID != null ? (
+            {sentRequestsUserID?.length > 0 && sentRequestsUserID != null ? (
               <Grid
                 container
                 spacing={3}
@@ -55,7 +55,7 @@ export const SentInvitation = () => {
                 alignItems="center"
               >
                 {sentRequestsUserID.map((userID) => (
-                  <Grid item>
+                  <Grid item data-cy="invitationsGrid">
                     <SentInvitationCard
                       userID={userID}
                       currentUser={currentUser.email}

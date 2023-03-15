@@ -98,13 +98,25 @@ export const PossibleConnectionCard = ({
             />
             {/*moves the buttons to the right*/}
             <Box display="flex" justifyContent="center">
-              <CardActions>
-                {/*view profile will go to the user's profile and message will be sent to the */}
-                <ColorButtonBlue size="medium" onClick={sendInvitation}>
-                  Send Invitation
-                  <SendIcon sx={{ ml: 1 }} />
-                </ColorButtonBlue>
-              </CardActions>
+              {
+                // <CardActions>
+              }
+              {/*view profile will go to the user's profile and message will be sent to the */}
+              <ColorButtonBlue
+                size="medium"
+                onClick={sendInvitation}
+                data-cy={`invitationButton${
+                  possibleConnectionUser?.values?.firstName ?? ""
+                }`}
+                id={`invitationButton${
+                  possibleConnectionUser?.values?.firstName ?? ""
+                }`}
+              >
+                Send Invitation
+              </ColorButtonBlue>
+              {
+                //</CardActions>
+              }
             </Box>
           </>
         </Card>

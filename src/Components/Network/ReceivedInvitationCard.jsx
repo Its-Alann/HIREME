@@ -138,7 +138,7 @@ export const ReceivedInvitationCard = ({
     <ThemeProvider theme={theme2}>
       <div>
         <Box sx={{ width: 300, minWidth: 100 }}>
-          <Card variant="outlined" sx={{ p: 1 }}>
+          <Card variant="outlined" sx={{ p: 1 }} data-cy="ReceivedCard">
             <>
               <CardHeader
                 avatar={
@@ -168,13 +168,28 @@ export const ReceivedInvitationCard = ({
               <Box display="flex" justifyContent="flex-end">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue size="medium" onClick={acceptInvite}>
+                  <ColorButtonBlue
+                    size="medium"
+                    onClick={acceptInvite}
+                    data-cy={`AcceptInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
+                    id={`AcceptInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
+                  >
                     Accept
                   </ColorButtonBlue>
                   <ColorButtonLightBlue
                     size="medium"
                     variant="outlined"
                     onClick={ignoreInvite}
+                    data-cy={`IgnoreInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
+                    id={`IgnoreInvitationBtn${
+                      receivedInvitationUser?.values?.firstName ?? ""
+                    }`}
                   >
                     Ignore
                   </ColorButtonLightBlue>

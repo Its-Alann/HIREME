@@ -35,7 +35,7 @@ const steps = [
   "Awards",
 ];
 
-const AccountCreation = () => {
+const AccountCreationPage = () => {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
 
@@ -325,4 +325,4 @@ const AccountCreation = () => {
   );
 };
 
-export default AccountCreation;
+export default AccountCreationPage;

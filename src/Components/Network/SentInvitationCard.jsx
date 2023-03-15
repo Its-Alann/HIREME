@@ -109,7 +109,11 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
               <Box display="flex" justifyContent="center">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue size="medium" onClick={withdrawInvitation}>
+                  <ColorButtonBlue
+                    size="medium"
+                    onClick={withdrawInvitation}
+                    id="withdrawButton"
+                  >
                     Withdraw
                   </ColorButtonBlue>
                 </CardActions>
