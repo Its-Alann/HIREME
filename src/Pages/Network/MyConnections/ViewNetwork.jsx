@@ -45,7 +45,7 @@ export const ViewNetwork = () => {
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
-            {connectedUsersId.length > 0 && connectedUsersId != null ? (
+            {connectedUsersId?.length > 0 && connectedUsersId != null ? (
               <Grid
                 container
                 spacing={3}
@@ -55,7 +55,10 @@ export const ViewNetwork = () => {
               >
                 {connectedUsersId.map((connectedUserID) => (
                   <Grid item>
-                    <NetworkCards connectedUserID={connectedUserID} />
+                    <NetworkCards
+                      connectedUserID={connectedUserID}
+                      currentUser={auth.currentUser.email}
+                    />
                   </Grid>
                 ))}
               </Grid>

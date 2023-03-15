@@ -9,7 +9,14 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -35,9 +42,51 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
 const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
   color: "#2B2F90",
 }));
+const ColorButtonRed = styled(Button)(({ theme }) => ({
+  backgroundColor: "red",
+  size: "15px",
+  fontSize: "10px",
+  color: "white",
+  border: "none",
+  "&:hover": {
+    backgroundColor: "red",
+    size: "15px",
+    fontSize: "10px",
+    color: "white",
+    border: "none",
+  },
+}));
 
-export const NetworkCards = ({ connectedUserID }) => {
+export const NetworkCards = ({ connectedUserID, currentUser }) => {
   const [connectedUser, setConnectedUser] = useState([]);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
+  const removeConnection = async () => {
+    const currentUserNetworkRef = doc(db, "network", currentUser);
+    const connectedUserNetworkRef = doc(db, "network", connectedUserID);
+
+    try {
+      await updateDoc(currentUserNetworkRef, {
+        connectedUsers: arrayRemove(connectedUserID),
+      });
+
+      await updateDoc(connectedUserNetworkRef, {
+        connectedUsers: arrayRemove(currentUser),
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     const getConnectedUsers = async () => {
@@ -45,6 +94,7 @@ export const NetworkCards = ({ connectedUserID }) => {
         const docSnap = await getDoc(doc(db, "userProfiles", connectedUserID));
         const userData = docSnap.data();
         setConnectedUser(userData);
+        console.log("NetworkCards");
       } catch (err) {
         console.log(err);
       }
@@ -84,13 +134,46 @@ export const NetworkCards = ({ connectedUserID }) => {
                 }
               />
               {/*moves the buttons to the right*/}
-              <Box display="flex" justifyContent="flex-end">
+              <Box display="flex" flexDirection="column">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
                   <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
-                  <ColorButtonLightBlue size="medium" variant="outlined">
+                  <ColorButtonLightBlue variant="outlined">
                     Message
                   </ColorButtonLightBlue>
+                  <ColorButtonRed
+                    size="medium"
+                    variant="outlined"
+                    onClick={handleClickOpen}
+                  >
+                    Remove Connection
+                  </ColorButtonRed>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Remove{" "}
+                      {`${connectedUser?.values?.firstName ?? ""} ${
+                        connectedUser?.values?.lastname ?? ""
+                      }`}
+                      from your connections?
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        The user will not be notified that you have removed him
+                        from your connections
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={removeConnection} autoFocus>
+                        Remove user
+                      </Button>
+                      <Button onClick={handleClose}>Cancel</Button>
+                    </DialogActions>
+                  </Dialog>
                 </CardActions>
               </Box>
             </>
@@ -103,6 +186,7 @@ export const NetworkCards = ({ connectedUserID }) => {
 
 NetworkCards.propTypes = {
   connectedUserID: PropTypes.string.isRequired,
+  currentUser: PropTypes.string.isRequired,
 };
 
 export default NetworkCards;
