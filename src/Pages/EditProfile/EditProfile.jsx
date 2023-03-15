@@ -15,6 +15,7 @@ import AwardsCard from "../../Components/ProfileCards/AwardsCard";
 import { app, auth, storage } from "../../Firebase/firebase";
 import "./EditProfile.css";
 import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
+import Resume from "../../Components/ProfileCards/Resume";
 
 const EditProfile = () => {
   // Set default value, because otherwise UI glitch + warning
@@ -69,7 +70,8 @@ const EditProfile = () => {
   });
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
-  const [url, setUrl] = useState();
+  const [imageUrl, setImageUrl] = useState();
+  const [resumeUrl, setResumeUrl] = useState();
 
   // Only once, attach listener to onAuthStateChanged
   useEffect(() => {
@@ -99,17 +101,29 @@ const EditProfile = () => {
         } else {
           console.log("User Profile Not Exist");
         }
-        //Get profile picture
+        //Get user profile picture from firebase
         console.log(currentUserEmail);
         const profilePictureLink = `${currentUserEmail}-profilePicture`;
         const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
         getDownloadURL(imageRef)
           // eslint-disable-next-line no-shadow
-          .then((url) => {
-            setUrl(url);
+          .then((imageUrl) => {
+            setImageUrl(imageUrl);
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
+          });
+
+        //Get user resume from firebase
+        const resumeLink = `${currentUserEmail}-resume`;
+        const resumeRef = ref(storage, `resumes/${resumeLink}`);
+        getDownloadURL(resumeRef)
+          // eslint-disable-next-line no-shadow
+          .then((resumeUrl) => {
+            setResumeUrl(resumeUrl);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the resume url");
           });
       }
     }
@@ -145,7 +159,7 @@ const EditProfile = () => {
               alignItems="center"
               display="flex"
             >
-              <ProfilePicture urlProfilePicture={url} />
+              <ProfilePicture urlProfilePicture={imageUrl} />
             </Grid>
             <Grid item xs={6} container>
               <InputBase
@@ -163,7 +177,6 @@ const EditProfile = () => {
                 value={profile.values.lastName}
                 readOnly
               />
-
               <InputBase
                 id="standard-basic"
                 style={{ fontSize: "25px" }}
@@ -172,7 +185,6 @@ const EditProfile = () => {
                 value={profile.values.school}
                 readOnly
               />
-
               <InputBase
                 id="standard-basic"
                 placeholder="City"
@@ -190,6 +202,12 @@ const EditProfile = () => {
               />
             </Grid>
           </Grid>
+
+          {/* Resume section for user to add,modify or remove */}
+          <Resume resumeUrl={resumeUrl}> </Resume>
+
+          {/* Stack of profile cards for user to edit */}
+
           <Stack spacing={2}>
             <ContactInfoCard
               setProfile={setProfile}

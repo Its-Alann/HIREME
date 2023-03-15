@@ -213,8 +213,21 @@ const AccountCreation = () => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
+
+      // Set user profile data
       await setDoc(doc(db, "userProfiles", user.email), {
         values,
+      });
+
+      // Add user email to network collection
+      await setDoc(doc(db, "network", user.email), {
+        connectedUsers: [],
+      });
+
+      // Add user email to invitations collection
+      await setDoc(doc(db, "invitations", user.email), {
+        receivedInvitations: [],
+        sentInvitations: [],
       });
     } catch (error) {
       console.log(error);
