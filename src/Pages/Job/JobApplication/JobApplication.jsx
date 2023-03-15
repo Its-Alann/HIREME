@@ -93,9 +93,16 @@ const JobApplication = () => {
         .toLowerCase()
         .replace(/\s+/g, "-")}/${email}/transcript.jpg`
     );
-    uploadBytes(resumeRef, resume);
-    uploadBytes(coverLetterRef, coverLetter);
-    uploadBytes(transcriptRef, transcript);
+
+    if (resume != null) {
+      uploadBytes(resumeRef, resume);
+    }
+    if (coverLetter != null) {
+      uploadBytes(coverLetterRef, coverLetter);
+    }
+    if (transcript != null) {
+      uploadBytes(transcriptRef, transcript);
+    }
   };
 
   const addJobApplication = async () => {
@@ -106,7 +113,7 @@ const JobApplication = () => {
       {
         jobs: arrayUnion({
           jobID: URLjobID,
-          status: "applied",
+          status: "pending",
           email,
           phoneNumber,
           address,
@@ -135,15 +142,6 @@ const JobApplication = () => {
       uploadDocuments();
       addJobApplication();
       console.log("completed");
-      console.log(
-        "Data packet",
-        resume,
-        coverLetter,
-        transcript,
-        phoneNumber,
-        address,
-        email
-      );
     }
   };
 
