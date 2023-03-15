@@ -31,7 +31,7 @@ describe("Display Job Posting", () => {
   });
 });
 
-describe("Change the application status for Hanni Pham - viewed", () => {
+describe("Change the application status to viewed", () => {
   it("visits the job listing page with applicants", () => {
     cy.visit(
       "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
@@ -56,7 +56,7 @@ describe("Change the application status for Hanni Pham - viewed", () => {
   });
 });
 
-describe("Change the application status for Hanni Pham - viewed", () => {
+describe("Change the application status interview", () => {
   it("visits the job listing page with applicants", () => {
     cy.visit(
       "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
