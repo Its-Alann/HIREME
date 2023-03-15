@@ -1,4 +1,5 @@
-import { React, useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import { React, useState } from "react";
 import {
   Grid,
   Box,
@@ -6,29 +7,45 @@ import {
   CardContent,
   Typography,
   TextField,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
 
-const LanguagesCard = ({ profile, setProfile }) => {
+const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
+  const language = `language${cardNum}`;
+  const proficiency = `language${cardNum}proficiency`;
   const [editButton, setEditButton] = useState(false);
-  const [proficiency, setProficiency] = useState("");
+  const [deleteAlert, setDeleteAlert] = useState(false);
 
-  useEffect(() => {
-    if (profile.values) {
-      setProficiency(profile.values.proficiency);
-    }
-  }, [profile.values.proficiency]);
+  const handleClickOpen = () => {
+    setDeleteAlert(true);
+  };
 
-  useEffect(() => {
+  const handleClose = () => {
+    setDeleteAlert(false);
+  };
+
+  const handleClearCardInfo = () => {
+    handleClose();
+    const newCardNum = profile.values.languageNum - 1;
     setProfile({
-      values: { ...profile.values, proficiency },
+      values: {
+        ...profile.values,
+        languageNum: newCardNum,
+      },
     });
-  }, [proficiency]);
+  };
 
   return (
     <Box>
@@ -36,7 +53,7 @@ const LanguagesCard = ({ profile, setProfile }) => {
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Languages </Typography>
+              <Typography variant="h5"> Language </Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -51,10 +68,10 @@ const LanguagesCard = ({ profile, setProfile }) => {
                 label="Language"
                 variant="standard"
                 size="small"
-                value={profile.values.language}
+                value={profile.values[language]}
                 onChange={(e) =>
                   setProfile({
-                    values: { ...profile.values, language: e.target.value },
+                    values: { ...profile.values, [language]: e.target.value },
                   })
                 }
                 InputProps={{
@@ -63,15 +80,22 @@ const LanguagesCard = ({ profile, setProfile }) => {
                 }}
               />
             </Grid>
-            <Grid item>
+            <Grid item sx={{ mr: "auto" }}>
               <Box sx={{ minWidth: 300 }}>
                 <FormControl fullWidth variant="standard">
                   <InputLabel> Proficiency</InputLabel>
                   <Select
                     id="language-dropdown"
-                    value={proficiency}
+                    value={profile.values[proficiency]}
                     label="Proficiency"
-                    onChange={(e) => setProficiency(e.target.value)}
+                    onChange={(e) =>
+                      setProfile({
+                        values: {
+                          ...profile.values,
+                          [proficiency]: e.target.value,
+                        },
+                      })
+                    }
                     inputProps={{ readOnly: !editButton }}
                   >
                     <MenuItem value="Fluent">Fluent</MenuItem>
@@ -81,6 +105,42 @@ const LanguagesCard = ({ profile, setProfile }) => {
                 </FormControl>
               </Box>
             </Grid>
+            {isLast && (
+              <>
+                {cardNum > 0 && (
+                  <DeleteIcon
+                    sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
+                    onClick={handleClickOpen}
+                  />
+                )}
+
+                <Dialog open={deleteAlert} onClose={handleClose}>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to delete this card?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                  </DialogActions>
+                </Dialog>
+
+                <AddIcon
+                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  onClick={() => {
+                    const newCardNum = profile.values.languageNum + 1;
+                    console.log(newCardNum);
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        languageNum: newCardNum,
+                      },
+                    });
+                  }}
+                />
+              </>
+            )}
           </Grid>
         </CardContent>
       </Card>
@@ -89,6 +149,7 @@ const LanguagesCard = ({ profile, setProfile }) => {
 };
 
 LanguagesCard.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
 };

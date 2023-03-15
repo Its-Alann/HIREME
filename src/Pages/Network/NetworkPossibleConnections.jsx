@@ -67,16 +67,14 @@ export const NetworkPossibleConnections = () => {
   useEffect(() => {
     try {
       //create a new array of users that isnt connected with the currentUser
-      allUsers.forEach(() => {
-        const newNonConnectedUsersArr = allUsers.filter(
-          (user) =>
-            !connectedUsersId.includes(user.id) &&
-            !sentInvitationsId.includes(user.id) &&
-            currentUser.email !== user.id
-        );
-        setNonConnectedUsersArr(newNonConnectedUsersArr);
-        //console.log(newNonConnectedUsersArr);
-      });
+      const newNonConnectedUsersArr = allUsers.filter(
+        (user) =>
+          !connectedUsersId.includes(user.id) &&
+          !sentInvitationsId.includes(user.id) &&
+          currentUser.email !== user.id
+      );
+      setNonConnectedUsersArr(newNonConnectedUsersArr);
+      //console.log(newNonConnectedUsersArr);
     } catch (error) {
       console.log(error);
     }
@@ -95,7 +93,8 @@ export const NetworkPossibleConnections = () => {
             display="flex"
             data-cy="connectionsBox"
           >
-            {nonConnectedUsersArr.length > 0 && nonConnectedUsersArr != null ? (
+            {nonConnectedUsersArr?.length > 0 &&
+            nonConnectedUsersArr != null ? (
               <Grid
                 container
                 spacing={3}
@@ -110,6 +109,7 @@ export const NetworkPossibleConnections = () => {
                       possibleConnectionUserId={possibleConnectionUserID.id}
                       currentUser={currentUser.email}
                       data-cy={`gridItem${possibleConnectionUserID}`}
+                      id={`gridItem${possibleConnectionUserID}`}
                     />
                   </Grid>
                 ))}
