@@ -14,6 +14,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
 import { Divider } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import { db } from "../../Firebase/firebase";
 
 const style = {
@@ -39,6 +40,7 @@ export const JobPostingApplicants = () => {
   const [selectedApplicantId, setSelectedApplicantId] = useState("");
   const [selectedApplicantName, setSelectedApplicantName] = useState("");
   const [changedApplicationStatus, setChangedApplicationStatus] = useState("");
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const getApplicationStatuses = async (listOfApplicants) => {
     //console.log(listOfApplicants);
@@ -103,6 +105,12 @@ export const JobPostingApplicants = () => {
     }
   };
 
+  // loads the logo of a company
+  async function loadLogoCompany() {
+    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+    setCompaniesLogo(querySnapshot.data().logoPath);
+  }
+
   useEffect(() => {
     console.log(5);
     Promise.all([getJobData(), getCompanyName()])
@@ -112,6 +120,7 @@ export const JobPostingApplicants = () => {
       .catch((err) => {
         console.log(err);
       });
+    loadLogoCompany();
   }, []);
 
   // For application statuses
@@ -175,18 +184,86 @@ export const JobPostingApplicants = () => {
   };
 
   return (
-    <Stack direction="row" alignItems="flex-start" justifyContent="center">
+    <Grid container direction="row" alignItems="flex-start" justify="center">
       {/* Job information */}
-      <Box sx={{ width: 700, p: 5 }}>
-        <Card variant="outlined">
-          <Box sx={{ m: 2 }}>
-            <Box sx={{ pb: 2 }}>
-              <Stack spacing={-0.5}>
-                <Typography variant="h4">{job.title}</Typography>
-                <Typography sx={{ fontSize: 18 }}>
-                  {companyName.name}
-                </Typography>
-                <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
+      <Grid xs={12} sm={12} md={6}>
+        <Box sx={{ p: 5 }}>
+          <Card variant="outlined">
+            <Box sx={{ m: 2 }}>
+              <Box sx={{ pb: 2 }}>
+                <Grid
+                  container
+                  spacing={-0.5}
+                  direction="row"
+                  alignItems="center"
+                >
+                  <Grid>
+                    {job.companyID === undefined ? (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "0.25",
+                          height: "0.25",
+                          mr: 2,
+                        }}
+                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                      />
+                    ) : (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo}
+                      />
+                    )}
+                  </Grid>
+                  <Grid>
+                    <Box xs={12} sm={12} md={6}>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {companyName.name}
+                      </Typography>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {job.location}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+                {job.deadline && (
+                  <Typography sx={{ fontSize: 16 }}>
+                    {new Date(
+                      (job.deadline.seconds ?? 0) * 1000 +
+                        (job.deadline.nanoseconds ?? 0) / 1000000
+                    ).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      timeZone: "UTC",
+                    })}
+                  </Typography>
+                )}
+              </Box>
+
+              <Divider />
+              <Stack spacing={2}>
+                <Box sx={{ pt: 2 }}>
+                  <Typography sx={{ fontSize: 20 }}>About the job</Typography>
+                  <Typography>{job.description}</Typography>
+                </Box>
+                <Box>
+                  <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
+                  <Typography>{job.requirement}</Typography>
+                </Box>
+                <Box>
+                  <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                  <Typography>{job.benefits}</Typography>
+                </Box>
               </Stack>
               {job.deadline && (
                 <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
@@ -202,8 +279,11 @@ export const JobPostingApplicants = () => {
                 </Typography>
               )}
             </Box>
+          </Card>
+        </Box>
+      </Grid>
 
-            <Divider />
+      {/* <Divider />
             <Stack spacing={2}>
               <Box sx={{ pt: 2 }}>
                 <Typography sx={{ fontSize: 20 }}>About the job</Typography>
@@ -220,111 +300,113 @@ export const JobPostingApplicants = () => {
             </Stack>
           </Box>
         </Card>
-      </Box>
+      </Box> */}
       {/* List of applicants and their statuses */}
-      <Box sx={{ width: 500, p: 5 }}>
-        <Card variant="outlined">
-          <Box sx={{ m: 2 }}>
-            <Box sx={{ pb: 2 }}>
-              <Typography variant="h4">Applicants</Typography>
+      <Grid xs={12} sm={12} md={6}>
+        <Box sx={{ p: 5 }}>
+          <Card variant="outlined">
+            <Box sx={{ m: 2 }}>
+              <Box sx={{ pb: 2 }}>
+                <Typography variant="h4">Applicants</Typography>
 
-              {applicants !== null && applicants.length > 0 ? (
-                applicants.map((applicant) => {
-                  const hello = "hello";
+                {applicants !== null && applicants.length > 0 ? (
+                  applicants.map((applicant) => {
+                    const hello = "hello";
 
-                  return (
-                    <Stack
-                      display="flex"
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="space-evenly"
-                      sx={{ my: 1 }}
-                    >
-                      <Box sx={{ width: 150 }}>
-                        <Typography>
-                          {`${applicant.applicantFirstName} ${applicant.applicantLastName}`}
-                        </Typography>
-                      </Box>
+                    return (
+                      <Stack
+                        display="flex"
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-evenly"
+                        sx={{ my: 1 }}
+                      >
+                        <Box sx={{ width: 150 }}>
+                          <Typography>
+                            {`${applicant.applicantFirstName} ${applicant.applicantLastName}`}
+                          </Typography>
+                        </Box>
 
-                      <Card>
-                        <CardActionArea
-                          onClick={() =>
-                            handleOpen(
-                              applicant.applicantStatus,
-                              applicant.applicantId,
-                              `${applicant.applicantFirstName} ${applicant.applicantLastName}`
-                            )
-                          }
-                        >
-                          <CardContent
-                            sx={{
-                              display: "flex",
-                              height: 5,
-                              width: 200,
-                              textAlign: "center",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#FFFFFF",
-                              backgroundColor: () => {
-                                switch (applicant.applicantStatus) {
-                                  case "interview":
-                                    return "#17A500";
-                                  case "rejected":
-                                    return "#8F0000";
-                                  case "viewed":
-                                    return "#DE8B50";
-                                  default: // pending
-                                    return "#A9A9A9";
-                                }
-                              },
-                            }}
+                        <Card>
+                          <CardActionArea
+                            onClick={() =>
+                              handleOpen(
+                                applicant.applicantStatus,
+                                applicant.applicantId,
+                                `${applicant.applicantFirstName} ${applicant.applicantLastName}`
+                              )
+                            }
                           >
-                            <Typography sx={{ textTransform: "uppercase" }}>
-                              {applicant.applicantStatus}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                      </Card>
-                    </Stack>
-                  );
-                })
-              ) : (
-                <Typography>No applicants :/</Typography>
-              )}
+                            <CardContent
+                              sx={{
+                                display: "flex",
+                                height: 5,
+                                width: 200,
+                                textAlign: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#FFFFFF",
+                                backgroundColor: () => {
+                                  switch (applicant.applicantStatus) {
+                                    case "interview":
+                                      return "#17A500";
+                                    case "rejected":
+                                      return "#8F0000";
+                                    case "viewed":
+                                      return "#DE8B50";
+                                    default: // pending
+                                      return "#A9A9A9";
+                                  }
+                                },
+                              }}
+                            >
+                              <Typography sx={{ textTransform: "uppercase" }}>
+                                {applicant.applicantStatus}
+                              </Typography>
+                            </CardContent>
+                          </CardActionArea>
+                        </Card>
+                      </Stack>
+                    );
+                  })
+                ) : (
+                  <Typography>No applicants :/</Typography>
+                )}
+              </Box>
             </Box>
-          </Box>
-        </Card>
-      </Box>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Change application status for {selectedApplicantName}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            The current status is {selectedApplicantStatus}
-          </Typography>
-          <Stack direction="row" display="flex" alignItems="center">
-            <Typography sx={{ mr: 2 }}>
-              Change application status to:
-            </Typography>
-            <Select
-              value={changedApplicationStatus}
-              onChange={handleStatusChange}
-            >
-              <MenuItem value="interview">Interview</MenuItem>
-              <MenuItem value="viewed">Viewed</MenuItem>
-              <MenuItem value="rejected">Rejected</MenuItem>
-            </Select>
-          </Stack>
-          <Button onClick={handleSubmit}>Submit</Button>
+          </Card>
         </Box>
-      </Modal>
-    </Stack>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Change application status for {selectedApplicantName}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              The current status is {selectedApplicantStatus}
+            </Typography>
+            <Stack direction="row" display="flex" alignItems="center">
+              <Typography sx={{ mr: 2 }}>
+                Change application status to:
+              </Typography>
+              <Select
+                value={changedApplicationStatus}
+                onChange={handleStatusChange}
+              >
+                <MenuItem value="interview">Interview</MenuItem>
+                <MenuItem value="viewed">Viewed</MenuItem>
+                <MenuItem value="rejected">Rejected</MenuItem>
+              </Select>
+            </Stack>
+            <Button onClick={handleSubmit}>Submit</Button>
+          </Box>
+        </Modal>
+      </Grid>
+    </Grid>
   );
 };
 
