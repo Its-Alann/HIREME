@@ -7,6 +7,8 @@ import Modal from "@mui/material/Modal";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import * as React from "react";
 import { getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 import Card from "@mui/material/Card";
@@ -123,11 +125,6 @@ export const JobPostingApplicants = () => {
     loadLogoCompany();
   }, []);
 
-  // For application statuses
-  // 1. Get the array of applications from jobs
-  // 2. Get the names of the applicants from userProfiles
-  // 3. If the job ID exists for the user in applications, then display the applicant status
-
   // To change application status
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
   const handleOpen = (status, id, name) => {
@@ -164,8 +161,12 @@ export const JobPostingApplicants = () => {
       (jobIndex) => jobIndex.jobID === jobId
     );
     // set new status with the current jobID
+
     const applicationStatusToUpdate = {
+      address: applicantApplications[applicationIndex].address,
+      email: applicantApplications[applicationIndex].email,
       jobID: jobId,
+      phoneNumber: applicantApplications[applicationIndex].phoneNumber,
       status: newApplicationStatus,
     };
 
@@ -234,9 +235,8 @@ export const JobPostingApplicants = () => {
                     </Box>
                   </Grid>
                 </Grid>
-
                 {job.deadline && (
-                  <Typography sx={{ fontSize: 16 }}>
+                  <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
                     {new Date(
                       (job.deadline.seconds ?? 0) * 1000 +
                         (job.deadline.nanoseconds ?? 0) / 1000000
@@ -265,42 +265,11 @@ export const JobPostingApplicants = () => {
                   <Typography>{job.benefits}</Typography>
                 </Box>
               </Stack>
-              {job.deadline && (
-                <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
-                  {new Date(
-                    (job.deadline.seconds ?? 0) * 1000 +
-                      (job.deadline.nanoseconds ?? 0) / 1000000
-                  ).toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    timeZone: "UTC",
-                  })}
-                </Typography>
-              )}
             </Box>
           </Card>
         </Box>
       </Grid>
 
-      {/* <Divider />
-            <Stack spacing={2}>
-              <Box sx={{ pt: 2 }}>
-                <Typography sx={{ fontSize: 20 }}>About the job</Typography>
-                <Typography>{job.description}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
-                <Typography>{job.requirement}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
-                <Typography>{job.benefits}</Typography>
-              </Box>
-            </Stack>
-          </Box>
-        </Card>
-      </Box> */}
       {/* List of applicants and their statuses */}
       <Grid xs={12} sm={12} md={6}>
         <Box sx={{ p: 5 }}>
@@ -383,7 +352,13 @@ export const JobPostingApplicants = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Box display="flex" justifyContent="flex-end">
+              <IconButton onClick={handleClose}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            <Typography variant="h6" component="h2">
               Change application status for {selectedApplicantName}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
