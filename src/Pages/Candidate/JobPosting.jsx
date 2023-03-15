@@ -10,16 +10,17 @@ import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import { PropTypes } from "prop-types";
 import { Divider } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { db } from "../../Firebase/firebase";
 
 export const JobPosting = () => {
-  const pageID = useParams();
   const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
 
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const getJobData = async () => {
     try {
@@ -46,9 +47,16 @@ export const JobPosting = () => {
     }
   };
 
+  // loads the logo of a company
+  async function loadLogoCompany() {
+    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+    setCompaniesLogo(querySnapshot.data().logoPath);
+  }
+
   useEffect(() => {
     getJobData();
     getCompanyName(); // try to fix this
+    loadLogoCompany();
   }, []);
 
   // For application statuses
@@ -60,7 +68,7 @@ export const JobPosting = () => {
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
 
   return (
-    <Stack direction="row" alignItems="flex-start" justifyContent="center">
+    <Grid container direction="row" alignItems="flex-start" justify="center">
       {/* Job information */}
       <Box sx={{ p: 5, width: "90%" }}>
         <Card variant="outlined">
@@ -72,7 +80,40 @@ export const JobPosting = () => {
                   flexDirection={{ xs: "column", sm: "row" }}
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
-                  <Typography variant="h4">{job.title}</Typography>
+                  <Stack direction="row" alignItems="center">
+                    {job.companyID === undefined ? (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "0.25",
+                          height: "0.25",
+                          mr: 2,
+                        }}
+                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                      />
+                    ) : (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo}
+                      />
+                    )}
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {companyName.name}
+                      </Typography>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {job.location}
+                      </Typography>
+                    </Box>
+                  </Stack>
                   <Button
                     variant="contained"
                     sx={{
@@ -92,13 +133,9 @@ export const JobPosting = () => {
                   </Button>
                   <StarOutlineIcon />
                 </Box>
-                <Typography sx={{ fontSize: 18 }}>
-                  {companyName.name}
-                </Typography>
-                <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
               </Stack>
               {job.deadline && (
-                <Typography sx={{ fontSize: 16 }}>
+                <Typography sx={{ fontSize: 16, mt: 2 }}>
                   {new Date(
                     (job.deadline.seconds ?? 0) * 1000 +
                       (job.deadline.nanoseconds ?? 0) / 1000000
@@ -126,7 +163,7 @@ export const JobPosting = () => {
           </Box>
         </Card>
       </Box>
-    </Stack>
+    </Grid>
   );
 };
 
