@@ -79,55 +79,6 @@ const SignUpPage = () => {
             data-cy="formTest"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  data-cy="firstNameTest"
-                  autoFocus
-                  onBlur={(e) => {
-                    setFirstNameError(
-                      e.target.value === ""
-                        ? false
-                        : !/^[a-zA-Z]+$/.test(e.target.value)
-                    );
-                  }}
-                  error={firstNameError}
-                  helperText={
-                    !firstNameError
-                      ? ""
-                      : "Please enter a valid name (letters only)"
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  data-cy="lastNameTest"
-                  onBlur={(e) => {
-                    setLastNameError(
-                      e.target.value === ""
-                        ? false
-                        : !/^[a-zA-Z]+$/.test(e.target.value)
-                    );
-                  }}
-                  error={lastNameError}
-                  helperText={
-                    !lastNameError
-                      ? ""
-                      : "Please enter a valid name (letters only)"
-                  }
-                  autoComplete="family-name"
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
