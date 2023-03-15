@@ -14,16 +14,18 @@ describe("Login to test account", () => {
 
 describe("Creates a new job", () => {
   it("Creates a new job", () => {
-    cy.visit("http://localhost:3000/jobCreation");
+    cy.visit("http://localhost:3000/createJob");
     // not a good fix
     // we are waiting for firebase to give the id of the company.
     // we can try cy.spy() on console log.
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000);
     cy.get("#TextField-Title").type("Tester Job Title");
+    cy.get("#TextField-City").type("City");
+    cy.get("#TextField-Country").type("Country");
     cy.get("#TextField-Description").type("Tester Job Description");
-    cy.get("#TextField-Location").type("Tester Job Location");
     cy.get("#TextField-Requirement").type("Tester Job Requirement");
+    cy.get("#TextField-Benefits").type("Tester Job Benefits");
     // somehow cannot get date picker by id
     // cy.get("#DatePicker-Deadline").click();
     cy.get("#Button-Save").click();

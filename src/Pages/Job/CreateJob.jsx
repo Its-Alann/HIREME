@@ -14,6 +14,7 @@ import {
   arrayUnion,
   writeBatch,
 } from "firebase/firestore";
+import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { auth, db } from "../../Firebase/firebase";
@@ -298,15 +299,17 @@ export const CreateJob = () => {
           </Box>
         </Stack>
 
-        <Button
-          variant="contained"
-          size="medium"
-          id="Button-Save"
-          sx={{ mt: 2 }}
-          onClick={() => handleSubmit()}
-        >
-          Save
-        </Button>
+        <Link to="/myJobs">
+          <Button
+            variant="contained"
+            size="medium"
+            id="Button-Save"
+            sx={{ mt: 2 }}
+            onClick={() => handleSubmit()}
+          >
+            Save
+          </Button>
+        </Link>
       </Box>
     </Container>
   );

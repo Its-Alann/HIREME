@@ -229,7 +229,7 @@ export const EditJob = () => {
             <Typography>Job benefits</Typography>
             <TextField
               required
-              id="TextField-Requirement"
+              id="TextField-Benefits"
               fullWidth
               multiline
               rows={2}
