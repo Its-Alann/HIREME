@@ -82,7 +82,7 @@ export const JobPosting = () => {
                     }}
                   >
                     <Link
-                      to={`/applyJobs/${job.companyID}/${pageJobID}`}
+                      to={`/jobApplication/${job.companyID}/${pageJobID}`}
                       className="link"
                       underline="none"
                       style={{ textDecoration: "none" }}
