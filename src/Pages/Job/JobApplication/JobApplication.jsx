@@ -40,10 +40,13 @@ const JobApplication = () => {
   const [companyName, setCompanyName] = useState("");
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
+  // Patterns that the email, phone number and address must match in order for it to be an
+  // eligible application
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phonePattern = /^\d{10}$/;
   const addressPattern = /^.+$/;
 
+  // Job ID and company ID retrieved from the URL
   const URLjobID = useParams().jobID;
   const URLcompanyID = useParams().companyID;
 
@@ -72,21 +75,30 @@ const JobApplication = () => {
     }
   };
 
+  // Function that uploads the documents that users have uploaded to firebase
   const uploadDocuments = () => {
     const storage = getStorage();
 
+    // Creates a location for a resume in Firebase storage with the company name under the /job-applications/ directory
+    // ex: /job-applications/microsoft/software-dev/resume.jpg
     const resumeRef = ref(
       storage,
       `/job-applications/${companyName.toLowerCase()}/${jobTitle
         .toLowerCase()
         .replace(/\s+/g, "-")}/${email}/resume.jpg`
     );
+
+    // Creates a location for a cover letter in Firebase storage with the company name under the /job-applications/ directory
+    // ex: /job-applications/microsoft/software-dev/coverletter.jpg
     const coverLetterRef = ref(
       storage,
       `/job-applications/${companyName.toLowerCase()}/${jobTitle
         .toLowerCase()
         .replace(/\s+/g, "-")}/${email}/coverletter.jpg`
     );
+
+    // Creates a location for a transcript in Firebase storage with the company name under the /job-applications/ directory
+    // ex: /job-applications/microsoft/software-dev/transcript.jpg
     const transcriptRef = ref(
       storage,
       `/job-applications/${companyName.toLowerCase()}/${jobTitle
@@ -94,6 +106,7 @@ const JobApplication = () => {
         .replace(/\s+/g, "-")}/${email}/transcript.jpg`
     );
 
+    // If the resume, cover letter or transcript are null, they will not send any data to the Firestore storage
     if (resume != null) {
       uploadBytes(resumeRef, resume);
     }
@@ -105,6 +118,8 @@ const JobApplication = () => {
     }
   };
 
+  // Adds the job application information to the applications collection on Firestore. Appends to user's
+  // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
     const applicationsRef = doc(db, "applications", currentUserEmail);
     setDoc(
@@ -123,6 +138,7 @@ const JobApplication = () => {
     );
   };
 
+  // Handles the submit button and validates the form. If the inputs are incorrect, the application will not be submitted
   const onSubmit = () => {
     if (
       (emailPattern.test(email) &&
@@ -145,6 +161,7 @@ const JobApplication = () => {
     }
   };
 
+  // Gets the job title from Firestore jobs collection
   const getJobTitle = async () => {
     try {
       const docSnap = await getDoc(doc(db, "jobs", URLjobID));
@@ -155,6 +172,7 @@ const JobApplication = () => {
     }
   };
 
+  // Gets the company name from Firestore companies collection
   const getCompanyName = async () => {
     try {
       const docSnap = await getDoc(doc(db, "companies", URLcompanyID));
@@ -165,6 +183,7 @@ const JobApplication = () => {
     }
   };
 
+  // On load, this will set the current user's email and retrieve the job title and company name
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
