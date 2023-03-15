@@ -161,7 +161,6 @@ export const JobPostingApplicants = () => {
     const applicationIndex = applicantApplications.findIndex(
       (jobIndex) => jobIndex.jobID === jobId
     );
-    // set new status with the current jobID
 
     const applicationStatusToUpdate = {
       address: applicantApplications[applicationIndex].address,

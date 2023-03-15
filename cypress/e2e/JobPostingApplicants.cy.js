@@ -31,7 +31,7 @@ describe("Display Job Posting", () => {
   });
 });
 
-describe("Change the application status for Hanni Pham", () => {
+describe("Change the application status for Hanni Pham - viewed", () => {
   it("visits the job listing page with applicants", () => {
     cy.visit(
       "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
@@ -39,7 +39,7 @@ describe("Change the application status for Hanni Pham", () => {
     cy.wait(1000);
   });
 
-  it("selects Hanni Pham from the list of applicants and changes application status to viewed", () => {
+  it("selects Hanni Pham from the list of applicants and changes application status to rejected", () => {
     cy.visit(
       "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
     );
@@ -48,20 +48,36 @@ describe("Change the application status for Hanni Pham", () => {
       ":nth-child(2) > .MuiPaper-root > .MuiButtonBase-root > .MuiCardContent-root"
     ).click();
     cy.get(".MuiSelect-select").click();
-    cy.get('[data-value="viewed"]').click();
+    cy.get('[data-value="rejected"]').click();
+    cy.get(".css-1acyv19 > .MuiButton-root").click();
     cy.get(
-      ".css-79ws1d-MuiModal-root > .MuiBox-root > .MuiButtonBase-root"
-    ).click();
+      ":nth-child(2) > .MuiPaper-root > .MuiButtonBase-root > .MuiCardContent-root > .MuiTypography-root"
+    ).should("have.text", "rejected");
+  });
+});
+
+describe("Change the application status for Hanni Pham - viewed", () => {
+  it("visits the job listing page with applicants", () => {
+    cy.visit(
+      "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
+    );
+    cy.wait(1000);
   });
 
-  it("shows the correct application status for Hanni Pham", () => {
+  it("selects Hanni Pham from the list of applicants and changes application status to interview", () => {
     cy.visit(
       "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
     );
     cy.wait(1000);
     cy.get(
+      ":nth-child(2) > .MuiPaper-root > .MuiButtonBase-root > .MuiCardContent-root"
+    ).click();
+    cy.get(".MuiSelect-select").click();
+    cy.get('[data-value="interview"]').click();
+    cy.get(".css-1acyv19 > .MuiButton-root").click();
+    cy.get(
       ":nth-child(2) > .MuiPaper-root > .MuiButtonBase-root > .MuiCardContent-root > .MuiTypography-root"
-    ).should("have.text", "viewed");
+    ).should("have.text", "interview");
   });
 });
 
