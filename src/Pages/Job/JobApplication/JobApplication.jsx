@@ -8,7 +8,8 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
@@ -37,6 +38,7 @@ const JobApplication = () => {
   const [transcript, setTranscript] = useState(null);
   const [jobTitle, setJobTitle] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phonePattern = /^\d{10}$/;
@@ -44,6 +46,8 @@ const JobApplication = () => {
 
   const URLjobID = useParams().jobID;
   const URLcompanyID = useParams().companyID;
+
+  const auth = getAuth();
 
   // Event handler function to update the state variables when a file is selected for upload
   const onFileChange = (e, fileType) => {
@@ -94,6 +98,24 @@ const JobApplication = () => {
     uploadBytes(transcriptRef, transcript);
   };
 
+  const addJobApplication = async () => {
+    const applicationsRef = doc(db, "applications", currentUserEmail);
+    setDoc(
+      applicationsRef,
+      // eslint-disable-next-line no-undef
+      {
+        jobs: arrayUnion({
+          jobID: URLjobID,
+          status: "applied",
+          email,
+          phoneNumber,
+          address,
+        }),
+      },
+      { merge: true }
+    );
+  };
+
   const onSubmit = () => {
     if (
       (emailPattern.test(email) &&
@@ -111,6 +133,7 @@ const JobApplication = () => {
       }
     } else {
       uploadDocuments();
+      addJobApplication();
       console.log("completed");
       console.log(
         "Data packet",
@@ -145,6 +168,13 @@ const JobApplication = () => {
   };
 
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserEmail(user.email);
+      } else {
+        console.error("No user found");
+      }
+    });
     getJobTitle();
     getCompanyName();
   }, []);
