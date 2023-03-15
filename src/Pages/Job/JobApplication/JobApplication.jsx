@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -8,8 +8,12 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import { doc, getDoc } from "firebase/firestore";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useParams } from "react-router-dom";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import FileUpload from "../../../Components/FileUpload/FileUpload";
+import { db } from "../../../Firebase/firebase";
 
 const JobApplication = () => {
   // Define the MUI theme to be used in the component
@@ -31,10 +35,15 @@ const JobApplication = () => {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
   const [transcript, setTranscript] = useState(null);
+  const [jobTitle, setJobTitle] = useState("");
+  const [companyName, setCompanyName] = useState("");
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phonePattern = /^\d{10}$/;
   const addressPattern = /^.+$/;
+
+  const URLjobID = useParams().jobID;
+  const URLcompanyID = useParams().companyID;
 
   // Event handler function to update the state variables when a file is selected for upload
   const onFileChange = (e, fileType) => {
@@ -59,6 +68,32 @@ const JobApplication = () => {
     }
   };
 
+  const uploadDocuments = () => {
+    const storage = getStorage();
+
+    const resumeRef = ref(
+      storage,
+      `/job-applications/${companyName.toLowerCase()}/${jobTitle
+        .toLowerCase()
+        .replace(/\s+/g, "-")}/${email}/resume.jpg`
+    );
+    const coverLetterRef = ref(
+      storage,
+      `/job-applications/${companyName.toLowerCase()}/${jobTitle
+        .toLowerCase()
+        .replace(/\s+/g, "-")}/${email}/coverletter.jpg`
+    );
+    const transcriptRef = ref(
+      storage,
+      `/job-applications/${companyName.toLowerCase()}/${jobTitle
+        .toLowerCase()
+        .replace(/\s+/g, "-")}/${email}/transcript.jpg`
+    );
+    uploadBytes(resumeRef, resume);
+    uploadBytes(coverLetterRef, coverLetter);
+    uploadBytes(transcriptRef, transcript);
+  };
+
   const onSubmit = () => {
     if (
       (emailPattern.test(email) &&
@@ -75,6 +110,7 @@ const JobApplication = () => {
         console.log("enter a valid address");
       }
     } else {
+      uploadDocuments();
       console.log("completed");
       console.log(
         "Data packet",
@@ -87,6 +123,31 @@ const JobApplication = () => {
       );
     }
   };
+
+  const getJobTitle = async () => {
+    try {
+      const docSnap = await getDoc(doc(db, "jobs", URLjobID));
+      const jobData = docSnap.data();
+      setJobTitle(jobData.title);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCompanyName = async () => {
+    try {
+      const docSnap = await getDoc(doc(db, "companies", URLcompanyID));
+      const jobData = docSnap.data();
+      setCompanyName(jobData.name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getJobTitle();
+    getCompanyName();
+  }, []);
 
   return (
     // Apply the MUI theme to the component using the ThemeProvider component
@@ -112,7 +173,7 @@ const JobApplication = () => {
         {/* Job title */}
         <Grid item md={12} sm={12} xs={12}>
           <Typography variant="h6">
-            You are applying for: Nuance Product Manager
+            You are applying for: {`${companyName} ${jobTitle}`}
           </Typography>
         </Grid>
 
