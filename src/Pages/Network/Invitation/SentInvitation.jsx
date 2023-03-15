@@ -46,7 +46,7 @@ export const SentInvitation = () => {
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
-            {sentRequestsUserID.length > 0 && sentRequestsUserID != null ? (
+            {sentRequestsUserID?.length > 0 && sentRequestsUserID != null ? (
               <Grid
                 container
                 spacing={3}

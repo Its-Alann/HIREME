@@ -17,10 +17,19 @@ import EditProfilePage from "./Pages/EditProfile/EditProfilePage";
 import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
+import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
+import { CreateCompany } from "./Pages/Company/CreateCompany";
+import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
+import { CreateJob } from "./Pages/Job/CreateJob";
+import { BrowseJobs } from "./Pages/Job/BrowseJobs";
+import { MyJobs } from "./Pages/Job/MyJobs";
+import { EditJob } from "./Pages/Job/EditJob";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
 import FlaggedMessages from "./Pages/Admin/FlaggedMessages";
+import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
+import { JobPosting } from "./Pages/Candidate/JobPosting";
 
 const App = () => {
   const hello = "helloo";
@@ -63,13 +72,38 @@ const App = () => {
             />
             <Route path="/network" exact element={<NetworkPage />} />
             <Route path="/messaging" export element={<MessagingPage />} />
-            <Route path="/myNetwork" exact element={<ViewNetwork />} />
+            {/* <Route path="/myNetwork" exact element={<ViewNetwork />} /> */}
             <Route path="/invitations" exact element={<ReceivedInvitation />} />
             <Route path="/sentRequests" exact element={<SentInvitation />} />
             <Route
               path="/admin/flaggedMessages"
               exact
               element={<FlaggedMessages />}
+            />
+            <Route
+              path="/possibleConnections"
+              exact
+              element={<NetworkPossibleConnections />}
+            />
+            <Route path="/createCompany" exact element={<CreateCompany />} />
+            <Route
+              path="/createRecruiter"
+              exact
+              element={<CreateRecruiter />}
+            />
+            <Route path="/createJob" exact element={<CreateJob />} />
+            <Route path="/browseJobs" exact element={<BrowseJobs />} />
+            <Route path="/myJobs" exact element={<MyJobs />} />
+            <Route path="/editJob/:jobID" exact element={<EditJob />} />
+            <Route
+              path="/viewJobPostingApplicants/:companyID/:jobID"
+              exact
+              element={<JobPostingApplicants />}
+            />
+            <Route
+              path="/viewJobPosting/:companyID/:jobID"
+              exact
+              element={<JobPosting />}
             />
           </Routes>
         </Router>
