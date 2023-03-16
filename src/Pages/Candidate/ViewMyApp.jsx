@@ -23,7 +23,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-// import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
@@ -38,11 +37,15 @@ export const ViewMyApp = () => {
 
   const jobsPerPage = 5;
 
+  // gets all the job information and creates an array of
+  //objects containing all needed information
   const getJobInformation = async (jobId) => {
+    //gets the job statuses from the applications collection
     const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
     const usersjobs = applicationsSnapshot.data().jobs;
     let status1 = "";
 
+    //goes through all jobs and sets the status of a specific jobID
     usersjobs.forEach(async (item) => {
       if (jobId === item.jobID) {
         console.log("LINE 47", item.status);
@@ -52,6 +55,7 @@ export const ViewMyApp = () => {
 
     console.log(jobId);
 
+    //creates jobInformation object and adds it to myApplications
     try {
       const jobInformationSnapshot = await getDoc(doc(db, "jobs", jobId));
       const jobInformationData = jobInformationSnapshot.data();
@@ -78,6 +82,8 @@ export const ViewMyApp = () => {
     }
   };
 
+  // get all the jobs we need to display on the page from applications collection
+  // creates a jobInformation object by calling the method
   async function getJobs() {
     //await getMyApplications();
     const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
@@ -185,30 +191,17 @@ export const ViewMyApp = () => {
         {myApplications.map((job) => {
           const hello = "hello";
 
-          // getAllInfo(job.jobID);
-          // console.log("ALL INFO", title, company, deadline, location);
-          //   const jobTitle = getJobTitle(job.jobID);
-          // const jobTitle = getJobTitle(job.jobID);
-          // const company = getCompany(job.jobID);
-          // const location = getLocation(job.jobID);
-          // const deadline = getDeadline(job.jobID);
-
-          // do this to show what is inside job
-          // console.log(job);
-          // console.log(companiesName);
           return (
             // Create cards instead
-            <Box sx={{ py: 1 }}>
+            <Grid sx={{ py: 1 }}>
               <Card variant="outlined">
-                <Box sx={{ m: 3 }}>
-                  <Grid
-                    container
-                    spacing={-0.5}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Grid>
+                <Stack direction="row" justifyContent="space-between">
+                  <Grid sx={{ md: 8, sm: 12, sx: 12 }}>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      margin="5"
+                    >
                       {job.companyID === undefined ? (
                         <Box
                           component="img"
@@ -216,7 +209,7 @@ export const ViewMyApp = () => {
                             // objectFit: "cover",
                             width: "0.25",
                             height: "0.25",
-                            mr: 2,
+                            ml: 2,
                           }}
                           src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
                         />
@@ -228,69 +221,98 @@ export const ViewMyApp = () => {
                             width: "6rem",
                             height: "6rem",
                             mr: 2,
+                            alignItems: "center",
                           }}
                           src={companiesLogo[job.companyID]}
                         />
                       )}
-                      <Box>
-                        <Typography variant="h4">{job.jobTitle}</Typography>
+                      <Grid>
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography variant="h4">{job.jobTitle}</Typography>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              backgroundColor: "black",
+                              m: 2,
+                              height: 30,
+                              width: 100,
+                              textTransform: "none",
+                            }}
+                            onClick={() => handleRemoveJob(job.jobID)}
+                          >
+                            Remove
+                          </Button>
+                        </Stack>
                         <Typography>{companiesName[job.companyID]} </Typography>
                         {/* <Typography>{job.companyID} </Typography> */}
                         {/* change to country and city */}
                         <Typography>{`${job.city}, ${job.country}`}</Typography>
-                      </Box>
-                    </Grid>
-                    <Grid>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: "black",
-                          m: 2,
-                          textTransform: "none",
-                          marginLeft: "auto",
-                        }}
-                        onClick={() => handleRemoveJob(job.jobID)}
-                      >
-                        Remove
-                      </Button>
-                    </Grid>
+                      </Grid>
+                    </Stack>
+
+                    {/* do we need to show company id? */}
+                    {/* <Typography>Company ID: {job.companyID}</Typography> */}
+                    <Stack direction="row" sx={{ pt: 2 }}>
+                      <Typography>
+                        Deadline:{" "}
+                        {new Date(
+                          job.deadline.seconds * 1000 +
+                            job.deadline.nanoseconds / 1000000
+                        ).toDateString()}
+                      </Typography>
+                    </Stack>
                   </Grid>
 
-                  {/* do we need to show company id? */}
-                  {/* <Typography>Company ID: {job.companyID}</Typography> */}
+                  {/* <Grid sx={{ md: 2, sm: 12, sx: 12 }}>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "black",
+                        m: 2,
+                        height: 30,
+                        width: 100,
+                        textTransform: "none",
+                      }}
+                      onClick={() => handleRemoveJob(job.jobID)}
+                    >
+                      Remove
+                    </Button>
+                  </Grid> */}
 
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="flex-end"
-                    sx={{ pt: 2 }}
+                  <Grid
+                    sx={{
+                      md: 2,
+                      sm: 12,
+                      sx: 12,
+                      backgroundColor:
+                        job.status === "interview"
+                          ? "green"
+                          : job.status === "viewed"
+                          ? "yellow"
+                          : job.status === "rejected"
+                          ? "red"
+                          : "darkgray",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "70px",
+                    }}
                   >
-                    <Typography>
-                      Deadline:{" "}
-                      {new Date(
-                        job.deadline.seconds * 1000 +
-                          job.deadline.nanoseconds / 1000000
-                      ).toDateString()}
+                    <Typography
+                      sx={{
+                        writingMode: "vertical-rl",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        color: "white",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {job.status}
                     </Typography>
-                  </Stack>
-                </Box>
-                <Box
-                  sx={{
-                    backgroundColor:
-                      job.status === "interview"
-                        ? "green"
-                        : job.status === "viewed"
-                        ? "yellow"
-                        : job.status === "rejected"
-                        ? "red"
-                        : "darkgray",
-                    flex: 1,
-                  }}
-                >
-                  <Typography>{job.status}</Typography>
-                </Box>
+                  </Grid>
+                </Stack>
               </Card>
-            </Box>
+            </Grid>
           );
         })}
       </Box>
