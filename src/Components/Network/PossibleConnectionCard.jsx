@@ -108,6 +108,9 @@ export const PossibleConnectionCard = ({
                 data-cy={`invitationButton${
                   possibleConnectionUser?.values?.firstName ?? ""
                 }`}
+                id={`invitationButton${
+                  possibleConnectionUser?.values?.firstName ?? ""
+                }`}
               >
                 Send Invitation
               </ColorButtonBlue>
