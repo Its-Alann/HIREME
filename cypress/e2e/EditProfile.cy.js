@@ -105,18 +105,31 @@ describe("Edit Profile Page", () => {
     cy.get('button[name="awardPopupDel"]').click();
   });
 
-  // it("resume card", () => {
-  //   cy.visit("http://localhost:3000/editProfile");
-  //   cy.get('[name="UploadBtn"]').click();
-  //   cy.wait(500);
-  //   cy.get('[name="UploadBtn"]').attachFile("TestPdf.pdf");
-  //   cy.get('[name="UploadBtn"]').click();
-  //   const fileName = "TestPdf.pdf";
-  //   cy.fixture(fileName).then(fileContent => {
-  //     cy.get('[name="UploadBtn"]').upload(fileContent, fileName, mimeType: "application/pdf");
-  //   })
-  //   cy.get('[name="UploadBtn"]').selectFile("TestPdf.pdf");
-  // });
+  it("adds a resume", () => {
+    cy.visit("http://localhost:3000/editProfile");
+    cy.wait(500);
+    cy.get(
+      ".css-1cwdt9v-MuiGrid-root > :nth-child(1) > .MuiButtonBase-root"
+    ).click();
+    cy.get('[name="UploadBtn"]').selectFile("cypress/fixtures/TestPdf.pdf");
+    cy.get(":nth-child(2) > .MuiButton-outlined").click();
+    cy.wait(1000);
+    cy.get(
+      '[style="place-content: center; text-align: center;"] > [tabindex="0"]'
+    ).click();
+    cy.get(
+      '[style="place-content: center; text-align: center;"] > :nth-child(2)'
+    ).click();
+    cy.get("body").click(0, 0);
+    cy.get(":nth-child(2) > .MuiButton-text").click();
+    cy.wait(1000);
+  });
+
+  it("changes profile picture", () => {
+    cy.visit("http://localhost:3000/editProfile");
+    cy.wait(500);
+    cy.get(".MuiAvatar-img").click();
+  });
 
   it("save changes", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
