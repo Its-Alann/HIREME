@@ -143,7 +143,6 @@ const LoginPage = () => {
                 sx={{ mt: 3, mb: 2, py: 1 }}
                 color="primary"
                 name="signIn"
-                inputProps={{ "aria-label": "signIn" }}
               >
                 Sign In
               </Button>

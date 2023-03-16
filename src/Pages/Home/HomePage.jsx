@@ -135,7 +135,6 @@ const HomePage = () => {
                       variant="contained"
                       sx={{ mt: 3, mb: 2, py: 1 }}
                       color="primary"
-                      inputProps={{ "aria-label": "signIn" }}
                       onClick={handleSignOut}
                     >
                       Sign Out
