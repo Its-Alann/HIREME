@@ -1,58 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { auth, db } from "../../Firebase/firebase";
 
-const descendingComparator = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-};
-
-const headCells = [
-  {
-    id: "user",
-    numeric: false,
-    disablePadding: true,
-    label: "User",
-  },
-  {
-    id: "message",
-    numeric: false,
-    disablePadding: true,
-    label: "Flagged Message 🚩",
-  },
-  {
-    id: "type",
-    numeric: false,
-    disablePadding: true,
-    label: "Type",
-  },
-  {
-    id: "date",
-    numeric: false,
-    disablePadding: true,
-    label: "Date",
-  },
-];
-
 const columns = [
-  { field: "id", headerName: "ID", width: 90 },
+  // { field: "id", headerName: "ID", width: 90 },
   {
     field: "user",
     numeric: false,
@@ -79,15 +33,54 @@ const columns = [
   },
 ];
 
-let rows = [];
+// const columns = [
+//   { field: "id", headerName: "ID", width: 90 },
+//   {
+//     field: "firstName",
+//     headerName: "First name",
+//     width: 150,
+//     editable: true,
+//   },
+//   {
+//     field: "lastName",
+//     headerName: "Last name",
+//     width: 150,
+//     editable: true,
+//   },
+//   {
+//     field: "age",
+//     headerName: "Age",
+//     type: "number",
+//     width: 110,
+//     editable: true,
+//   },
+//   {
+//     field: "fullName",
+//     headerName: "Full name",
+//     description: "This column has a value getter and is not sortable.",
+//     sortable: false,
+//     width: 160,
+//     valueGetter: (params) =>
+//       `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+//   },
+// ];
+
+// const rows = [
+//   { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
+//   { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
+//   { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
+//   { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
+//   { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
+//   { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
+//   { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
+//   { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
+//   { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+// ];
 
 const FlaggedMessages = (props) => {
   // array of reported message objects
   const [reportedMessages, setReportedMessages] = useState([]);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("date");
-
-  // let rows = [];
+  const [selectedRowData, setSelectedRowData] = useState([]);
 
   const getReportedMessages = async () => {
     const reportedMessagesRef = collection(db, "reportedMessages");
@@ -105,23 +98,11 @@ const FlaggedMessages = (props) => {
         index: resData.index,
         id: ii,
       };
-      const thingy2 = {
-        user: resData.sender,
-        message: resData.content || resData.attachment || null,
-        date: resData.timestamp.toDate(),
-        type: resData.content ? "content" : "attachment",
-        id: ii,
-      };
-      // console.log(thingy.date instanceof Date);
-      temp.push(thingy2);
+      temp.push(thingy);
       ii += 1;
     });
 
     setReportedMessages(temp);
-
-    rows = temp;
-    setReportedMessages(rows);
-    console.log("rows", rows);
   };
 
   useEffect(() => {
@@ -129,69 +110,36 @@ const FlaggedMessages = (props) => {
   }, []);
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
-      {/* <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Flagged Message 🚩</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Date</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {reportedMessages.map((data) => (
-              <TableRow>
-                <TableCell>{data.user}</TableCell>
-                <TableCell>{data.message}</TableCell>
-                <TableCell>{data.type}</TableCell>
-                <TableCell>{data.date.toLocaleString()}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer> */}
-
-      {/* <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {headCells.map((headCell) => (
-                <TableCell
-                  key={headCell.id}
-                  align="left"
-                  // padding={headCell.disablePadding ? "none" : "normal"}
-                  // sortDirection={orderBy === headCell.id ? order : false}
-                >
-                  <TableSortLabel
-                  // active={orderBy === headCell.id}
-                  // direction={orderBy === headCell.id ? order : "asc"}
-                  // onClick={createSortHandler(headCell.id)}
-                  >
-                    {headCell.label}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>{}</TableBody>
-        </Table>
-      </TableContainer> */}
-
-      <DataGrid
-        rows={reportedMessages}
-        columns={columns}
-        pageSizeOptions={[5]}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+    <>
+      {/* TODO: make mass report / warn users with the checklist
+            selected rows are in the selectedRowData useState
+      */}
+      <Button variant="contained">Button</Button>
+      <Box sx={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={reportedMessages}
+          columns={columns}
+          pageSizeOptions={[5]}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
             },
-          },
-        }}
-      />
-    </Box>
+          }}
+          checkboxSelection
+          disableRowSelectionOnClick
+          onRowSelectionModelChange={(ids) => {
+            const selectedIDs = new Set(ids);
+            const data = reportedMessages.filter((row) =>
+              selectedIDs.has(row.id)
+            );
+            // console.log(data);
+            setSelectedRowData(data);
+          }}
+        />
+      </Box>
+    </>
   );
 };
 
