@@ -29,12 +29,6 @@ import { auth, db } from "../../Firebase/firebase";
 import "../Job/Job.css";
 
 export const ViewMyApp2 = () => {
-  //const auth = getAuth();
-  // console.log(auth.currentUser);
-  // console.log(auth.currentUser.email);
-  // const userEmail = auth.currentUser.email;
-  // console.log(userEmail);
-
   const [jobs, setJobs] = useState([]);
   const [companiesName, setCompaniesName] = useState({});
   const [myApplications, setMyApplications] = useState([]);
@@ -43,47 +37,65 @@ export const ViewMyApp2 = () => {
 
   const jobsPerPage = 5;
 
+  const getJobInformation = async (jobId) => {
+    const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
+    const usersjobs = applicationsSnapshot.data().jobs;
+    let status1 = "";
+    //console.log(usersjobs);
+
+    usersjobs.forEach(async (item) => {
+      if (jobId === item.jobID) {
+        console.log("LINE 47", item.status);
+        status1 = item.status;
+      }
+      // return "status could not be found";
+    });
+
+    console.log(jobId);
+
+    try {
+      const jobInformationSnapshot = await getDoc(doc(db, "jobs", jobId));
+      const jobInformationData = jobInformationSnapshot.data();
+
+      console.log("in getjobinfo", status1);
+
+      console.log(jobInformationData);
+      const jobInformation = {
+        jobTitle: jobInformationData.title,
+        jobID: jobId,
+        status: status1,
+        companyID: jobInformationData.companyID,
+        location: jobInformationData.location,
+        deadline: jobInformationData.deadline,
+      };
+      console.log("line73: ", jobInformation);
+      setMyApplications((prevApplications) => [
+        ...prevApplications,
+        jobInformation,
+      ]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // async function getJobs() {
+  //   //await getMyApplications();
+  //   const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
+  //   const applicationsData = applicationsSnapshot.data().jobs;
+
+  //   console.log(applicationsData);
+
+  //   setJobs(applicationsData);
+  // }
+
   async function getJobs() {
     //await getMyApplications();
     const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
     const applicationsData = applicationsSnapshot.data().jobs;
-
-    console.log(applicationsData);
-
-    // const arrayOfJobIds = [];
-    // const arrayOfStatus = [];
-    // applicationsData.forEach((item) => {
-    //   arrayOfJobIds.push(item.jobID);
-    //   arrayOfStatus.push(item.status);
-    // });
-
-    // console.log("this SHOULD BE AN ARRAY OF USER IDS", arrayOfJobIds);
-    // console.log("this SHOULD BE AN ARRAY OF USER STATUSES", arrayOfStatus);
-    // //setMyApplications(arrayOfJobIds);
-
-    // const initialJobsQuery = query(collection(db, "jobs"));
-
-    // const jobsSnapshot = await getDocs(initialJobsQuery);
-
-    // // if none document returned, skip
-    // if (jobsSnapshot.docs.length < 1) {
-    //   return;
-    // }
-
-    // const temp = [];
-    // jobsSnapshot.docs.forEach((document) => {
-    //   console.log("JOBBBBS", document);
-    //   console.log(arrayOfJobIds);
-    //   if (arrayOfJobIds.includes(document.id)) {
-    //     temp.push({
-    //       ...document.data(),
-    //       documentID: document.id,
-    //       status: "pending",
-    //     });
-    //   }
-    // });
-    // temp.reverse();
-    setJobs(applicationsData);
+    await applicationsData.map((job) =>
+      Promise.all(getJobInformation(job.jobID))
+    );
+    console.log(myApplications);
   }
 
   // const getJobTitle = async (jobID) => {
@@ -134,7 +146,10 @@ export const ViewMyApp2 = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
-    jobs.forEach(async (job) => {
+    console.log("IN COMPANIES", jobs);
+    console.log("IN COMPANIES", myApplications);
+
+    myApplications.forEach(async (job) => {
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
         const companyRef = doc(db, "companies", job.companyID);
@@ -177,6 +192,7 @@ export const ViewMyApp2 = () => {
       console.log(err);
     }
   };
+
   //wejnbjenck
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -193,11 +209,11 @@ export const ViewMyApp2 = () => {
   useEffect(() => {
     getCompaniesName();
     console.log("STOPPPPPPP");
-  }, [jobs]);
+  }, [myApplications]);
 
   useEffect(() => {
     console.log("STOPPPPPPP");
-    getJobs();
+    Promise.all([getJobs()]);
   }, [myUser]);
 
   return (
@@ -207,7 +223,7 @@ export const ViewMyApp2 = () => {
           My Application
         </Typography>
         {/* {getJobTitle("4QwjqeYxPRuDw7fOnKBj")}; */}
-        {jobs.map((job) => {
+        {myApplications.map((job) => {
           const hello = "hello";
 
           // getAllInfo(job.jobID);
@@ -220,6 +236,7 @@ export const ViewMyApp2 = () => {
 
           // do this to show what is inside job
           // console.log(job);
+          // console.log(companiesName);
           return (
             // Create cards instead
             <Box sx={{ py: 1 }}>
@@ -230,7 +247,7 @@ export const ViewMyApp2 = () => {
                     flexDirection={{ xs: "column", sm: "row" }}
                     alignItems={{ xs: "flex-start", sm: "center" }}
                   >
-                    <Typography variant="h4">{job.jobID}</Typography>
+                    <Typography variant="h4">{job.jobTitle}</Typography>
                     <Button
                       variant="contained"
                       sx={{
@@ -244,10 +261,11 @@ export const ViewMyApp2 = () => {
                       Remove
                     </Button>
                   </Box>
-                  <Typography>comp </Typography>
+                  <Typography>{companiesName[job.companyID]} </Typography>
+                  {/* <Typography>{job.companyID} </Typography> */}
 
                   {/* change to country and city */}
-                  <Typography>{job.jobID}</Typography>
+                  <Typography>{job.location}</Typography>
 
                   {/* do we need to show company id? */}
                   {/* <Typography>Company ID: {job.companyID}</Typography> */}
@@ -258,13 +276,13 @@ export const ViewMyApp2 = () => {
                     alignItems="flex-end"
                     sx={{ pt: 2 }}
                   >
-                    {/* <Typography>
+                    <Typography>
                       Deadline:{" "}
                       {new Date(
-                        getDeadline(job.jobID).seconds * 1000 +
-                          getDeadline(job.jobID).nanoseconds / 1000000
+                        job.deadline.seconds * 1000 +
+                          job.deadline.nanoseconds / 1000000
                       ).toDateString()}
-                    </Typography> */}
+                    </Typography>
                   </Stack>
                 </Box>
                 <Box
