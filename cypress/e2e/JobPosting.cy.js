@@ -71,8 +71,6 @@ describe("Display unique job posting", () => {
     );
   });
 
-  
-
   it("shows job last date to apply", () => {
     cy.visit(
       "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
