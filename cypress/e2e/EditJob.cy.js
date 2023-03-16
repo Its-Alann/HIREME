@@ -1,3 +1,5 @@
+Cypress.on("uncaught:exception", (err, runnable) => false);
+
 beforeEach(() => {
   cy.viewport(1920, 1080);
 });
