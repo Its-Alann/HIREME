@@ -21,6 +21,7 @@ export const JobPosting = () => {
 
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   // makes a getDoc of the jobs collection based on the jobID
   // sets the job to the JobData
@@ -49,10 +50,17 @@ export const JobPosting = () => {
     }
   };
 
+  // loads the logo of a company
+  async function loadLogoCompany() {
+    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+    setCompaniesLogo(querySnapshot.data().logoPath);
+  }
+
   // calling 2 methods
   useEffect(() => {
     getJobData();
     getCompanyName();
+    loadLogoCompany();
   }, []);
 
   // returns the job posting with the apply button
@@ -70,7 +78,50 @@ export const JobPosting = () => {
                   flexDirection={{ xs: "column", sm: "row" }}
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
-                  <Typography variant="h4">{job.title}</Typography>
+                  <Stack direction="row" alignItems="center">
+                    {job.companyID === undefined ? (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "0.25",
+                          height: "0.25",
+                          mr: 2,
+                        }}
+                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                      />
+                    ) : (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo}
+                      />
+                    )}
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {companyName.name}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: 18 }}
+                      >{`${job.city}, ${job.country}`}</Typography>
+                      {job.deadline && (
+                        <Typography sx={{ fontSize: 16 }}>
+                          Deadline:{" "}
+                          {new Date(
+                            job.deadline.seconds * 1000 +
+                              job.deadline.nanoseconds / 1000000
+                          ).toDateString()}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Stack>
+
                   {/*  apply button which allowes a user to be sent to an apply page */}
                   <Button
                     variant="contained"
@@ -91,26 +142,7 @@ export const JobPosting = () => {
                   </Button>
                   <StarOutlineIcon />
                 </Box>
-                <Typography sx={{ fontSize: 18 }}>
-                  {companyName.name}
-                </Typography>
-                <Typography
-                  sx={{ fontSize: 18 }}
-                >{`${job.city}, ${job.country}`}</Typography>
               </Stack>
-              {job.deadline && (
-                <Typography sx={{ fontSize: 16 }}>
-                  {new Date(
-                    (job.deadline.seconds ?? 0) * 1000 +
-                      (job.deadline.nanoseconds ?? 0) / 1000000
-                  ).toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    timeZone: "UTC",
-                  })}
-                </Typography>
-              )}
             </Box>
 
             <Divider />
