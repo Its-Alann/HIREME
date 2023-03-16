@@ -63,6 +63,7 @@ const SkillsCard = ({ setProfile, profile }) => {
           <Grid container>
             <TextField
               label="Skill"
+              name="SkillInput"
               variant="standard"
               size="small"
               value={tempSkill}
@@ -78,7 +79,11 @@ const SkillsCard = ({ setProfile, profile }) => {
               }}
               InputProps={{
                 endAdornment: (
-                  <AddIcon onClick={handleAdd} style={{ cursor: "pointer" }} />
+                  <AddIcon
+                    onClick={handleAdd}
+                    style={{ cursor: "pointer" }}
+                    name="skillAdd"
+                  />
                 ),
                 readOnly: !editButton,
                 error: editButton,
