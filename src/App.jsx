@@ -31,6 +31,7 @@ import FlaggedMessages from "./Pages/Admin/FlaggedMessages";
 import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
+import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
 
 const App = () => {
   const hello = "helloo";
@@ -111,6 +112,7 @@ const App = () => {
               exact
               element={<JobPosting />}
             />
+            <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
           </Routes>
         </Router>
       </div>
