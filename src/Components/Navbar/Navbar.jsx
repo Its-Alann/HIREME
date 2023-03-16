@@ -22,6 +22,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { changeLanguage } from "i18next";
+import { useTranslation } from "react-i18next";
+import { FormControl, InputLabel, Select } from "@mui/material";
+import LanguageIcon from "@mui/icons-material/Language";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
@@ -32,6 +36,16 @@ const settings = ["Profile", "Account", "Dashboard"];
 const Navbar = () => {
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  const [language, setLanguage] = React.useState("");
+  const { t, i18n } = useTranslation();
+  const openSettings = t("OpenSettings");
+
+  const handleChange = (event) => {
+    setLanguage(event.target.value);
+    changeLanguage(event.target.value);
+    window.location.reload();
+  };
+
   //getting user information
   React.useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -178,7 +192,7 @@ const Navbar = () => {
                       handleCloseNavMenu();
                     }}
                   >
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography textAlign="center">{t(page)}</Typography>
                   </MenuItem>
                 ))}
               {!userIsConnected &&
@@ -191,7 +205,7 @@ const Navbar = () => {
                       handleCloseNavMenu();
                     }}
                   >
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography textAlign="center">{t(page)}</Typography>
                   </MenuItem>
                 ))}
             </Menu>
@@ -247,13 +261,13 @@ const Navbar = () => {
                     {page === "Messaging" && <MessageOutlinedIcon />}
                     {page === "Network" && <GroupsOutlinedIcon />}
                     {page === "Jobs" && <WorkOutlineOutlinedIcon />}
-                    {page}
+                    {t(page)}
                   </Button>
                 ))}
               </Box>
 
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
-                <Tooltip title="Open settings">
+                <Tooltip title={openSettings}>
                   <IconButton
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0 }}
@@ -299,7 +313,7 @@ const Navbar = () => {
                       data-cy={`${setting}-phone-test`}
                       onClick={() => {}}
                     >
-                      <Typography textAlign="center">{setting}</Typography>
+                      <Typography textAlign="center">{t(setting)}</Typography>
                     </MenuItem>
                   ))}
                   <MenuItem
@@ -310,7 +324,7 @@ const Navbar = () => {
                     }}
                     data-cy="logout-test"
                   >
-                    Logout
+                    {t("Logout")}
                   </MenuItem>
                 </Menu>
               </Box>
@@ -342,11 +356,24 @@ const Navbar = () => {
                   {page === "Jobs" && <WorkOutlineOutlinedIcon />}
                   {page === "Sign Up" && <PersonOutlineOutlinedIcon />}
                   {page === "Log In" && <LoginOutlinedIcon />}
-                  {page}
+                  {t(page)}
                 </Button>
               ))}
             </Box>
           )}
+          <FormControl sx={{ minWidth: "215px", marginLeft: "15px" }}>
+            <InputLabel
+              id="demo-simple-select-label"
+              sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
+            >
+              {t("changeLanguage")} <LanguageIcon />
+            </InputLabel>
+            <Select value={language} label="language" onChange={handleChange}>
+              <MenuItem value="en">English</MenuItem>
+              <MenuItem value="es">Español</MenuItem>
+              <MenuItem value="fr">French</MenuItem>
+            </Select>
+          </FormControl>
         </Toolbar>
       </Container>
     </AppBar>

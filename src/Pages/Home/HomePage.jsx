@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import "./Home.css";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import { auth, app } from "../../Firebase/firebase";
 import HomepagePic from "../../Assets/images/homepage1.png";
 import LoginPage from "../Login/LoginPage";
@@ -17,6 +17,7 @@ const HomePage = () => {
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const { t, i18n } = useTranslation();
 
   const checkFormCompletion = async (email) => {
     const docRef = doc(db, "userProfiles", email);
@@ -114,8 +115,7 @@ const HomePage = () => {
                   data-cy="grid-test"
                 >
                   <Typography variant="h4" data-cy="message-test">
-                    {" "}
-                    Welcome Back {firstName}!{" "}
+                    {t("WelcomeBack")} {firstName}!{" "}
                   </Typography>
                 </Grid>
                 <Grid
@@ -127,7 +127,7 @@ const HomePage = () => {
                   alignItems="center"
                 >
                   <div>
-                    <Typography variant="h6"> Done for the day? </Typography>
+                    <Typography variant="h6"> {t("Done")} </Typography>
                     <Button
                       fullWidth
                       id="signout"
@@ -138,7 +138,7 @@ const HomePage = () => {
                       inputProps={{ "aria-label": "signIn" }}
                       onClick={handleSignOut}
                     >
-                      Sign Out
+                      {t("SignOut")}
                     </Button>
                   </div>
                 </Grid>
@@ -165,14 +165,14 @@ const HomePage = () => {
                           window.location.href = "/accountCreation";
                         }}
                       >
-                        Create your profile
+                        {t("CreateProfile")}
                       </Button>
                     </div>
                   ) : (
                     <div>
                       <Typography variant="h6">
                         {" "}
-                        Need to make some changes?{" "}
+                        {t("ChangeProfile")}{" "}
                       </Typography>
                       <Button
                         fullWidth
@@ -184,7 +184,7 @@ const HomePage = () => {
                           window.location.href = "/editProfile";
                         }}
                       >
-                        Edit your profile
+                        {t("EditProfile")}
                       </Button>
                     </div>
                   )}
@@ -195,7 +195,7 @@ const HomePage = () => {
                       window.location.href = "/createRecruiter";
                     }}
                   >
-                    I&apos;m a recruiter
+                    {t("recruiter")}
                   </Link>
                 </div>
               </Grid>

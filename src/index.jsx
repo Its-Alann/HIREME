@@ -2,6 +2,7 @@ import React from "react";
 import "./index.css";
 import { render } from "react-dom";
 import App from "./App";
+import "./i18n";
 
 const rootNode = document.getElementById("root");
 render(
