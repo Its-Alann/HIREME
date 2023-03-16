@@ -5,8 +5,8 @@ beforeEach(() => {
 describe("Login to test account", () => {
   it("Logs into test account", () => {
     cy.visit("http://localhost:3000/login");
-    cy.get("#email").type("accountcreation@test.com");
-    cy.get("#password").type("test123");
+    cy.get("#email").type("be@badoo.bee");
+    cy.get("#password").type("care123");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
   });
@@ -21,5 +21,6 @@ describe("Creates a recruiter account", () => {
     cy.get("#ComboBox-CompanyList").click();
     cy.get('li[data-option-index="0"]').click();
     cy.get("#Button-Save").click();
+    cy.wait(1000);
   });
 });

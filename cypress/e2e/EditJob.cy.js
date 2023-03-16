@@ -30,6 +30,7 @@ describe("Edit job posting", () => {
     cy.get("#TextField-Requirement").type(" edited");
     cy.get("#TextField-Benefits").type(" edited");
     cy.get("#Button-Save").click();
+    cy.wait(1000);
   });
 });
 
@@ -55,5 +56,6 @@ describe("Change job posting back to origninal", () => {
     cy.get("#TextField-Benefits").type("Tester Job Benefits");
 
     cy.get("#Button-Save").click();
+    cy.wait(1000);
   });
 });
