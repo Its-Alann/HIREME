@@ -206,7 +206,7 @@ export const MyJobs = () => {
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Typography>{companiesName[job.companyID]}</Typography>
-                      <Typography>{job.location}</Typography>
+                      <Typography>{`${job.city}, ${job.country}`}</Typography>
                     </Box>
                   </Stack>
 
