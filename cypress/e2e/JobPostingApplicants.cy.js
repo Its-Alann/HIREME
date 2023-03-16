@@ -105,7 +105,11 @@ describe("Remove a job", () => {
   it("remove a job", () => {
     cy.visit("http://localhost:3000/myJobs");
     cy.wait(1000);
-    cy.get(`[data-cy="view"]`).first().click();
+    cy.get(
+      ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
+    )
+      .first()
+      .click();
     cy.get(".css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)").click();
     cy.get(".MuiDialogActions-root > a > .MuiButtonBase-root").click();
   });
