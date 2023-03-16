@@ -3,7 +3,7 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { List, ListItem } from "@mui/material";
 import { getDownloadURL, ref } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import MessageListItem from "./MessageListItem";
 import { auth, storage, db } from "../../Firebase/firebase";
 
@@ -24,14 +24,41 @@ const MessageList = ({ messages, convoId }) => {
     }
     const convoRef = doc(db, "messages", convoId);
     const updatedMessages = messages;
-    updatedMessages[index] = {
-      ...messages[index],
-      reported: !messages[index].reported,
-    };
+
+    const reportedMessageDocId = `${convoId}-${index}`;
+
+    if (messages[index].reported) {
+      updatedMessages[index] = {
+        ...messages[index],
+        reported: false,
+      };
+
+      //delete message doc from reportedMessages collection
+      try {
+        await deleteDoc(doc(db, "reportedMessages", reportedMessageDocId));
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      updatedMessages[index] = {
+        ...messages[index],
+        reported: true,
+      };
+
+      // add the message to the reportedMessages collection
+      await setDoc(doc(db, "reportedMessages", reportedMessageDocId), {
+        ...messages[index],
+        convoId,
+        index,
+      });
+    }
+
     // console.log("updatedMessages", updatedMessages);
     await updateDoc(convoRef, {
       messages: updatedMessages,
     });
+
+    console.log("idol", messages[index]);
   };
 
   return (
