@@ -21,7 +21,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
+const AwardsCard = ({
+  profile,
+  setProfile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const awardTitle = `awardTitle${cardNum}`;
   const awardIssuer = `awardIssuer${cardNum}`;
   const awardDescription = `awardDescription${cardNum}`;
@@ -66,7 +72,10 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -186,7 +195,12 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.awardsNum + 1;
                     console.log(newCardNum);
@@ -212,6 +226,7 @@ AwardsCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
 };
 
 export default AwardsCard;

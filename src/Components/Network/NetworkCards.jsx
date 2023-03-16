@@ -17,6 +17,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -137,7 +138,14 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
               <Box display="flex" flexDirection="column">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
+                  <Link
+                    to={`/editProfile/${connectedUser.values.firstName}${connectedUser.values.lastName}`}
+                    state={{ userID: connectedUserID }}
+                  >
+                    <ColorButtonBlue size="medium">
+                      View Profile
+                    </ColorButtonBlue>
+                  </Link>
                   <ColorButtonLightBlue variant="outlined">
                     Message
                   </ColorButtonLightBlue>

@@ -23,7 +23,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
+const ExperienceCard = ({
+  setProfile,
+  profile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const expName = `expName${cardNum}`;
   const expPosition = `expPos${cardNum}`;
   const expLocation = `expLoc${cardNum}`;
@@ -97,7 +103,10 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -182,6 +191,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                 }
                 label="I currently work here"
                 labelPlacement="end"
+                disabled={!editButton}
               />
             </Grid>
           </Grid>
@@ -275,7 +285,12 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.expNum + 1;
                     console.log(newCardNum);
@@ -302,6 +317,7 @@ ExperienceCard.propTypes = {
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
   currentUserEmail: PropTypes.string,
+  visitingProfile: PropTypes.bool,
 };
 
 export default ExperienceCard;
