@@ -60,16 +60,16 @@ describe("Display unique job posting", () => {
     );
   });
 
-  // it("shows job company info", () => {
-  //   cy.visit(
-  //     "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
-  //   );
-  //   cy.wait(1000);
-  //   cy.get(".css-1mhd35f-MuiStack-root > :nth-child(3)").should(
-  //     "have.text",
-  //     "Nobel Prize Association Building"
-  //   );
-  // });
+  it("shows job company city and country", () => {
+    cy.visit(
+      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+    );
+    cy.wait(1000);
+    cy.get(".css-1mhd35f-MuiStack-root > :nth-child(3)").should(
+      "have.text",
+      "Las Vegas, Nevada"
+    );
+  });
 
   it("shows job last date to apply", () => {
     cy.visit(

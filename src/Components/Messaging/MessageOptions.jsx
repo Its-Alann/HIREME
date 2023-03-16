@@ -5,7 +5,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import PropTypes from "prop-types";
 
-const MessageOptions = ({ index, convoId, reportMessage }) => {
+const MessageOptions = ({ index, convoId, reportMessage, reported }) => {
   const antinos = "🖖";
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -45,7 +45,7 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
           className="reportMsgButton"
         >
           <FlagIcon />
-          Report
+          {reported ? "Unreport" : "Report"}
         </MenuItem>
       </Menu>
     </>
@@ -56,6 +56,7 @@ MessageOptions.propTypes = {
   index: PropTypes.number,
   convoId: PropTypes.string,
   reportMessage: PropTypes.func,
+  reported: PropTypes.bool,
 };
 
 export default MessageOptions;
