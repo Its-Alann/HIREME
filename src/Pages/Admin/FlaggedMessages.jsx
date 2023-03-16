@@ -134,7 +134,6 @@ const FlaggedMessages = (props) => {
             const data = reportedMessages.filter((row) =>
               selectedIDs.has(row.id)
             );
-            // console.log(data);
             setSelectedRowData(data);
           }}
         />
