@@ -96,6 +96,7 @@ const Navbar = () => {
         navigate("/");
         break;
       case "jobs":
+        navigate("/browseJobs");
         break;
       case "sign up":
         navigate("/SignUp");
