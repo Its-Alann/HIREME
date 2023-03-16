@@ -20,6 +20,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 // import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
@@ -28,12 +29,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
 import "../Job/Job.css";
 
-export const ViewMyApp2 = () => {
+export const ViewMyApp = () => {
   const [jobs, setJobs] = useState([]);
   const [companiesName, setCompaniesName] = useState({});
   const [myApplications, setMyApplications] = useState([]);
-  // const [currentUser, setCurrentUser] = useState("");
   const [myUser, setMyUser] = useState("");
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const jobsPerPage = 5;
 
@@ -41,14 +42,12 @@ export const ViewMyApp2 = () => {
     const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
     const usersjobs = applicationsSnapshot.data().jobs;
     let status1 = "";
-    //console.log(usersjobs);
 
     usersjobs.forEach(async (item) => {
       if (jobId === item.jobID) {
         console.log("LINE 47", item.status);
         status1 = item.status;
       }
-      // return "status could not be found";
     });
 
     console.log(jobId);
@@ -65,7 +64,8 @@ export const ViewMyApp2 = () => {
         jobID: jobId,
         status: status1,
         companyID: jobInformationData.companyID,
-        location: jobInformationData.location,
+        city: jobInformationData.city,
+        country: jobInformationData.country,
         deadline: jobInformationData.deadline,
       };
       console.log("line73: ", jobInformation);
@@ -78,16 +78,6 @@ export const ViewMyApp2 = () => {
     }
   };
 
-  // async function getJobs() {
-  //   //await getMyApplications();
-  //   const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
-  //   const applicationsData = applicationsSnapshot.data().jobs;
-
-  //   console.log(applicationsData);
-
-  //   setJobs(applicationsData);
-  // }
-
   async function getJobs() {
     //await getMyApplications();
     const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
@@ -97,49 +87,6 @@ export const ViewMyApp2 = () => {
     );
     console.log(myApplications);
   }
-
-  // const getJobTitle = async (jobID) => {
-  //   const jobsRef = doc(db, "jobs", jobID);
-  //   const docSnap = await getDoc(jobsRef);
-  //   const data = docSnap.data().title;
-  //   console.log("title", data);
-  //   return data.title;
-  // };
-
-  // const getCompany = async (jobID) => {
-  //   const jobsRef = doc(db, "jobs", jobID);
-  //   const docSnap = await getDoc(jobsRef);
-  //   const data = docSnap.data().companyID;
-  //   console.log("companyID", data);
-  // };
-
-  // const getLocation = async (jobID) => {
-  //   const jobsRef = doc(db, "jobs", jobID);
-  //   const docSnap = await getDoc(jobsRef);
-  //   const data = docSnap.data().location;
-  //   console.log("location", data);
-  // };
-
-  // const getDeadline = async (jobID) => {
-  //   const jobsRef = doc(db, "jobs", jobID);
-  //   const docSnap = await getDoc(jobsRef);
-  //   const data = docSnap.data().deadline;
-  //   console.log("deadline", data);
-  // };
-  // const [title, setTitle] = React.useState("");
-  // const [company, setCompany] = React.useState("");
-  // const [location, setLocation] = React.useState("");
-  // const [deadline, setDeadline] = React.useState("");
-
-  // const getAllInfo = async (jobID) => {
-  //   const jobsRef = doc(db, "jobs", jobID);
-  //   const docSnap = await getDoc(jobsRef);
-
-  //   setTitle(docSnap.data().title);
-  //   setCompany(docSnap.data().companyID);
-  //   setLocation(docSnap.data().location);
-  //   setDeadline(docSnap.data().deadline);
-  // };
 
   // Get companies' name using the companyID of each Job
   // And store them.
@@ -157,6 +104,17 @@ export const ViewMyApp2 = () => {
         temp[job.companyID] = companySnapshot.data().name;
         setCompaniesName({ ...temp });
       }
+    });
+  }
+
+  // Load the logo of each company that has job listings
+  function loadLogoCompany() {
+    const temp = companiesLogo;
+    myApplications.forEach(async (job) => {
+      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
+      temp[job.companyID] = querySnapshot.data().logoPath;
+      // triggers a re-render and display the newly loaded logos
+      setCompaniesLogo({ ...temp });
     });
   }
 
@@ -208,6 +166,7 @@ export const ViewMyApp2 = () => {
 
   useEffect(() => {
     getCompaniesName();
+    loadLogoCompany();
     console.log("STOPPPPPPP");
   }, [myApplications]);
 
@@ -242,30 +201,60 @@ export const ViewMyApp2 = () => {
             <Box sx={{ py: 1 }}>
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
-                  <Box
-                    display="flex"
-                    flexDirection={{ xs: "column", sm: "row" }}
-                    alignItems={{ xs: "flex-start", sm: "center" }}
+                  <Grid
+                    container
+                    spacing={-0.5}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
                   >
-                    <Typography variant="h4">{job.jobTitle}</Typography>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "black",
-                        m: 2,
-                        textTransform: "none",
-                        ml: { xs: 0, sm: "auto" },
-                      }}
-                      onClick={() => handleRemoveJob(job.jobID)}
-                    >
-                      Remove
-                    </Button>
-                  </Box>
-                  <Typography>{companiesName[job.companyID]} </Typography>
-                  {/* <Typography>{job.companyID} </Typography> */}
-
-                  {/* change to country and city */}
-                  <Typography>{job.location}</Typography>
+                    <Grid>
+                      {job.companyID === undefined ? (
+                        <Box
+                          component="img"
+                          sx={{
+                            // objectFit: "cover",
+                            width: "0.25",
+                            height: "0.25",
+                            mr: 2,
+                          }}
+                          src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                        />
+                      ) : (
+                        <Box
+                          component="img"
+                          sx={{
+                            // objectFit: "cover",
+                            width: "6rem",
+                            height: "6rem",
+                            mr: 2,
+                          }}
+                          src={companiesLogo[job.companyID]}
+                        />
+                      )}
+                      <Box>
+                        <Typography variant="h4">{job.jobTitle}</Typography>
+                        <Typography>{companiesName[job.companyID]} </Typography>
+                        {/* <Typography>{job.companyID} </Typography> */}
+                        {/* change to country and city */}
+                        <Typography>{`${job.city}, ${job.country}`}</Typography>
+                      </Box>
+                    </Grid>
+                    <Grid>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: "black",
+                          m: 2,
+                          textTransform: "none",
+                          marginLeft: "auto",
+                        }}
+                        onClick={() => handleRemoveJob(job.jobID)}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </Grid>
 
                   {/* do we need to show company id? */}
                   {/* <Typography>Company ID: {job.companyID}</Typography> */}
@@ -308,4 +297,4 @@ export const ViewMyApp2 = () => {
     </Container>
   );
 };
-export default ViewMyApp2;
+export default ViewMyApp;

@@ -29,8 +29,7 @@ import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
-import { ViewMyApplications } from "./Pages/Candidate/ViewMyApplications";
-import { ViewMyApp2 } from "./Pages/Candidate/ViewMyApp2";
+import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
 
 const App = () => {
   const hello = "helloo";
@@ -101,12 +100,7 @@ const App = () => {
               exact
               element={<JobPosting />}
             />
-            <Route
-              path="/viewMyApplications"
-              exact
-              element={<ViewMyApplications />}
-            />
-            <Route path="/viewMyApp2" exact element={<ViewMyApp2 />} />
+            <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
           </Routes>
         </Router>
       </div>
