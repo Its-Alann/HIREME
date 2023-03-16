@@ -141,6 +141,7 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                   <ColorButtonLightBlue variant="outlined">
                     Message
                   </ColorButtonLightBlue>
+                  {/* import PersonRemoveIcon from '@mui/icons-material/PersonRemove'; use this icon instead of the button */}
                   <ColorButtonRed
                     size="medium"
                     variant="outlined"
