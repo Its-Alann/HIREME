@@ -14,6 +14,7 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { db } from "../../Firebase/firebase";
 
 export const JobPosting = () => {
+  // declaring  the useStates and useParams
   const pageID = useParams();
   const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
@@ -21,10 +22,12 @@ export const JobPosting = () => {
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
 
+  // makes a getDoc of the jobs collection based on the jobID
+  // sets the job to the JobData
   const getJobData = async () => {
     try {
       // Gets the job data using the jobID from the URL
-      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
+      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID));
       console.log(pageJobID);
       const jobData = jobsSnapshot.data();
       setJob(jobData);
@@ -35,10 +38,10 @@ export const JobPosting = () => {
     }
   };
 
+  // gets the coompany name froom the coompanies collection based on the coompanyID
   const getCompanyName = async () => {
     try {
-      // Gets the name of the company from the companyID in job data
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID)); // hardcoded, implement navigation and pass in the prop
+      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
     } catch (error) {
@@ -46,19 +49,14 @@ export const JobPosting = () => {
     }
   };
 
+  // calling 2 methods
   useEffect(() => {
     getJobData();
-    getCompanyName(); // try to fix this
+    getCompanyName();
   }, []);
 
-  // For application statuses
-  // 1. Get the array of applications from jobs
-  // 2. Get the names of the applicants from userProfiles
-  // 3. If the job ID exists for the user in applications, then display the applicant status
-
-  // To change application status
-  // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
-
+  // returns the job posting with the apply button
+  // clicking on the apply button will take the user to the apply page
   return (
     <Stack direction="row" alignItems="flex-start" justifyContent="center">
       {/* Job information */}
@@ -73,6 +71,7 @@ export const JobPosting = () => {
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
                   <Typography variant="h4">{job.title}</Typography>
+                  {/*  apply button which allowes a user to be sent to an apply page */}
                   <Button
                     variant="contained"
                     sx={{

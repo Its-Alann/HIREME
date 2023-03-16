@@ -5,13 +5,6 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 
 import {
-  collection,
-  query,
-  limitToLast,
-  getDocs,
-  orderBy,
-  startAfter,
-  endBefore,
   doc,
   getDoc,
   limit,
@@ -60,9 +53,6 @@ export const ViewMyApp = () => {
       const jobInformationSnapshot = await getDoc(doc(db, "jobs", jobId));
       const jobInformationData = jobInformationSnapshot.data();
 
-      console.log("in getjobinfo", status1);
-
-      console.log(jobInformationData);
       const jobInformation = {
         jobTitle: jobInformationData.title,
         jobID: jobId,
@@ -72,7 +62,6 @@ export const ViewMyApp = () => {
         country: jobInformationData.country,
         deadline: jobInformationData.deadline,
       };
-      console.log("line73: ", jobInformation);
       setMyApplications((prevApplications) => [
         ...prevApplications,
         jobInformation,
@@ -91,7 +80,7 @@ export const ViewMyApp = () => {
     await applicationsData.map((job) =>
       Promise.all(getJobInformation(job.jobID))
     );
-    console.log(myApplications);
+    // console.log(myApplications);
   }
 
   // Get companies' name using the companyID of each Job
@@ -99,8 +88,8 @@ export const ViewMyApp = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
-    console.log("IN COMPANIES", jobs);
-    console.log("IN COMPANIES", myApplications);
+    // console.log("IN COMPANIES", jobs);
+    // console.log("IN COMPANIES", myApplications);
 
     myApplications.forEach(async (job) => {
       if (!temp[job.companyID]) {
@@ -123,20 +112,21 @@ export const ViewMyApp = () => {
       setCompaniesLogo({ ...temp });
     });
   }
-
+  // remove the entire row of the job that was selected to be removed
+  // remove the applied job linked to the candidate the database
   const handleRemoveJob = async (jobID) => {
-    // TODO: Implement the logic to remove the job with the given ID
-    console.log(`Removing job with ID ${jobID}`);
+    // Implement the logic to remove the job with the given ID
+    // console.log(`Removing job with ID ${jobID}`);
     // const docRef = db.collection("applications").doc("billybob@gmail.com");
     const docReffff = doc(db, "applications", myUser);
     const docRef = await getDoc(docReffff);
 
     const docSnapshot = docRef.data();
 
-    console.log(docSnapshot);
+    // console.log(docSnapshot);
     docRef.data().jobs.forEach(async (element) => {
-      console.log(element);
-      console.log(element.jobID);
+      // console.log(element);
+      // console.log(element.jobID);
       if (element.jobID === jobID) {
         await updateDoc(docReffff, {
           jobs: arrayRemove(element),
@@ -157,7 +147,7 @@ export const ViewMyApp = () => {
     }
   };
 
-  //wejnbjenck
+  //auth listener on load
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -170,17 +160,22 @@ export const ViewMyApp = () => {
     });
   }, []);
 
+  //set a listener to on the myApplications
   useEffect(() => {
     getCompaniesName();
     loadLogoCompany();
     console.log("STOPPPPPPP");
   }, [myApplications]);
 
+  //set a listener to on the jobs document
   useEffect(() => {
     console.log("STOPPPPPPP");
     Promise.all([getJobs()]);
   }, [myUser]);
 
+  // returns all the applications that the logged in user has applied to
+  // every application has a remove button. If applicant clicks "Remove" button application is removed
+  // status is displayed for each application (the status is changed by recruiter)
   return (
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
@@ -192,7 +187,7 @@ export const ViewMyApp = () => {
           const hello = "hello";
 
           return (
-            // Create cards instead
+            // Create cards
             <Grid sx={{ py: 1 }}>
               <Card variant="outlined">
                 <Stack direction="row" justifyContent="space-between">
@@ -244,14 +239,9 @@ export const ViewMyApp = () => {
                           </Button>
                         </Stack>
                         <Typography>{companiesName[job.companyID]} </Typography>
-                        {/* <Typography>{job.companyID} </Typography> */}
-                        {/* change to country and city */}
                         <Typography>{`${job.city}, ${job.country}`}</Typography>
                       </Grid>
                     </Stack>
-
-                    {/* do we need to show company id? */}
-                    {/* <Typography>Company ID: {job.companyID}</Typography> */}
                     <Stack direction="row" sx={{ pt: 2 }}>
                       <Typography>
                         Deadline:{" "}
@@ -262,22 +252,6 @@ export const ViewMyApp = () => {
                       </Typography>
                     </Stack>
                   </Grid>
-
-                  {/* <Grid sx={{ md: 2, sm: 12, sx: 12 }}>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "black",
-                        m: 2,
-                        height: 30,
-                        width: 100,
-                        textTransform: "none",
-                      }}
-                      onClick={() => handleRemoveJob(job.jobID)}
-                    >
-                      Remove
-                    </Button>
-                  </Grid> */}
 
                   <Grid
                     sx={{
