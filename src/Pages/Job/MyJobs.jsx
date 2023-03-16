@@ -165,7 +165,7 @@ export const MyJobs = () => {
           My Jobs
         </Typography>
         <Typography>
-          This Page list all jobs belong to me, {jobsPerPage} per page. Only me
+          This Page list all jobs belong to me, {jobsPerPage} per page. Only I
           should be able to see the page.
         </Typography>
 

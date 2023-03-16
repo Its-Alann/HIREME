@@ -7,6 +7,7 @@ import {
   Button,
   Modal,
   Select,
+  Menu,
   MenuItem,
   Typography,
   IconButton,
@@ -15,11 +16,24 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
 } from "@mui/material";
 import * as React from "react";
-import { getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  getDocs,
+  collection,
+} from "firebase/firestore";
 import Grid from "@mui/material/Unstable_Grid2";
-import { db } from "../../Firebase/firebase";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { db, auth } from "../../Firebase/firebase";
 
 const style = {
   position: "absolute",
@@ -39,12 +53,15 @@ export const JobPostingApplicants = () => {
   const [job, setJob] = useState([]);
   const [companyName, setCompanyName] = useState({});
   const [applicants, setApplicants] = useState([]);
-  const [open, setOpen] = useState(false);
+
   const [selectedApplicantStatus, setSelectedApplicantStatus] = useState("");
   const [selectedApplicantId, setSelectedApplicantId] = useState("");
   const [selectedApplicantName, setSelectedApplicantName] = useState("");
   const [changedApplicationStatus, setChangedApplicationStatus] = useState("");
   const [companiesLogo, setCompaniesLogo] = React.useState({});
+
+  const [open, setOpen] = useState(false);
+  const [openRemoveJob, setOpenRemoveJob] = useState(false);
 
   const getApplicationStatuses = async (listOfApplicants) => {
     //console.log(listOfApplicants);
@@ -126,7 +143,7 @@ export const JobPostingApplicants = () => {
     loadLogoCompany();
   }, []);
 
-  // To change application status
+  // Handle modal operations for remove job
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
   const handleOpen = (status, id, name) => {
     setSelectedApplicantStatus(status);
@@ -184,6 +201,76 @@ export const JobPostingApplicants = () => {
     window.location.reload();
   };
 
+  // Remove job dialog
+  const handleOpenRemoveJob = () => {
+    setOpenRemoveJob(true);
+  };
+
+  const handleCloseRemoveJob = () => {
+    setOpenRemoveJob(false);
+  };
+
+  // Remove job from backend
+  const removeJobFromJobs = async () => {
+    await deleteDoc(doc(db, "jobs", pageJobID));
+  };
+
+  const removeJobFromCompany = async () => {
+    // Delete doc in companies where jobID = pageJobID
+    const companyRef = doc(db, "companies", pageCompanyID);
+    const companySnapshot = await getDoc(companyRef);
+    const companyData = companySnapshot.data().jobs;
+    const companyJobIndex = companyData.findIndex(
+      (jobIndex) => jobIndex.jobID === pageJobID
+    );
+    if (companyJobIndex !== -1) {
+      companyData.splice(companyJobIndex, 1);
+      await updateDoc(companyRef, { jobs: companyData });
+    }
+  };
+
+  const removeJobFromRecruiter = async () => {
+    // Delete doc in recruiters
+    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
+    const recruiterSnapshot = await getDoc(recruiterRef);
+    const recruiterData = recruiterSnapshot.data().jobs;
+    const recruiterJobIndex = recruiterData.findIndex(
+      (jobIndex) => jobIndex.jobID === pageJobID
+    );
+    if (recruiterJobIndex !== -1) {
+      recruiterData.splice(recruiterJobIndex, 1);
+      await updateDoc(recruiterRef, { jobs: recruiterData });
+    }
+  };
+
+  const removeJobFromApplicants = async () => {
+    // Delete doc in applicants
+    const applicantsSnapshot = await getDocs(collection(db, "applications"));
+    const allApplicants = applicantsSnapshot.docs.map((document) => ({
+      id: document.id,
+      ...document.data(),
+    }));
+
+    allApplicants.forEach(async (applicant) => {
+      const listOfApplications = applicant.jobs;
+      const applicationJobIndex = listOfApplications.findIndex(
+        (jobIndex) => jobIndex.jobID === pageJobID
+      );
+      if (applicationJobIndex !== -1) {
+        const applicantRef = await doc(db, "applications", applicant.id);
+        listOfApplications.splice(applicationJobIndex, 1);
+        await updateDoc(applicantRef, { jobs: listOfApplications });
+      }
+    });
+  };
+
+  const deleteJob = async () => {
+    removeJobFromJobs();
+    removeJobFromCompany();
+    removeJobFromRecruiter();
+    removeJobFromApplicants();
+  };
+
   return (
     <Grid container direction="row" alignItems="flex-start" justify="center">
       {/* Job information */}
@@ -236,16 +323,50 @@ export const JobPostingApplicants = () => {
                       </Box>
                     </Grid>
                   </Grid>
-                  <Link
-                    to={{
-                      pathname: `/editJob/${pageJobID}`,
-                    }}
-                  >
-                    <IconButton>
-                      <EditIcon />
+                  <Box>
+                    <Link
+                      to={{
+                        pathname: `/editJob/${pageJobID}`,
+                      }}
+                    >
+                      <IconButton>
+                        <EditIcon />
+                      </IconButton>
+                    </Link>
+                    <IconButton onClick={handleOpenRemoveJob}>
+                      <RemoveCircleOutlineIcon />
                     </IconButton>
-                  </Link>
+                  </Box>
                 </Stack>
+
+                <Dialog
+                  open={openRemoveJob}
+                  onClose={handleCloseRemoveJob}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    Are you sure you would like to remove the job posting?
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      This job posting will be removed completely. All data
+                      related to this post will be erased.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseRemoveJob}>Cancel</Button>
+                    <Link to="/myJobs" style={{ textDecoration: "none" }}>
+                      <Button
+                        sx={{ color: "red" }}
+                        onClick={deleteJob}
+                        autoFocus
+                      >
+                        Remove
+                      </Button>
+                    </Link>
+                  </DialogActions>
+                </Dialog>
 
                 {job.deadline && (
                   <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
