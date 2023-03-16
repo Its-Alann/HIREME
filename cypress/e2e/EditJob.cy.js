@@ -19,6 +19,8 @@ describe("Login to test account", () => {
 describe("Edit job posting", () => {
   it("edits first test job posting", () => {
     cy.visit("http://localhost:3000/myJobs");
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
     cy.get(`[data-cy="view"]`).first().click();
     cy.get("a > .MuiButtonBase-root").click();
     cy.get("#TextField-Title").type(" edited");
@@ -34,6 +36,8 @@ describe("Edit job posting", () => {
 describe("Change job posting back to origninal", () => {
   it("edits first test job posting", () => {
     cy.visit("http://localhost:3000/myJobs");
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
     cy.get(`[data-cy="view"]`).first().click();
     cy.get("a > .MuiButtonBase-root").click();
     cy.get("#TextField-Title").clear();
