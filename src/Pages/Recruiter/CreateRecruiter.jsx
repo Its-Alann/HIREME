@@ -6,7 +6,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import * as React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import { setDoc, collection, query, getDocs, doc } from "firebase/firestore";
 import { auth, db } from "../../Firebase/firebase";
 
@@ -104,28 +104,20 @@ export const CreateRecruiter = () => {
                 })
               }
             />
-            <div>
-              <Link
-                sx={{ fontSize: 12 }}
-                onClick={() => {
-                  window.location.href = "/createCompany";
-                }}
-              >
-                Company does not exist yet?
-              </Link>
-            </div>
+            <a href="/createCompany">Company does not exist yet?</a>
           </Box>
         </Stack>
-
-        <Button
-          variant="contained"
-          id="Button-Save"
-          size="medium"
-          sx={{ mt: 2 }}
-          onClick={() => handleSubmit()}
-        >
-          Save
-        </Button>
+        <Link to="/">
+          <Button
+            variant="contained"
+            id="Button-Save"
+            size="medium"
+            sx={{ mt: 2 }}
+            onClick={() => handleSubmit()}
+          >
+            Save
+          </Button>
+        </Link>
       </Box>
     </Container>
   );

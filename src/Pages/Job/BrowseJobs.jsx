@@ -157,7 +157,7 @@ export const BrowseJobs = () => {
                   <Typography>{companiesName[job.companyID]}</Typography>
 
                   {/* change to country and city */}
-                  <Typography>{job.location}</Typography>
+                  <Typography>{`${job.city}, ${job.country}`}</Typography>
 
                   {/* do we need to show company id? */}
                   {/* <Typography>Company ID: {job.companyID}</Typography> */}
