@@ -26,19 +26,7 @@ describe("Display job applications", () => {
   });
 });
 
-describe("Remove a job", () => {
-  it("clicks on the remove button", () => {
-    cy.visit("http://localhost:3000/viewmyapplications");
-    cy.wait(1000);
-    cy.get(
-      ":nth-child(2) > .MuiPaper-root > :nth-child(1) > .css-1glpfpa-MuiGrid2-root > .css-1mx9e1j-MuiStack-root > .MuiGrid2-root > .css-gmwslw-MuiStack-root > .MuiButtonBase-root"
-    ).click();
-    cy.wait(1000);
-    cy.visit("http://localhost:3000/viewmyapplications");
-  });
-});
-
-describe("Adds job back", () => {
+describe("Applies for a job", () => {
   it("applies to a job", () => {
     cy.visit("http://localhost:3000/browsejobs");
     cy.get(
@@ -52,6 +40,35 @@ describe("Adds job back", () => {
     cy.get("#mui-3").type("1111111111");
     cy.get("#mui-4").type("something street");
     cy.get('[data-testid="submit-button"]').click();
+    cy.wait(1000);
+  });
+});
+
+describe("Remove a job", () => {
+  it("clicks on the remove button", () => {
+    cy.visit("http://localhost:3000/viewmyapplications");
+    cy.wait(1000);
+    cy.get(".css-gmwslw-MuiStack-root > .MuiButtonBase-root").click();
+    cy.wait(1000);
+    cy.visit("http://localhost:3000/viewmyapplications");
+  });
+});
+
+describe("Applies for a job", () => {
+  it("applies to a job", () => {
+    cy.visit("http://localhost:3000/browsejobs");
+    cy.get(
+      ":nth-child(3) > .MuiPaper-root > .MuiBox-root > .css-qvcdic-MuiStack-root > :nth-child(1) > .link"
+    ).click();
+    cy.wait(1000);
+    cy.get(
+      ".css-1mhd35f-MuiStack-root > .MuiBox-root > .MuiButtonBase-root"
+    ).click();
+    cy.get("#mui-2").type("viewapp@test.com");
+    cy.get("#mui-3").type("1111111111");
+    cy.get("#mui-4").type("something street");
+    cy.get('[data-testid="submit-button"]').click();
+    cy.wait(1000);
   });
 });
 

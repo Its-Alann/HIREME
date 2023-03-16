@@ -226,6 +226,7 @@ export const ViewMyApp = () => {
                           <Typography variant="h4">{job.jobTitle}</Typography>
                           <Button
                             variant="contained"
+                            data-cy="remove-button"
                             sx={{
                               backgroundColor: "black",
                               m: 2,
