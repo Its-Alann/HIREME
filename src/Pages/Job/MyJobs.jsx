@@ -229,6 +229,7 @@ export const MyJobs = () => {
                       size="medium"
                       sx={{ my: 1 }}
                       id={`Button-${job.documentID}`}
+                      data-cy="view"
                     >
                       <Link
                         to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
