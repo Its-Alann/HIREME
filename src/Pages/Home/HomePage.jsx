@@ -181,7 +181,7 @@ const HomePage = () => {
                         sx={{ mt: 3, mb: 2, py: 1 }}
                         color="primary"
                         onClick={() => {
-                          window.location.href = "/editProfile";
+                          window.location.href = "/editProfile/myprofile";
                         }}
                       >
                         Edit your profile

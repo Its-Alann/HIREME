@@ -61,7 +61,7 @@ const App = () => {
               element={<AccountCreationPage />}
             />
             <Route
-              path="/editProfile"
+              path="/editProfile/:connectionID"
               exact
               element={
                 <ProtectedRoute redirect="/">

@@ -21,7 +21,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
+const VolunteeringCard = ({
+  profile,
+  setProfile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const volunteerOrg = `volunteer${cardNum}org`;
   const volunteerDesc = `volunteer${cardNum}desc`;
   const volunteerDate = `volunteer${cardNum}date`;
@@ -65,7 +71,10 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -159,7 +168,12 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.volunteerNum + 1;
                     console.log(newCardNum);
@@ -184,6 +198,7 @@ VolunteeringCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
 };
 
 export default VolunteeringCard;
