@@ -9,13 +9,15 @@ describe("Login to test account", () => {
     cy.get("#password").type("test123");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
   });
 });
 
 describe("Edit job posting", () => {
   it("edits first test job posting", () => {
     cy.visit("http://localhost:3000/myJobs");
-    cy.get("#Button-xKEDX7Batu7eYjhNvoLS").click();
+    cy.get(`[data-cy="view"]`).first().click();
     cy.get("a > .MuiButtonBase-root").click();
     cy.get("#TextField-Title").type(" edited");
     cy.get("#TextField-City").type(" edited");
@@ -30,7 +32,7 @@ describe("Edit job posting", () => {
 describe("Change job posting back to origninal", () => {
   it("edits first test job posting", () => {
     cy.visit("http://localhost:3000/myJobs");
-    cy.get("#Button-xKEDX7Batu7eYjhNvoLS").click();
+    cy.get(`[data-cy="view"]`).first().click();
     cy.get("a > .MuiButtonBase-root").click();
     cy.get("#TextField-Title").clear();
     cy.get("#TextField-City").clear();

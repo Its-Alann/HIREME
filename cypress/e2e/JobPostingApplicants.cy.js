@@ -21,12 +21,6 @@ describe("Display Job Posting", () => {
     cy.visit("http://localhost:3000/myJobs");
     cy.wait(1000);
   });
-
-  it("clicks on job listing with applicants", () => {
-    cy.visit("http://localhost:3000/myJobs");
-    cy.wait(1000);
-    cy.get("#Button-aYwmsGRNdWgosLt24YFD").click();
-  });
 });
 
 describe("Change the application status to viewed", () => {

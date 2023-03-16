@@ -9,6 +9,8 @@ describe("Login to test account", () => {
     cy.get("#password").type("test123");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
   });
 });
 
