@@ -22,7 +22,13 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
 
-const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
+const LanguagesCard = ({
+  profile,
+  setProfile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const language = `language${cardNum}`;
   const proficiency = `language${cardNum}proficiency`;
   const [editButton, setEditButton] = useState(false);
@@ -58,7 +64,10 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -127,7 +136,12 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.languageNum + 1;
                     console.log(newCardNum);
@@ -152,6 +166,7 @@ LanguagesCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
 };
 
 export default LanguagesCard;

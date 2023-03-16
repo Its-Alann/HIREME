@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Stack, Button, InputBase } from "@mui/material";
 import { ref, getDownloadURL } from "firebase/storage";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useLocation } from "react-router-dom";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
 import ExperienceCard from "../../Components/ProfileCards/ExperienceCard";
@@ -71,6 +72,8 @@ const EditProfilePage = () => {
   const [imageUrl, setImageUrl] = useState();
   const [resumeUrl, setResumeUrl] = useState();
   const [infoAvailable, setInfoAvailable] = useState(false);
+  const location = useLocation();
+  const [visitedProfile, setVisitedProfile] = useState(false);
 
   //callback function to make sure setState updates state before its next use (i think)
   // function outputProfile() {
@@ -80,8 +83,12 @@ const EditProfilePage = () => {
   // Only once, attach listener to onAuthStateChanged
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+      // Check if the profile is visited by an external user
+      if (user && location.state === null) {
         setCurrentUserEmail(user.email);
+      } else if (location.state !== null) {
+        setCurrentUserEmail(location.state.userID);
+        setVisitedProfile(true);
       } else {
         console.log("No user currently logged in");
       }
@@ -173,6 +180,7 @@ const EditProfilePage = () => {
           currentUserEmail={currentUserEmail}
           cardNum={i}
           isLast={i + 1 === profile.values.schoolNum}
+          visitingProfile={visitedProfile}
         />
       );
     }
@@ -198,6 +206,7 @@ const EditProfilePage = () => {
           currentUserEmail={currentUserEmail}
           cardNum={i}
           isLast={i + 1 === profile.values.expNum}
+          visitingProfile={visitedProfile}
         />
       );
     }
@@ -222,6 +231,7 @@ const EditProfilePage = () => {
           setProfile={setProfile}
           cardNum={i}
           isLast={i + 1 === profile.values.awardsNum}
+          visitingProfile={visitedProfile}
         />
       );
     }
@@ -246,6 +256,7 @@ const EditProfilePage = () => {
           setProfile={setProfile}
           cardNum={i}
           isLast={i + 1 === profile.values.languageNum}
+          visitingProfile={visitedProfile}
         />
       );
     }
@@ -270,6 +281,7 @@ const EditProfilePage = () => {
           setProfile={setProfile}
           cardNum={i}
           isLast={i + 1 === profile.values.projectNum}
+          visitingProfile={visitedProfile}
         />
       );
     }
@@ -294,6 +306,7 @@ const EditProfilePage = () => {
           setProfile={setProfile}
           cardNum={i}
           isLast={i + 1 === profile.values.volunteerNum}
+          visitingProfile={visitedProfile}
         />
       );
     }
@@ -311,7 +324,10 @@ const EditProfilePage = () => {
               alignItems="center"
               display="flex"
             >
-              <ProfilePicture urlProfilePicture={imageUrl} />
+              <ProfilePicture
+                urlProfilePicture={imageUrl}
+                visitingProfile={visitedProfile}
+              />
             </Grid>
             <Grid item xs={6} container>
               <InputBase
@@ -359,12 +375,18 @@ const EditProfilePage = () => {
           </Grid>
 
           {/* Resume section for user to add,modify or remove */}
-          <Resume resumeUrl={resumeUrl}> </Resume>
+          <Resume resumeUrl={resumeUrl} visitingProfile={visitedProfile}>
+            {" "}
+          </Resume>
 
           <Stack spacing={2}>
             {infoAvailable && (
               <>
-                <ContactInfoCard setProfile={setProfile} profile={profile} />
+                <ContactInfoCard
+                  setProfile={setProfile}
+                  profile={profile}
+                  visitingProfile={visitedProfile}
+                />
 
                 {/* <EducationCard
                 setProfile={setProfile}
@@ -380,7 +402,11 @@ const EditProfilePage = () => {
                 /> */}
                 {getExperienceCards()}
 
-                <SkillsCard profile={profile} setProfile={setProfile} />
+                <SkillsCard
+                  profile={profile}
+                  setProfile={setProfile}
+                  visitingProfile={visitedProfile}
+                />
 
                 {/* <LanguagesCard profile={profile} setProfile={setProfile} /> */}
                 {getLanguageCards()}

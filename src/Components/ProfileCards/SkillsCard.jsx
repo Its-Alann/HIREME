@@ -13,7 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import PropTypes from "prop-types";
 
 // eslint-disable-next-line react/prop-types
-const SkillsCard = ({ setProfile, profile }) => {
+const SkillsCard = ({ setProfile, profile, visitingProfile }) => {
   const [skillsStr, setSkillsStr] = useState("");
   const [editButton, setEditButton] = useState(false);
   const [skillArr, setSkillArr] = useState([]);
@@ -56,7 +56,10 @@ const SkillsCard = ({ setProfile, profile }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -78,7 +81,13 @@ const SkillsCard = ({ setProfile, profile }) => {
               }}
               InputProps={{
                 endAdornment: (
-                  <AddIcon onClick={handleAdd} style={{ cursor: "pointer" }} />
+                  <AddIcon
+                    onClick={handleAdd}
+                    style={{
+                      cursor: "pointer",
+                      display: visitingProfile ? "none" : "inline",
+                    }}
+                  />
                 ),
                 readOnly: !editButton,
                 error: editButton,
@@ -86,21 +95,38 @@ const SkillsCard = ({ setProfile, profile }) => {
             />
           </Grid>
           {/* Would like to turn this into tags that can be deleted */}
-          <Grid container spacing={1} style={{ marginTop: "1%" }}>
-            {skillArr.length > 0 &&
-              skillArr.map((data) => (
-                <Chip
-                  sx={{ m: "0.25%" }}
-                  key={data}
-                  color="info"
-                  label={data}
-                  variant="outlined"
-                  onDelete={() =>
-                    setSkillArr((prev) => prev.filter((temp) => temp !== data))
-                  }
-                />
-              ))}
-          </Grid>
+          {!visitingProfile ? (
+            <Grid container spacing={1} style={{ marginTop: "1%" }}>
+              {skillArr.length > 0 &&
+                skillArr.map((data) => (
+                  <Chip
+                    sx={{ m: "0.25%" }}
+                    key={data}
+                    color="info"
+                    label={data}
+                    variant="outlined"
+                    onDelete={() =>
+                      setSkillArr((prev) =>
+                        prev.filter((temp) => temp !== data)
+                      )
+                    }
+                  />
+                ))}
+            </Grid>
+          ) : (
+            <Grid container spacing={1} style={{ marginTop: "1%" }}>
+              {skillArr.length > 0 &&
+                skillArr.map((data) => (
+                  <Chip
+                    sx={{ m: "0.25%" }}
+                    key={data}
+                    color="info"
+                    label={data}
+                    variant="outlined"
+                  />
+                ))}
+            </Grid>
+          )}
         </CardContent>
       </Card>
     </Box>
@@ -110,6 +136,7 @@ const SkillsCard = ({ setProfile, profile }) => {
 SkillsCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
+  visitingProfile: PropTypes.bool,
 };
 
 export default SkillsCard;

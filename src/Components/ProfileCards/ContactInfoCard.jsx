@@ -14,7 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ContactInfoCard = ({ setProfile, profile }) => {
+const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
   const [editButton, setEditButton] = useState(false);
   const [tempDob, setTempDob] = useState("");
 
@@ -35,7 +35,10 @@ const ContactInfoCard = ({ setProfile, profile }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -156,6 +159,7 @@ ContactInfoCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
   currentUserEmail: PropTypes.string,
 };
 
