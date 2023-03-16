@@ -25,13 +25,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
-const pageNamesForApplicant = [
-  "Home",
-  "Network",
-  "Jobs",
-  "MyApplications",
-  "Messaging",
-];
+const pageNamesForApplicant = ["Home", "Network", "Jobs", "Messaging"];
 const pageNamesForRecruiter = [
   "Home",
   "Network",
