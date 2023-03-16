@@ -48,7 +48,7 @@ describe("Remove a job", () => {
   it("clicks on the remove button", () => {
     cy.visit("http://localhost:3000/viewmyapplications");
     cy.wait(1000);
-    cy.get(".css-gmwslw-MuiStack-root > .MuiButtonBase-root").click();
+    cy.get('[data-cy="remove-button"]').click();
     cy.wait(1000);
     cy.visit("http://localhost:3000/viewmyapplications");
   });
