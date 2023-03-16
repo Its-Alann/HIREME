@@ -75,6 +75,7 @@ const LanguagesCard = ({
             <Grid item>
               <TextField
                 label="Language"
+                name="Language"
                 variant="standard"
                 size="small"
                 value={profile.values[language]}
@@ -95,6 +96,7 @@ const LanguagesCard = ({
                   <InputLabel> Proficiency</InputLabel>
                   <Select
                     id="language-dropdown"
+                    name="LanguageDropdown"
                     value={profile.values[proficiency]}
                     label="Proficiency"
                     onChange={(e) =>
@@ -120,6 +122,7 @@ const LanguagesCard = ({
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="langDel"
                   />
                 )}
 
@@ -131,7 +134,9 @@ const LanguagesCard = ({
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="langPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -152,6 +157,7 @@ const LanguagesCard = ({
                       },
                     });
                   }}
+                  name="langAdd"
                 />
               </>
             )}

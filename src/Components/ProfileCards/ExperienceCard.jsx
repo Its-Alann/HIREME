@@ -114,6 +114,7 @@ const ExperienceCard = ({
             <Grid item>
               <TextField
                 label="Company Name"
+                name="CompanyName"
                 variant="standard"
                 size="small"
                 value={profile.values[expName]}
@@ -157,6 +158,7 @@ const ExperienceCard = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="End Date"
+                    name="ExpEndDate"
                     value={tempEndDate}
                     readOnly={!editButton}
                     onChange={(newValue) => {
@@ -182,7 +184,7 @@ const ExperienceCard = ({
               <FormControlLabel
                 control={
                   <Checkbox
-                    name="workCheck"
+                    name="WorkCheck"
                     checked={isCurrentlyEmployed}
                     onChange={handleCheckbox}
                   />
@@ -197,6 +199,7 @@ const ExperienceCard = ({
             <Grid item>
               <TextField
                 label="Job Position"
+                name="JobPosition"
                 variant="standard"
                 size="small"
                 value={profile.values[expPosition]}
@@ -217,6 +220,7 @@ const ExperienceCard = ({
             <Grid item>
               <TextField
                 label="Location"
+                name="JobLocation"
                 variant="standard"
                 size="small"
                 value={profile.values[expLocation]}
@@ -238,6 +242,7 @@ const ExperienceCard = ({
           <Grid container>
             <TextField
               label="Job Description"
+              name="JobDescription"
               variant="standard"
               size="small"
               value={profile.values[expDescription]}
@@ -261,6 +266,7 @@ const ExperienceCard = ({
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="expDel"
                   />
                 )}
 
@@ -272,7 +278,9 @@ const ExperienceCard = ({
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="expPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -293,6 +301,7 @@ const ExperienceCard = ({
                       },
                     });
                   }}
+                  name="expAdd"
                 />
               </>
             )}

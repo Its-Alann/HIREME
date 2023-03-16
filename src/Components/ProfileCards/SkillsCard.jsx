@@ -66,6 +66,7 @@ const SkillsCard = ({ setProfile, profile, visitingProfile }) => {
           <Grid container>
             <TextField
               label="Skill"
+              name="SkillInput"
               variant="standard"
               size="small"
               value={tempSkill}
@@ -87,6 +88,7 @@ const SkillsCard = ({ setProfile, profile, visitingProfile }) => {
                       cursor: "pointer",
                       display: visitingProfile ? "none" : "inline",
                     }}
+                    name="skillAdd"
                   />
                 ),
                 readOnly: !editButton,

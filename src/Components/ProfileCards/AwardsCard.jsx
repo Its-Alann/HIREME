@@ -83,6 +83,7 @@ const AwardsCard = ({
             <Grid item>
               <TextField
                 label="Award Title"
+                name="AwardTitle"
                 variant="standard"
                 size="small"
                 value={profile.values[awardTitle]}
@@ -102,6 +103,7 @@ const AwardsCard = ({
             <Grid item>
               <TextField
                 label="Award Issuer"
+                name="AwardIssuer"
                 variant="standard"
                 size="small"
                 value={profile.values[awardIssuer]}
@@ -148,6 +150,7 @@ const AwardsCard = ({
             <Grid item sx={{ mr: "auto" }}>
               <TextField
                 label="Award Description"
+                name="AwardDescription"
                 variant="standard"
                 size="small"
                 multiline
@@ -173,6 +176,7 @@ const AwardsCard = ({
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="awardDel"
                   />
                 )}
 
@@ -184,7 +188,9 @@ const AwardsCard = ({
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="awardPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -205,6 +211,7 @@ const AwardsCard = ({
                       },
                     });
                   }}
+                  name="awardAdd"
                 />
               </>
             )}

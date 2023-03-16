@@ -81,7 +81,8 @@ const VolunteeringCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Project Title"
+                label="Organization Name"
+                name="OrgName"
                 variant="standard"
                 size="small"
                 value={profile.values[volunteerOrg]}
@@ -126,7 +127,8 @@ const VolunteeringCard = ({
           <Grid container spacing={3}>
             <Grid item sx={{ mr: "auto" }}>
               <TextField
-                label="Project Description"
+                label="Volunteering Description"
+                name="VolDesc"
                 variant="standard"
                 size="small"
                 multiline
@@ -152,6 +154,7 @@ const VolunteeringCard = ({
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="volDel"
                   />
                 )}
 
@@ -163,7 +166,9 @@ const VolunteeringCard = ({
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="volPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -184,6 +189,7 @@ const VolunteeringCard = ({
                       },
                     });
                   }}
+                  name="volAdd"
                 />
               </>
             )}
