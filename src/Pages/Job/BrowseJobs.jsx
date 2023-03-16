@@ -27,6 +27,7 @@ export const BrowseJobs = () => {
   const [lastJob, setLastJob] = React.useState(null);
   const [firstJob, setFirstJob] = React.useState(null);
   const [companiesName, setCompaniesName] = React.useState({});
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const jobsPerPage = 5;
 
@@ -123,8 +124,20 @@ export const BrowseJobs = () => {
     });
   }
 
+  // Load the logo of each company that has job listings
+  function loadLogoCompany() {
+    const temp = companiesLogo;
+    jobs.forEach(async (job) => {
+      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
+      temp[job.companyID] = querySnapshot.data().logoPath;
+      // triggers a re-render and display the newly loaded logos
+      setCompaniesLogo({ ...temp });
+    });
+  }
+
   React.useEffect(() => {
     getCompaniesName();
+    loadLogoCompany();
   }, [jobs]);
 
   React.useEffect(() => {
@@ -152,12 +165,36 @@ export const BrowseJobs = () => {
             <Box key={job.documentID} sx={{ py: 1 }}>
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
-                  <Typography variant="h4">{job.title}</Typography>
-
-                  <Typography>{companiesName[job.companyID]}</Typography>
-
-                  {/* change to country and city */}
-                  <Typography>{`${job.city}, ${job.country}`}</Typography>
+                  <Stack direction="row" alignItems="center">
+                    {job.companyID === undefined ? (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "0.25",
+                          height: "0.25",
+                          mr: 2,
+                        }}
+                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
+                      />
+                    ) : (
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo[job.companyID]}
+                      />
+                    )}
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Typography>{`${job.city}, ${job.country}`}</Typography>
+                    </Box>
+                  </Stack>
 
                   {/* do we need to show company id? */}
                   {/* <Typography>Company ID: {job.companyID}</Typography> */}
@@ -182,24 +219,7 @@ export const BrowseJobs = () => {
                         style={{ textDecoration: "none" }}
                       >
                         {/* <Link to="/job/1"> */}
-                        View job (redirects to candidate&apos;s view)
-                      </Link>
-                    </Button>
-                    {/* button for recruiter's view */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      sx={{ my: 1 }}
-                      id={`Button-${job.documentID}`}
-                    >
-                      <Link
-                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
-                        className="link"
-                        underline="none"
-                        style={{ textDecoration: "none" }}
-                      >
-                        {/* <Link to="/job/1"> */}
-                        View job (redirects to recruiter&apos;s view)
+                        View job
                       </Link>
                     </Button>
                     <Typography>
