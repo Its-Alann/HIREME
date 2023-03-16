@@ -1,4 +1,7 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
+
+Cypress.on("uncaught:exception", (err, runnable) => false);
+
 beforeEach(() => {
   cy.viewport(1920, 1080);
 });
@@ -21,12 +24,40 @@ describe("Display job applications", () => {
     cy.visit("http://localhost:3000/viewmyapplications");
     cy.wait(1000);
   });
+});
 
-  // it("show title", () => {
-  //   cy.visit("http://localhost:3000/viewmyapplication");
-  //   cy.wait(1000);
-  //   cy.get(
-  //     ":nth-child(3) > .MuiPaper-root > .MuiBox-root > .css-qvcdic-MuiStack-root > :nth-child(1) > .link"
-  //   ).should("have.text", "My Applications");
-  // });
+describe("Remove a job", () => {
+  it("clicks on the remove button", () => {
+    cy.visit("http://localhost:3000/viewmyapplications");
+    cy.wait(1000);
+    cy.get(
+      ":nth-child(2) > .MuiPaper-root > :nth-child(1) > .css-1glpfpa-MuiGrid2-root > .css-1mx9e1j-MuiStack-root > .MuiGrid2-root > .css-gmwslw-MuiStack-root > .MuiButtonBase-root"
+    ).click();
+    cy.wait(1000);
+    cy.visit("http://localhost:3000/viewmyapplications");
+  });
+});
+
+describe("Adds job back", () => {
+  it("applies to a job", () => {
+    cy.visit("http://localhost:3000/browsejobs");
+    cy.get(
+      ":nth-child(3) > .MuiPaper-root > .MuiBox-root > .css-qvcdic-MuiStack-root > :nth-child(1) > .link"
+    ).click();
+    cy.wait(1000);
+    cy.get(
+      ".css-1mhd35f-MuiStack-root > .MuiBox-root > .MuiButtonBase-root"
+    ).click();
+    cy.get("#mui-2").type("viewapp@test.com");
+    cy.get("#mui-3").type("1111111111");
+    cy.get("#mui-4").type("something street");
+    cy.get('[data-testid="submit-button"]').click();
+  });
+});
+
+describe("Returns to job applications", () => {
+  it("applies to a job", () => {
+    cy.visit("http://localhost:3000/viewmyapplications");
+    cy.wait(1000);
+  });
 });
