@@ -55,6 +55,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoPhoneNumber"
               />
             </Grid>
             <Grid item>
@@ -72,10 +73,11 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoAddress"
               />
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ marginBottom: "1%" }}>
             <Grid item>
               <TextField
                 label="City"
@@ -91,6 +93,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoCity"
               />
             </Grid>
             <Grid item>
@@ -108,6 +111,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoCountry"
               />
             </Grid>
             <Grid item>
@@ -125,6 +129,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoPostCode"
               />
             </Grid>
           </Grid>
