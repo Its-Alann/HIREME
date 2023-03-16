@@ -44,9 +44,7 @@ describe("Display unique job posting", () => {
       "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
     );
     cy.wait(1000);
-    cy.get(
-      ".css-1mhd35f-MuiStack-root > .MuiBox-root > .MuiTypography-root"
-    ).should("have.text", "Food supplier");
+    cy.get(".MuiTypography-h4").should("have.text", "Food supplier");
   });
 
   it("shows job company", () => {
@@ -54,7 +52,7 @@ describe("Display unique job posting", () => {
       "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
     );
     cy.wait(1000);
-    cy.get(".css-1mhd35f-MuiStack-root > :nth-child(2)").should(
+    cy.get(".css-1d9cypr-MuiStack-root > .css-0 > :nth-child(2)").should(
       "have.text",
       "Microsoft"
     );
@@ -65,10 +63,7 @@ describe("Display unique job posting", () => {
       "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
     );
     cy.wait(1000);
-    cy.get(".css-1mhd35f-MuiStack-root > :nth-child(3)").should(
-      "have.text",
-      "Las Vegas, Nevada"
-    );
+    cy.get(".css-0 > :nth-child(3)").should("have.text", "Las Vegas, Nevada");
   });
 
   it("shows job last date to apply", () => {
@@ -78,7 +73,7 @@ describe("Display unique job posting", () => {
     cy.wait(1000);
     cy.get(".css-bqdipl-MuiTypography-root").should(
       "have.text",
-      "October 20, 2023"
+      "Deadline: Fri Oct 20 2023"
     );
   });
 
