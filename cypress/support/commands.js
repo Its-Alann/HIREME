@@ -25,5 +25,6 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "@testing-library/cypress/add-commands";
 import "@cypress/code-coverage/support";
+import "cypress-file-upload";
 
 require("cypress-plugin-tab");
