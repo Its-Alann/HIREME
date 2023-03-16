@@ -317,7 +317,11 @@ const EditProfilePage = () => {
     <ThemeProvider theme={theme}>
       <Grid display="flex" style={{ minWidth: "100vh" }}>
         <div id="profile-container">
-          <Grid container columnSpacing={2} sx={{ marginBottom: "1.5%" }}>
+          <Grid
+            container
+            columnSpacing={3}
+            sx={{ marginBottom: "1.5%", marginLeft: 0 }}
+          >
             <Grid
               item
               justifyContent="center"
@@ -329,7 +333,7 @@ const EditProfilePage = () => {
                 visitingProfile={visitedProfile}
               />
             </Grid>
-            <Grid item xs={6} container>
+            <Grid item xs={5} container>
               <InputBase
                 id="standard-basic"
                 style={{ fontSize: "45px" }}
@@ -349,7 +353,7 @@ const EditProfilePage = () => {
 
               <InputBase
                 id="standard-basic"
-                style={{ fontSize: "25px" }}
+                style={{ fontSize: "25px", width: "100%" }}
                 placeholder="School Name"
                 variant="standard"
                 value={profile.values.school}
@@ -388,18 +392,8 @@ const EditProfilePage = () => {
                   visitingProfile={visitedProfile}
                 />
 
-                {/* <EducationCard
-                setProfile={setProfile}
-                profile={profile}
-                currentUserEmail={currentUserEmail}
-                /> */}
                 {getEductionCards()}
 
-                {/* <ExperienceCard
-                setProfile={setProfile}
-                profile={profile}
-                currentUserEmail={currentUserEmail}
-                /> */}
                 {getExperienceCards()}
 
                 <SkillsCard
@@ -408,16 +402,12 @@ const EditProfilePage = () => {
                   visitingProfile={visitedProfile}
                 />
 
-                {/* <LanguagesCard profile={profile} setProfile={setProfile} /> */}
                 {getLanguageCards()}
 
-                {/* <ProjectsCard profile={profile} setProfile={setProfile} /> */}
                 {getProjectsCards()}
 
-                {/* <VolunteeringCard profile={profile} setProfile={setProfile} /> */}
                 {getVolunteeringCard()}
 
-                {/* <AwardsCard profile={profile} setProfile={setProfile} /> */}
                 {getAwardsCards()}
 
                 <Button

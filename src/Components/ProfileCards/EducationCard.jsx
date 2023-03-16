@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Chip,
   TextField,
   Dialog,
   DialogContent,
@@ -18,7 +17,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
-import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -91,6 +89,7 @@ const EducationCard = ({
             <Grid item>
               <TextField
                 label="School name"
+                name="SchoolName"
                 variant="standard"
                 size="small"
                 value={profile.values[schName]}
@@ -163,6 +162,7 @@ const EducationCard = ({
             <Grid item>
               <TextField
                 label="Degree"
+                name="Degree"
                 variant="standard"
                 size="small"
                 value={profile.values[schDegree]}
@@ -183,6 +183,7 @@ const EducationCard = ({
             <Grid item>
               <TextField
                 label="Program"
+                name="Program"
                 variant="standard"
                 size="small"
                 value={profile.values[schProgram]}
@@ -214,6 +215,7 @@ const EducationCard = ({
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="eduDel"
                   />
                 )}
 
@@ -225,7 +227,9 @@ const EducationCard = ({
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="eduPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -245,6 +249,7 @@ const EducationCard = ({
                       },
                     });
                   }}
+                  name="eduAdd"
                 />
               </>
             )}

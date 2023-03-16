@@ -148,6 +148,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
             style={{ backgroundColor: "#eaeaea" }}
             color="primary"
             variant="outlined"
+            name="UploadBtn"
           >
             Upload a file
             <input
