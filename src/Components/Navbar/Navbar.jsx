@@ -19,17 +19,36 @@ import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import { useNavigate } from "react-router-dom";
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
-const pages = ["Home", "Network", "Jobs", "Messaging"];
+const pageNamesForApplicant = [
+  "Home",
+  "Network",
+  "Jobs",
+  "MyApplications",
+  "Messaging",
+];
+const pageNamesForRecruiter = [
+  "Home",
+  "Network",
+  "Jobs",
+  "MyJobs",
+  "Messaging",
+];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
 const settings = ["Profile", "Account", "Dashboard"];
 
 const Navbar = () => {
+  const [pageNames, setPageNames] = React.useState([
+    "Home",
+    "Network",
+    "Jobs",
+    "Messaging",
+  ]);
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
   //getting user information
@@ -37,10 +56,15 @@ const Navbar = () => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const dbInfo = await getDoc(doc(db, "userProfiles", user.email));
-          const userInfo = dbInfo.data();
-          setUserData(userInfo);
+          const userProfile = await getDoc(doc(db, "userProfiles", user.email));
+          setUserData(userProfile.data());
           setUserIsConnected(true);
+          const recruiter = await getDoc(doc(db, "recruiters", user.uid));
+          if (recruiter.exists()) {
+            setPageNames(pageNamesForRecruiter);
+          } else {
+            setPageNames(pageNamesForApplicant);
+          }
         } catch (err) {
           console.log(err);
         }
@@ -97,6 +121,9 @@ const Navbar = () => {
         break;
       case "jobs":
         navigate("/browseJobs");
+        break;
+      case "myjobs":
+        navigate("/myJobs");
         break;
       case "sign up":
         navigate("/SignUp");
@@ -170,7 +197,7 @@ const Navbar = () => {
               }}
             >
               {userIsConnected &&
-                pages.map((page) => (
+                pageNames.map((page) => (
                   <MenuItem
                     key={page}
                     data-cy={`${page}-phone-test`}
@@ -229,7 +256,7 @@ const Navbar = () => {
                   display: { xs: "none", md: "flex", justifyContent: "end" },
                 }}
               >
-                {pages.map((page) => (
+                {pageNames.map((page) => (
                   <Button
                     key={page}
                     data-cy={`${page}-test`}
@@ -248,6 +275,7 @@ const Navbar = () => {
                     {page === "Messaging" && <MessageOutlinedIcon />}
                     {page === "Network" && <GroupsOutlinedIcon />}
                     {page === "Jobs" && <WorkOutlineOutlinedIcon />}
+                    {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
                     {page}
                   </Button>
                 ))}
