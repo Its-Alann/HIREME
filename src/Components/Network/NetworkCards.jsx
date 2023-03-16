@@ -160,21 +160,20 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                     aria-describedby="alert-dialog-description"
                   >
                     <DialogTitle id="alert-dialog-title">
-                      Remove{" "}
+                      {t("RemoveFrom")}{" "}
                       {`${connectedUser?.values?.firstName ?? ""} ${
                         connectedUser?.values?.lastname ?? ""
                       }`}
-                      from your connections?
+                      {t("RemoveFrom2")}
                     </DialogTitle>
                     <DialogContent>
                       <DialogContentText id="alert-dialog-description">
-                        The user will not be notified that you have removed him
-                        from your connections
+                        {t("RemoveAlert")}
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={removeConnection} autoFocus>
-                        Remove user
+                        {t("RemoveUser")}
                       </Button>
                       <Button onClick={handleClose}>Cancel</Button>
                     </DialogActions>

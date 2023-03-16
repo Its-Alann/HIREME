@@ -42,11 +42,16 @@
   "Withdraw": "Retirar",
   "Message": "Mensaje",
   "ViewProfile": "Ver Perfil",
-  "RemoveConnections": "Eliminar Conexión",
+  "RemoveConnection": "Eliminar Conexión",
   "Accept": "Aceptar",
   "Ignore": "Ignorar",
   "NewConvo": "Nueva Convo",
   "TypeName": "Escriba un nombre o varios nombres",
   "TypeSomething": "Escribe algo",
-  "Report": "reportar"
+  "Report": "reportar",
+  "RemoveFrom": "¿Eliminar a",
+  "RemoveFrom2": "de tus conexiones?",
+  "RemoveAlert": "El usuario no será notificado de que lo has eliminado de tus conexiones",
+  "RemoveUser": "Quitar usuario",
+  "Cancel": "Cancelar"
 }
