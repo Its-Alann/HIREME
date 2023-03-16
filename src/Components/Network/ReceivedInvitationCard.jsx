@@ -16,6 +16,7 @@ import {
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -47,6 +48,7 @@ export const ReceivedInvitationCard = ({
   currentUser,
 }) => {
   const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const getAcceptInvitationUsers = async () => {
@@ -178,7 +180,7 @@ export const ReceivedInvitationCard = ({
                       receivedInvitationUser?.values?.firstName ?? ""
                     }`}
                   >
-                    Accept
+                    {t("Accept")}
                   </ColorButtonBlue>
                   <ColorButtonLightBlue
                     size="medium"
@@ -191,7 +193,7 @@ export const ReceivedInvitationCard = ({
                       receivedInvitationUser?.values?.firstName ?? ""
                     }`}
                   >
-                    Ignore
+                    {t("Ignore")}
                   </ColorButtonLightBlue>
                 </CardActions>
               </Box>

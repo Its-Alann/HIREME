@@ -16,10 +16,13 @@ import {
   listAll,
   deleteObject,
 } from "firebase/storage";
+import { useTranslation } from "react-i18next";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
 const SendChat = ({ conversationID, myUser, selectedIndex }) => {
+  const { t, i18n } = useTranslation();
+
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
   const [url, setUrl] = useState();
@@ -181,7 +184,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               variant="standard"
               hiddenLabel
               id="message-input"
-              placeholder="Type Something"
+              placeholder={t("TypeSomething")}
               fullWidth
               onChange={(e) => setMessageContent(e.target.value)}
               value={messageContent}

@@ -17,6 +17,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -60,6 +61,7 @@ const ColorButtonRed = styled(Button)(({ theme }) => ({
 export const NetworkCards = ({ connectedUserID, currentUser }) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const { t, i18n } = useTranslation();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -137,16 +139,19 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
               <Box display="flex" flexDirection="column">
                 <CardActions>
                   {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue size="medium">View Profile</ColorButtonBlue>
+                  <ColorButtonBlue size="medium">
+                    {" "}
+                    {t("ViewProfile")}
+                  </ColorButtonBlue>
                   <ColorButtonLightBlue variant="outlined">
-                    Message
+                    {t("Message")}
                   </ColorButtonLightBlue>
                   <ColorButtonRed
                     size="medium"
                     variant="outlined"
                     onClick={handleClickOpen}
                   >
-                    Remove Connection
+                    {t("RemoveConnection")}
                   </ColorButtonRed>
                   <Dialog
                     open={open}

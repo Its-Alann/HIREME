@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 
@@ -15,6 +16,7 @@ const theme = createTheme();
 export const ReceivedInvitation = () => {
   const [receivedInvitations, setReceivedInvitations] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -64,7 +66,7 @@ export const ReceivedInvitation = () => {
                 ))}
               </Grid>
             ) : (
-              <Typography>No received invitations yet :/</Typography>
+              <Typography>{t("NoReceivedInvitations")}</Typography>
             )}
           </Box>
         </Container>

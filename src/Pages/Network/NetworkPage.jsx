@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Route, Link, Routes } from "react-router-dom";
 import { PropTypes } from "prop-types";
+import { useTranslation } from "react-i18next";
 import Navbar from "../../Components/Navbar/Navbar";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
 import { SentInvitation } from "./Invitation/SentInvitation";
@@ -38,6 +39,7 @@ const theme = createTheme({
 
 const NetworkPage = () => {
   const [value, setValue] = React.useState(0);
+  const { t, i18n } = useTranslation();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -53,19 +55,19 @@ const NetworkPage = () => {
               onChange={handleChange}
               aria-label="nav tabs example"
             >
-              <Tab label="My Network" value={0} data-cy="NetworkTab" />
+              <Tab label={t("MyNetwork")} value={0} data-cy="NetworkTab" />
               <Tab
-                label="Received Invitations"
+                label={t("ReceivedInvitations")}
                 value={1}
                 data-cy="ReceivedInvitationTab"
               />
               <Tab
-                label="Sent Invitation"
+                label={t("SentInvitations")}
                 value={2}
                 data-cy="SentInvitationTab"
               />
               <Tab
-                label="Possible Connections"
+                label={t("PossibleConnections")}
                 value={3}
                 data-cy="PossibleConnectionsTab"
               />

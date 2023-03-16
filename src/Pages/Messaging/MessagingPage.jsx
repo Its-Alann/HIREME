@@ -26,6 +26,7 @@ import {
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
 import AddCommentIcon from "@mui/icons-material/AddComment";
+import { useTranslation } from "react-i18next";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
@@ -74,6 +75,8 @@ const Messaging = () => {
   const scrollToBottom = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
+
+  const { t, i18n } = useTranslation();
 
   const getOtherAuthors = async (list) => {
     const nameList = await Promise.all(
@@ -181,7 +184,7 @@ const Messaging = () => {
       setSelectedIndex(-1);
       setMessages([]);
       setConvoId("");
-      setName("New Convo");
+      setName(t("NewConvo"));
     }
   }, [newConvo]);
 
@@ -243,7 +246,7 @@ const Messaging = () => {
                 sx={{ display: "flex", p: 1, justifyContent: "space-between" }}
               >
                 <Typography color="primary" variant="h4" noWrap>
-                  Messaging
+                  {t("Messaging")}
                 </Typography>
                 <IconButton
                   data-cy="startNewConvo"

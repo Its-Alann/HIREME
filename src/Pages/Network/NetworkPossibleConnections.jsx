@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
@@ -19,6 +20,7 @@ export const NetworkPossibleConnections = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  const { t, i18n } = useTranslation();
 
   const getPossibleConnections = async (user) => {
     // READ DATA
@@ -85,7 +87,7 @@ export const NetworkPossibleConnections = () => {
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>
-            People you may know
+            {t("MayKnow")}
           </Typography>
           <Box
             justifyContent="center"

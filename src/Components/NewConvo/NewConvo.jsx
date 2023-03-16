@@ -14,10 +14,12 @@ import {
 import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
 import { Autocomplete, TextField, IconButton } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import { useTranslation } from "react-i18next";
 import { auth, db } from "../../Firebase/firebase";
 
 const NewConvo = ({ selectConvo, getConversationId, getOtherAuthors }) => {
   const antinos = "🖖";
+  const { t, i18n } = useTranslation();
 
   const [connections, setConnections] = useState([]);
 
@@ -73,7 +75,7 @@ const NewConvo = ({ selectConvo, getConversationId, getOtherAuthors }) => {
               // eslint-disable-next-line react/jsx-props-no-spreading
               {...params}
               variant="standard"
-              placeholder="Type a name or multiple names"
+              placeholder={t("TypeName")}
             />
           )}
         />

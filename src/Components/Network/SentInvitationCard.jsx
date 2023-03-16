@@ -10,6 +10,7 @@ import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -34,6 +35,7 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
 
 export const SentInvitationCard = ({ userID, currentUser }) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const getSentRequestUsers = async () => {
@@ -114,7 +116,7 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
                     onClick={withdrawInvitation}
                     id="withdrawButton"
                   >
-                    Withdraw
+                    {t("Withdraw")}
                   </ColorButtonBlue>
                 </CardActions>
               </Box>

@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { SentInvitationCard } from "../../../Components/Network/SentInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 
@@ -15,6 +16,7 @@ const theme = createTheme();
 export const SentInvitation = () => {
   const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -64,7 +66,7 @@ export const SentInvitation = () => {
                 ))}
               </Grid>
             ) : (
-              <Typography>No sent invitations :/</Typography>
+              <Typography>{t("NoSentInvitations")}</Typography>
             )}
             {/*The array will contain all the connected users*/}
           </Box>

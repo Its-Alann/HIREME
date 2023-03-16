@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
 
@@ -15,6 +16,7 @@ const theme = createTheme();
 
 export const ViewNetwork = () => {
   const [connectedUsersId, setConnectedUsersId] = useState([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -63,7 +65,7 @@ export const ViewNetwork = () => {
                 ))}
               </Grid>
             ) : (
-              <Typography>No connections yet :/</Typography>
+              <Typography>{t("NoConnection")}</Typography>
             )}
           </Box>
         </Container>
