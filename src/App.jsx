@@ -27,6 +27,7 @@ import { EditJob } from "./Pages/Job/EditJob";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
+import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
@@ -89,6 +90,11 @@ const App = () => {
             <Route path="/createJob" exact element={<CreateJob />} />
             <Route path="/browseJobs" exact element={<BrowseJobs />} />
             <Route path="/myJobs" exact element={<MyJobs />} />
+            <Route
+              path="/jobApplication/:companyID/:jobID"
+              exact
+              element={<JobApplication />}
+            />
             <Route path="/editJob/:jobID" exact element={<EditJob />} />
             <Route
               path="/viewJobPostingApplicants/:companyID/:jobID"
