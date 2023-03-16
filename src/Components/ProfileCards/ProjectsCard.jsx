@@ -62,6 +62,7 @@ const ProjectsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Project Title"
+                name="ProjectTitle"
                 variant="standard"
                 size="small"
                 value={profile.values[projTitle]}
@@ -81,6 +82,7 @@ const ProjectsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item sx={{ mr: "auto" }}>
               <TextField
                 label="Project Description"
+                name="ProjectDescription"
                 variant="standard"
                 size="small"
                 multiline
@@ -103,6 +105,7 @@ const ProjectsCard = ({ profile, setProfile, cardNum, isLast }) => {
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="projDel"
                   />
                 )}
 
@@ -114,7 +117,9 @@ const ProjectsCard = ({ profile, setProfile, cardNum, isLast }) => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="projPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -130,6 +135,7 @@ const ProjectsCard = ({ profile, setProfile, cardNum, isLast }) => {
                       },
                     });
                   }}
+                  name="projAdd"
                 />
               </>
             )}

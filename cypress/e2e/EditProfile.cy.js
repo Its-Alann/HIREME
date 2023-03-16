@@ -30,6 +30,94 @@ describe("Edit Profile Page", () => {
     cy.visit("http://localhost:3000/editProfile");
   });
 
+  it("write in all input fields", () => {
+    cy.visit("http://localhost:3000/editProfile");
+
+    //set all cards to editable
+    cy.get('[data-testid="EditIcon"]').each((el) => {
+      cy.get(el).click();
+    });
+
+    //try all calendars
+    cy.get('[data-testid="CalendarIcon"]').each((el) => {
+      cy.get(el).click();
+      cy.get("button").contains("28").click();
+    });
+
+    //contact card
+    cy.get('input[name="ContactInfoPhoneNumber"]').type("123");
+    cy.get('input[name="ContactInfoAddress"]').type("123");
+    cy.get('input[name="ContactInfoCity"]').type("123");
+    cy.get('input[name="ContactInfoCountry"]').type("123");
+    cy.get('input[name="ContactInfoPostCode"]').type("123");
+
+    //education card
+    cy.get('input[name="SchoolName"]').type("abc");
+    cy.get('input[name="Degree"]').type("abc");
+    cy.get('input[name="Program"]').type("abc");
+    cy.get('svg[name="eduAdd"]').click();
+    cy.get('svg[name="eduDel"]').click();
+    cy.get('button[name="eduPopupDel"]').click();
+
+    //experience card
+    cy.get('input[name="CompanyName"]').type("abc");
+    cy.get('[type="checkbox"]').check();
+    cy.get('input[name="JobPosition"]').type("abc");
+    cy.get('input[name="JobLocation"]').type("abc");
+    cy.get('input[name="JobDescription"]').type("abc");
+    cy.get('svg[name="expAdd"]').click();
+    cy.get('svg[name="expDel"]').click();
+    cy.get('button[name="expPopupDel"]').click();
+
+    //skill card
+    cy.get('input[name="SkillInput"]').type("abc");
+    cy.get('svg[name="skillAdd"]').click();
+    cy.get('[data-testid="CancelIcon"]').first().click();
+
+    //language card
+    cy.get('input[name="Language"]').type("abc");
+    cy.get("#language-dropdown").click({ force: true });
+    cy.get("li").contains("Fluent").click();
+    cy.get('svg[name="langAdd"]').click();
+    cy.get('svg[name="langDel"]').click();
+    cy.get('button[name="langPopupDel"]').click();
+
+    //project card
+    cy.get('input[name="ProjectTitle"]').type("abc");
+    cy.get('textarea[name="ProjectDescription"]').type("abc");
+    cy.get('svg[name="projAdd"]').click();
+    cy.get('svg[name="projDel"]').click();
+    cy.get('button[name="projPopupDel"]').click();
+
+    // //volunteering card
+    cy.get('input[name="OrgName"]').type("abc");
+    cy.get('textarea[name="VolDesc"]').type("abc");
+    cy.get('svg[name="volAdd"]').click();
+    cy.get('svg[name="volDel"]').click();
+    cy.get('button[name="volPopupDel"]').click();
+
+    // //awards card
+    cy.get('input[name="AwardTitle"]').type("abc");
+    cy.get('input[name="AwardIssuer"]').type("abc");
+    cy.get('textarea[name="AwardDescription"]').type("abc");
+    cy.get('svg[name="awardAdd"]').click();
+    cy.get('svg[name="awardDel"]').click();
+    cy.get('button[name="awardPopupDel"]').click();
+  });
+
+  // it("resume card", () => {
+  //   cy.visit("http://localhost:3000/editProfile");
+  //   cy.get('[name="UploadBtn"]').click();
+  //   cy.wait(500);
+  //   cy.get('[name="UploadBtn"]').attachFile("TestPdf.pdf");
+  //   cy.get('[name="UploadBtn"]').click();
+  //   const fileName = "TestPdf.pdf";
+  //   cy.fixture(fileName).then(fileContent => {
+  //     cy.get('[name="UploadBtn"]').upload(fileContent, fileName, mimeType: "application/pdf");
+  //   })
+  //   cy.get('[name="UploadBtn"]').selectFile("TestPdf.pdf");
+  // });
+
   it("save changes", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.visit("http://localhost:3000/editProfile");
