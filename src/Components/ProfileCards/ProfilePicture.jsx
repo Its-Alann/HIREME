@@ -28,10 +28,6 @@ const ProfilePicture = ({ urlProfilePicture }) => {
             .catch((error) => {
               console.log(error.message, "error getting the image url");
             });
-          console.log("image");
-          console.log(image);
-          console.log("url");
-          console.log(url);
           setNewPicture(true);
         })
         .catch((error) => {
