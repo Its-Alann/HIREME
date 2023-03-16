@@ -21,7 +21,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
+const EducationCard = ({
+  setProfile,
+  profile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const schName = `schoolName${cardNum}`;
   const schDegree = `schoolDegree${cardNum}`;
   const schProgram = `schoolProgram${cardNum}`;
@@ -72,7 +78,10 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -225,7 +234,12 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.schoolNum + 1;
                     setProfile({
@@ -251,6 +265,7 @@ EducationCard.propTypes = {
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
   currentUserEmail: PropTypes.string,
+  visitingProfile: PropTypes.bool,
 };
 
 export default EducationCard;
