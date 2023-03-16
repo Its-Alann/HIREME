@@ -95,7 +95,9 @@ export const JobPosting = () => {
                 <Typography sx={{ fontSize: 18 }}>
                   {companyName.name}
                 </Typography>
-                <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
+                <Typography
+                  sx={{ fontSize: 18 }}
+                >{`${job.city}, ${job.country}`}</Typography>
               </Stack>
               {job.deadline && (
                 <Typography sx={{ fontSize: 16 }}>
