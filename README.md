@@ -1,4 +1,4 @@
-# SOEN390-Project-Team8 ![check-code-coverage](https://img.shields.io/badge/code--coverage-72.71%25-yellow)
+# SOEN390-Project-Team8 ![check-code-coverage](https://img.shields.io/badge/code--coverage-91.97%25-brightgreen)
 
 # Getting Started with HIREME
 
