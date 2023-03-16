@@ -231,7 +231,7 @@ export const JobPostingApplicants = () => {
                           {companyName.name}
                         </Typography>
                         <Typography sx={{ fontSize: 18 }}>
-                          {job.location}
+                          {`${job.city}, ${job.country}`}
                         </Typography>
                       </Box>
                     </Grid>
