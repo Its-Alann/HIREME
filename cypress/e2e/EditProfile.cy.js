@@ -27,11 +27,11 @@ describe("Edit Profile Button", () => {
 
 describe("Edit Profile Page", () => {
   it("display correct", () => {
-    cy.visit("http://localhost:3000/editProfile");
+    cy.visit("http://localhost:3000/editProfile/myprofile");
   });
 
   it("write in all input fields", () => {
-    cy.visit("http://localhost:3000/editProfile");
+    cy.visit("http://localhost:3000/editProfile/myprofile");
 
     //set all cards to editable
     cy.get('[data-testid="EditIcon"]').each((el) => {
@@ -106,7 +106,7 @@ describe("Edit Profile Page", () => {
   });
 
   it("adds a resume", () => {
-    cy.visit("http://localhost:3000/editProfile");
+    cy.visit("http://localhost:3000/editProfile/myprofile");
     cy.wait(500);
     cy.get(
       ".css-1cwdt9v-MuiGrid-root > :nth-child(1) > .MuiButtonBase-root"
@@ -126,14 +126,14 @@ describe("Edit Profile Page", () => {
   });
 
   it("changes profile picture", () => {
-    cy.visit("http://localhost:3000/editProfile");
+    cy.visit("http://localhost:3000/editProfile/myprofile");
     cy.wait(500);
     cy.get(".MuiAvatar-img").click();
   });
 
   it("save changes", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.visit("http://localhost:3000/editProfile");
+    cy.visit("http://localhost:3000/editProfile/myprofile");
     cy.scrollTo("bottom", { easing: "linear" });
     cy.get('[data-cy="saveBtn"]').click();
   });

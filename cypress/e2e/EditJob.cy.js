@@ -21,7 +21,11 @@ describe("Edit job posting", () => {
     cy.visit("http://localhost:3000/myJobs");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
-    cy.get(`[data-cy="view"]`).first().click();
+    cy.get(
+      ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"]'
+    )
+      .first()
+      .click();
     cy.get("a > .MuiButtonBase-root").click();
     cy.get("#TextField-Title").type(" edited");
     cy.get("#TextField-City").type(" edited");
@@ -39,7 +43,11 @@ describe("Change job posting back to origninal", () => {
     cy.visit("http://localhost:3000/myJobs");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
-    cy.get(`[data-cy="view"]`).first().click();
+    cy.get(
+      ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"]'
+    )
+      .first()
+      .click();
     cy.get("a > .MuiButtonBase-root").click();
     cy.get("#TextField-Title").clear();
     cy.get("#TextField-City").clear();
