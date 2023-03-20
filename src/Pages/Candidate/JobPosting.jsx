@@ -53,14 +53,18 @@ export const JobPosting = () => {
   // loads the logo of a company
   async function loadLogoCompany() {
     const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
-    setCompaniesLogo(querySnapshot.data().logoPath);
+    if (querySnapshot.data().logoPath === undefined) {
+      setCompaniesLogo(
+        "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=28c5b8a4-3c75-47d8-b19c-5f54c6da2872"
+      );
+    } else {
+      setCompaniesLogo(querySnapshot.data().logoPath);
+    }
   }
 
   // calling 2 methods
   useEffect(() => {
-    getJobData();
-    getCompanyName();
-    loadLogoCompany();
+    Promise.all([getJobData(), getCompanyName(), loadLogoCompany()]);
   }, []);
 
   // returns the job posting with the apply button
@@ -79,29 +83,16 @@ export const JobPosting = () => {
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
                   <Stack direction="row" alignItems="center">
-                    {job.companyID === undefined ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "0.25",
-                          height: "0.25",
-                          mr: 2,
-                        }}
-                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                      />
-                    ) : (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo}
-                      />
-                    )}
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo}
+                    />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Typography sx={{ fontSize: 18 }}>
