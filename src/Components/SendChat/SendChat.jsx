@@ -224,8 +224,8 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
 
               <Button
                 aria-describedby={id}
-                variant="contained"
                 onClick={handleClick}
+                sx={{ marginLeft: "10px" }}
               >
                 <SentimentSatisfiedOutlinedIcon />
               </Button>
