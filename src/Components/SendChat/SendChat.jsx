@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
-import { IconButton, Stack, Box, TextField, Typography } from "@mui/material";
+import {
+  IconButton,
+  Stack,
+  Box,
+  TextField,
+  Typography,
+  Button,
+  Popover,
+} from "@mui/material";
 import { getAuth } from "firebase/auth";
 import Fab from "@mui/material/Fab";
 import { SendRounded as SendRoundedIcon, Clear } from "@mui/icons-material";
@@ -16,6 +24,8 @@ import {
   listAll,
   deleteObject,
 } from "firebase/storage";
+import EmojiPicker from "emoji-picker-react";
+import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
@@ -23,6 +33,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
   const [url, setUrl] = useState();
+  const [showPicker, setShowPicker] = useState(false);
 
   const [file, setFile] = useState();
 
@@ -31,6 +42,28 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   const [fileStorageRef, setFileStorageRef] = useState();
 
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  //code for select emoji
+
+  const onEmojiClick = (emojiData, event) => {
+    setMessageContent((prevInput) => prevInput + emojiData.emoji);
+    setShowPicker(false);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  //end
 
   const uploadFile = () => {
     if (!file) return;
@@ -177,16 +210,47 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               </Box>
             )
           ) : (
-            <TextField
-              variant="standard"
-              hiddenLabel
-              id="message-input"
-              placeholder="Type Something"
-              fullWidth
-              onChange={(e) => setMessageContent(e.target.value)}
-              value={messageContent}
-              sx={{ m: 0 }}
-            />
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
+              <TextField
+                variant="standard"
+                hiddenLabel
+                id="message-input"
+                placeholder="Type Something"
+                fullWidth
+                onChange={(e) => setMessageContent(e.target.value)}
+                value={messageContent}
+                sx={{ m: 0 }}
+              />
+
+              <Button
+                aria-describedby={id}
+                variant="contained"
+                onClick={handleClick}
+              >
+                <SentimentSatisfiedOutlinedIcon />
+              </Button>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+              >
+                <Typography sx={{ p: 2 }}>
+                  <EmojiPicker
+                    pickerStyle={{ width: "100%" }}
+                    onEmojiClick={onEmojiClick}
+                  />
+                </Typography>
+              </Popover>
+            </Box>
           )}
         </Grid>
 
