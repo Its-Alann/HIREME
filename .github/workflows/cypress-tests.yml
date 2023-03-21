@@ -22,6 +22,11 @@ jobs:
         uses: cypress-io/github-action@v5.4.0
         with:
           install: false
-          start: npm start
+          runTests: false
+          build: npm run build
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
+          
+      - name: Parse test files for parallelization
+        id: parse
+        uses: tgamauf/cypress-parallel@v2
