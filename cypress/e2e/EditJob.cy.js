@@ -7,8 +7,8 @@ beforeEach(() => {
 describe("Login to test account", () => {
   it("Logs into test account", () => {
     cy.visit("http://localhost:3000/login");
-    cy.get("#email").type("accountcreation@test.com");
-    cy.get("#password").type("test123");
+    cy.get("#email").type("editjobtest@gmail.com");
+    cy.get("#password").type("iwanttoedit1job!");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -56,12 +56,12 @@ describe("Change job posting back to origninal", () => {
     cy.get("#TextField-Requirement").clear();
     cy.get("#TextField-Benefits").clear();
 
-    cy.get("#TextField-Title").type("Tester Job Title");
-    cy.get("#TextField-City").type("City");
-    cy.get("#TextField-Country").type("Country");
-    cy.get("#TextField-Description").type("Tester Job Description");
-    cy.get("#TextField-Requirement").type("Tester Job Requirement");
-    cy.get("#TextField-Benefits").type("Tester Job Benefits");
+    cy.get("#TextField-Title").type("Edit Jobs");
+    cy.get("#TextField-City").type("Toronto");
+    cy.get("#TextField-Country").type("Canada");
+    cy.get("#TextField-Description").type("Edit job postings in HIREME");
+    cy.get("#TextField-Requirement").type("< 2.5 GPA");
+    cy.get("#TextField-Benefits").type("Lots of fun");
 
     cy.get("#Button-Save").click();
     cy.wait(1000);
