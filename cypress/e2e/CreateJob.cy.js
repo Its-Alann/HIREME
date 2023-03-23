@@ -33,3 +33,19 @@ describe("Creates a new job", () => {
     cy.get("#Button-Save").click();
   });
 });
+
+describe("Delete the new job", () => {
+  it("deletes the new created job", () => {
+    cy.visit("http://localhost:3000/");
+    cy.wait(2000);
+    cy.get('[data-cy="MyJobs-test"]').click();
+    cy.wait(2000);
+    cy.get(
+      ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
+    )
+      .first()
+      .click();
+    cy.get('.css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)').click();
+    cy.get('.MuiDialogActions-root > a > .MuiButtonBase-root').click();
+  })
+});
