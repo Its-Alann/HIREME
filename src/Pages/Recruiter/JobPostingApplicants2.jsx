@@ -29,6 +29,8 @@ import {
   getDoc,
   updateDoc,
   getDocs,
+  query,
+  where,
   collection,
 } from "firebase/firestore";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -63,52 +65,76 @@ export const JobPostingApplicants2 = () => {
   const [open, setOpen] = useState(false);
   const [openRemoveJob, setOpenRemoveJob] = useState(false);
 
-  const getApplicationStatuses = async (listOfApplicants) => {
+  const getApplicationStatuses = async (jobIDfromJOB) => {
     //console.log(listOfApplicants);
 
     const tempArray = [];
 
-    if (listOfApplicants != null) {
-      await Promise.all(
-        listOfApplicants.map(async (applicant) => {
-          const applicantSnapshot = await getDoc(
-            doc(db, "applications", applicant)
-          );
-          const applicantApplications = applicantSnapshot.data().jobs;
-
-          const applicantNameSnapshot = await getDoc(
-            doc(db, "userProfiles", applicant)
-          );
-
-          let applicationStatus = "";
-          applicantApplications.forEach((jobApplication) => {
-            if (jobApplication.jobID === pageJobID) {
-              applicationStatus = jobApplication.status;
-            }
-          });
-
-          tempArray.push({
-            applicantId: applicant,
-            applicantStatus: applicationStatus,
-            applicantFirstName: applicantNameSnapshot.data().values.firstName,
-            applicantLastName: applicantNameSnapshot.data().values.lastName,
-          });
-        })
-      );
-    } else {
+    const q = query(
+      collection(db, "applications2"),
+      where("jobID", "==", jobIDfromJOB)
+    );
+    if (q === undefined) {
       console.log("no applicants");
     }
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (docJob) => {
+      console.log(docJob.id, " => ", docJob.data());
+      const applicationStatus = docJob.data().status;
+      const applicant = docJob.data().applicantEmail;
+      const applicantNameSnapshot = await getDoc(
+        doc(db, "userProfiles2", applicant)
+      );
+      tempArray.push({
+        applicantId: jobIDfromJOB,
+        applicantStatus: applicationStatus,
+        applicantFirstName: applicantNameSnapshot.data().values.firstName,
+        applicantLastName: applicantNameSnapshot.data().values.lastName,
+      });
+    });
+
     setApplicants(tempArray);
+
+    // if (listOfApplicants != null) {
+    //   await Promise.all(
+    //     listOfApplicants.map(async (applicant) => {
+    //       const applicantSnapshot = await getDoc(
+    //         doc(db, "applications2", applicant)
+    //       );
+    //       const applicantApplications = applicantSnapshot.data().jobs;
+
+    //       const applicantNameSnapshot = await getDoc(
+    //         doc(db, "userProfiles2", applicant)
+    //       );
+
+    //       let applicationStatus = "";
+    //       applicantApplications.forEach((jobApplication) => {
+    //         if (jobApplication.jobID === pageJobID) {
+    //           applicationStatus = jobApplication.status;
+    //         }
+    //       });
+
+    //       tempArray.push({
+    //         applicantId: applicant,
+    //         applicantStatus: applicationStatus,
+    //         applicantFirstName: applicantNameSnapshot.data().values.firstName,
+    //         applicantLastName: applicantNameSnapshot.data().values.lastName,
+    //       });
+    //     })
+    //   );
+    // } else {
+    //   console.log("no applicants");
+    // }
   };
 
   const getJobData = async () => {
     try {
       // Gets the job data using the jobID from the URL
-      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID));
+      const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
       const jobData = jobsSnapshot.data();
       setJob(jobData);
       //console.log(jobData);
-      await getApplicationStatuses(jobData.applicants);
+      await getApplicationStatuses(pageJobID);
     } catch (error) {
       console.log(error);
     }
@@ -117,19 +143,16 @@ export const JobPostingApplicants2 = () => {
   const getCompanyName = async () => {
     try {
       // Gets the name of the company from the companyID in job data
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+      const companySnapshot = await getDoc(
+        doc(db, "companies2", pageCompanyID)
+      );
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
+      setCompaniesLogo(companySnapshot.data().logoPath);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // loads the logo of a company
-  async function loadLogoCompany() {
-    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
-    setCompaniesLogo(querySnapshot.data().logoPath);
-  }
 
   useEffect(() => {
     console.log(5);
@@ -140,7 +163,6 @@ export const JobPostingApplicants2 = () => {
       .catch((err) => {
         console.log(err);
       });
-    loadLogoCompany();
   }, []);
 
   // Handle modal operations for remove job
@@ -165,37 +187,64 @@ export const JobPostingApplicants2 = () => {
     const applicantId = selectedApplicantId;
     const jobId = pageJobID;
 
+    const q = query(
+      collection(db, "applications2"),
+      where("applicantEmail", "==", applicantId)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (docApplicant) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(docApplicant.id, " => ", docApplicant.data());
+      let applicantApplications = docApplicant.data();
+      const applicationStatusToUpdate = {
+        address: applicantApplications.address,
+        email: applicantApplications.email,
+        jobID: jobId,
+        phoneNumber: applicantApplications.phoneNumber,
+        status: newApplicationStatus,
+      };
+      applicantApplications = applicationStatusToUpdate;
+      const applicantRef = doc(db, "applications2", applicantId);
+      const applicantSnapshot = await getDoc(
+        doc(db, "applications2", applicantId)
+      );
+      await updateDoc(applicantRef, { jobs: applicantApplications })
+        .then(() => {
+          console.log("Status updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating status", error);
+        });
+    });
     // 2. Update doc
     // Change database to directly update doc instead of iterate through the whole array
-    const applicantRef = doc(db, "applications", applicantId);
-    const applicantSnapshot = await getDoc(
-      doc(db, "applications", applicantId)
-    );
-    const applicantApplications = applicantSnapshot.data().jobs;
-    console.log(applicantApplications);
+
+    // const applicantApplications = applicantSnapshot.data().jobs;
+    // console.log(applicantApplications);
 
     // get index in array to update
-    const applicationIndex = applicantApplications.findIndex(
-      (jobIndex) => jobIndex.jobID === jobId
-    );
+    // const applicationIndex = applicantApplications.findIndex(
+    //   (jobIndex) => jobIndex.jobID === jobId
+    // );
 
-    const applicationStatusToUpdate = {
-      address: applicantApplications[applicationIndex].address,
-      email: applicantApplications[applicationIndex].email,
-      jobID: jobId,
-      phoneNumber: applicantApplications[applicationIndex].phoneNumber,
-      status: newApplicationStatus,
-    };
+    // const applicationStatusToUpdate = {
+    //   address: applicantApplications[applicationIndex].address,
+    //   email: applicantApplications[applicationIndex].email,
+    //   jobID: jobId,
+    //   phoneNumber: applicantApplications[applicationIndex].phoneNumber,
+    //   status: newApplicationStatus,
+    // };
 
-    applicantApplications[applicationIndex] = applicationStatusToUpdate;
+    // applicantApplications[applicationIndex] = applicationStatusToUpdate;
 
-    await updateDoc(applicantRef, { jobs: applicantApplications })
-      .then(() => {
-        console.log("Array index updated successfully!");
-      })
-      .catch((error) => {
-        console.error("Error updating array index: ", error);
-      });
+    // await updateDoc(applicantRef, { jobs: applicantApplications })
+    //   .then(() => {
+    //     console.log("Array index updated successfully!");
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error updating array index: ", error);
+    //   });
 
     handleClose(); // close the modal
     window.location.reload();
@@ -212,12 +261,12 @@ export const JobPostingApplicants2 = () => {
 
   // Remove job from backend
   const removeJobFromJobs = async () => {
-    await deleteDoc(doc(db, "jobs", pageJobID));
+    await deleteDoc(doc(db, "jobs2", pageJobID));
   };
 
   const removeJobFromCompany = async () => {
     // Delete doc in companies where jobID = pageJobID
-    const companyRef = doc(db, "companies", pageCompanyID);
+    const companyRef = doc(db, "companies2", pageCompanyID);
     const companySnapshot = await getDoc(companyRef);
     const companyData = companySnapshot.data().jobs;
     const companyJobIndex = companyData.findIndex(
@@ -231,7 +280,7 @@ export const JobPostingApplicants2 = () => {
 
   const removeJobFromRecruiter = async () => {
     // Delete doc in recruiters
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
+    const recruiterRef = doc(db, "recruiters2", auth.currentUser.uid);
     const recruiterSnapshot = await getDoc(recruiterRef);
     const recruiterData = recruiterSnapshot.data().jobs;
     const recruiterJobIndex = recruiterData.findIndex(
@@ -244,30 +293,44 @@ export const JobPostingApplicants2 = () => {
   };
 
   const removeJobFromApplicants = async () => {
-    // Delete doc in applicants
-    const applicantsSnapshot = await getDocs(collection(db, "applications"));
-    const allApplicants = applicantsSnapshot.docs.map((document) => ({
-      id: document.id,
-      ...document.data(),
-    }));
+    const jobId = pageJobID;
 
-    allApplicants.forEach(async (applicant) => {
-      const listOfApplications = applicant.jobs;
-      const applicationJobIndex = listOfApplications.findIndex(
-        (jobIndex) => jobIndex.jobID === pageJobID
-      );
-      if (applicationJobIndex !== -1) {
-        const applicantRef = await doc(db, "applications", applicant.id);
-        listOfApplications.splice(applicationJobIndex, 1);
-        await updateDoc(applicantRef, { jobs: listOfApplications });
-      }
+    const q = query(
+      collection(db, "applications2"),
+      where("jobID", "==", jobId)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (docJob) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(docJob.id, " => ", docJob.data());
+      await deleteDoc(doc(db, "applications2", docJob.id));
     });
+
+    // Delete doc in applicants
+    // const applicantsSnapshot = await getDocs(collection(db, "applications2"));
+    // const allApplicants = applicantsSnapshot.docs.map((document) => ({
+    //   id: document.id,
+    //   ...document.data(),
+    // }));
+
+    // allApplicants.forEach(async (applicant) => {
+    //   const listOfApplications = applicant.jobs;
+    //   const applicationJobIndex = listOfApplications.findIndex(
+    //     (jobIndex) => jobIndex.jobID === pageJobID
+    //   );
+    //   if (applicationJobIndex !== -1) {
+    //     const applicantRef = await doc(db, "applications2", applicant.id);
+    //     listOfApplications.splice(applicationJobIndex, 1);
+    //     await updateDoc(applicantRef, { jobs: listOfApplications });
+    //   }
+    // });
   };
 
   const deleteJob = async () => {
-    removeJobFromJobs();
-    removeJobFromCompany();
-    removeJobFromRecruiter();
+    // removeJobFromJobs();
+    // removeJobFromCompany();
+    // removeJobFromRecruiter();
     removeJobFromApplicants();
   };
 

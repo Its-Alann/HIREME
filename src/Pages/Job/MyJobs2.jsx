@@ -148,7 +148,6 @@ export const MyJobs2 = () => {
           This Page list all jobs belong to me, {jobsPerPage} per page. Only I
           should be able to see the page.
         </Typography>
-        {console.log(jobs)}
         {jobs.map((job) => {
           // Anti eslint
           const hello = "hello";
