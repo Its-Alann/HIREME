@@ -121,18 +121,17 @@ const JobApplication2 = () => {
   // Adds the job application information to the applications collection on Firestore. Appends to user's
   // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
-    const applicationsRef = doc(db, "applications", currentUserEmail);
+    const applicationsRef = doc(db, "applications2");
     setDoc(
       applicationsRef,
       // eslint-disable-next-line no-undef
       {
-        jobs: arrayUnion({
-          jobID: URLjobID,
-          status: "pending",
-          email,
-          phoneNumber,
-          address,
-        }),
+        jobID: URLjobID,
+        status: "pending",
+        email,
+        applicantEmail: currentUserEmail,
+        phoneNumber,
+        address,
       },
       { merge: true }
     );
