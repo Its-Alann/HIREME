@@ -29,20 +29,7 @@ import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfi
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 
-const SendChat = ({ conversationID, myUser, selectedIndex }) => {
-  // const SendChat = ({ conversationID }) => {
-  const [messageContent, setMessageContent] = useState("");
-  const [url, setUrl] = useState();
-  const [showPicker, setShowPicker] = useState(false);
-
-  const [file, setFile] = useState();
-
-  const [isUploading, setIsUploading] = useState(false);
-
-  const [fileStorageRef, setFileStorageRef] = useState();
-
-  const [uploadProgress, setUploadProgress] = useState(0);
-
+const EmojiPickerButton = ({ setShowPicker, setMessageContent }) => {
   //code for select emoji
 
   const onEmojiClick = (emojiData, event) => {
@@ -50,7 +37,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     setShowPicker(false);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,6 +51,51 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   const id = open ? "simple-popover" : undefined;
 
   //end
+  return (
+    <>
+      <IconButton
+        aria-describedby={id}
+        onClick={handleClick}
+        variant="contained"
+      >
+        <SentimentSatisfiedOutlinedIcon color="primary" />
+      </IconButton>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+      >
+        <EmojiPicker
+          pickerStyle={{ width: "100%" }}
+          onEmojiClick={onEmojiClick}
+        />
+      </Popover>
+    </>
+  );
+};
+
+const SendChat = ({ conversationID, myUser, selectedIndex }) => {
+  // const SendChat = ({ conversationID }) => {
+  const [messageContent, setMessageContent] = useState("");
+  const [url, setUrl] = useState();
+  const [showPicker, setShowPicker] = useState(false);
+
+  const [file, setFile] = useState();
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const [fileStorageRef, setFileStorageRef] = useState();
+
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const uploadFile = () => {
     if (!file) return;
@@ -221,35 +253,6 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
                 value={messageContent}
                 sx={{ m: 0 }}
               />
-
-              <Button
-                aria-describedby={id}
-                onClick={handleClick}
-                sx={{ marginLeft: "10px" }}
-              >
-                <SentimentSatisfiedOutlinedIcon />
-              </Button>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-              >
-                <Typography sx={{ p: 2 }}>
-                  <EmojiPicker
-                    pickerStyle={{ width: "100%" }}
-                    onEmojiClick={onEmojiClick}
-                  />
-                </Typography>
-              </Popover>
             </Box>
           )}
         </Grid>
@@ -269,7 +272,20 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             />
           </Grid>
         )}
-
+        {!file && (
+          <Grid
+            xs={1}
+            align="center"
+            justifyContent="center"
+            sx={{ display: "flex", height: 56 }}
+          >
+            <EmojiPickerButton
+              data-cy="emojiPickerButton"
+              setMessageContent={setMessageContent}
+              setShowPicker={setShowPicker}
+            />
+          </Grid>
+        )}
         <Grid
           xs={1}
           align="center"
@@ -286,7 +302,6 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             onClick={async () => {
               await handleSend();
             }}
-            // sx={{ p: 1 }}
           >
             <SendRoundedIcon color="primary" />
           </IconButton>
@@ -300,6 +315,11 @@ SendChat.propTypes = {
   conversationID: PropTypes.string,
   myUser: PropTypes.string, //email
   selectedIndex: PropTypes.number,
+};
+
+EmojiPickerButton.propTypes = {
+  setMessageContent: PropTypes.func,
+  setShowPicker: PropTypes.func,
 };
 
 export default SendChat;
