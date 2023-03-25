@@ -11,6 +11,7 @@ import {
   collection,
   doc,
   getDoc,
+  addDoc,
   arrayUnion,
   writeBatch,
 } from "firebase/firestore";
@@ -24,7 +25,6 @@ export const CreateJob2 = () => {
     companyID: "",
     deadline: new Date(),
     description: "",
-    location: "",
     country: "",
     city: "",
     owner: "",
@@ -40,32 +40,20 @@ export const CreateJob2 = () => {
   async function handleSubmit() {
     // Here we are updating different document
     // With batch, either all of the updates succeed or none.
-    const batch = writeBatch(db);
+    // const batch = writeBatch(db);
 
-    const jobDocumentRef = doc(collection(db, "jobs"));
-    batch.set(jobDocumentRef, jobInformation);
+    // const jobDocumentRef = doc(collection(db, "jobs2"));
+    // batch.set(jobDocumentRef, jobInformation);
 
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
-    batch.update(recruiterRef, {
-      jobs: arrayUnion({
-        jobID: jobDocumentRef.id,
-        publishedAt: jobInformation.publishedAt,
-      }),
+    // await batch.commit();
+    await addDoc(collection(db, "jobs2"), {
+      ...jobInformation,
     });
-
-    const companyRef = doc(db, "companies", jobInformation.companyID);
-    batch.update(companyRef, {
-      jobs: arrayUnion({
-        jobID: jobDocumentRef.id,
-        publishedAt: jobInformation.publishedAt,
-      }),
-    });
-    await batch.commit();
   }
 
   // We need to include Recruiter ID & their company ID in the new Job
   async function getCompanyIDAndRecruiterID() {
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
+    const recruiterRef = doc(db, "recruiters2", auth.currentUser.uid);
     const recruiterSnapshot = await getDoc(recruiterRef);
     if (recruiterSnapshot.exists()) {
       const companyID = recruiterSnapshot.data().workFor;
@@ -73,7 +61,7 @@ export const CreateJob2 = () => {
         console.log("current recruiter's company ID not exist");
         return;
       }
-      const companyRef = doc(db, "companies", companyID);
+      const companyRef = doc(db, "companies2", companyID);
       const companySnapshot = await getDoc(companyRef);
       if (companySnapshot.exists()) {
         setJobInformation({
@@ -194,24 +182,6 @@ export const CreateJob2 = () => {
             </Box>
           </Stack>
 
-          {/* <Box>
-            <Typography>Location</Typography>
-            <TextField
-              required
-              id="TextField-Location"
-              variant="standard"
-              placeholder="Location"
-              fullWidth
-              value={jobInformation.location}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  location: e.target.value,
-                })
-              }
-            />
-          </Box> */}
-
           <Box>
             <Typography>Job description</Typography>
             {/*<TextField
@@ -299,7 +269,7 @@ export const CreateJob2 = () => {
           </Box>
         </Stack>
 
-        <Link to="/myJobs">
+        <Link to="/myJobs2">
           <Button
             variant="contained"
             size="medium"

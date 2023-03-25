@@ -40,7 +40,7 @@ export const BrowseJobs2 = () => {
   // these will be selected.
   // then shown in reverse order.
   const initialJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     limitToLast(jobsPerPage)
   );
@@ -64,7 +64,7 @@ export const BrowseJobs2 = () => {
   // L F
   // 1 & 2 become the new lastJob & firstJob
   const nextJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     endBefore(lastJob),
     limitToLast(jobsPerPage)
@@ -78,7 +78,7 @@ export const BrowseJobs2 = () => {
   //     L       F
   // 3 & 7 become the new lastJob & firstJob
   const previousJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     startAfter(firstJob),
     limit(jobsPerPage)
@@ -113,31 +113,24 @@ export const BrowseJobs2 = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
+    const temp2 = companiesLogo;
+
     jobs.forEach(async (job) => {
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies", job.companyID);
+        const companyRef = doc(db, "companies2", job.companyID);
         const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
-        setCompaniesName({ ...temp });
-      }
-    });
-  }
+        temp2[job.companyID] = companySnapshot.data().logoPath;
 
-  // Load the logo of each company that has job listings
-  function loadLogoCompany() {
-    const temp = companiesLogo;
-    jobs.forEach(async (job) => {
-      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
-      temp[job.companyID] = querySnapshot.data().logoPath;
-      // triggers a re-render and display the newly loaded logos
-      setCompaniesLogo({ ...temp });
+        setCompaniesName({ ...temp });
+        setCompaniesLogo({ ...temp2 });
+      }
     });
   }
 
   React.useEffect(() => {
     getCompaniesName();
-    loadLogoCompany();
   }, [jobs]);
 
   React.useEffect(() => {
@@ -213,7 +206,7 @@ export const BrowseJobs2 = () => {
                       id={`Button-${job.documentID}`}
                     >
                       <Link
-                        to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+                        to={`/viewJobPosting2/${job.companyID}/${job.documentID}`}
                         className="link"
                         underline="none"
                         style={{ textDecoration: "none" }}
