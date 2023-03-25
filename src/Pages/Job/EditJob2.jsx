@@ -82,7 +82,7 @@ export const EditJob2 = () => {
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Edit Job
+          Edit Job 2
         </Typography>
         <Typography>
           This Page shows a single Job@aposs information & allow the owner to

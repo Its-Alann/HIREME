@@ -137,7 +137,7 @@ export const JobPosting2 = () => {
                       underline="none"
                       style={{ textDecoration: "none" }}
                     >
-                      {console.log("thiws is the job:", job)} Apply
+                      {console.log("thiws is the job:", job)} Apply 2
                     </Link>
                   </Button>
                   <StarOutlineIcon />

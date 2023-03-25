@@ -409,7 +409,7 @@ export const JobPostingApplicants2 = () => {
           <Card variant="outlined">
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
-                <Typography variant="h4">Applicants</Typography>
+                <Typography variant="h4">Applicants 2</Typography>
 
                 {applicants !== null && applicants.length > 0 ? (
                   applicants.map((applicant) => {

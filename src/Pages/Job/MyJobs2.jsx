@@ -162,7 +162,7 @@ export const MyJobs2 = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          My Jobs
+          My Jobs 2
         </Typography>
         <Typography>
           This Page list all jobs belong to me, {jobsPerPage} per page. Only I
