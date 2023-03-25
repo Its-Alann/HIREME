@@ -180,7 +180,7 @@ export const ViewMyApp2 = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          My Application
+          My Application 2
         </Typography>
         {/* {getJobTitle("4QwjqeYxPRuDw7fOnKBj")}; */}
         {myApplications.map((job) => {

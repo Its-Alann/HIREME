@@ -102,7 +102,7 @@ export const CreateJob2 = () => {
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Job Creation
+          Job Creation 2
         </Typography>
         {/* is this supposed to be a public comment? */}
         <Typography gutterBottom>
