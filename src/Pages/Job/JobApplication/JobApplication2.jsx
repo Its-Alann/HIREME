@@ -163,7 +163,7 @@ const JobApplication2 = () => {
   // Gets the job title from Firestore jobs collection
   const getJobTitle = async () => {
     try {
-      const docSnap = await getDoc(doc(db, "jobs", URLjobID));
+      const docSnap = await getDoc(doc(db, "jobs2", URLjobID));
       const jobData = docSnap.data();
       setJobTitle(jobData.title);
     } catch (error) {
@@ -174,7 +174,7 @@ const JobApplication2 = () => {
   // Gets the company name from Firestore companies collection
   const getCompanyName = async () => {
     try {
-      const docSnap = await getDoc(doc(db, "companies", URLcompanyID));
+      const docSnap = await getDoc(doc(db, "companies2", URLcompanyID));
       const jobData = docSnap.data();
       setCompanyName(jobData.name);
     } catch (error) {

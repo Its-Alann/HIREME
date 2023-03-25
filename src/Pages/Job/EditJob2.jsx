@@ -24,7 +24,6 @@ export const EditJob2 = () => {
     companyID: "",
     deadline: new Date(),
     description: "",
-    location: "",
     owner: "",
     country: "",
     city: "",
@@ -36,7 +35,7 @@ export const EditJob2 = () => {
   const [companyName, setCompanyName] = React.useState("");
 
   async function getJob() {
-    const jobRef = doc(db, "jobs", jobID);
+    const jobRef = doc(db, "jobs2", jobID);
     const jobSnapshot = await getDoc(jobRef);
     if (jobSnapshot.exists()) {
       setJobInformation({
@@ -50,7 +49,7 @@ export const EditJob2 = () => {
 
   async function getCompanyName() {
     if (jobInformation.companyID) {
-      const companyRef = doc(db, "companies", jobInformation.companyID);
+      const companyRef = doc(db, "companies2", jobInformation.companyID);
       const companySnapshot = await getDoc(companyRef);
       if (companySnapshot.exists()) {
         setCompanyName(companySnapshot.data().name);
@@ -61,7 +60,7 @@ export const EditJob2 = () => {
   }
 
   async function handleSubmit() {
-    const jobRef = doc(db, "jobs", jobID);
+    const jobRef = doc(db, "jobs2", jobID);
     await updateDoc(jobRef, jobInformation);
   }
 
@@ -171,24 +170,6 @@ export const EditJob2 = () => {
               />
             </Box>
           </Stack>
-
-          {/* <Box>
-            <Typography>Location</Typography>
-            <TextField
-              required
-              id="TextField-Location"
-              variant="standard"
-              placeholder="Location"
-              fullWidth
-              value={jobInformation.location}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  location: e.target.value,
-                })
-              }
-            />
-          </Box> */}
 
           <Box>
             <Typography>Job description</Typography>
