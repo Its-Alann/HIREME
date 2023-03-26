@@ -39,7 +39,7 @@ jobs:
       - name: Serve production build
         run: |
           npm install -g serve
-          npx serve -s react-github-actions-build -l 3000 &
-          working-directory: react-github-actions-build
+          cd react-github-actions-build
+          npx serve -s . -l 3000 &
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
