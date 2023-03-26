@@ -15,18 +15,48 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Start server
-      run: |
-        npm ci
-        npm start
-        wait-on http://localhost:3000
-        wait-on-timeout: 120
-  cypress_tests:
+      
+  admin_tests:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
+        with:
+          install: false
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          spec: cypress\e2e\admin
+          
+  jobs_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v5.4.0
+        with:
+          install: false
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          spec: cypress\e2e\jobs
+  
+  recruiters_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v5.4.0
+        with:
+          install: false
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          spec: cypress\e2e\recruiters
