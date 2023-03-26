@@ -85,7 +85,9 @@ jobs:
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
           spec: cypress/e2e/users       
+  
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy app to Firebase
+        uses: actions/checkout@v3
