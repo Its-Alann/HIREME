@@ -19,7 +19,7 @@ jobs:
         run: npm install
       - name: Start server
         with: 
-          start: npm start
+          run: npm start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
       - name: Cypress run
