@@ -40,5 +40,6 @@ jobs:
         run: |
           npm install -g serve
           npx serve -s react-github-actions-build -l 3000 &
+          working-directory: react-github-actions-build
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
