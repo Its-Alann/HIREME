@@ -18,9 +18,7 @@ jobs:
     - name: Start server
       run: |
         npm ci
-        npm start & npx wait-on http://localhost:3000
-      env:
-        CI: true      
+        npm start & npx wait-on http://localhost:3000     
   cypress_tests:
     runs-on: ubuntu-latest
     timeout-minutes: 20
