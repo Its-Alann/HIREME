@@ -1,6 +1,11 @@
 name: Build and Deploy
 
 on:
+  workflow_run:
+    workflows: ["Cypress Tests"]
+    branches: [main]
+    types: 
+      - completed
   push:
     branches:
       [ main ]
