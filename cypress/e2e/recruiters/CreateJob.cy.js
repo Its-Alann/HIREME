@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 beforeEach(() => {
   cy.viewport(1920, 1080);
 });
@@ -31,6 +32,7 @@ describe("Creates a new job", () => {
     // somehow cannot get date picker by id
     // cy.get("#DatePicker-Deadline").click();
     cy.get("#Button-Save").click();
+    cy.wait(1000);
   });
 });
 
@@ -45,7 +47,7 @@ describe("Delete the new job", () => {
     )
       .first()
       .click();
-    cy.get('.css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)').click();
-    cy.get('.MuiDialogActions-root > a > .MuiButtonBase-root').click();
-  })
+    cy.get(".css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)").click();
+    cy.get(".MuiDialogActions-root > a > .MuiButtonBase-root").click();
+  });
 });

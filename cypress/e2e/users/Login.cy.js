@@ -1,6 +1,6 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 import { expect } from "chai";
-import { auth } from "../../src/Firebase/firebase";
+import { auth } from "../../../src/Firebase/firebase";
 
 describe("Testing the login feature", () => {
   beforeEach(() => {
