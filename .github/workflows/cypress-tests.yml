@@ -25,7 +25,6 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
-          install: false
           start: npm start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
@@ -40,7 +39,6 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
-          install: false
           start: npm start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
@@ -55,7 +53,6 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
-          install: false
           start: npm start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
