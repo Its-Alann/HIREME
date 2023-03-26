@@ -26,20 +26,10 @@ jobs:
         path: build
           
   cypress_tests:
-    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Get artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: react-github-actions-build
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Serve production build
-        run: |
-          npm install -g serve
-          cd react-github-actions-build
-          npx serve -s . -l 3000 &
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
