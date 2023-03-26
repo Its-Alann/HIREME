@@ -22,6 +22,7 @@ jobs:
     strategy:
       matrix:
         spec: [admin, jobs, recruiters, ui, users]
+      fail-fast: false
     timeout-minutes: 20
     steps:
       - name: Checkout
