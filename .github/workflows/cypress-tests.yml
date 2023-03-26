@@ -28,7 +28,7 @@ jobs:
       - name: Serve production build
         run: |
           npm install -g serve
-          serve -s build --no-clipboard
+          serve -s build &
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
