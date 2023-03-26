@@ -8,7 +8,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { auth } from "../../../src/Firebase/firebase";
+import { auth } from "../../src/Firebase/firebase";
 
 const deleteSignedUser = async (password) => {
   const credential = EmailAuthProvider.credential(

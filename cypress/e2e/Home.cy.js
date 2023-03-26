@@ -1,6 +1,6 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../src/Firebase/firebase";
+import { db } from "../../src/Firebase/firebase";
 
 beforeEach(() => {
   cy.viewport(1920, 1080);
