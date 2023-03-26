@@ -22,7 +22,7 @@ jobs:
     - name: Serve production build
       run: |
         npm install -g serve
-        serve -s build
+        serve -s build --no-clipboard
           
   cypress_tests:
     needs: build
