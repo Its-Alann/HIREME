@@ -25,6 +25,7 @@ jobs:
         serve -s build
           
   cypress_tests:
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
