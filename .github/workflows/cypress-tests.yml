@@ -13,22 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Build
-      run: |
-        npm ci
-        npm run build
-    - name: Share artifact inside workflow
-      uses: actions/upload-artifact@v1
-      with:
-        name: react-github-actions-build
-        path: build
     - name: Start server
-      run: npm start
-      env:
-        CI: true
-        
+      run: npm start &        
   cypress_tests:
     runs-on: ubuntu-latest
     timeout-minutes: 20
