@@ -24,12 +24,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    steps:
-      - name: Serve production build
-        run: |
-          npm install -g serve
-          serve -s build &
-          
+    steps:         
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
