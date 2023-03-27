@@ -37,6 +37,7 @@ export const EditJob2 = () => {
   async function getJob() {
     const jobRef = doc(db, "jobs2", jobID);
     const jobSnapshot = await getDoc(jobRef);
+    console.log(jobSnapshot.data());
     if (jobSnapshot.exists()) {
       setJobInformation({
         ...jobSnapshot.data(),
@@ -84,7 +85,7 @@ export const EditJob2 = () => {
           Edit Job 2
         </Typography>
         <Typography>
-          This Page shows a single Job@aposs information & allow the owner to
+          This Page shows a single Job&apos;s information & allow the owner to
           edit them
         </Typography>
 
@@ -242,7 +243,7 @@ export const EditJob2 = () => {
           </Box>
         </Stack>
         <Link
-          to={`/viewJobPostingApplicants/${jobInformation.companyID}/${jobID}`}
+          to={`/viewJobPostingApplicants2/${jobInformation.companyID}/${jobID}`}
         >
           <Button
             variant="contained"
