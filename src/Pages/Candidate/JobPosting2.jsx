@@ -28,12 +28,12 @@ export const JobPosting2 = () => {
   const getJobData = async () => {
     try {
       // Gets the job data using the jobID from the URL
-      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID));
-      console.log(pageJobID);
+      const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
+      //console.log(pageJobID);
       const jobData = jobsSnapshot.data();
       setJob(jobData);
 
-      console.log(jobData);
+      //console.log(jobData);
     } catch (error) {
       console.log(error);
     }
@@ -42,25 +42,21 @@ export const JobPosting2 = () => {
   // gets the coompany name froom the coompanies collection based on the coompanyID
   const getCompanyName = async () => {
     try {
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+      const companySnapshot = await getDoc(
+        doc(db, "companies2", pageCompanyID)
+      );
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
+      setCompaniesLogo(companyData.logoPath);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // loads the logo of a company
-  async function loadLogoCompany() {
-    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
-    setCompaniesLogo(querySnapshot.data().logoPath);
-  }
-
   // calling 2 methods
   useEffect(() => {
     getJobData();
     getCompanyName();
-    loadLogoCompany();
   }, []);
 
   // returns the job posting with the apply button
@@ -132,12 +128,13 @@ export const JobPosting2 = () => {
                     }}
                   >
                     <Link
-                      to={`/jobApplication/${job.companyID}/${pageJobID}`}
+                      to={`/jobApplication2/${job.companyID}/${pageJobID}`}
                       className="link"
                       underline="none"
                       style={{ textDecoration: "none" }}
                     >
-                      {console.log("thiws is the job:", job)} Apply 2
+                      {/* {console.log("thiws is the job:", job)}*/}
+                      Apply 2
                     </Link>
                   </Button>
                   <StarOutlineIcon />
@@ -154,6 +151,10 @@ export const JobPosting2 = () => {
               <Box>
                 <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
                 <Typography>{job.requirement}</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                <Typography>{job.benefits}</Typography>
               </Box>
             </Stack>
           </Box>
