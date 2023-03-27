@@ -8,15 +8,16 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import FileUpload from "../../../Components/FileUpload/FileUpload";
 import { db } from "../../../Firebase/firebase";
 
 const JobApplication2 = () => {
+  const navigate = useNavigate();
   // Define the MUI theme to be used in the component
   const theme = createTheme({
     palette: {
@@ -121,9 +122,8 @@ const JobApplication2 = () => {
   // Adds the job application information to the applications collection on Firestore. Appends to user's
   // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
-    const applicationsRef = doc(db, "applications2");
-    setDoc(
-      applicationsRef,
+    addDoc(
+      collection(db, "applications2"),
       // eslint-disable-next-line no-undef
       {
         jobID: URLjobID,
@@ -157,6 +157,7 @@ const JobApplication2 = () => {
       uploadDocuments();
       addJobApplication();
       console.log("completed");
+      navigate(`/browseJobs`);
     }
   };
 
@@ -212,12 +213,12 @@ const JobApplication2 = () => {
         }}
       >
         {/* Page title */}
-        <Grid item md={12} sm={12} xs={12}>
+        <Grid item md={12} sm={12} xs={12} sx={{ mt: 4 }}>
           <Typography variant="h3"> Your Application 2</Typography>
         </Grid>
 
         {/* Job title */}
-        <Grid item md={12} sm={12} xs={12}>
+        <Grid item md={12} sm={12} xs={12} sx={{ mt: 2 }}>
           <Typography variant="h6">
             You are applying for: {`${companyName} ${jobTitle}`}
           </Typography>
