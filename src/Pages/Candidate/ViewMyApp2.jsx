@@ -11,6 +11,11 @@ import {
   FieldValue,
   arrayRemove,
   updateDoc,
+  getDocs,
+  query,
+  where,
+  collection,
+  deleteDoc,
 } from "firebase/firestore";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -32,31 +37,15 @@ export const ViewMyApp2 = () => {
 
   // gets all the job information and creates an array of
   //objects containing all needed information
-  const getJobInformation = async (jobId) => {
-    //gets the job statuses from the applications collection
-    const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
-    const usersjobs = applicationsSnapshot.data().jobs;
-    let status1 = "";
-
-    //goes through all jobs and sets the status of a specific jobID
-    usersjobs.forEach(async (item) => {
-      if (jobId === item.jobID) {
-        console.log("LINE 47", item.status);
-        status1 = item.status;
-      }
-    });
-
-    console.log(jobId);
-
+  const getJobInformation = async (jobId, statusApplicant) => {
     //creates jobInformation object and adds it to myApplications
     try {
-      const jobInformationSnapshot = await getDoc(doc(db, "jobs", jobId));
+      const jobInformationSnapshot = await getDoc(doc(db, "jobs2", jobId));
       const jobInformationData = jobInformationSnapshot.data();
-
       const jobInformation = {
         jobTitle: jobInformationData.title,
         jobID: jobId,
-        status: status1,
+        status: statusApplicant,
         companyID: jobInformationData.companyID,
         city: jobInformationData.city,
         country: jobInformationData.country,
@@ -75,12 +64,22 @@ export const ViewMyApp2 = () => {
   // creates a jobInformation object by calling the method
   async function getJobs() {
     //await getMyApplications();
-    const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
-    const applicationsData = applicationsSnapshot.data().jobs;
-    await applicationsData.map((job) =>
-      Promise.all(getJobInformation(job.jobID))
+    const applicationsSnapshot = await getDocs(
+      query(
+        collection(db, "applications2"),
+        where("applicantEmail", "==", myUser)
+      )
     );
-    // console.log(myApplications);
+
+    const applicationsData = applicationsSnapshot.docs.map((docJob) => ({
+      id: docJob.id,
+      ...docJob.data(),
+    }));
+    // const applicationsSnapshot = await getDoc(doc(db, "applications2", myUser));
+    // const applicationsData = applicationsSnapshot.data().jobs;
+    await applicationsData.map((job) =>
+      Promise.all(getJobInformation(job.jobID, job.status))
+    );
   }
 
   // Get companies' name using the companyID of each Job
@@ -88,59 +87,36 @@ export const ViewMyApp2 = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
-    // console.log("IN COMPANIES", jobs);
-    // console.log("IN COMPANIES", myApplications);
+    const temp2 = companiesLogo;
 
     myApplications.forEach(async (job) => {
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies", job.companyID);
+        const companyRef = doc(db, "companies2", job.companyID);
         const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
+        temp2[job.companyID] = companySnapshot.data().logoPath;
         setCompaniesName({ ...temp });
+        setCompaniesLogo({ ...temp2 });
       }
     });
   }
 
-  // Load the logo of each company that has job listings
-  function loadLogoCompany() {
-    const temp = companiesLogo;
-    myApplications.forEach(async (job) => {
-      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
-      temp[job.companyID] = querySnapshot.data().logoPath;
-      // triggers a re-render and display the newly loaded logos
-      setCompaniesLogo({ ...temp });
-    });
-  }
-  // remove the entire row of the job that was selected to be removed
   // remove the applied job linked to the candidate the database
   const handleRemoveJob = async (jobID) => {
     // Implement the logic to remove the job with the given ID
-    // console.log(`Removing job with ID ${jobID}`);
-    // const docRef = db.collection("applications").doc("billybob@gmail.com");
-    const docReffff = doc(db, "applications", myUser);
-    const docRef = await getDoc(docReffff);
-
-    const docSnapshot = docRef.data();
-
-    // console.log(docSnapshot);
-    docRef.data().jobs.forEach(async (element) => {
-      // console.log(element);
-      // console.log(element.jobID);
-      if (element.jobID === jobID) {
-        await updateDoc(docReffff, {
-          jobs: arrayRemove(element),
-          //element.arrayRemove();
-        });
-      }
-    });
-
-    const jobDocumentRef = doc(db, "jobs", jobID);
-
     try {
-      await updateDoc(jobDocumentRef, {
-        applicants: arrayRemove(myUser),
-      });
+      const querySnapshot = await getDocs(
+        query(collection(db, "applications2"), where("jobID", "==", jobID))
+      );
+      const tempArray = querySnapshot.docs.map((docJob) => ({
+        id: docJob.id,
+      }));
+      await Promise.all(
+        tempArray.map(async (applicant) => {
+          await deleteDoc(doc(db, "applications2", applicant.id));
+        })
+      );
       window.location.reload();
     } catch (err) {
       console.log(err);
@@ -163,13 +139,12 @@ export const ViewMyApp2 = () => {
   //set a listener to on the myApplications
   useEffect(() => {
     getCompaniesName();
-    loadLogoCompany();
-    console.log("STOPPPPPPP");
+    console.log("listening of myApplications");
   }, [myApplications]);
 
   //set a listener to on the jobs document
   useEffect(() => {
-    console.log("STOPPPPPPP");
+    console.log("listener of jobs");
     Promise.all([getJobs()]);
   }, [myUser]);
 
