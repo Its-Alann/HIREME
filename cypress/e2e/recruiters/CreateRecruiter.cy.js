@@ -15,7 +15,7 @@ describe("Login to test account", () => {
 describe("Creates a recruiter account", () => {
   it("Creates a recruiter account", () => {
     cy.visit("http://localhost:3000/createRecruiter");
-
+    cy.wait(1000);
     cy.get("#TextField-FirstName").type("Tester First Name");
     cy.get("#TextField-LastName").type("Tester Last Name");
     cy.get("#ComboBox-CompanyList").click();
