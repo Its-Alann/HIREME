@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -7,7 +7,6 @@ import {
   Button,
   Modal,
   Select,
-  Menu,
   MenuItem,
   Typography,
   IconButton,
@@ -35,7 +34,7 @@ import {
 } from "firebase/firestore";
 import Grid from "@mui/material/Unstable_Grid2";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { db, auth } from "../../Firebase/firebase";
+import { db } from "../../Firebase/firebase";
 
 const style = {
   position: "absolute",
@@ -49,6 +48,7 @@ const style = {
 };
 
 export const JobPostingApplicants2 = () => {
+  const navigate = useNavigate();
   const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
 
@@ -57,74 +57,48 @@ export const JobPostingApplicants2 = () => {
   const [applicants, setApplicants] = useState([]);
 
   const [selectedApplicantStatus, setSelectedApplicantStatus] = useState("");
-  const [selectedApplicantId, setSelectedApplicantId] = useState("");
   const [selectedApplicantName, setSelectedApplicantName] = useState("");
+  const [selectedApplicantEmail, setSelectedApplicantEmail] = useState("");
+  const [selectedApplicantDocID, setSelectedApplicantDocID] = useState("");
   const [changedApplicationStatus, setChangedApplicationStatus] = useState("");
   const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const [open, setOpen] = useState(false);
   const [openRemoveJob, setOpenRemoveJob] = useState(false);
+  const tempArray2 = [];
 
-  const getApplicationStatuses = async (jobIDfromJOB) => {
-    //console.log(listOfApplicants);
-
-    const tempArray = [];
-
-    const q = query(
-      collection(db, "applications2"),
-      where("jobID", "==", jobIDfromJOB)
+  const getApplicationStatuses = async () => {
+    const querySnapshot = await getDocs(
+      query(collection(db, "applications2"), where("jobID", "==", pageJobID))
     );
-    if (q === undefined) {
+
+    const tempArray = querySnapshot.docs.map((docJob) => ({
+      id: docJob.id,
+      applicantEmail: docJob.data().applicantEmail,
+      applicationStatus: docJob.data().status,
+    }));
+
+    if (applicants != null) {
+      await Promise.all(
+        tempArray.map(async (applicant) => {
+          const applicantNameSnapshot = await getDoc(
+            doc(db, "userProfiles", applicant.applicantEmail)
+          );
+
+          tempArray2.push({
+            applicantID: applicant.id,
+            applicantStatus: applicant.applicationStatus,
+            applicantFirstName: applicantNameSnapshot.data().values.firstName,
+            applicantLastName: applicantNameSnapshot.data().values.lastName,
+            applicantEmail: applicant.applicantEmail,
+          });
+        })
+      );
+    } else {
       console.log("no applicants");
     }
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (docJob) => {
-      console.log(docJob.id, " => ", docJob.data());
-      const applicationStatus = docJob.data().status;
-      const applicant = docJob.data().applicantEmail;
-      const applicantNameSnapshot = await getDoc(
-        doc(db, "userProfiles2", applicant)
-      );
-      tempArray.push({
-        applicantId: jobIDfromJOB,
-        applicantStatus: applicationStatus,
-        applicantFirstName: applicantNameSnapshot.data().values.firstName,
-        applicantLastName: applicantNameSnapshot.data().values.lastName,
-      });
-    });
 
-    setApplicants(tempArray);
-
-    // if (listOfApplicants != null) {
-    //   await Promise.all(
-    //     listOfApplicants.map(async (applicant) => {
-    //       const applicantSnapshot = await getDoc(
-    //         doc(db, "applications2", applicant)
-    //       );
-    //       const applicantApplications = applicantSnapshot.data().jobs;
-
-    //       const applicantNameSnapshot = await getDoc(
-    //         doc(db, "userProfiles2", applicant)
-    //       );
-
-    //       let applicationStatus = "";
-    //       applicantApplications.forEach((jobApplication) => {
-    //         if (jobApplication.jobID === pageJobID) {
-    //           applicationStatus = jobApplication.status;
-    //         }
-    //       });
-
-    //       tempArray.push({
-    //         applicantId: applicant,
-    //         applicantStatus: applicationStatus,
-    //         applicantFirstName: applicantNameSnapshot.data().values.firstName,
-    //         applicantLastName: applicantNameSnapshot.data().values.lastName,
-    //       });
-    //     })
-    //   );
-    // } else {
-    //   console.log("no applicants");
-    // }
+    setApplicants(tempArray2);
   };
 
   const getJobData = async () => {
@@ -133,8 +107,6 @@ export const JobPostingApplicants2 = () => {
       const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
       const jobData = jobsSnapshot.data();
       setJob(jobData);
-      //console.log(jobData);
-      await getApplicationStatuses(pageJobID);
     } catch (error) {
       console.log(error);
     }
@@ -154,23 +126,13 @@ export const JobPostingApplicants2 = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(5);
-    Promise.all([getJobData(), getCompanyName()])
-      .then(() => {
-        console.log("Finished loading data");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   // Handle modal operations for remove job
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
-  const handleOpen = (status, id, name) => {
+  const handleOpen = (status, fName, lName, email, docID) => {
     setSelectedApplicantStatus(status);
-    setSelectedApplicantId(id);
-    setSelectedApplicantName(name);
+    setSelectedApplicantName(fName + lName);
+    setSelectedApplicantEmail(email);
+    setSelectedApplicantDocID(docID);
     setOpen(true);
   };
 
@@ -182,72 +144,41 @@ export const JobPostingApplicants2 = () => {
 
   const handleSubmit = async () => {
     setSelectedApplicantStatus(changedApplicationStatus);
+
     // 1. Get changed application status and applicant id
     const newApplicationStatus = changedApplicationStatus;
-    const applicantId = selectedApplicantId;
     const jobId = pageJobID;
+    const applicantEmail = selectedApplicantEmail;
+    const applicantDocID = selectedApplicantDocID;
 
-    const q = query(
-      collection(db, "applications2"),
-      where("applicantEmail", "==", applicantId)
+    const querySnapshot = await getDocs(
+      query(
+        collection(db, "applications2"),
+        where("applicantEmail", "==", applicantEmail)
+      )
     );
-
-    const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (docApplicant) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(docApplicant.id, " => ", docApplicant.data());
       let applicantApplications = docApplicant.data();
       const applicationStatusToUpdate = {
         address: applicantApplications.address,
+        applicantEmail,
         email: applicantApplications.email,
         jobID: jobId,
         phoneNumber: applicantApplications.phoneNumber,
         status: newApplicationStatus,
       };
       applicantApplications = applicationStatusToUpdate;
-      const applicantRef = doc(db, "applications2", applicantId);
-      const applicantSnapshot = await getDoc(
-        doc(db, "applications2", applicantId)
-      );
-      await updateDoc(applicantRef, { jobs: applicantApplications })
+      const applicantRef = doc(db, "applications2", applicantDocID);
+
+      await updateDoc(applicantRef, applicantApplications)
         .then(() => {
           console.log("Status updated successfully!");
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Error updating status", error);
         });
     });
-    // 2. Update doc
-    // Change database to directly update doc instead of iterate through the whole array
-
-    // const applicantApplications = applicantSnapshot.data().jobs;
-    // console.log(applicantApplications);
-
-    // get index in array to update
-    // const applicationIndex = applicantApplications.findIndex(
-    //   (jobIndex) => jobIndex.jobID === jobId
-    // );
-
-    // const applicationStatusToUpdate = {
-    //   address: applicantApplications[applicationIndex].address,
-    //   email: applicantApplications[applicationIndex].email,
-    //   jobID: jobId,
-    //   phoneNumber: applicantApplications[applicationIndex].phoneNumber,
-    //   status: newApplicationStatus,
-    // };
-
-    // applicantApplications[applicationIndex] = applicationStatusToUpdate;
-
-    // await updateDoc(applicantRef, { jobs: applicantApplications })
-    //   .then(() => {
-    //     console.log("Array index updated successfully!");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error updating array index: ", error);
-    //   });
-
-    handleClose(); // close the modal
-    window.location.reload();
   };
 
   // Remove job dialog
@@ -260,79 +191,35 @@ export const JobPostingApplicants2 = () => {
   };
 
   // Remove job from backend
-  const removeJobFromJobs = async () => {
-    await deleteDoc(doc(db, "jobs2", pageJobID));
-  };
-
-  const removeJobFromCompany = async () => {
-    // Delete doc in companies where jobID = pageJobID
-    const companyRef = doc(db, "companies2", pageCompanyID);
-    const companySnapshot = await getDoc(companyRef);
-    const companyData = companySnapshot.data().jobs;
-    const companyJobIndex = companyData.findIndex(
-      (jobIndex) => jobIndex.jobID === pageJobID
-    );
-    if (companyJobIndex !== -1) {
-      companyData.splice(companyJobIndex, 1);
-      await updateDoc(companyRef, { jobs: companyData });
-    }
-  };
-
-  const removeJobFromRecruiter = async () => {
-    // Delete doc in recruiters
-    const recruiterRef = doc(db, "recruiters2", auth.currentUser.uid);
-    const recruiterSnapshot = await getDoc(recruiterRef);
-    const recruiterData = recruiterSnapshot.data().jobs;
-    const recruiterJobIndex = recruiterData.findIndex(
-      (jobIndex) => jobIndex.jobID === pageJobID
-    );
-    if (recruiterJobIndex !== -1) {
-      recruiterData.splice(recruiterJobIndex, 1);
-      await updateDoc(recruiterRef, { jobs: recruiterData });
-    }
-  };
-
-  const removeJobFromApplicants = async () => {
+  const removeJobAndApplicants = async () => {
     const jobId = pageJobID;
 
-    const q = query(
-      collection(db, "applications2"),
-      where("jobID", "==", jobId)
+    const querySnapshot = await getDocs(
+      query(collection(db, "applications2"), where("jobID", "==", jobId))
     );
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (docJob) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(docJob.id, " => ", docJob.data());
-      await deleteDoc(doc(db, "applications2", docJob.id));
-    });
+    const tempArray = querySnapshot.docs.map((docJob) => ({
+      id: docJob.id,
+    }));
 
-    // Delete doc in applicants
-    // const applicantsSnapshot = await getDocs(collection(db, "applications2"));
-    // const allApplicants = applicantsSnapshot.docs.map((document) => ({
-    //   id: document.id,
-    //   ...document.data(),
-    // }));
-
-    // allApplicants.forEach(async (applicant) => {
-    //   const listOfApplications = applicant.jobs;
-    //   const applicationJobIndex = listOfApplications.findIndex(
-    //     (jobIndex) => jobIndex.jobID === pageJobID
-    //   );
-    //   if (applicationJobIndex !== -1) {
-    //     const applicantRef = await doc(db, "applications2", applicant.id);
-    //     listOfApplications.splice(applicationJobIndex, 1);
-    //     await updateDoc(applicantRef, { jobs: listOfApplications });
-    //   }
-    // });
+    await Promise.all(
+      tempArray.map(async (docJob) => {
+        await deleteDoc(doc(db, "applications2", docJob.id));
+      })
+    );
+    await deleteDoc(doc(db, "jobs2", jobId));
+    navigate("/myJobs2");
   };
 
-  const deleteJob = async () => {
-    // removeJobFromJobs();
-    // removeJobFromCompany();
-    // removeJobFromRecruiter();
-    removeJobFromApplicants();
-  };
+  useEffect(() => {
+    Promise.all([getJobData(), getCompanyName(), getApplicationStatuses()])
+      .then(() => {
+        console.log("Finished loading data");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Grid container direction="row" alignItems="flex-start" justify="center">
@@ -389,7 +276,7 @@ export const JobPostingApplicants2 = () => {
                   <Box>
                     <Link
                       to={{
-                        pathname: `/editJob/${pageJobID}`,
+                        pathname: `/editJob2/${pageJobID}`,
                       }}
                     >
                       <IconButton>
@@ -419,15 +306,13 @@ export const JobPostingApplicants2 = () => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleCloseRemoveJob}>Cancel</Button>
-                    <Link to="/myJobs" style={{ textDecoration: "none" }}>
-                      <Button
-                        sx={{ color: "red" }}
-                        onClick={deleteJob}
-                        autoFocus
-                      >
-                        Remove
-                      </Button>
-                    </Link>
+                    <Button
+                      sx={{ color: "red" }}
+                      onClick={removeJobAndApplicants}
+                      autoFocus
+                    >
+                      Remove
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
@@ -473,11 +358,9 @@ export const JobPostingApplicants2 = () => {
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
                 <Typography variant="h4">Applicants 2</Typography>
-
                 {applicants !== null && applicants.length > 0 ? (
                   applicants.map((applicant) => {
                     const hello = "hello";
-
                     return (
                       <Stack
                         display="flex"
@@ -497,8 +380,10 @@ export const JobPostingApplicants2 = () => {
                             onClick={() =>
                               handleOpen(
                                 applicant.applicantStatus,
-                                applicant.applicantId,
-                                `${applicant.applicantFirstName} ${applicant.applicantLastName}`
+                                applicant.applicantFirstName,
+                                applicant.applicantLastName,
+                                applicant.applicantEmail,
+                                applicant.applicantID
                               )
                             }
                           >
