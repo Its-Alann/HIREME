@@ -77,7 +77,7 @@ const Messaging = () => {
 
   const getOtherAuthors = async (list) => {
     const nameList = await Promise.all(
-      list.map(async (author) => {
+      list.otherAuthors.map(async (author) => {
         const docSnap = await getDoc(doc(db, "userProfiles", author));
         if (docSnap.exists()) {
           return `${docSnap.data().values.firstName} ${
@@ -88,7 +88,7 @@ const Messaging = () => {
       })
     );
     const names = nameList.filter(Boolean).join(", ");
-    return { names, emails: list };
+    return { names, emails: list.otherAuthors, mostRecent: list.mostRecent };
   };
 
   // get all names of user's receivers
@@ -107,12 +107,23 @@ const Messaging = () => {
     const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
       //list of author lists
       const allAuthorsList = [];
+      //each document is a convo
       querySnapshot.forEach((document) => {
-        allAuthorsList.push(
-          document.data().authors.filter((author) => author !== myUser)
-        );
+        console.log(document.data().messages.at(-1));
+        const data = document.data();
+        const mostRecent = data.messages.at(-1).timestamp.toDate();
+        console.log("mostRecent", mostRecent);
+        console.log("data", data);
+        allAuthorsList.push({
+          otherAuthors: document
+            .data()
+            .authors.filter((author) => author !== myUser),
+          mostRecent,
+        });
       });
 
+      console.log("allAuthorsList", allAuthorsList);
+      console.log(allAuthorsList[0].mostRecent instanceof Date);
       const allChatProfiles = await Promise.all(
         allAuthorsList.map(getOtherAuthors)
       );
@@ -122,6 +133,11 @@ const Messaging = () => {
         emails: ["billybob@gmail.com", "yodiegang@ful.com"]
       }   
       */
+      console.log("before sort", allChatProfiles);
+      allChatProfiles.sort((a, b) =>
+        a.mostRecent < b.mostRecent ? 1 : a.mostRecent > b.mostRecent ? -1 : 0
+      );
+      console.log("allChatProfiles", allChatProfiles);
       setChatProfiles(allChatProfiles);
     });
   };
@@ -285,12 +301,7 @@ const Messaging = () => {
                           src="https://picsum.photos/200/300"
                         />
                       </ListItemAvatar>
-                      <Typography
-                        sx={{ textTransform: "lowercase" }}
-                        variant="body1"
-                      >
-                        {chat.names}
-                      </Typography>
+                      <Typography variant="body1">{chat.names}</Typography>
                     </ListItemButton>
                   ))}
                 </List>
