@@ -11,6 +11,7 @@ import {
   Stack,
   useMediaQuery,
   ListItemButton,
+  ListItemText,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -296,7 +297,10 @@ const Messaging = () => {
                           src="https://picsum.photos/200/300"
                         />
                       </ListItemAvatar>
-                      <Typography variant="body1">{chat.names}</Typography>
+                      <ListItemText
+                        primary={chat.names}
+                        secondary={chat.mostRecent.toDateString()}
+                      />
                     </ListItemButton>
                   ))}
                 </List>
