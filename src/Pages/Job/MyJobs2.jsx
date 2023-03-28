@@ -171,7 +171,7 @@ export const MyJobs2 = () => {
                 alignSelf="center"
                 justifyContent="space-between"
               >
-                Create Job &nbsp;
+                Create Job &nbsp;&nbsp;
                 <PostAddIcon sx={{ fontSize: "25px" }} />
               </Stack>
             </Link>
