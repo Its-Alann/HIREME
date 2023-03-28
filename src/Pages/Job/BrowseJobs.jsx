@@ -40,7 +40,7 @@ export const BrowseJobs = () => {
   // these will be selected.
   // then shown in reverse order.
   const initialJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     limitToLast(jobsPerPage)
   );
@@ -64,7 +64,7 @@ export const BrowseJobs = () => {
   // L F
   // 1 & 2 become the new lastJob & firstJob
   const nextJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     endBefore(lastJob),
     limitToLast(jobsPerPage)
@@ -78,7 +78,7 @@ export const BrowseJobs = () => {
   //     L       F
   // 3 & 7 become the new lastJob & firstJob
   const previousJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     startAfter(firstJob),
     limit(jobsPerPage)
@@ -113,31 +113,26 @@ export const BrowseJobs = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
+    const temp2 = companiesLogo;
+
     jobs.forEach(async (job) => {
+      const companyRef = doc(db, "companies2", job.companyID);
+      const companySnapshot = await getDoc(companyRef);
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies", job.companyID);
-        const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
         setCompaniesName({ ...temp });
       }
-    });
-  }
-
-  // Load the logo of each company that has job listings
-  function loadLogoCompany() {
-    const temp = companiesLogo;
-    jobs.forEach(async (job) => {
-      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
-      temp[job.companyID] = querySnapshot.data().logoPath;
-      // triggers a re-render and display the newly loaded logos
-      setCompaniesLogo({ ...temp });
+      if (companySnapshot.data().logoPath === "") {
+        temp2[job.companyID] =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      setCompaniesLogo({ ...temp2 });
     });
   }
 
   React.useEffect(() => {
     getCompaniesName();
-    loadLogoCompany();
   }, [jobs]);
 
   React.useEffect(() => {
@@ -148,7 +143,7 @@ export const BrowseJobs = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Browse Jobs
+          Browse Jobs 2
         </Typography>
         <Typography>
           This Page list all jobs, {jobsPerPage} per page. Everyone can access
@@ -166,29 +161,16 @@ export const BrowseJobs = () => {
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
                   <Stack direction="row" alignItems="center">
-                    {job.companyID === undefined ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "0.25",
-                          height: "0.25",
-                          mr: 2,
-                        }}
-                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                      />
-                    ) : (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo[job.companyID]}
-                      />
-                    )}
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo[job.companyID]}
+                    />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Typography>{companiesName[job.companyID]}</Typography>

@@ -21,19 +21,20 @@ export const CreateRecruiter = () => {
   async function handleSubmit() {
     console.log(auth.currentUser.uid);
     await setDoc(
-      doc(db, "recruiters", auth.currentUser.uid),
+      doc(db, "recruiters2", auth.currentUser.uid),
       recruiterInformation
     );
   }
 
   async function getCompanies() {
-    const companiesRef = collection(db, "companies");
+    const companiesRef = collection(db, "companies2");
     const companiesQuery = query(companiesRef);
     const queryResultSnapshot = await getDocs(companiesQuery);
     const tempCompanyList = [];
     queryResultSnapshot.forEach((document) => {
       tempCompanyList.push({ id: document.id, label: document.data().name });
     });
+    //console.log(tempCompanyList);
     setCompanyList(tempCompanyList);
   }
 
@@ -45,7 +46,7 @@ export const CreateRecruiter = () => {
     <Container maxWidth="md">
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Recruiter Account Creation
+          Recruiter Account Creation 2
         </Typography>
         <Stack spacing={2}>
           <Box>
