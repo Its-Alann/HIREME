@@ -157,7 +157,7 @@ const JobApplication2 = () => {
       uploadDocuments();
       addJobApplication();
       console.log("completed");
-      navigate(`/browseJobs`);
+      navigate(`/browseJobs2`);
     }
   };
 
