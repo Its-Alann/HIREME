@@ -118,8 +118,10 @@ export const ViewMyApp2 = () => {
       await Promise.all(
         tempArray.map(async (applicant) => {
           await deleteDoc(doc(db, "applications2", applicant.id));
+          console.log(docID.id);
         })
       );
+
       window.location.reload();
     } catch (err) {
       console.log(err);
