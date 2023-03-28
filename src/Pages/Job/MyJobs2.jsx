@@ -16,6 +16,7 @@ import {
   documentId,
   where,
 } from "firebase/firestore";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import { EditJob2 } from "./EditJob2";
 import { CreateJob2 } from "./CreateJob2";
 import { db, auth } from "../../Firebase/firebase";
@@ -141,9 +142,41 @@ export const MyJobs2 = () => {
   return (
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
-        <Typography variant="h4" sx={{ pb: 2 }}>
-          My Jobs 2
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="h4" sx={{ pb: 2 }}>
+            My Jobs 2
+          </Typography>
+          {/* button for recruiter's view */}
+          <Button
+            variant="contained"
+            size="medium"
+            sx={{ my: 1 }}
+            id="create-job"
+            data-cy="view"
+          >
+            <Link
+              to="/createJob2"
+              className="link"
+              underline="none"
+              style={{ textDecoration: "none" }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                alignContent="center"
+                alignSelf="center"
+                justifyContent="space-between"
+              >
+                Create Job &nbsp;
+                <PostAddIcon sx={{ fontSize: "25px" }} />
+              </Stack>
+            </Link>
+          </Button>
+        </Stack>
         <Typography>
           This Page list all jobs belong to me, {jobsPerPage} per page. Only I
           should be able to see the page.
