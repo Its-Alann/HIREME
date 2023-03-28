@@ -120,7 +120,11 @@ export const JobPostingApplicants2 = () => {
       );
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
-      setCompaniesLogo(companySnapshot.data().logoPath);
+      if (companyData.logoPath === "") {
+        companyData.logoPath =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      }
+      setCompaniesLogo(companyData.logoPath);
     } catch (error) {
       console.log(error);
     }
@@ -237,29 +241,16 @@ export const JobPostingApplicants2 = () => {
                     alignItems="center"
                   >
                     <Grid>
-                      {job.companyID === undefined ? (
-                        <Box
-                          component="img"
-                          sx={{
-                            // objectFit: "cover",
-                            width: "0.25",
-                            height: "0.25",
-                            mr: 2,
-                          }}
-                          src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                        />
-                      ) : (
-                        <Box
-                          component="img"
-                          sx={{
-                            // objectFit: "cover",
-                            width: "6rem",
-                            height: "6rem",
-                            mr: 2,
-                          }}
-                          src={companiesLogo}
-                        />
-                      )}
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo}
+                      />
                     </Grid>
                     <Grid>
                       <Box xs={12} sm={12} md={6}>
