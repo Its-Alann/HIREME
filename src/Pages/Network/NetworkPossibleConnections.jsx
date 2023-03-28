@@ -18,31 +18,38 @@ export const NetworkPossibleConnections = () => {
   const [sentInvitationsId, setSentInvitationsId] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
 
   const getPossibleConnections = async (user) => {
     // READ DATA
     try {
+      if (!user || !user.email) {
+        return;
+      }
       //get list of user connections of current user
+      console.log("getpossibleconnections", user.email);
       const networkDocSnap = await getDoc(doc(db, "network", user.email));
-      const currentUserNetworkData = networkDocSnap.data();
-      setConnectedUsersId(currentUserNetworkData.connectedUsers);
+      if (networkDocSnap.exists()) {
+        console.log("exist", user.email);
+        const currentUserNetworkData = networkDocSnap.data();
+        setConnectedUsersId(currentUserNetworkData.connectedUsers);
 
-      //get list of users that the current user sent invitations to
-      const sentInvitationsDocSnap = await getDoc(
-        doc(db, "invitations", user.email)
-      );
-      const sentInvitationsData = sentInvitationsDocSnap.data();
-      setSentInvitationsId(sentInvitationsData.sentInvitations);
+        //get list of users that the current user sent invitations to
+        const sentInvitationsDocSnap = await getDoc(
+          doc(db, "invitations", user.email)
+        );
+        const sentInvitationsData = sentInvitationsDocSnap.data();
+        setSentInvitationsId(sentInvitationsData.sentInvitations);
 
-      // get all users in userProfiles
-      const usersRef = collection(db, "userProfiles");
-      const data = await getDocs(usersRef);
-      const users = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setAllUsers(users);
+        // get all users in userProfiles
+        const usersRef = collection(db, "userProfiles");
+        const data = await getDocs(usersRef);
+        const users = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setAllUsers(users);
+      }
     } catch (err) {
       console.error("err:", err);
     }
@@ -103,13 +110,16 @@ export const NetworkPossibleConnections = () => {
                 alignItems="center"
                 data-cy="connectionGrid"
               >
-                {nonConnectedUsersArr.map((possibleConnectionUserID) => (
-                  <Grid item>
+                {nonConnectedUsersArr.map((possibleConnectionUser) => (
+                  <Grid
+                    item
+                    key={`PossibleConnectionCard${possibleConnectionUser.id}`}
+                  >
                     <PossibleConnectionCard
-                      possibleConnectionUserId={possibleConnectionUserID.id}
+                      possibleConnectionUserId={possibleConnectionUser.id}
                       currentUser={currentUser.email}
-                      data-cy={`gridItem${possibleConnectionUserID}`}
-                      id={`gridItem${possibleConnectionUserID}`}
+                      data-cy={`gridItem${possibleConnectionUser}`}
+                      id={`gridItem${possibleConnectionUser}`}
                     />
                   </Grid>
                 ))}

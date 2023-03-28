@@ -182,8 +182,6 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
           </Button>
           <Button
             onClick={handleSubmit}
-            justifyContent="center"
-            textAlign="center"
             type="submit"
             style={{
               backgroundColor: "#eaeaea",

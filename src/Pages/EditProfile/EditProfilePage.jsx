@@ -40,7 +40,7 @@ const EditProfilePage = () => {
       country: "",
       postalCode: "",
       dob: "",
-      //school: "",
+      school: "",
       //degree: "",
       //program: "",
       //startDateEdu: "",
@@ -175,6 +175,7 @@ const EditProfilePage = () => {
     for (let i = 0; i < profile.values.schoolNum; i += 1) {
       cards.push(
         <EducationCard
+          key={`EducationCard${i}`}
           setProfile={setProfile}
           profile={profile}
           currentUserEmail={currentUserEmail}
@@ -201,6 +202,7 @@ const EditProfilePage = () => {
     for (let i = 0; i < profile.values.expNum; i += 1) {
       cards.push(
         <ExperienceCard
+          key={`ExperienceCard${i}`}
           setProfile={setProfile}
           profile={profile}
           currentUserEmail={currentUserEmail}
@@ -227,6 +229,7 @@ const EditProfilePage = () => {
     for (let i = 0; i < profile.values.awardsNum; i += 1) {
       cards.push(
         <AwardsCard
+          key={`AwardCard${i}`}
           profile={profile}
           setProfile={setProfile}
           cardNum={i}
@@ -252,6 +255,7 @@ const EditProfilePage = () => {
     for (let i = 0; i < profile.values.languageNum; i += 1) {
       cards.push(
         <LanguagesCard
+          key={`LanguageCard${i}`}
           profile={profile}
           setProfile={setProfile}
           cardNum={i}
@@ -277,6 +281,7 @@ const EditProfilePage = () => {
     for (let i = 0; i < profile.values.projectNum; i += 1) {
       cards.push(
         <ProjectsCard
+          key={`ProjectCard${i}`}
           profile={profile}
           setProfile={setProfile}
           cardNum={i}
@@ -302,6 +307,7 @@ const EditProfilePage = () => {
     for (let i = 0; i < profile.values.volunteerNum; i += 1) {
       cards.push(
         <VolunteeringCard
+          key={`VolunteeringCard${i}`}
           profile={profile}
           setProfile={setProfile}
           cardNum={i}

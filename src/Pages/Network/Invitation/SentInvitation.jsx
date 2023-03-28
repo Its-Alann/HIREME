@@ -55,7 +55,11 @@ export const SentInvitation = () => {
                 alignItems="center"
               >
                 {sentRequestsUserID.map((userID) => (
-                  <Grid item data-cy="invitationsGrid">
+                  <Grid
+                    item
+                    data-cy="invitationsGrid"
+                    key={`SentInvitationCard${userID}`}
+                  >
                     <SentInvitationCard
                       userID={userID}
                       currentUser={currentUser.email}

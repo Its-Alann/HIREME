@@ -422,6 +422,7 @@ export const JobPostingApplicants = () => {
                         alignItems="center"
                         justifyContent="space-evenly"
                         sx={{ my: 1 }}
+                        key={`ApplicantBox${applicant.applicantId}`}
                       >
                         <Box sx={{ width: 150 }}>
                           <Typography>

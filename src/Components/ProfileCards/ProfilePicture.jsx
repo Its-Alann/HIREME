@@ -68,9 +68,6 @@ const ProfilePicture = ({ urlProfilePicture, visitingProfile }) => {
             width: 200,
             height: 200,
           }}
-          textAlign="center"
-          alignItems="center"
-          justifyContent="center"
           style={{
             backgroundColor: "white",
             border: "solid",

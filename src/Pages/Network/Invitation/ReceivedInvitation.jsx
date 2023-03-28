@@ -55,7 +55,7 @@ export const ReceivedInvitation = () => {
                 alignItems="center"
               >
                 {receivedInvitations.map((requestedUserID) => (
-                  <Grid item>
+                  <Grid item key={`ReceivedInvitationCard${requestedUserID}`}>
                     <ReceivedInvitationCard
                       receivedInvitationUserID={requestedUserID}
                       currentUser={currentUser.email}
