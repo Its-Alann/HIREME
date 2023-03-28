@@ -116,8 +116,8 @@ export const ViewMyApp2 = () => {
         id: docJob.id,
       }));
       await Promise.all(
-        tempArray.map(async (applicant) => {
-          await deleteDoc(doc(db, "applications2", applicant.id));
+        tempArray.map(async (docID) => {
+          await deleteDoc(doc(db, "applications2", docID.id));
         })
       );
       window.location.reload();
@@ -161,100 +161,113 @@ export const ViewMyApp2 = () => {
           My Application 2
         </Typography>
         {/* {getJobTitle("4QwjqeYxPRuDw7fOnKBj")}; */}
-        {myApplications.map((job) => {
-          const hello = "hello";
+        {console.log(myApplications)}
+        {myApplications.length > 0 && myApplications !== null ? (
+          myApplications.map((job) => {
+            const hello = "hello";
 
-          return (
-            // Create cards
-            <Grid sx={{ py: 1 }}>
-              <Card variant="outlined">
-                <Stack direction="row" justifyContent="space-between">
-                  <Grid sx={{ md: 8, sm: 12, sx: 12 }}>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      margin="5"
-                    >
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                          alignItems: "center",
-                        }}
-                        src={companiesLogo[job.companyID]}
-                      />
-                      <Grid>
-                        <Stack direction="row" justifyContent="space-between">
-                          <Typography variant="h4">{job.jobTitle}</Typography>
-                          <Button
-                            variant="contained"
-                            data-cy="remove-button"
-                            sx={{
-                              backgroundColor: "black",
-                              m: 2,
-                              height: 30,
-                              width: 100,
-                              textTransform: "none",
-                            }}
-                            onClick={() => handleRemoveJob(job.jobID)}
-                          >
-                            Remove
-                          </Button>
-                        </Stack>
-                        <Typography>{companiesName[job.companyID]} </Typography>
-                        <Typography>{`${job.city}, ${job.country}`}</Typography>
-                      </Grid>
-                    </Stack>
-                    <Stack direction="row" sx={{ pt: 2 }}>
-                      <Typography>
-                        Deadline:{" "}
-                        {new Date(
-                          job.deadline.seconds * 1000 +
-                            job.deadline.nanoseconds / 1000000
-                        ).toDateString()}
-                      </Typography>
-                    </Stack>
-                  </Grid>
+            return (
+              // Create cards
+              <Grid sx={{ py: 1 }}>
+                <Card variant="outlined">
+                  <Stack direction="row" justifyContent="space-between">
+                    <Grid sx={{ md: 8, sm: 12, sx: 12 }}>
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        margin="5"
+                      >
+                        <Box
+                          component="img"
+                          sx={{
+                            // objectFit: "cover",
+                            width: "6rem",
+                            height: "6rem",
+                            mr: 2,
+                            alignItems: "center",
+                          }}
+                          src={companiesLogo[job.companyID]}
+                        />
+                        <Grid>
+                          <Stack direction="row" justifyContent="space-between">
+                            <Typography variant="h4">{job.jobTitle}</Typography>
+                            <Button
+                              variant="contained"
+                              data-cy="remove-button"
+                              sx={{
+                                backgroundColor: "black",
+                                m: 2,
+                                height: 30,
+                                width: 100,
+                                textTransform: "none",
+                              }}
+                              onClick={() => handleRemoveJob(job.jobID)}
+                            >
+                              Remove
+                            </Button>
+                          </Stack>
+                          <Typography>
+                            {companiesName[job.companyID]}{" "}
+                          </Typography>
+                          <Typography>{`${job.city}, ${job.country}`}</Typography>
+                        </Grid>
+                      </Stack>
+                      <Stack direction="row" sx={{ pt: 2 }}>
+                        <Typography>
+                          Deadline:{" "}
+                          {new Date(
+                            job.deadline.seconds * 1000 +
+                              job.deadline.nanoseconds / 1000000
+                          ).toDateString()}
+                        </Typography>
+                      </Stack>
+                    </Grid>
 
-                  <Grid
-                    sx={{
-                      md: 2,
-                      sm: 12,
-                      sx: 12,
-                      backgroundColor:
-                        job.status === "interview"
-                          ? "green"
-                          : job.status === "viewed"
-                          ? "yellow"
-                          : job.status === "rejected"
-                          ? "red"
-                          : "darkgray",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "70px",
-                    }}
-                  >
-                    <Typography
+                    <Grid
                       sx={{
-                        writingMode: "vertical-rl",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        color: "white",
-                        textTransform: "uppercase",
+                        md: 2,
+                        sm: 12,
+                        sx: 12,
+                        backgroundColor:
+                          job.status === "interview"
+                            ? "green"
+                            : job.status === "viewed"
+                            ? "yellow"
+                            : job.status === "rejected"
+                            ? "red"
+                            : "darkgray",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "70px",
                       }}
                     >
-                      {job.status}
-                    </Typography>
-                  </Grid>
-                </Stack>
-              </Card>
-            </Grid>
-          );
-        })}
+                      <Typography
+                        sx={{
+                          writingMode: "vertical-rl",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          color: "white",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {job.status}
+                      </Typography>
+                    </Grid>
+                  </Stack>
+                </Card>
+              </Grid>
+            );
+          })
+        ) : (
+          <Card variant="outlined">
+            <Box sx={{ m: 2 }}>
+              <Box sx={{ pb: 2 }}>
+                <Typography>No applied jobs :/</Typography>
+              </Box>
+            </Box>
+          </Card>
+        )}
       </Box>
     </Container>
   );
