@@ -92,6 +92,7 @@ const Messaging = () => {
   };
 
   // get all names of user's receivers
+  // populate the message sidebar
   const getAllReceivers = async () => {
     setChatProfiles([]);
     const messagesRef = collection(db, "messages");
