@@ -109,11 +109,8 @@ const Messaging = () => {
       const allAuthorsList = [];
       //each document is a convo
       querySnapshot.forEach((document) => {
-        console.log(document.data().messages.at(-1));
         const data = document.data();
         const mostRecent = data.messages.at(-1).timestamp.toDate();
-        console.log("mostRecent", mostRecent);
-        console.log("data", data);
         allAuthorsList.push({
           otherAuthors: document
             .data()
@@ -133,11 +130,9 @@ const Messaging = () => {
         emails: ["billybob@gmail.com", "yodiegang@ful.com"]
       }   
       */
-      console.log("before sort", allChatProfiles);
       allChatProfiles.sort((a, b) =>
         a.mostRecent < b.mostRecent ? 1 : a.mostRecent > b.mostRecent ? -1 : 0
       );
-      console.log("allChatProfiles", allChatProfiles);
       setChatProfiles(allChatProfiles);
     });
   };
