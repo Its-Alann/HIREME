@@ -8,15 +8,16 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import FileUpload from "../../../Components/FileUpload/FileUpload";
 import { db } from "../../../Firebase/firebase";
 
 const JobApplication = () => {
+  const navigate = useNavigate();
   // Define the MUI theme to be used in the component
   const theme = createTheme({
     palette: {
@@ -121,18 +122,16 @@ const JobApplication = () => {
   // Adds the job application information to the applications collection on Firestore. Appends to user's
   // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
-    const applicationsRef = doc(db, "applications", currentUserEmail);
-    setDoc(
-      applicationsRef,
+    addDoc(
+      collection(db, "applications2"),
       // eslint-disable-next-line no-undef
       {
-        jobs: arrayUnion({
-          jobID: URLjobID,
-          status: "pending",
-          email,
-          phoneNumber,
-          address,
-        }),
+        jobID: URLjobID,
+        status: "pending",
+        email,
+        applicantEmail: currentUserEmail,
+        phoneNumber,
+        address,
       },
       { merge: true }
     );
@@ -158,13 +157,14 @@ const JobApplication = () => {
       uploadDocuments();
       addJobApplication();
       console.log("completed");
+      navigate(`/browseJobs`);
     }
   };
 
   // Gets the job title from Firestore jobs collection
   const getJobTitle = async () => {
     try {
-      const docSnap = await getDoc(doc(db, "jobs", URLjobID));
+      const docSnap = await getDoc(doc(db, "jobs2", URLjobID));
       const jobData = docSnap.data();
       setJobTitle(jobData.title);
     } catch (error) {
@@ -175,7 +175,7 @@ const JobApplication = () => {
   // Gets the company name from Firestore companies collection
   const getCompanyName = async () => {
     try {
-      const docSnap = await getDoc(doc(db, "companies", URLcompanyID));
+      const docSnap = await getDoc(doc(db, "companies2", URLcompanyID));
       const jobData = docSnap.data();
       setCompanyName(jobData.name);
     } catch (error) {
@@ -213,12 +213,12 @@ const JobApplication = () => {
         }}
       >
         {/* Page title */}
-        <Grid item md={12} sm={12} xs={12}>
-          <Typography variant="h3"> Your Application </Typography>
+        <Grid item md={12} sm={12} xs={12} sx={{ mt: 4 }}>
+          <Typography variant="h3"> Your Application 2</Typography>
         </Grid>
 
         {/* Job title */}
-        <Grid item md={12} sm={12} xs={12}>
+        <Grid item md={12} sm={12} xs={12} sx={{ mt: 2 }}>
           <Typography variant="h6">
             You are applying for: {`${companyName} ${jobTitle}`}
           </Typography>
