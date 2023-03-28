@@ -184,6 +184,9 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               placeholder="Type Something"
               fullWidth
               onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") await handleSend();
+              }}
               value={messageContent}
               sx={{ m: 0 }}
             />
