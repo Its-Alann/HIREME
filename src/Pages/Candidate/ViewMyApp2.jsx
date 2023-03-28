@@ -90,15 +90,18 @@ export const ViewMyApp2 = () => {
     const temp2 = companiesLogo;
 
     myApplications.forEach(async (job) => {
+      const companyRef = doc(db, "companies2", job.companyID);
+      const companySnapshot = await getDoc(companyRef);
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies2", job.companyID);
-        const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
-        temp2[job.companyID] = companySnapshot.data().logoPath;
         setCompaniesName({ ...temp });
-        setCompaniesLogo({ ...temp2 });
       }
+      if (companySnapshot.data().logoPath === "") {
+        temp2[job.companyID] =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      setCompaniesLogo({ ...temp2 });
     });
   }
 
@@ -172,30 +175,17 @@ export const ViewMyApp2 = () => {
                       justifyContent="space-between"
                       margin="5"
                     >
-                      {job.companyID === undefined ? (
-                        <Box
-                          component="img"
-                          sx={{
-                            // objectFit: "cover",
-                            width: "0.25",
-                            height: "0.25",
-                            ml: 2,
-                          }}
-                          src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                        />
-                      ) : (
-                        <Box
-                          component="img"
-                          sx={{
-                            // objectFit: "cover",
-                            width: "6rem",
-                            height: "6rem",
-                            mr: 2,
-                            alignItems: "center",
-                          }}
-                          src={companiesLogo[job.companyID]}
-                        />
-                      )}
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                          alignItems: "center",
+                        }}
+                        src={companiesLogo[job.companyID]}
+                      />
                       <Grid>
                         <Stack direction="row" justifyContent="space-between">
                           <Typography variant="h4">{job.jobTitle}</Typography>
