@@ -23,6 +23,7 @@ import {
   onSnapshot,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { onAuthStateChanged } from "firebase/auth";
@@ -56,6 +57,7 @@ const Messaging = () => {
   const [chatProfiles, setChatProfiles] = useState([]);
   const [name, setName] = useState([]);
 
+  // current user's email
   const [myUser, setMyUser] = useState("");
 
   //tracks the convo in the sidebar
@@ -120,8 +122,6 @@ const Messaging = () => {
         });
       });
 
-      console.log("allAuthorsList", allAuthorsList);
-      console.log(allAuthorsList[0].mostRecent instanceof Date);
       const allChatProfiles = await Promise.all(
         allAuthorsList.map(getOtherAuthors)
       );
@@ -175,6 +175,21 @@ const Messaging = () => {
     scrollToBottom();
   };
 
+  const markMessagesAsRead = async () => {
+    const updatedMessages = messages.map((m) => {
+      // eslint-disable-next-line no-param-reassign
+      if (!m.seenBy) m.seenBy = [myUser];
+      if (!m.seenBy?.includes(myUser)) m.seenBy.push(myUser);
+      return m;
+    });
+    console.log(updatedMessages);
+
+    const convoRef = doc(db, "messages", convoId);
+    await updateDoc(convoRef, {
+      messages: updatedMessages,
+    });
+  };
+
   // auth listener on load
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -203,9 +218,12 @@ const Messaging = () => {
     let unSub;
     if (convoId) {
       setNewConvo(false);
-      unSub = onSnapshot(doc(db, "messages", convoId), (document) => {
+      const convoRef = doc(db, "messages", convoId);
+
+      unSub = onSnapshot(convoRef, (document) => {
         setMessages(document.data().messages);
       });
+      markMessagesAsRead();
     }
   }, [convoId]);
 
