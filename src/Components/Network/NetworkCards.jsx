@@ -96,6 +96,7 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
         const userData = docSnap.data();
         setConnectedUser(userData);
         console.log("NetworkCards");
+        console.log(userData);
       } catch (err) {
         console.log(err);
       }

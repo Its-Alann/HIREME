@@ -21,7 +21,6 @@ const MessageListItem = ({
   return (
     <Stack
       className="message-stack"
-      container
       alignItems={alignment === "right" ? "flex-end" : "flex-start"}
     >
       <Box sx={{ px: "12px", maxWidth: "100%" }}>
@@ -48,7 +47,6 @@ const MessageListItem = ({
           data-testid="reportedBadge"
         >
           <Box
-            xs
             sx={{
               bgcolor: alignment === "right" ? "secondary.main" : "gray.main",
               width: "fit-content",

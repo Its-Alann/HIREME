@@ -69,6 +69,9 @@ const HomePage = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Typography variant="h4" align="center">
+        Welcome Back {firstName}!
+      </Typography>
       <Grid>
         <Grid container sx={{ bgcolor: "#EAEAEA" }}>
           {user ? (
@@ -102,14 +105,13 @@ const HomePage = () => {
                 justify="center"
                 alignItems="center"
                 display="flex"
-                direction="column"
+                container
               >
                 <Grid
                   item
                   s={12}
                   sm={12}
                   md={12}
-                  display="flex"
                   alignItems="center"
                   data-cy="grid-test"
                 >
@@ -118,39 +120,28 @@ const HomePage = () => {
                     Welcome Back {firstName}!{" "}
                   </Typography>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  display="flex"
-                  alignItems="center"
-                >
-                  <div>
-                    <Typography variant="h6"> Done for the day? </Typography>
-                    <Button
-                      fullWidth
-                      id="signout"
-                      data-testid="homeLink"
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2, py: 1 }}
-                      color="primary"
-                      onClick={handleSignOut}
-                    >
-                      Sign Out
-                    </Button>
-                  </div>
+                <Grid item xs={12} sm={12} md={12} alignItems="center">
+                  <Typography variant="h6"> Done for the day? </Typography>
+                  <Button
+                    id="signout"
+                    data-testid="homeLink"
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      py: 1,
+                      minWidth: 1 / 4,
+                      maxWidth: 1 / 2,
+                    }}
+                    color="primary"
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </Button>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  display="flex"
-                  alignItems="center"
-                >
+                <Grid item xs={12} sm={12} md={12} alignItems="center">
                   {formCompleted === false ? (
-                    <div>
+                    <>
                       <Typography variant="h6">
                         Looks like you&apos;re new!
                       </Typography>
@@ -158,7 +149,13 @@ const HomePage = () => {
                         fullWidth
                         data-testid="createProfileLink"
                         variant="outlined"
-                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        sx={{
+                          mt: 3,
+                          mb: 2,
+                          py: 1,
+                          minWidth: 1 / 4,
+                          maxWidth: 1 / 2,
+                        }}
                         color="primary"
                         onClick={() => {
                           window.location.href = "/accountCreation";
@@ -166,9 +163,9 @@ const HomePage = () => {
                       >
                         Create your profile
                       </Button>
-                    </div>
+                    </>
                   ) : (
-                    <div>
+                    <>
                       <Typography variant="h6">
                         {" "}
                         Need to make some changes?{" "}
@@ -177,7 +174,13 @@ const HomePage = () => {
                         fullWidth
                         data-testid="editProfileButton"
                         variant="outlined"
-                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        sx={{
+                          mt: 3,
+                          mb: 2,
+                          py: 1,
+                          minWidth: 1 / 4,
+                          maxWidth: 1 / 2,
+                        }}
                         color="primary"
                         onClick={() => {
                           window.location.href = "/editProfile/myprofile";
@@ -185,10 +188,10 @@ const HomePage = () => {
                       >
                         Edit your profile
                       </Button>
-                    </div>
+                    </>
                   )}
                 </Grid>
-                <div>
+                <Grid item xs={12} sm={12} md={12} alignItems="center">
                   <Link
                     onClick={() => {
                       window.location.href = "/createRecruiter";
@@ -196,7 +199,7 @@ const HomePage = () => {
                   >
                     I&apos;m a recruiter
                   </Link>
-                </div>
+                </Grid>
               </Grid>
             </Grid>
           ) : (

@@ -25,7 +25,7 @@ const SignInButton = () => {
   useEffect(() => checkRedirect, []);
 
   return (
-    <IconButton xs onClick={signInWithFirebaseRedirect}>
+    <IconButton onClick={signInWithFirebaseRedirect}>
       <GoogleIcon />
     </IconButton>
   );

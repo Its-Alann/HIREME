@@ -54,7 +54,7 @@ export const ViewNetwork = () => {
                 alignItems="center"
               >
                 {connectedUsersId.map((connectedUserID) => (
-                  <Grid item>
+                  <Grid item key={`ConnectedUserCard${connectedUserID}`}>
                     <NetworkCards
                       connectedUserID={connectedUserID}
                       currentUser={auth.currentUser.email}

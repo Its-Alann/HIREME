@@ -93,7 +93,8 @@ const MessageList = ({ messages, convoId }) => {
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(),
+  // eslint-disable-next-line react/forbid-prop-types
+  messages: PropTypes.arrayOf(PropTypes.any),
   convoId: PropTypes.string,
 };
 export default MessageList;

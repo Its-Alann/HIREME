@@ -7,7 +7,6 @@ import { auth } from "../../Firebase/firebase";
 
 const ProtectedRoute = ({ children, redirect }) => {
   const [user, loading, error] = useAuthState(auth);
-  console.log("USERR", user);
 
   //check if user is null when auth is ready
   if ((user === null || user === undefined) && !loading) {
