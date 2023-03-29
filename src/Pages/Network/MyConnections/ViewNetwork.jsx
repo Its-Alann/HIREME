@@ -10,6 +10,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
 import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import { db, auth } from "../../../Firebase/firebase";
+import image2 from "../../../Assets/images/390image2.svg";
 
 const theme = createTheme();
 
@@ -63,7 +64,16 @@ export const ViewNetwork = () => {
                 ))}
               </Grid>
             ) : (
-              <Typography>No connections yet :/</Typography>
+              <Box
+                component="img"
+                justifyContent="center"
+                sx={{
+                  width: 0.3,
+                  height: 0.3,
+                }}
+                src={image2}
+                // alt="Trees"
+              />
             )}
           </Box>
         </Container>
