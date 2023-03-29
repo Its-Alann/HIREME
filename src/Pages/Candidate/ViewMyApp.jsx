@@ -16,7 +16,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
 import "../Job/Job.css";
@@ -77,9 +76,7 @@ export const ViewMyApp = () => {
     //await getMyApplications();
     const applicationsSnapshot = await getDoc(doc(db, "applications", myUser));
     const applicationsData = applicationsSnapshot.data().jobs;
-    await applicationsData.map((job) =>
-      Promise.all(getJobInformation(job.jobID))
-    );
+    await applicationsData.map((job) => getJobInformation(job.jobID));
     // console.log(myApplications);
   }
 
@@ -170,7 +167,9 @@ export const ViewMyApp = () => {
   //set a listener to on the jobs document
   useEffect(() => {
     console.log("STOPPPPPPP");
-    Promise.all([getJobs()]);
+    if (myUser) {
+      getJobs();
+    }
   }, [myUser]);
 
   // returns all the applications that the logged in user has applied to
@@ -188,7 +187,7 @@ export const ViewMyApp = () => {
 
           return (
             // Create cards
-            <Grid sx={{ py: 1 }}>
+            <Grid sx={{ py: 1 }} key={`MyApplicationCard${job.jobID}`}>
               <Card variant="outlined">
                 <Stack direction="row" justifyContent="space-between">
                   <Grid sx={{ md: 8, sm: 12, sx: 12 }}>

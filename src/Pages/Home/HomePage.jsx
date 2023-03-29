@@ -69,9 +69,6 @@ const HomePage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Typography variant="h4" align="center">
-        Welcome Back {firstName}!
-      </Typography>
       <Grid>
         <Grid container sx={{ bgcolor: "#EAEAEA" }}>
           {user ? (
