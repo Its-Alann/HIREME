@@ -10,6 +10,7 @@ import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import Stack from "@mui/material/Stack";
 import {
   Dialog,
   DialogActions,
@@ -17,6 +18,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 
@@ -110,30 +112,36 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
         <Box sx={{ width: 300, minWidth: 100 }}>
           <Card variant="outlined" sx={{ p: 1 }} data-cy="userProfileInNetwork">
             <>
-              <CardHeader
-                avatar={
-                  //source will be the user's image
-                  <Avatar
-                    aria-label="user"
-                    sx={{ width: 56, height: 56 }}
-                    src={connectedUser.values.image}
-                  />
-                }
-                //title will be the user's name and subheader is their bio
-                title={
-                  connectedUser.values.firstName !== "" &&
-                  connectedUser.values.lastName !== ""
-                    ? `${connectedUser.values.firstName} ${connectedUser.values.lastName}`
-                    : "No name"
-                }
-                subheader={
-                  //remove != null when incomplete users are removed
-                  connectedUser.values.description !== "" &&
-                  connectedUser.values.description != null
-                    ? `${connectedUser.values.description}`
-                    : "No bio"
-                }
-              />
+              <Stack direction="row" justifyContent="space-between">
+                <CardHeader
+                  avatar={
+                    //source will be the user's image
+                    <Avatar
+                      aria-label="user"
+                      sx={{ width: 56, height: 56 }}
+                      src={connectedUser.values.image}
+                    />
+                  }
+                  //title will be the user's name and subheader is their bio
+                  title={
+                    connectedUser.values.firstName !== "" &&
+                    connectedUser.values.lastName !== ""
+                      ? `${connectedUser.values.firstName} ${connectedUser.values.lastName}`
+                      : "No name"
+                  }
+                  subheader={
+                    //remove != null when incomplete users are removed
+                    connectedUser.values.description !== "" &&
+                    connectedUser.values.description != null
+                      ? `${connectedUser.values.description}`
+                      : "No bio"
+                  }
+                />
+                <Button onClick={handleClickOpen}>
+                  <PersonRemoveIcon />
+                </Button>
+              </Stack>
+
               {/*moves the buttons to the right*/}
               <Box display="flex" flexDirection="column">
                 <CardActions>
@@ -142,7 +150,7 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                     to={`/editProfile/${connectedUser.values.firstName}${connectedUser.values.lastName}`}
                     state={{ userID: connectedUserID }}
                   >
-                    <ColorButtonBlue size="medium">
+                    <ColorButtonBlue size="medium" sx={{ mx: 1 }}>
                       View Profile
                     </ColorButtonBlue>
                   </Link>
@@ -150,13 +158,14 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                     Message
                   </ColorButtonLightBlue>
                   {/* import PersonRemoveIcon from '@mui/icons-material/PersonRemove'; use this icon instead of the button */}
-                  <ColorButtonRed
+                  {/* <ColorButtonRed
                     size="medium"
                     variant="outlined"
                     onClick={handleClickOpen}
                   >
                     Remove Connection
-                  </ColorButtonRed>
+                  </ColorButtonRed> */}
+
                   <Dialog
                     open={open}
                     onClose={handleClose}
@@ -177,10 +186,14 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                      <Button onClick={removeConnection} autoFocus>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button
+                        onClick={removeConnection}
+                        autoFocus
+                        style={{ color: "red" }}
+                      >
                         Remove user
                       </Button>
-                      <Button onClick={handleClose}>Cancel</Button>
                     </DialogActions>
                   </Dialog>
                 </CardActions>
