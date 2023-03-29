@@ -43,7 +43,7 @@ export const SentInvitation = () => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
+        <Container component="main" maxWidth="xxl">
           <CssBaseline />
           <Box justifyContent="center" alignItems="center" display="flex">
             {sentRequestsUserID?.length > 0 && sentRequestsUserID != null ? (

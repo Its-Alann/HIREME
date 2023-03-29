@@ -81,7 +81,7 @@ export const NetworkPossibleConnections = () => {
   }, [connectedUsersId, sentInvitationsId, allUsers, currentUser]);
 
   return (
-    <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
+    <div>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
           <Box

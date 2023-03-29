@@ -111,6 +111,7 @@ export const PossibleConnectionCard = ({
                 id={`invitationButton${
                   possibleConnectionUser?.values?.firstName ?? ""
                 }`}
+                sx={{ mb: 1 }}
               >
                 Send Invitation
               </ColorButtonBlue>
