@@ -93,7 +93,17 @@ const MessageList = ({ messages, convoId }) => {
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(),
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      content: PropTypes.string,
+      attachment: PropTypes.string,
+      seenBy: PropTypes.arrayOf(PropTypes.string),
+      sender: PropTypes.string,
+      // eslint-disable-next-line react/forbid-prop-types
+      timestamp: PropTypes.object,
+      reported: PropTypes.bool,
+    })
+  ),
   convoId: PropTypes.string,
 };
 export default MessageList;
