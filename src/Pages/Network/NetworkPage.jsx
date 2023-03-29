@@ -5,6 +5,7 @@ import Tab from "@mui/material/Tab";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Divider from "@mui/material/Divider";
 import { Route, Link, Routes } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -45,8 +46,9 @@ const NetworkPage = () => {
 
   return (
     <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
+      <Divider />
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth={false} sx={{ m: 2 }}>
+        <Container component="main" maxWidth={false}>
           <Box sx={{ width: "100%" }}>
             <Tabs
               value={value}
