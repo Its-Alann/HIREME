@@ -45,7 +45,9 @@ const NewConvo = ({ selectConvo, getConversationId, getOtherAuthors }) => {
   const handleClick = async () => {
     const list = value.sort();
     console.log("list", list);
-    const names = await getOtherAuthors(list);
+    const obj = { otherAuthors: list, mostRecent: new Date() };
+    console.log("obj", obj);
+    const names = await getOtherAuthors(obj);
     console.log("names", names.names);
     selectConvo(
       await getConversationId([auth.currentUser.email, ...value]),
