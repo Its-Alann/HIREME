@@ -17,8 +17,6 @@ import {
   where,
 } from "firebase/firestore";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import { EditJob2 } from "./EditJob2";
-import { CreateJob2 } from "./CreateJob2";
 import { db, auth } from "../../Firebase/firebase";
 
 export const MyJobs = () => {
@@ -150,7 +148,7 @@ export const MyJobs = () => {
           justifyContent="space-between"
         >
           <Typography variant="h4" sx={{ pb: 2 }}>
-            My Jobs 2
+            My Jobs
           </Typography>
           {/* button for recruiter's view */}
           <Button

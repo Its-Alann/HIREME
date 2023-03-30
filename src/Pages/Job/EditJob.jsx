@@ -82,7 +82,7 @@ export const EditJob = () => {
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Edit Job 2
+          Edit Job
         </Typography>
         <Typography>
           This Page shows a single Job&apos;s information & allow the owner to
