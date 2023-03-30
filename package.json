@@ -51,6 +51,7 @@
     "react-scripts": "^5.0.1",
     "react-scroll": "^1.8.8",
     "react-vanilla-tilt": "^1.0.0",
+    "serve": "^14.2.0",
     "start-server-and-test": "^1.15.4",
     "testing-library-selectors": "^0.1.0",
     "typewriter-effect": "^2.19.0",
