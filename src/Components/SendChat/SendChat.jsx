@@ -25,63 +25,9 @@ import {
   deleteObject,
 } from "firebase/storage";
 import EmojiPicker from "emoji-picker-react";
-import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
-
-const EmojiPickerButton = ({ setShowPicker, setMessageContent }) => {
-  //code for select emoji
-
-  const onEmojiClick = (emojiData, event) => {
-    setMessageContent((prevInput) => prevInput + emojiData.emoji);
-    setShowPicker(false);
-  };
-
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
-  //end
-  return (
-    <>
-      <IconButton
-        aria-describedby={id}
-        onClick={handleClick}
-        variant="contained"
-      >
-        <SentimentSatisfiedOutlinedIcon color="primary" />
-      </IconButton>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-      >
-        <EmojiPicker
-          pickerStyle={{ width: "100%" }}
-          onEmojiClick={onEmojiClick}
-        />
-      </Popover>
-    </>
-  );
-};
+import EmojiPickerButton from "../EmojiPicker/EmojiPickerButton";
 
 const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   // const SendChat = ({ conversationID }) => {
@@ -315,11 +261,6 @@ SendChat.propTypes = {
   conversationID: PropTypes.string,
   myUser: PropTypes.string, //email
   selectedIndex: PropTypes.number,
-};
-
-EmojiPickerButton.propTypes = {
-  setMessageContent: PropTypes.func,
-  setShowPicker: PropTypes.func,
 };
 
 export default SendChat;
