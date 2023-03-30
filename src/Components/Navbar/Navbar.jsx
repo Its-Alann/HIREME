@@ -11,6 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
 import AdbIcon from "@mui/icons-material/Adb";
 import HomeOutlined from "@mui/icons-material/HomeOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
@@ -25,7 +26,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
-const pageNamesForApplicant = ["Home", "Network", "Jobs", "Messaging"];
+const pageNamesForApplicant = [
+  "Home",
+  "Network",
+  "Jobs",
+  "MyJobs",
+  "Messaging",
+];
 const pageNamesForRecruiter = [
   "Home",
   "Network",
@@ -71,21 +78,27 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser2, setAnchorElUser2] = React.useState(null);
   //const [redirectToPage, setRedirectToPage] = React.useState("");
   //const [user, userLoading, userError] = useAuthState(auth);
   const [signOut, logoutLoading, logoutError] = useSignOut(auth);
 
   let redirectToPage2 = "";
+  // Manages open & close of the menus in Navbar for mobile & web version
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
+  const handleOpenUserMenu2 = (event) => {
+    setAnchorElUser2(event.currentTarget);
+  };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+  const handleCloseUserMenu2 = () => {
+    setAnchorElUser2(null);
   };
 
   //navigation to other pages
@@ -113,8 +126,11 @@ const Navbar = () => {
         signOut(auth);
         navigate("/");
         break;
-      case "jobs":
+      case "view jobs":
         navigate("/browseJobs");
+        break;
+      case "view applied jobs":
+        navigate("/viewMyApplications");
         break;
       case "myjobs":
         navigate("/myJobs");
@@ -157,6 +173,7 @@ const Navbar = () => {
             HIRE<i>ME</i>
           </Typography>
 
+          {/* display navbar of mobile version and redirect to their respective page */}
           <Box
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
             data-cy="phone-menu-test"
@@ -190,19 +207,58 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
+              {/* display sub-menu of Jobs which has menu-items of View Jobs & View Applied Jobs, 
+                  and redirect to their respective page */}
               {userIsConnected &&
-                pageNames.map((page) => (
-                  <MenuItem
-                    key={page}
-                    data-cy={`${page}-phone-test`}
-                    onClick={() => {
-                      redirectToPage2 = page;
-                      handleCloseNavMenu();
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
+                pageNames.map((page) =>
+                  page === "Jobs" ? (
+                    <MenuItem
+                      onClick={handleOpenUserMenu2}
+                      key={page}
+                      data-cy={`${page}-phone-test`}
+                    >
+                      Jobs
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorElUser2}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                        open={Boolean(anchorElUser2)}
+                        onClose={handleCloseUserMenu2}
+                        keepMounted
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view jobs";
+                          }}
+                          data-cy="view-job-test"
+                        >
+                          View Jobs
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view applied jobs";
+                          }}
+                          data-cy="view-applied-job-test"
+                        >
+                          View Applied Jobs
+                        </MenuItem>
+                      </Menu>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      key={page}
+                      data-cy={`${page}-phone-test`}
+                      onClick={() => {
+                        redirectToPage2 = page;
+                        handleCloseNavMenu();
+                      }}
+                    >
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  )
+                )}
               {!userIsConnected &&
                 loggedOutPages.map((page) => (
                   <MenuItem
@@ -241,6 +297,7 @@ const Navbar = () => {
             HIRE<i>ME</i>
           </Typography>
 
+          {/* display navbar of web version and redirect to their respective page */}
           {userIsConnected && (
             <>
               <Box
@@ -250,29 +307,80 @@ const Navbar = () => {
                   display: { xs: "none", md: "flex", justifyContent: "end" },
                 }}
               >
-                {pageNames.map((page) => (
-                  <Button
-                    key={page}
-                    data-cy={`${page}-test`}
-                    onClick={() => {
-                      redirectToPage2 = page;
-                      handleCloseNavMenu();
-                    }}
-                    sx={{
-                      my: 2,
-                      color: "main",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {page === "Home" && <HomeOutlined />}
-                    {page === "Messaging" && <MessageOutlinedIcon />}
-                    {page === "Network" && <GroupsOutlinedIcon />}
-                    {page === "Jobs" && <WorkOutlineOutlinedIcon />}
-                    {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
-                    {page}
-                  </Button>
-                ))}
+                {/* display sub-menu of Jobs which has menu-items of View Jobs & View Applied Jobs, 
+                  and redirect to their respective page */}
+                {pageNames.map((page) =>
+                  page === "Jobs" ? (
+                    <>
+                      <Button
+                        onClick={handleOpenUserMenu2}
+                        sx={{
+                          my: 2,
+                          color: "main",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Stack justifyContent="center" alignItems="center">
+                          <WorkOutlineOutlinedIcon justifyContent="center" />
+                          JOBS
+                        </Stack>
+                      </Button>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorElUser2}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                        open={Boolean(anchorElUser2)}
+                        onClose={handleCloseUserMenu2}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view jobs";
+                            handleCloseUserMenu2();
+                            handleCloseNavMenu();
+                          }}
+                          data-cy="view-job-test"
+                        >
+                          View Jobs
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view applied jobs";
+                            handleCloseUserMenu2();
+                            handleCloseNavMenu();
+                          }}
+                          data-cy="view-applied-job-test"
+                        >
+                          View Applied Jobs
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  ) : (
+                    <Button
+                      key={page}
+                      data-cy={`${page}-test`}
+                      onClick={() => {
+                        redirectToPage2 = page;
+                        handleCloseNavMenu();
+                      }}
+                      sx={{
+                        my: 2,
+                        color: "main",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {page === "Home" && <HomeOutlined />}
+                      {page === "Messaging" && <MessageOutlinedIcon />}
+                      {page === "Network" && <GroupsOutlinedIcon />}
+                      {page === "Jobs" && <WorkOutlineOutlinedIcon />}
+                      {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
+                      {page}
+                    </Button>
+                  )
+                )}
               </Box>
 
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
