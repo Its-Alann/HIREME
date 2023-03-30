@@ -112,6 +112,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     const newMessage = {
       timestamp,
       sender,
+      seenBy: myUser,
     };
 
     if (file) {
