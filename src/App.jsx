@@ -19,6 +19,8 @@ import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import { CreateCompany } from "./Pages/Company/CreateCompany";
+import { ViewCompany } from "./Pages/Company/ViewCompany";
+import { EditCompany } from "./Pages/Company/EditCompany";
 import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
 import { CreateJob } from "./Pages/Job/CreateJob";
 import { BrowseJobs } from "./Pages/Job/BrowseJobs";
@@ -113,6 +115,16 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
+            <Route
+              path="/viewCompany/:companyID"
+              exact
+              element={<ViewCompany />}
+            />
+            <Route
+              path="/editCompany/:companyID"
+              exact
+              element={<EditCompany />}
+            />
           </Routes>
         </Router>
       </div>

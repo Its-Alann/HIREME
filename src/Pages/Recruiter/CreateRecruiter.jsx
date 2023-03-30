@@ -7,7 +7,19 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
-import { setDoc, collection, query, getDocs, doc } from "firebase/firestore";
+import {
+  setDoc,
+  collection,
+  query,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  writeBatch,
+  arrayRemove,
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateRecruiter = () => {
@@ -17,13 +29,28 @@ export const CreateRecruiter = () => {
     workFor: "",
   });
   const [companyList, setCompanyList] = React.useState([]);
+  const [previousCompany, setPreviousCompany] = React.useState(null);
+  const [currentUserID, setCurrentUserID] = React.useState(null);
 
   async function handleSubmit() {
-    console.log(auth.currentUser.uid);
-    await setDoc(
-      doc(db, "recruiters", auth.currentUser.uid),
-      recruiterInformation
-    );
+    const companyRef = doc(db, "companies", recruiterInformation.workFor);
+    const companySnapshot = await getDoc(companyRef);
+    if (!companySnapshot.exists()) {
+      return;
+    }
+
+    const batch = writeBatch(db);
+    batch.set(doc(db, "recruiters", currentUserID), recruiterInformation);
+    batch.update(companyRef, {
+      employees: arrayUnion(currentUserID),
+    });
+    if (previousCompany) {
+      batch.update(doc(db, "companies", previousCompany), {
+        employees: arrayRemove(currentUserID),
+        managers: arrayRemove(currentUserID),
+      });
+    }
+    await batch.commit();
   }
 
   async function getCompanies() {
@@ -37,9 +64,38 @@ export const CreateRecruiter = () => {
     setCompanyList(tempCompanyList);
   }
 
+  async function getPreviousCompany() {
+    const recruiterSnapshot = await getDoc(
+      doc(db, "recruiters", currentUserID)
+    );
+    if (recruiterSnapshot.exists()) {
+      if (recruiterSnapshot.workFor) {
+        setPreviousCompany(recruiterSnapshot.workFor);
+      } else {
+        console.log(recruiterSnapshot.workFor);
+        setPreviousCompany(null);
+        console.log("sdf");
+      }
+    }
+  }
+
   React.useEffect(() => {
     getCompanies();
   }, []);
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserID(user.uid);
+      }
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (currentUserID) {
+      getPreviousCompany();
+    }
+  }, [currentUserID]);
 
   return (
     <Container maxWidth="md">
