@@ -136,5 +136,6 @@ describe("Edit Profile Page", () => {
     cy.visit("http://localhost:3000/editProfile/myprofile");
     cy.scrollTo("bottom", { easing: "linear" });
     cy.get('[data-cy="saveBtn"]').click();
+    cy.wait(500);
   });
 });
