@@ -36,6 +36,7 @@ export const CreateJob = () => {
   const [companyName, setCompanyName] = React.useState({
     name: "",
   });
+  const [isAllowed, setIsAllowed] = React.useState(false);
 
   async function handleSubmit() {
     // Here we are updating different document
@@ -71,6 +72,7 @@ export const CreateJob = () => {
       const companyID = recruiterSnapshot.data().workFor;
       if (companyID == null) {
         console.log("current recruiter's company ID not exist");
+        setIsAllowed(false);
         return;
       }
       const companyRef = doc(db, "companies", companyID);
@@ -82,11 +84,14 @@ export const CreateJob = () => {
           owner: auth.currentUser.uid,
         });
         setCompanyName({ name: companySnapshot.data().name });
+        setIsAllowed(true);
       } else {
         console.log("current recruiter's company not exist");
+        setIsAllowed(false);
       }
     } else {
       console.log("current user not a recruiter");
+      setIsAllowed(false);
     }
   }
 
@@ -99,219 +104,193 @@ export const CreateJob = () => {
   }, []);
 
   return (
-    <Container maxWidth="md" sx={{ mb: 10 }}>
-      <Box sx={{ pt: 5 }}>
-        <Typography variant="h4" sx={{ pb: 2 }}>
-          Job Creation
-        </Typography>
-        {/* is this supposed to be a public comment? */}
-        <Typography gutterBottom>
-          This page has purpose of creating a new job posting. If you are logged
-          in, and you are a Recruiter. Then, after you click SAVE, there should
-          be a new document under jobs collection, and its id will be updated to
-          your recruiter profile & the company profile.
-        </Typography>
-        <Stack spacing={2}>
-          <Box>
-            <Typography>Job Title</Typography>
-            <TextField
-              required
-              id="TextField-Title"
-              variant="standard"
-              placeholder="Job Title"
-              fullWidth
-              value={jobInformation.title}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  title: e.target.value,
-                })
-              }
-            />
+    <>
+      {isAllowed ? (
+        <Container maxWidth="md" sx={{ mb: 10 }}>
+          <Box sx={{ pt: 5 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
+              Job Creation
+            </Typography>
+            {/* is this supposed to be a public comment? */}
+            <Typography gutterBottom>
+              This page has purpose of creating a new job posting. If you are
+              logged in, and you are a Recruiter. Then, after you click SAVE,
+              there should be a new document under jobs collection, and its id
+              will be updated to your recruiter profile & the company profile.
+            </Typography>
+            <Stack spacing={2}>
+              <Box>
+                <Typography>Job Title</Typography>
+                <TextField
+                  required
+                  id="TextField-Title"
+                  variant="standard"
+                  placeholder="Job Title"
+                  fullWidth
+                  value={jobInformation.title}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      title: e.target.value,
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <Typography>Company ID</Typography>
+                <TextField
+                  required
+                  id="TextField-CompanyID"
+                  variant="standard"
+                  placeholder="Company ID"
+                  fullWidth
+                  value={jobInformation.companyID}
+                  InputProps={{ readOnly: true }}
+                />
+              </Box>
+
+              <Box>
+                <Typography>Company Name</Typography>
+                <TextField
+                  required
+                  id="TextField-CompanyName"
+                  variant="standard"
+                  placeholder="Company Name"
+                  fullWidth
+                  value={companyName.name}
+                  InputProps={{ readOnly: true }}
+                />
+              </Box>
+
+              <Stack direction="row" justifyContent="flex-start">
+                <Box sx={{ pr: 2 }}>
+                  <Typography>City</Typography>
+                  <TextField
+                    required
+                    id="TextField-City"
+                    variant="standard"
+                    placeholder="City"
+                    fullWidth
+                    value={jobInformation.city}
+                    onChange={(e) =>
+                      setJobInformation({
+                        ...jobInformation,
+                        city: e.target.value,
+                      })
+                    }
+                  />
+                </Box>
+
+                <Box>
+                  <Typography>Country</Typography>
+                  <TextField
+                    required
+                    id="TextField-Country"
+                    variant="standard"
+                    placeholder="Country"
+                    fullWidth
+                    value={jobInformation.country}
+                    onChange={(e) =>
+                      setJobInformation({
+                        ...jobInformation,
+                        country: e.target.value,
+                      })
+                    }
+                  />
+                </Box>
+              </Stack>
+
+              <Box>
+                <Typography>Job description</Typography>
+                <TextField
+                  required
+                  id="TextField-Description"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={jobInformation.description}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <Typography>Job requirements</Typography>
+                <TextField
+                  required
+                  id="TextField-Requirement"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={jobInformation.requirement}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      requirement: e.target.value,
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <Typography>Benefits</Typography>
+                <TextField
+                  id="TextField-Benefits"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={jobInformation.benefits}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      benefits: e.target.value,
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    id="DatePicker-Deadline"
+                    label="Application Deadline"
+                    value={jobInformation.deadline}
+                    onChange={(newValue) => {
+                      setJobInformation({
+                        ...jobInformation,
+                        deadline: newValue.$d,
+                      });
+                    }}
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </Box>
+            </Stack>
+
+            <Link to="/myJobs">
+              <Button
+                variant="contained"
+                size="medium"
+                id="Button-Save"
+                sx={{ mt: 2 }}
+                onClick={() => handleSubmit()}
+              >
+                Save
+              </Button>
+            </Link>
           </Box>
-
-          <Box>
-            <Typography>Company ID</Typography>
-            <TextField
-              required
-              id="TextField-CompanyID"
-              variant="standard"
-              placeholder="Company ID"
-              fullWidth
-              value={jobInformation.companyID}
-              InputProps={{ readOnly: true }}
-            />
-          </Box>
-
-          <Box>
-            <Typography>Company Name</Typography>
-            <TextField
-              required
-              id="TextField-CompanyName"
-              variant="standard"
-              placeholder="Company Name"
-              fullWidth
-              value={companyName.name}
-              InputProps={{ readOnly: true }}
-            />
-          </Box>
-
-          <Stack direction="row" justifyContent="flex-start">
-            <Box sx={{ pr: 2 }}>
-              <Typography>City</Typography>
-              <TextField
-                required
-                id="TextField-City"
-                variant="standard"
-                placeholder="City"
-                fullWidth
-                value={jobInformation.city}
-                onChange={(e) =>
-                  setJobInformation({
-                    ...jobInformation,
-                    city: e.target.value,
-                  })
-                }
-              />
-            </Box>
-
-            <Box>
-              <Typography>Country</Typography>
-              <TextField
-                required
-                id="TextField-Country"
-                variant="standard"
-                placeholder="Country"
-                fullWidth
-                value={jobInformation.country}
-                onChange={(e) =>
-                  setJobInformation({
-                    ...jobInformation,
-                    country: e.target.value,
-                  })
-                }
-              />
-            </Box>
-          </Stack>
-
-          {/* <Box>
-            <Typography>Location</Typography>
-            <TextField
-              required
-              id="TextField-Location"
-              variant="standard"
-              placeholder="Location"
-              fullWidth
-              value={jobInformation.location}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  location: e.target.value,
-                })
-              }
-            />
-          </Box> */}
-
-          <Box>
-            <Typography>Job description</Typography>
-            {/*<TextField
-              required
-              id="TextField-Description"
-              variant="standard"
-              placeholder="Job Description"
-              fullWidth
-              multiline
-              value={jobInformation.description}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  description: e.target.value,
-                })
-              }
-            /> */}
-            <TextField
-              required
-              id="TextField-Description"
-              fullWidth
-              multiline
-              rows={4}
-              value={jobInformation.description}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  description: e.target.value,
-                })
-              }
-            />
-          </Box>
-
-          <Box>
-            <Typography>Job requirements</Typography>
-            <TextField
-              required
-              id="TextField-Requirement"
-              fullWidth
-              multiline
-              rows={2}
-              value={jobInformation.requirement}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  requirement: e.target.value,
-                })
-              }
-            />
-          </Box>
-
-          <Box>
-            <Typography>Benefits</Typography>
-            <TextField
-              id="TextField-Benefits"
-              fullWidth
-              multiline
-              rows={2}
-              value={jobInformation.benefits}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  benefits: e.target.value,
-                })
-              }
-            />
-          </Box>
-
-          <Box>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                id="DatePicker-Deadline"
-                label="Application Deadline"
-                value={jobInformation.deadline}
-                onChange={(newValue) => {
-                  setJobInformation({
-                    ...jobInformation,
-                    deadline: newValue.$d,
-                  });
-                }}
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-          </Box>
-        </Stack>
-
-        <Link to="/myJobs">
-          <Button
-            variant="contained"
-            size="medium"
-            id="Button-Save"
-            sx={{ mt: 2 }}
-            onClick={() => handleSubmit()}
-          >
-            Save
-          </Button>
-        </Link>
-      </Box>
-    </Container>
+        </Container>
+      ) : (
+        <p>not allowed</p>
+      )}
+      <p> </p>
+    </>
   );
 };
 export default CreateJob;
