@@ -214,7 +214,7 @@ const JobApplication = () => {
       >
         {/* Page title */}
         <Grid item md={12} sm={12} xs={12} sx={{ mt: 4 }}>
-          <Typography variant="h3"> Your Application 2</Typography>
+          <Typography variant="h3"> Your Application</Typography>
         </Grid>
 
         {/* Job title */}

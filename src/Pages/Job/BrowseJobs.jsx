@@ -143,7 +143,7 @@ export const BrowseJobs = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Browse Jobs 2
+          Browse Jobs
         </Typography>
         <Typography>
           This Page list all jobs, {jobsPerPage} per page. Everyone can access

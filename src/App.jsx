@@ -32,16 +32,6 @@ import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
-import { CreateCompany2 } from "./Pages/Company/CreateCompany2";
-import { CreateRecruiter2 } from "./Pages/Recruiter/CreateRecruiter2";
-import { CreateJob2 } from "./Pages/Job/CreateJob2";
-import { BrowseJobs2 } from "./Pages/Job/BrowseJobs2";
-import { MyJobs2 } from "./Pages/Job/MyJobs2";
-import JobApplication2 from "./Pages/Job/JobApplication/JobApplication2";
-import { EditJob2 } from "./Pages/Job/EditJob2";
-import { JobPostingApplicants2 } from "./Pages/Recruiter/JobPostingApplicants2";
-import { JobPosting2 } from "./Pages/Candidate/JobPosting2";
-import { ViewMyApp2 } from "./Pages/Candidate/ViewMyApp2";
 
 const App = () => {
   const hello = "helloo";
@@ -123,34 +113,6 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
-
-            {/* duplicate paths for job (refactoring) */}
-            <Route path="/createCompany2" exact element={<CreateCompany2 />} />
-            <Route
-              path="/createRecruiter2"
-              exact
-              element={<CreateRecruiter2 />}
-            />
-            <Route path="/createJob2" exact element={<CreateJob2 />} />
-            <Route path="/browseJobs2" exact element={<BrowseJobs2 />} />
-            <Route path="/myJobs2" exact element={<MyJobs2 />} />
-            <Route
-              path="/jobApplication2/:companyID/:jobID"
-              exact
-              element={<JobApplication2 />}
-            />
-            <Route path="/editJob2/:jobID" exact element={<EditJob2 />} />
-            <Route
-              path="/viewJobPostingApplicants2/:companyID/:jobID"
-              exact
-              element={<JobPostingApplicants2 />}
-            />
-            <Route
-              path="/viewJobPosting2/:companyID/:jobID"
-              exact
-              element={<JobPosting2 />}
-            />
-            <Route path="/viewMyApplications2" exact element={<ViewMyApp2 />} />
           </Routes>
         </Router>
       </div>

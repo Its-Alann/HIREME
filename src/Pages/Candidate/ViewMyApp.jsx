@@ -158,7 +158,7 @@ export const ViewMyApp = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          My Application 2
+          My Application
         </Typography>
         {/* {getJobTitle("4QwjqeYxPRuDw7fOnKBj")}; */}
         {console.log(myApplications)}

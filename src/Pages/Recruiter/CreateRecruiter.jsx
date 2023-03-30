@@ -46,7 +46,7 @@ export const CreateRecruiter = () => {
     <Container maxWidth="md">
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Recruiter Account Creation 2
+          Recruiter Account Creation
         </Typography>
         <Stack spacing={2}>
           <Box>
