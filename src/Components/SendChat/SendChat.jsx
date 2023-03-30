@@ -222,11 +222,11 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
           <Grid
             xs={1}
             align="center"
+            data-cy="emojiPickerButton"
             justifyContent="center"
             sx={{ display: "flex", height: 56 }}
           >
             <EmojiPickerButton
-              data-cy="emojiPickerButton"
               setMessageContent={setMessageContent}
               setShowPicker={setShowPicker}
             />

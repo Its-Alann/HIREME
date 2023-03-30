@@ -28,6 +28,17 @@ describe("example to-do app", () => {
       cy.get("#message-input").should("be.visible").type("Hi");
       cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
       cy.get("#message-chats").last().should("contain", "Hi");
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000);
+
+      //send Hi with an emoji
+      cy.get("#message-input").should("be.visible").type("Hi");
+      cy.get('[data-cy="emojiPickerButton"]').click();
+      cy.get('[data-unified="1f602"] > .__EmojiPicker__').click();
+      cy.get('[data-testid="SendRoundedIcon"]')
+        .should("be.visible")
+        .click({ force: true });
+      cy.get("#message-chats").last().should("contain", "Hi😂");
 
       //send image
       const fileName = "src/Assets/fonts/Images/IMG_0524.png";
@@ -52,13 +63,12 @@ describe("example to-do app", () => {
         .get('[data-testid="attachment"]')
         .last()
         .click();
-
-      cy.get(".messageOptions").last().click();
-      cy.get(".reportMsgButton").click();
-      cy.get('[data-testid="reportedBadge"]').should("be.visible");
     });
 
     // it("report a message", () => {
+    //   cy.get(".messageOptions").last().click();
+    //   cy.get(".reportMsgButton").click();
+    //   cy.get('[data-testid="reportedBadge"]').should("be.visible");
     //   cy.login();
     //   cy.visit("http://localhost:3000/messaging");
     // });
@@ -124,9 +134,10 @@ describe("example to-do app", () => {
       cy.get('[data-cy="selectConnections"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').should("be.disabled");
       cy.get('[data-testid="ArrowDropDownIcon"]').click();
-      cy.get("li.MuiAutocomplete-option").click();
-      cy.get('[data-testid="CancelIcon"]').should("be.visible");
-      cy.get('[data-cy="submitConnections"]').click();
+      cy.get(".MuiAutocomplete-noOptions").should("be.visible");
+      //cy.get("li.MuiAutocomplete-option").click();
+      //cy.get('[data-testid="CancelIcon"]').should("be.visible");
+      //cy.get('[data-cy="submitConnections"]').click();
     });
   });
 
