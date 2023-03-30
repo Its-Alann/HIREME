@@ -73,8 +73,15 @@ const MessageList = ({ messages, convoId }) => {
             sx={{
               justifyContent: alignment,
               "&:hover .messageOptions": {
-                display: "inline-block",
+                // display: "inline-block",
+                visibility: "visible",
                 color: "grey",
+              },
+              ".seenByTag": {
+                visibility: "hidden",
+              },
+              "&:hover .seenByTag": {
+                visibility: "visible",
               },
             }}
           >

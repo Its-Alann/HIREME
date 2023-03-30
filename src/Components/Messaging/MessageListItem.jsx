@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Stack, IconButton, Typography, Badge } from "@mui/material";
 import MessageOptions from "./MessageOptions";
+import { auth } from "../../Firebase/firebase";
 
 const MessageListItem = ({
   message,
@@ -17,6 +18,11 @@ const MessageListItem = ({
 
   const timestamp = message.timestamp.toDate();
   const { content, sender, attachment, reported } = message;
+
+  // filter(Boolean) removes the comma from the beginning
+  const seenBy = message.seenBy.sort().filter(Boolean).join(", ");
+
+  console.log("seenBy", seenBy);
 
   return (
     <Stack
@@ -91,6 +97,7 @@ const MessageListItem = ({
           />
         )}
       </Box>
+
       <Typography
         style={{ marginLeft: "12px", marginRight: "12px" }}
         align={alignment}
@@ -98,6 +105,19 @@ const MessageListItem = ({
         color={textGray}
       >
         {timestamp.toLocaleString()}
+      </Typography>
+
+      <Typography
+        className="seenByTag"
+        style={{
+          marginLeft: "12px",
+          marginRight: "12px",
+        }}
+        align="right"
+        variant="caption"
+        color={textGray}
+      >
+        Seen by {seenBy}
       </Typography>
     </Stack>
   );
