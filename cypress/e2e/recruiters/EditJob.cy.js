@@ -7,8 +7,8 @@ beforeEach(() => {
 describe("Login to test account", () => {
   it("Logs into test account", () => {
     cy.visit("http://localhost:3000/login");
-    cy.get("#email").type("editjobtest@gmail.com");
-    cy.get("#password").type("iwanttoedit1job!");
+    cy.get("#email").type("accountcreation@test.com");
+    cy.get("#password").type("test123");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
