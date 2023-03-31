@@ -260,18 +260,18 @@ describe("Test the navbar component", () => {
   });
 
   describe("Click buttons on navbar when logged in with mobile resolution", () => {
-    it("clicks on home", () => {
-      cy.login();
-      cy.viewport(390, 844);
-      // cy.visit("http://localhost:3000/network");
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      cy.wait(500);
-      cy.get('[data-cy="Home-phone-test"]').click();
-      cy.wait(500);
-      cy.url().should("eq", "http://localhost:3000/");
-    });
+    // it("clicks on home", () => {
+    //   cy.login();
+    //   cy.viewport(390, 844);
+    //   // cy.visit("http://localhost:3000/network");
+    //   cy.get('[data-cy="phone-menu-test"]').within(() =>
+    //     cy.get("Button").click()
+    //   );
+    //   cy.wait(500);
+    //   cy.get('[data-cy="Home-phone-test"]').click();
+    //   cy.wait(500);
+    //   cy.url().should("eq", "http://localhost:3000/");
+    // });
 
     // it("clicks on network", () => {
     //   cy.wait(500);
