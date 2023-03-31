@@ -40,7 +40,7 @@ describe("Delete the new job", () => {
   it("deletes the new created job", () => {
     cy.visit("http://localhost:3000/");
     cy.wait(2000);
-    cy.get('[data-cy="MyJobs-test"]').click();
+    cy.get('[data-cy="My Jobs-test"]').click();
     cy.wait(2000);
     cy.get(
       ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
