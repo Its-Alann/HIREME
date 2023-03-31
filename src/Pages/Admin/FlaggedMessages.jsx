@@ -44,6 +44,21 @@ const columns = [
     disableColumnMenu: true,
     align: "center",
     renderCell: (params) => (
+      <Button variant="contained" size="small">
+        X
+      </Button>
+    ),
+  },
+  {
+    field: "warn",
+    width: 180,
+    headerName: "Warn",
+    headerAlign: "center",
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    align: "center",
+    renderCell: (params) => (
       <Button
         variant="contained"
         sx={{ backgroundColor: "#DF9000" }}
