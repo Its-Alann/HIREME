@@ -112,6 +112,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     const newMessage = {
       timestamp,
       sender,
+      seenBy: [myUser],
     };
 
     if (file) {
@@ -184,8 +185,12 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               placeholder="Type Something"
               fullWidth
               onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") await handleSend();
+              }}
               value={messageContent}
               sx={{ m: 0 }}
+              autoComplete="off"
             />
           )}
         </Grid>
