@@ -8,38 +8,25 @@ import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Typography } from "@mui/material";
+import PropTypes from "prop-types";
 import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
 import image2 from "../../../Assets/images/390image2.svg";
 
 const theme = createTheme();
 
-export const ReceivedInvitation = () => {
+export const ReceivedInvitation = ({
+  allUserProfiles,
+  receivedInvitationIDs,
+  currentUserEmail,
+}) => {
   const [receivedInvitations, setReceivedInvitations] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
 
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setCurrentUser(user);
-  //       const getReceivedInvitationUsers = async () => {
-  //         // READ DATA
-  //         try {
-  //           const docSnap = await getDoc(doc(db, "invitations", user.email));
-  //           const userData = docSnap.data();
-  //           setReceivedInvitations(userData.receivedInvitations);
-  //           console.log(receivedInvitations);
-  //         } catch (err) {
-  //           console.log(err);
-  //         }
-  //       };
-  //       getReceivedInvitationUsers();
-  //     } else {
-  //       //take you back to the homepage
-  //       //console.log("2:", user);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    setReceivedInvitations(receivedInvitationIDs);
+    setCurrentUser(currentUserEmail);
+  }, [receivedInvitationIDs]);
 
   return (
     <div>
@@ -60,7 +47,7 @@ export const ReceivedInvitation = () => {
                   <Grid item>
                     <ReceivedInvitationCard
                       receivedInvitationUserID={requestedUserID}
-                      currentUser={currentUser.email}
+                      currentUser={currentUser}
                     />
                   </Grid>
                 ))}
@@ -88,6 +75,12 @@ export const ReceivedInvitation = () => {
       </ThemeProvider>
     </div>
   );
+};
+
+ReceivedInvitation.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  receivedInvitationIDs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currentUserEmail: PropTypes.string.isRequired,
 };
 
 export default ReceivedInvitation;

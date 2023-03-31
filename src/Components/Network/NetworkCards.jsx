@@ -97,7 +97,6 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
         const docSnap = await getDoc(doc(db, "userProfiles", connectedUserID));
         const userData = docSnap.data();
         setConnectedUser(userData);
-        console.log("NetworkCards");
       } catch (err) {
         console.log(err);
       }
