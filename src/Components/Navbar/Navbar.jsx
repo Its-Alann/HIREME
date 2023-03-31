@@ -31,6 +31,7 @@ const pageNamesForRecruiter = [
   "Network",
   "Jobs",
   "MyJobs",
+  "MyCompany",
   "Messaging",
 ];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
@@ -45,6 +46,7 @@ const Navbar = () => {
   ]);
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  const [companyID, setCompanyID] = React.useState(null);
   //getting user information
   React.useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -56,6 +58,7 @@ const Navbar = () => {
           const recruiter = await getDoc(doc(db, "recruiters", user.uid));
           if (recruiter.exists()) {
             setPageNames(pageNamesForRecruiter);
+            setCompanyID(recruiter.data().workFor);
           } else {
             setPageNames(pageNamesForApplicant);
           }
@@ -124,6 +127,9 @@ const Navbar = () => {
         break;
       case "log in":
         navigate("/login");
+        break;
+      case "mycompany":
+        navigate(`/editCompany/${companyID}`);
         break;
       default:
         break;
@@ -270,6 +276,7 @@ const Navbar = () => {
                     {page === "Network" && <GroupsOutlinedIcon />}
                     {page === "Jobs" && <WorkOutlineOutlinedIcon />}
                     {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
+                    {page === "MyCompany" && <WorkOutlineOutlinedIcon />}
                     {page}
                   </Button>
                 ))}
