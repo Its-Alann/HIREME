@@ -104,9 +104,11 @@ export const JobPosting = () => {
                     )}
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
-                      <Typography sx={{ fontSize: 18 }}>
-                        {companyName.name}
-                      </Typography>
+                      <Link to={`/viewCompany/${pageCompanyID}`}>
+                        <Typography sx={{ fontSize: 18 }}>
+                          {companyName.name}
+                        </Typography>
+                      </Link>
                       <Typography
                         sx={{ fontSize: 18 }}
                       >{`${job.city}, ${job.country}`}</Typography>

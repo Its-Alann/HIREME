@@ -46,14 +46,6 @@ export const CreateJob = () => {
     const jobDocumentRef = doc(collection(db, "jobs"));
     batch.set(jobDocumentRef, jobInformation);
 
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
-    batch.update(recruiterRef, {
-      jobs: arrayUnion({
-        jobID: jobDocumentRef.id,
-        publishedAt: jobInformation.publishedAt,
-      }),
-    });
-
     const companyRef = doc(db, "companies", jobInformation.companyID);
     batch.update(companyRef, {
       jobs: arrayUnion({

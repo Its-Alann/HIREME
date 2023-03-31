@@ -1,5 +1,3 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import {
   Grid,
   IconButton,
@@ -7,9 +5,12 @@ import {
   Typography,
   Avatar,
   Card,
+  Box,
+  Button,
+  Container,
+  Stack,
 } from "@mui/material";
 import * as React from "react";
-import Container from "@mui/material/Container";
 import {
   doc,
   collection,
@@ -23,11 +24,11 @@ import {
   arrayRemove,
   arrayUnion,
 } from "firebase/firestore";
-import Stack from "@mui/material/Stack";
 import { onAuthStateChanged } from "firebase/auth";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../../Firebase/firebase";
+import JobCard from "../../Components/Jobs/JobCard";
 
 export const EditCompany = () => {
   const { companyID } = useParams();
@@ -42,6 +43,10 @@ export const EditCompany = () => {
   const [employeesInformation, setEmployeesInformation] = React.useState([]);
   const [managersInformation, setManagersInformation] = React.useState([]);
   const [currentUserID, setCurrentUserID] = React.useState("");
+  const [cursorPosition, setCursorPosition] = React.useState(0);
+  const [jobs, setJobs] = React.useState([]);
+
+  const jobsPerPage = 4;
 
   async function getCompanyInformation() {
     const companyRef = doc(db, "companies", companyID);
@@ -171,6 +176,58 @@ export const EditCompany = () => {
     });
   }
 
+  // Using the list of jobsID & the cursor position
+  // determine 5 jobID
+  // Then query jobs whose ID within the 5 jobID
+  async function getJobs() {
+    if (cursorPosition >= companyInformation.jobs.length) {
+      return;
+    }
+    const tempJobIDList = [];
+    for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
+      if (i >= companyInformation.jobs.length) {
+        break;
+      }
+      tempJobIDList.push(companyInformation.jobs[i].jobID);
+    }
+
+    const jobsQuery = query(
+      collection(db, "jobs"),
+      where(documentId(), "in", tempJobIDList)
+    );
+
+    const jobsSnapshot = await getDocs(jobsQuery);
+
+    const temp = [];
+    jobsSnapshot.docs.forEach((document) => {
+      temp.push({ ...document.data(), documentID: document.id });
+    });
+
+    // Sort the list of jobs based on the publishedAt, newest first
+    temp.sort((a, b) => {
+      if (a.publishedAt.seconds === b.publishedAt.seconds) {
+        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
+      }
+      return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
+    });
+    setJobs(temp);
+  }
+
+  function setCursorToNextPosition() {
+    const nextPosition = cursorPosition + jobsPerPage;
+    if (nextPosition >= companyInformation.jobs.length) {
+      return;
+    }
+    setCursorPosition(nextPosition);
+  }
+  function setCursorToPreviousPosition() {
+    let previousPosition = cursorPosition - jobsPerPage;
+    if (previousPosition < 0) {
+      previousPosition = 0;
+    }
+    setCursorPosition(previousPosition);
+  }
+
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -217,6 +274,10 @@ export const EditCompany = () => {
   }, [companyInformation]);
 
   React.useEffect(() => {
+    getJobs();
+  }, [companyInformation, cursorPosition]);
+
+  React.useEffect(() => {
     console.log(employeesInformation);
   }, [employeesInformation]);
 
@@ -242,6 +303,20 @@ export const EditCompany = () => {
               })
             }
           />
+
+          <Button
+            onClick={() => {
+              saveCompanyInformation();
+            }}
+            data-cy="saveBtn"
+            variant="contained"
+            size="medium"
+            sx={{ my: 1 }}
+            id="ButtonSave"
+          >
+            Save
+          </Button>
+
           <Typography>Company Logo</Typography>
           <IconButton>
             <input
@@ -271,19 +346,32 @@ export const EditCompany = () => {
             }}
           />
 
+          <Typography>Job List</Typography>
+          {jobs.map((job) => (
+            <JobCard
+              key={`JobCard-${job.documentID}`}
+              companyID={job.companyID}
+              companyName={companyInformation.name}
+              jobID={job.documentID}
+              title={job.title}
+              city={job.city}
+              country={job.country}
+              deadlineSeconds={job.deadline.seconds}
+              deadlineNanoSeconds={job.deadline.nanoseconds}
+              logo={companyInformation.logoPath}
+              editable
+            />
+          ))}
           <Button
-            onClick={() => {
-              saveCompanyInformation();
-            }}
-            style={{
-              color: "white",
-            }}
-            data-cy="saveBtn"
+            id="Button-Previous"
+            onClick={() => setCursorToPreviousPosition()}
           >
-            Save Changes
+            Previous
+          </Button>
+          <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
+            Next
           </Button>
 
-          <Typography>Has {companyInformation.jobs.length} Jobs</Typography>
           <Typography>Employee List</Typography>
           {employeesInformation.map((employee) => (
             <div key={`employeeCard-${employee.ID}`}>

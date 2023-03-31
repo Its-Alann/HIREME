@@ -15,12 +15,9 @@ import {
   limit,
 } from "firebase/firestore";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-// import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
-import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 import "./Job.css";
+import JobCard from "../../Components/Jobs/JobCard";
 
 export const BrowseJobs = () => {
   const [jobs, setJobs] = React.useState([]);
@@ -155,86 +152,20 @@ export const BrowseJobs = () => {
           this page.
         </Typography>
 
-        {jobs.map((job) => {
-          const hello = "hello";
-
-          // do this to show what is inside job
-          // console.log(job);
-          return (
-            // Create cards instead
-            <Box key={job.documentID} sx={{ py: 1 }}>
-              <Card variant="outlined">
-                <Box sx={{ m: 3 }}>
-                  <Stack direction="row" alignItems="center">
-                    {job.companyID === undefined ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "0.25",
-                          height: "0.25",
-                          mr: 2,
-                        }}
-                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                      />
-                    ) : (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo[job.companyID]}
-                      />
-                    )}
-                    <Box>
-                      <Typography variant="h4">{job.title}</Typography>
-                      <Typography>{companiesName[job.companyID]}</Typography>
-                      <Typography>{`${job.city}, ${job.country}`}</Typography>
-                    </Box>
-                  </Stack>
-
-                  {/* do we need to show company id? */}
-                  {/* <Typography>Company ID: {job.companyID}</Typography> */}
-
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="flex-end"
-                    sx={{ pt: 2 }}
-                  >
-                    {/* Added this button for candidate's view */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      sx={{ my: 1 }}
-                      id={`Button-${job.documentID}`}
-                    >
-                      <Link
-                        to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
-                        className="link"
-                        underline="none"
-                        style={{ textDecoration: "none" }}
-                      >
-                        {/* <Link to="/job/1"> */}
-                        View job
-                      </Link>
-                    </Button>
-                    <Typography>
-                      Deadline:{" "}
-                      {new Date(
-                        job.deadline.seconds * 1000 +
-                          job.deadline.nanoseconds / 1000000
-                      ).toDateString()}
-                    </Typography>
-                  </Stack>
-                </Box>
-              </Card>
-            </Box>
-          );
-        })}
+        {jobs.map((job) => (
+          <JobCard
+            key={`JobCard-${job.documentID}`}
+            companyID={job.companyID}
+            companyName={companiesName[job.companyID]}
+            jobID={job.documentID}
+            title={job.title}
+            city={job.city}
+            country={job.country}
+            deadlineSeconds={job.deadline.seconds}
+            deadlineNanoSeconds={job.deadline.nanoseconds}
+            logo={companiesLogo[job.companyID]}
+          />
+        ))}
         <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
           Previous
         </Button>

@@ -314,9 +314,11 @@ export const JobPostingApplicants = () => {
                     <Grid>
                       <Box xs={12} sm={12} md={6}>
                         <Typography variant="h4">{job.title}</Typography>
-                        <Typography sx={{ fontSize: 18 }}>
-                          {companyName.name}
-                        </Typography>
+                        <Link to={`/viewCompany/${pageCompanyID}`}>
+                          <Typography sx={{ fontSize: 18 }}>
+                            {companyName.name}
+                          </Typography>
+                        </Link>
                         <Typography sx={{ fontSize: 18 }}>
                           {`${job.city}, ${job.country}`}
                         </Typography>

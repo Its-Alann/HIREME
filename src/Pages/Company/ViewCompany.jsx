@@ -17,6 +17,7 @@ import {
 import Stack from "@mui/material/Stack";
 import { useParams, useNavigate } from "react-router-dom";
 import { db, storage } from "../../Firebase/firebase";
+import JobCard from "../../Components/Jobs/JobCard";
 
 export const ViewCompany = () => {
   const { companyID } = useParams();
@@ -27,6 +28,10 @@ export const ViewCompany = () => {
   });
   const [employeesInformation, setEmployeesInformation] = React.useState([]);
   const [managersInformation, setManagersInformation] = React.useState([]);
+  const [cursorPosition, setCursorPosition] = React.useState(0);
+  const [jobs, setJobs] = React.useState([]);
+
+  const jobsPerPage = 4;
 
   async function getCompanyInformation() {
     const companyRef = doc(db, "companies", companyID);
@@ -80,6 +85,59 @@ export const ViewCompany = () => {
     }
   }
 
+  // Using the list of jobsID & the cursor position
+  // determine 5 jobID
+  // Then query jobs whose ID within the 5 jobID
+  async function getJobs() {
+    if (cursorPosition >= companyInformation.jobs.length) {
+      return;
+    }
+    const tempJobIDList = [];
+    for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
+      if (i >= companyInformation.jobs.length) {
+        break;
+      }
+      tempJobIDList.push(companyInformation.jobs[i].jobID);
+    }
+
+    const jobsQuery = query(
+      collection(db, "jobs"),
+      where(documentId(), "in", tempJobIDList)
+    );
+
+    const jobsSnapshot = await getDocs(jobsQuery);
+
+    const temp = [];
+    jobsSnapshot.docs.forEach((document) => {
+      temp.push({ ...document.data(), documentID: document.id });
+    });
+
+    // Sort the list of jobs based on the publishedAt, newest first
+    temp.sort((a, b) => {
+      if (a.publishedAt.seconds === b.publishedAt.seconds) {
+        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
+      }
+      return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
+    });
+    setJobs(temp);
+  }
+
+  function setCursorToNextPosition() {
+    const nextPosition = cursorPosition + jobsPerPage;
+    if (nextPosition >= companyInformation.jobs.length) {
+      return;
+    }
+    setCursorPosition(nextPosition);
+  }
+
+  function setCursorToPreviousPosition() {
+    let previousPosition = cursorPosition - jobsPerPage;
+    if (previousPosition < 0) {
+      previousPosition = 0;
+    }
+    setCursorPosition(previousPosition);
+  }
+
   React.useEffect(() => {
     getCompanyInformation();
   }, []);
@@ -94,14 +152,13 @@ export const ViewCompany = () => {
     }
   }, [companyInformation]);
 
+  React.useEffect(() => {
+    getJobs();
+  }, [companyInformation, cursorPosition]);
+
   return (
     <>
-      <Typography variant="h4" sx={{ pb: 2 }}>
-        View Company
-      </Typography>
-      <Typography>Company Name</Typography>
-      <Typography>{companyInformation.name}</Typography>
-      <Typography>Company Logo</Typography>
+      <Typography variant="h4">{companyInformation.name}</Typography>
       <Box
         component="img"
         sx={{
@@ -112,8 +169,31 @@ export const ViewCompany = () => {
         }}
         src={companyInformation.logoPath}
       />
-      <Typography>Has {companyInformation.jobs.length} Jobs</Typography>
 
+      <Typography>Job List</Typography>
+      {jobs.map((job) => (
+        <JobCard
+          key={`JobCard-${job.documentID}`}
+          companyID={job.companyID}
+          companyName={companyInformation.name}
+          jobID={job.documentID}
+          title={job.title}
+          city={job.city}
+          country={job.country}
+          deadlineSeconds={job.deadline.seconds}
+          deadlineNanoSeconds={job.deadline.nanoseconds}
+          logo={companyInformation.logoPath}
+        />
+      ))}
+      <Button
+        id="Button-Previous"
+        onClick={() => setCursorToPreviousPosition()}
+      >
+        Previous
+      </Button>
+      <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
+        Next
+      </Button>
       <Typography>Employee List</Typography>
       {employeesInformation.map((employeeInformation) => (
         <div key={`employeeCard-${employeeInformation.ID}`}>
@@ -122,7 +202,6 @@ export const ViewCompany = () => {
           <Typography>{employeeInformation.lastName}</Typography>
         </div>
       ))}
-
       <Typography>Manager List</Typography>
       {managersInformation.map((manager) => (
         <div key={`managerCard-${manager.ID}`}>
