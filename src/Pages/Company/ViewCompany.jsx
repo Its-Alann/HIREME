@@ -1,10 +1,4 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import * as React from "react";
-import { useState } from "react";
-import Container from "@mui/material/Container";
 import {
   doc,
   collection,
@@ -14,9 +8,9 @@ import {
   documentId,
   getDocs,
 } from "firebase/firestore";
-import Stack from "@mui/material/Stack";
-import { useParams, useNavigate } from "react-router-dom";
-import { db, storage } from "../../Firebase/firebase";
+import { Stack, Box, Button, Typography, Container } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { db } from "../../Firebase/firebase";
 import JobCard from "../../Components/Jobs/JobCard";
 
 export const ViewCompany = () => {

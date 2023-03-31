@@ -11,6 +11,7 @@ import {
   Stack,
 } from "@mui/material";
 import * as React from "react";
+import PropTypes from "prop-types";
 import {
   doc,
   collection,
@@ -25,12 +26,12 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../../Firebase/firebase";
 import JobCard from "../../Components/Jobs/JobCard";
 
-export const EditCompany = () => {
+export const EditCompany = ({ toggleNavbarUpdate }) => {
   const { companyID } = useParams();
   const [companyInformation, setCompanyInformation] = React.useState({
     name: "",
@@ -39,7 +40,8 @@ export const EditCompany = () => {
     employees: [],
     managers: [],
   });
-  const [isAllowed, setIsAllowed] = React.useState(false);
+  const [isNewJobAllowed, setIsnewJobAllowed] = React.useState(false);
+  const [isAdmin, setIsAdmin] = React.useState(false);
   const [employeesInformation, setEmployeesInformation] = React.useState([]);
   const [managersInformation, setManagersInformation] = React.useState([]);
   const [currentUserID, setCurrentUserID] = React.useState("");
@@ -83,6 +85,7 @@ export const EditCompany = () => {
           ID: document.id,
           firstName: document.data().firstName,
           lastName: document.data().lastName,
+          email: document.data().email,
         });
       });
       setEmployeesInformation(temp);
@@ -105,6 +108,7 @@ export const EditCompany = () => {
           ID: document.id,
           firstName: document.data().firstName,
           lastName: document.data().lastName,
+          email: document.data().email,
         });
       });
       setManagersInformation(temp);
@@ -126,6 +130,9 @@ export const EditCompany = () => {
       ...companyInformation,
       employees,
     });
+    if (employeeID === currentUserID) {
+      toggleNavbarUpdate();
+    }
   }
 
   async function promoteToManager(employeeID) {
@@ -243,25 +250,27 @@ export const EditCompany = () => {
   React.useEffect(() => {
     // if a company has manager, then only the manager is allowed to edit company
     // if a copmany does not have manager, but has employee, then only employee is allowed to edit company
-    // if a company does not have manager nor employee, then everyone is allowed to edit company
+    let hasManager = false;
     if (companyInformation.managers && companyInformation.managers.length > 0) {
+      hasManager = true;
       if (companyInformation.managers.includes(currentUserID)) {
-        setIsAllowed(true);
-      } else {
-        setIsAllowed(false);
+        setIsnewJobAllowed(true);
+        setIsAdmin(true);
+        return;
       }
-    } else if (
+    }
+    if (
       companyInformation.employees &&
       companyInformation.employees.length > 0
     ) {
       if (companyInformation.employees.includes(currentUserID)) {
-        setIsAllowed(true);
-      } else {
-        setIsAllowed(false);
+        setIsnewJobAllowed(true);
+        setIsAdmin(!hasManager);
+        return;
       }
-    } else {
-      setIsAllowed(true);
     }
+    setIsnewJobAllowed(false);
+    setIsAdmin(false);
   }, [companyInformation, currentUserID]);
 
   React.useEffect(() => {
@@ -283,10 +292,20 @@ export const EditCompany = () => {
 
   return (
     <>
-      {isAllowed ? (
+      {isNewJobAllowed ? (
         <>
           <Typography variant="h4" sx={{ pb: 2 }}>
             Edit Company
+          </Typography>
+          <Typography>Who can update?</Typography>
+          <Typography>
+            If there is at least 1 manager, then only managers can update
+          </Typography>
+          <Typography>
+            Else If there is at least 1 employee, then only employees can update
+          </Typography>
+          <Typography>
+            Else If there is no employee, then only everyone can update
           </Typography>
           <Typography>Company Name</Typography>
           <TextField
@@ -303,19 +322,6 @@ export const EditCompany = () => {
               })
             }
           />
-
-          <Button
-            onClick={() => {
-              saveCompanyInformation();
-            }}
-            data-cy="saveBtn"
-            variant="contained"
-            size="medium"
-            sx={{ my: 1 }}
-            id="ButtonSave"
-          >
-            Save
-          </Button>
 
           <Typography>Company Logo</Typography>
           <IconButton>
@@ -345,6 +351,18 @@ export const EditCompany = () => {
               color: "#263aaf",
             }}
           />
+          <Button
+            onClick={() => {
+              saveCompanyInformation();
+            }}
+            data-cy="saveBtn"
+            variant="contained"
+            size="medium"
+            sx={{ my: 1 }}
+            id="ButtonSave"
+          >
+            Save
+          </Button>
 
           <Typography>Job List</Typography>
           {jobs.map((job) => (
@@ -368,9 +386,20 @@ export const EditCompany = () => {
           >
             Previous
           </Button>
+          {isNewJobAllowed && (
+            <Link to="/createJob">
+              <Button id="Button-NewJob">New Job</Button>
+            </Link>
+          )}
+
           <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
             Next
           </Button>
+
+          <Typography>Below are the recruiters of the company</Typography>
+          <Typography>Promote employee to be a manager</Typography>
+          <Typography>Demote a manager to be an employee</Typography>
+          <Typography>Remove an employee</Typography>
 
           <Typography>Employee List</Typography>
           {employeesInformation.map((employee) => (
@@ -378,20 +407,29 @@ export const EditCompany = () => {
               <Typography>{employee.ID}</Typography>
               <Typography>{employee.firstName}</Typography>
               <Typography>{employee.lastName}</Typography>
-              <Button
-                onClick={() => {
-                  removeEmployee(employee.ID);
-                }}
-              >
-                Remove
-              </Button>
-              <Button
-                onClick={() => {
-                  promoteToManager(employee.ID);
-                }}
-              >
-                Promote
-              </Button>
+              {employee.email && (
+                <Link to={`/viewProfile/${employee.email}`}>
+                  <Button>View Profile</Button>
+                </Link>
+              )}
+              {isAdmin && (
+                <>
+                  <Button
+                    onClick={() => {
+                      removeEmployee(employee.ID);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      promoteToManager(employee.ID);
+                    }}
+                  >
+                    Promote
+                  </Button>
+                </>
+              )}
             </div>
           ))}
           <Typography>Manager List</Typography>
@@ -400,13 +438,15 @@ export const EditCompany = () => {
               <Typography>{manager.ID}</Typography>
               <Typography>{manager.firstName}</Typography>
               <Typography>{manager.lastName}</Typography>
-              <Button
-                onClick={() => {
-                  demoteManager(manager.ID);
-                }}
-              >
-                Demote
-              </Button>
+              {isAdmin && (
+                <Button
+                  onClick={() => {
+                    demoteManager(manager.ID);
+                  }}
+                >
+                  Demote
+                </Button>
+              )}
             </div>
           ))}
         </>
@@ -418,3 +458,7 @@ export const EditCompany = () => {
   );
 };
 export default EditCompany;
+
+EditCompany.propTypes = {
+  toggleNavbarUpdate: PropTypes.func,
+};

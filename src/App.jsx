@@ -18,6 +18,7 @@ import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
+import { ViewProfile } from "./Pages/Network/ViewProfile";
 import { CreateCompany } from "./Pages/Company/CreateCompany";
 import { ViewCompany } from "./Pages/Company/ViewCompany";
 import { EditCompany } from "./Pages/Company/EditCompany";
@@ -36,10 +37,6 @@ import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
 
 const App = () => {
-  const hello = "helloo";
-
-  //asds//
-
   const theme = createTheme({
     palette: {
       primary: { main: "#2B2F90" },
@@ -50,12 +47,16 @@ const App = () => {
       fontFamily: ["Proxima Nova"],
     },
   });
+  const [navbarUpdateToggle, setNavebarUpdateToggle] = React.useState(false);
+  const toggleNavbarUpdate = () => {
+    setNavebarUpdateToggle(!navbarUpdateToggle);
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <Router>
-          <Navbar />
+          <Navbar navbarUpdateToggle={navbarUpdateToggle} />
           <Routes>
             <Route path="/" exact element={<HomePage />} />
             <Route path="/login" exact element={<LoginPage />} />
@@ -93,7 +94,9 @@ const App = () => {
             <Route
               path="/createRecruiter"
               exact
-              element={<CreateRecruiter />}
+              element={
+                <CreateRecruiter toggleNavbarUpdate={toggleNavbarUpdate} />
+              }
             />
             <Route path="/createJob" exact element={<CreateJob />} />
             <Route path="/browseJobs" exact element={<BrowseJobs />} />
@@ -123,7 +126,12 @@ const App = () => {
             <Route
               path="/editCompany/:companyID"
               exact
-              element={<EditCompany />}
+              element={<EditCompany toggleNavbarUpdate={toggleNavbarUpdate} />}
+            />
+            <Route
+              path="/viewProfile/:userEmail"
+              exact
+              element={<ViewProfile />}
             />
           </Routes>
         </Router>

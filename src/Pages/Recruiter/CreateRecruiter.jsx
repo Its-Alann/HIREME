@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import * as React from "react";
+import PropTypes from "prop-types";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
@@ -22,11 +23,12 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
 
-export const CreateRecruiter = () => {
+export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
   const [recruiterInformation, setRecruiterInformation] = React.useState({
     firstName: "",
     lastName: "",
     workFor: "",
+    email: "",
   });
   const [companyList, setCompanyList] = React.useState([]);
   const [previousCompany, setPreviousCompany] = React.useState(null);
@@ -51,6 +53,7 @@ export const CreateRecruiter = () => {
       });
     }
     await batch.commit();
+    toggleNavbarUpdate();
   }
 
   async function getCompanies() {
@@ -69,12 +72,10 @@ export const CreateRecruiter = () => {
       doc(db, "recruiters", currentUserID)
     );
     if (recruiterSnapshot.exists()) {
-      if (recruiterSnapshot.workFor) {
-        setPreviousCompany(recruiterSnapshot.workFor);
+      if (recruiterSnapshot.data().workFor) {
+        setPreviousCompany(recruiterSnapshot.data().workFor);
       } else {
-        console.log(recruiterSnapshot.workFor);
         setPreviousCompany(null);
-        console.log("sdf");
       }
     }
   }
@@ -87,6 +88,7 @@ export const CreateRecruiter = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUserID(user.uid);
+        setRecruiterInformation({ ...recruiterInformation, email: user.email });
       }
     });
   }, []);
@@ -96,6 +98,10 @@ export const CreateRecruiter = () => {
       getPreviousCompany();
     }
   }, [currentUserID]);
+
+  React.useEffect(() => {
+    console.log(previousCompany);
+  }, [previousCompany]);
 
   return (
     <Container maxWidth="md">
@@ -179,3 +185,7 @@ export const CreateRecruiter = () => {
   );
 };
 export default CreateRecruiter;
+
+CreateRecruiter.propTypes = {
+  toggleNavbarUpdate: PropTypes.func,
+};
