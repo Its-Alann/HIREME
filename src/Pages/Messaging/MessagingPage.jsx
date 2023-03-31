@@ -53,7 +53,6 @@ const findLastSeen = (arr, searchValue) => {
     .findIndex((x) => x.seenBy.includes(searchValue));
   const lastIndex =
     reverseIndex >= 0 ? arr.length - 1 - reverseIndex : reverseIndex;
-  console.log("lastIndex", lastIndex);
   return lastIndex;
 };
 
