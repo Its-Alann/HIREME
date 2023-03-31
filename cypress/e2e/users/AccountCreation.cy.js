@@ -224,6 +224,7 @@ describe("Filling Up Forms", () => {
         cy.get("#next").click();
         cy.get("#next").click();
         cy.get("#next").click();
+        cy.wait(500);
       });
     });
   });

@@ -60,7 +60,7 @@ const Navbar = () => {
           const userProfile = await getDoc(doc(db, "userProfiles", user.email));
           setUserData(userProfile.data());
           setUserIsConnected(true);
-          const recruiter = await getDoc(doc(db, "recruiters", user.uid));
+          const recruiter = await getDoc(doc(db, "recruiters2", user.uid));
           if (recruiter.exists()) {
             setPageNames(pageNamesForRecruiter);
           } else {

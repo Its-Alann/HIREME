@@ -48,6 +48,7 @@ describe("Delete the new job", () => {
       .first()
       .click();
     cy.get(".css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)").click();
-    cy.get(".MuiDialogActions-root > a > .MuiButtonBase-root").click();
+    cy.get(".css-847nqu-MuiButtonBase-root-MuiButton-root").click();
+    cy.wait(500);
   });
 });

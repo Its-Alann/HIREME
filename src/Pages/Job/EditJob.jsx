@@ -24,7 +24,6 @@ export const EditJob = () => {
     companyID: "",
     deadline: new Date(),
     description: "",
-    location: "",
     owner: "",
     country: "",
     city: "",
@@ -36,8 +35,9 @@ export const EditJob = () => {
   const [companyName, setCompanyName] = React.useState("");
 
   async function getJob() {
-    const jobRef = doc(db, "jobs", jobID);
+    const jobRef = doc(db, "jobs2", jobID);
     const jobSnapshot = await getDoc(jobRef);
+    console.log(jobSnapshot.data());
     if (jobSnapshot.exists()) {
       setJobInformation({
         ...jobSnapshot.data(),
@@ -50,7 +50,7 @@ export const EditJob = () => {
 
   async function getCompanyName() {
     if (jobInformation.companyID) {
-      const companyRef = doc(db, "companies", jobInformation.companyID);
+      const companyRef = doc(db, "companies2", jobInformation.companyID);
       const companySnapshot = await getDoc(companyRef);
       if (companySnapshot.exists()) {
         setCompanyName(companySnapshot.data().name);
@@ -61,7 +61,7 @@ export const EditJob = () => {
   }
 
   async function handleSubmit() {
-    const jobRef = doc(db, "jobs", jobID);
+    const jobRef = doc(db, "jobs2", jobID);
     await updateDoc(jobRef, jobInformation);
   }
 
@@ -85,7 +85,7 @@ export const EditJob = () => {
           Edit Job
         </Typography>
         <Typography>
-          This Page shows a single Job@aposs information & allow the owner to
+          This Page shows a single Job&apos;s information & allow the owner to
           edit them
         </Typography>
 
@@ -171,24 +171,6 @@ export const EditJob = () => {
               />
             </Box>
           </Stack>
-
-          {/* <Box>
-            <Typography>Location</Typography>
-            <TextField
-              required
-              id="TextField-Location"
-              variant="standard"
-              placeholder="Location"
-              fullWidth
-              value={jobInformation.location}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  location: e.target.value,
-                })
-              }
-            />
-          </Box> */}
 
           <Box>
             <Typography>Job description</Typography>
