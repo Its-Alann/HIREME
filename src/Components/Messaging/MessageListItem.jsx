@@ -17,12 +17,10 @@ const MessageListItem = ({
   const textGray = "rgba(0, 0, 0, 0.6)";
 
   const timestamp = message.timestamp.toDate();
-  const { content, sender, attachment, reported } = message;
+  const { content, sender, attachment, reported, readReceipt } = message;
 
   // filter(Boolean) removes the comma from the beginning
-  const seenBy = message.seenBy.sort().filter(Boolean).join(", ");
-
-  console.log("seenBy", seenBy);
+  const seenBy = message.readReceipt?.sort().filter(Boolean).join(", ");
 
   return (
     <Stack
@@ -107,18 +105,20 @@ const MessageListItem = ({
         {timestamp.toLocaleString()}
       </Typography>
 
-      <Typography
-        className="seenByTag"
-        style={{
-          marginLeft: "12px",
-          marginRight: "12px",
-        }}
-        align="right"
-        variant="caption"
-        color={textGray}
-      >
-        Seen by {seenBy}
-      </Typography>
+      {readReceipt && (
+        <Typography
+          className="seenByTag"
+          style={{
+            marginLeft: "12px",
+            marginRight: "12px",
+          }}
+          align="right"
+          variant="caption"
+          color={textGray}
+        >
+          Seen by {seenBy}
+        </Typography>
+      )}
     </Stack>
   );
 };
