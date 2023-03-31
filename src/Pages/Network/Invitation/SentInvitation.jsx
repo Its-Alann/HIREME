@@ -21,12 +21,17 @@ export const SentInvitation = ({
   currentUserEmail,
 }) => {
   const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     setSentRequestsUserID(sentInvitationsID);
     setCurrentUser(currentUserEmail);
   }, [sentInvitationsID]);
+
+  useEffect(() => {
+    setAllUsers(allUserProfiles);
+  }, [allUserProfiles]);
 
   return (
     <div>
@@ -45,6 +50,7 @@ export const SentInvitation = ({
                 {sentRequestsUserID.map((userID) => (
                   <Grid item data-cy="invitationsGrid">
                     <SentInvitationCard
+                      allUserProfiles={allUsers}
                       userID={userID}
                       currentUser={currentUser.email}
                     />

@@ -15,10 +15,12 @@ import { PossibleConnectionCard } from "../../Components/Network/PossibleConnect
 const theme = createTheme();
 
 export const NetworkPossibleConnections = ({
+  allUserProfiles,
   nonConnectedUsersID,
   currentUserEmail,
 }) => {
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
@@ -26,6 +28,10 @@ export const NetworkPossibleConnections = ({
     setNonConnectedUsersArr(nonConnectedUsersID);
     setCurrentUser(currentUserEmail);
   }, [nonConnectedUsersID]);
+
+  useEffect(() => {
+    setAllUsers(allUserProfiles);
+  }, [allUserProfiles]);
 
   return (
     <div>
@@ -50,6 +56,7 @@ export const NetworkPossibleConnections = ({
                 {nonConnectedUsersArr.map((possibleConnectionUserID) => (
                   <Grid item>
                     <PossibleConnectionCard
+                      allUserProfiles={allUsers}
                       possibleConnectionUserId={possibleConnectionUserID.id}
                       currentUser={currentUser}
                       data-cy={`gridItem${possibleConnectionUserID}`}
@@ -69,6 +76,7 @@ export const NetworkPossibleConnections = ({
 };
 
 NetworkPossibleConnections.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
   nonConnectedUsersID: PropTypes.arrayOf(PropTypes.Object).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };
