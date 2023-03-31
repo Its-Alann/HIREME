@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   ListItemButton,
   ListItemText,
+  Badge,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -26,8 +27,9 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { onAuthStateChanged } from "firebase/auth";
 import AddCommentIcon from "@mui/icons-material/AddComment";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import { onAuthStateChanged } from "firebase/auth";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
@@ -198,12 +200,13 @@ const Messaging = () => {
       return;
     }
     const updatedMessages = messages.map((m) => {
-      // eslint-disable-next-line no-param-reassign
-      if (!m.seenBy) m.seenBy = [myUser];
-      else if (!m.seenBy?.includes(myUser)) m.seenBy.push(myUser);
-      // eslint-disable-next-line no-param-reassign
-      delete m.readReceipt;
-      return m;
+      // dont want the readReceipt part to write to the db
+      const { readReceipt, ...updated } = m;
+
+      if (!m.seenBy) updated.seenBy = [myUser];
+      else if (!m.seenBy?.includes(myUser)) updated.seenBy.push(myUser);
+
+      return updated;
     });
     console.log("updatedMessages", updatedMessages);
     const convoRef = doc(db, "messages", convoId);
@@ -329,6 +332,7 @@ const Messaging = () => {
               >
                 <List>
                   {chatProfiles.map((chat, i) => (
+                    // <Badge badgeContent="hi">
                     <ListItemButton
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
@@ -355,7 +359,9 @@ const Messaging = () => {
                         primary={chat.names}
                         secondary={chat.mostRecent.toDateString()}
                       />
+                      <FiberManualRecordIcon fontSize="small" color="warning" />
                     </ListItemButton>
+                    // </Badge>
                   ))}
                 </List>
               </Grid>
