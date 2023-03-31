@@ -1,6 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "cypress-file-upload";
 
+const messagingTestAccountUid = "9Da7DZCwxRhEKEgC4eQAM1KXQjp1";
+const beaUid = "uusviMjzW7P3ehh4r5CCyu9ujvI3";
+
 describe("example to-do app", () => {
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
@@ -16,7 +19,7 @@ describe("example to-do app", () => {
       cy.logout();
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
-      cy.login();
+      cy.login(messagingTestAccountUid);
       cy.visit("http://localhost:3000/messaging");
 
       //open first conversation and checks if it's visible
@@ -70,7 +73,7 @@ describe("example to-do app", () => {
   describe("Testing the phone resolution changes", () => {
     it("displays icon of returning to all convos when using phone resolution", () => {
       cy.logout();
-      cy.login();
+      cy.login(messagingTestAccountUid);
 
       //Iphone resolution
       cy.viewport(390, 844);
@@ -105,22 +108,25 @@ describe("example to-do app", () => {
     //   });
     // });
 
-    it("reports message", () => {
+    it("reports then unreports message", () => {
       cy.logout();
-      cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
+      cy.login(beaUid);
       cy.visit("http://localhost:3000/messaging");
       cy.get(".convo-list > .MuiList-root > :nth-child(1)")
         .should("be.visible")
         .click();
 
-      cy.get(".messageOptions").last().click();
+      cy.get(".messageOptions").last().invoke("show").click({ force: true });
       cy.get(".reportMsgButton").click();
       cy.get('[data-testid="reportedBadge"]').should("be.visible");
+
+      cy.get(".messageOptions").last().invoke("show").click({ force: true });
+      cy.get(".reportMsgButton").click();
     });
 
     it("opens new chat flow", () => {
       cy.logout();
-      cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
+      cy.login(messagingTestAccountUid);
       // cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000/messaging");
       cy.get('[data-cy="startNewConvo"]').click();

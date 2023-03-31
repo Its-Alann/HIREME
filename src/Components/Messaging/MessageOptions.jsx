@@ -27,8 +27,8 @@ const MessageOptions = ({ index, convoId, reportMessage, reported }) => {
           height: "fit-content",
           alignSelf: "center",
           p: 0,
-          // display: "none",
-          color: "white",
+          visibility: "hidden",
+          // color: "white",
         }}
       >
         <MoreVertIcon />
