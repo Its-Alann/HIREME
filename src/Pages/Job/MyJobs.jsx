@@ -16,24 +16,45 @@ import {
   documentId,
   where,
 } from "firebase/firestore";
-import { EditJob } from "./EditJob";
-import { CreateJob } from "./CreateJob";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import { db, auth } from "../../Firebase/firebase";
 
 export const MyJobs = () => {
-  const [myJobsID, setMyJobsID] = React.useState([]);
+  const [myJobs, setMyJobs] = React.useState([]);
   const [jobs, setJobs] = React.useState([]);
   const [companiesName, setCompaniesName] = React.useState({});
   const [cursorPosition, setCursorPosition] = React.useState(0);
   const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const jobsPerPage = 4;
+  // Using the list of jobsID & the cursor position
+  // determine 5 jobID
+  // Then query jobs whose ID within the 5 jobID
+  async function getJobs() {
+    if (cursorPosition >= myJobs.length) {
+      return;
+    }
+    const tempJobList = [];
+    for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
+      if (i >= myJobs.length) {
+        break;
+      }
+      tempJobList.push(myJobs[i]);
+    }
+    setJobs(tempJobList);
+  }
 
   // Go to the recruiter, and get his list of jobs he posted
-  async function getMyJobsID() {
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
-    const recruiterSnapshot = await getDoc(recruiterRef);
-    const tempArray = [...recruiterSnapshot.data().jobs];
+  async function getMyJobs() {
+    const jobQuery = query(
+      collection(db, "jobs2"),
+      where("owner", "==", auth.currentUser.uid)
+    );
+    const jobsSnapshot = await getDocs(jobQuery);
+    const tempArray = jobsSnapshot.docs.map((job) => ({
+      id: job.id,
+      ...job.data(),
+    }));
 
     // Sort the list of jobID based on the publishedAt, newest first
     tempArray.sort((a, b) => {
@@ -42,8 +63,10 @@ export const MyJobs = () => {
       }
       return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
     });
+    // console.log(tempArray);
+    setMyJobs(tempArray);
 
-    setMyJobsID(tempArray);
+    await getJobs();
   }
 
   // Get companies' name using the companyID of each Job
@@ -51,57 +74,27 @@ export const MyJobs = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
+    const temp2 = companiesLogo;
+
     jobs.forEach(async (job) => {
+      const companyRef = doc(db, "companies2", job.companyID);
+      const companySnapshot = await getDoc(companyRef);
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies", job.companyID);
-        const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
         setCompaniesName({ ...temp });
       }
+      if (companySnapshot.data().logoPath === "") {
+        temp2[job.companyID] =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      setCompaniesLogo({ ...temp2 });
     });
-  }
-
-  // Using the list of jobsID & the cursor position
-  // determine 5 jobID
-  // Then query jobs whose ID within the 5 jobID
-  async function getJobs() {
-    if (cursorPosition >= myJobsID.length) {
-      return;
-    }
-    const tempJobIDList = [];
-    for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
-      if (i >= myJobsID.length) {
-        break;
-      }
-      tempJobIDList.push(myJobsID[i].jobID);
-    }
-
-    const jobsQuery = query(
-      collection(db, "jobs"),
-      where(documentId(), "in", tempJobIDList)
-    );
-
-    const jobsSnapshot = await getDocs(jobsQuery);
-
-    const temp = [];
-    jobsSnapshot.docs.forEach((document) => {
-      temp.push({ ...document.data(), documentID: document.id });
-    });
-
-    // Sort the list of jobs based on the publishedAt, newest first
-    temp.sort((a, b) => {
-      if (a.publishedAt.seconds === b.publishedAt.seconds) {
-        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
-      }
-      return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
-    });
-    setJobs(temp);
   }
 
   function setCursorToNextPosition() {
     const nextPosition = cursorPosition + jobsPerPage;
-    if (nextPosition >= myJobsID.length) {
+    if (nextPosition >= myJobs.length) {
       return;
     }
     setCursorPosition(nextPosition);
@@ -114,22 +107,11 @@ export const MyJobs = () => {
     setCursorPosition(previousPosition);
   }
 
-  // Load the logo of each company that has job listings
-  function loadLogoCompany() {
-    const temp = companiesLogo;
-    jobs.forEach(async (job) => {
-      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
-      temp[job.companyID] = querySnapshot.data().logoPath;
-      // triggers a re-render and display the newly loaded logos
-      setCompaniesLogo({ ...temp });
-    });
-  }
-
   // when auth change, get the list of job id from recruiter
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        getMyJobsID();
+        getMyJobs();
       }
     });
   }, []);
@@ -137,12 +119,11 @@ export const MyJobs = () => {
   // when cursor position change jobs to display
   React.useEffect(() => {
     getJobs();
-  }, [cursorPosition, myJobsID]);
+  }, [cursorPosition, myJobs]);
 
   // when jobs change, get the companies names
   React.useEffect(() => {
     getCompaniesName();
-    loadLogoCompany();
   }, [jobs]);
 
   // Uncomment this code to verify infinite loop of query
@@ -161,14 +142,45 @@ export const MyJobs = () => {
   return (
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
-        <Typography variant="h4" sx={{ pb: 2 }}>
-          My Jobs
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="h4" sx={{ pb: 2 }}>
+            My Jobs
+          </Typography>
+          {/* button for recruiter's view */}
+          <Button
+            variant="contained"
+            size="medium"
+            sx={{ my: 1 }}
+            id="create-job"
+            data-cy="view"
+          >
+            <Link
+              to="/createJob"
+              className="link"
+              underline="none"
+              style={{ textDecoration: "none" }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                alignContent="center"
+                alignSelf="center"
+                justifyContent="space-between"
+              >
+                Create Job &nbsp;&nbsp;
+                <PostAddIcon sx={{ fontSize: "25px" }} />
+              </Stack>
+            </Link>
+          </Button>
+        </Stack>
         <Typography>
           This Page list all jobs belong to me, {jobsPerPage} per page. Only I
           should be able to see the page.
         </Typography>
-
         {jobs.map((job) => {
           // Anti eslint
           const hello = "hello";
@@ -180,29 +192,16 @@ export const MyJobs = () => {
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
                   <Stack direction="row" alignItems="center">
-                    {job.companyID === undefined ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "0.25",
-                          height: "0.25",
-                          mr: 2,
-                        }}
-                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                      />
-                    ) : (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo[job.companyID]}
-                      />
-                    )}
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo[job.companyID]}
+                    />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Typography>{companiesName[job.companyID]}</Typography>
@@ -232,7 +231,7 @@ export const MyJobs = () => {
                       data-cy="view"
                     >
                       <Link
-                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
+                        to={`/viewJobPostingApplicants/${job.companyID}/${job.id}`}
                         className="link"
                         underline="none"
                         style={{ textDecoration: "none" }}

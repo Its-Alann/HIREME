@@ -28,14 +28,14 @@ describe("Display Job Posting", () => {
 describe("Change the application status to viewed", () => {
   it("visits the job listing page with applicants", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
+      "http://localhost:3000/viewJobPostingApplicants/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
   });
 
   it("selects Hanni Pham from the list of applicants and changes application status to rejected", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
+      "http://localhost:3000/viewJobPostingApplicants/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(
@@ -53,14 +53,14 @@ describe("Change the application status to viewed", () => {
 describe("Change the application status interview", () => {
   it("visits the job listing page with applicants", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
+      "http://localhost:3000/viewJobPostingApplicants/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
   });
 
   it("selects Hanni Pham from the list of applicants and changes application status to interview", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
+      "http://localhost:3000/viewJobPostingApplicants/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(
@@ -78,7 +78,7 @@ describe("Change the application status interview", () => {
 describe("Exit from popup window", () => {
   it("click on popup", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPostingApplicants/JpaQGBNwlTslSujkwX2C/4QwjqeYxPRuDw7fOnKBj"
+      "http://localhost:3000/viewJobPostingApplicants/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(
