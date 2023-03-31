@@ -113,7 +113,14 @@ describe("example to-do app", () => {
         .should("be.visible")
         .click();
 
-      cy.get(".messageOptions").last().click();
+      cy.get(".messageOptions").last().invoke("show").click({ force: true });
+      // cy.get('[data-testid="messageListItem"]')
+      //   .last()
+      //   .trigger("mouseover")
+      //   .get(".messageOptions")
+      //   .last()
+      //   .should("be.visible")
+      //   .click();
       cy.get(".reportMsgButton").click();
       cy.get('[data-testid="reportedBadge"]').should("be.visible");
     });
