@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
@@ -64,16 +65,21 @@ export const ViewNetwork = () => {
                 ))}
               </Grid>
             ) : (
-              <Box
-                component="img"
-                justifyContent="center"
-                sx={{
-                  width: 0.3,
-                  height: 0.3,
-                }}
-                src={image2}
-                // alt="Trees"
-              />
+              <>
+                <Box
+                  component="img"
+                  justifyContent="center"
+                  sx={{
+                    width: 0.3,
+                    height: 0.3,
+                  }}
+                  src={image2}
+                  // alt="Trees"
+                />
+                <Typography variant="h5" sx={{ ml: 1 }}>
+                  No connections to show
+                </Typography>
+              </>
             )}
           </Box>
         </Container>
