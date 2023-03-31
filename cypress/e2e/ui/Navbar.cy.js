@@ -19,6 +19,8 @@ describe("Test the navbar component", () => {
       cy.url().should("eq", "http://localhost:3000/");
       cy.get('[data-cy="Messaging-test"]').click();
       cy.url().should("eq", "http://localhost:3000/messaging");
+      cy.get('[data-cy="MyJobs-test"]').click();
+      cy.url().should("eq", "http://localhost:3000/myJobs");
       // cy.get('[data-cy="Network-test"]').click();
       // cy.url().should("eq", "http://localhost:3000/network");
     });
@@ -50,6 +52,15 @@ describe("Test the navbar component", () => {
         cy.get("Button").click()
       );
       //click third option
+      cy.get('[data-cy="MyJobs-phone-test"]').should("be.visible").click();
+      //verify link
+      cy.url().should("eq", "http://localhost:3000/myJobs");
+
+      //open menu
+      cy.get('[data-cy="phone-menu-test"]').within(() =>
+        cy.get("Button").click()
+      );
+      //click fourth option
       // cy.get('[data-cy="Network-phone-test"]').click();
       //verify link
       // cy.url().should("eq", "http://localhost:3000/network");
@@ -115,6 +126,10 @@ describe("Test the navbar component", () => {
       cy.visit("http://localhost:3000");
       cy.logout();
       cy.get('[data-cy="Jobs-test"]').click();
+      cy.get(
+        ':nth-child(5) > .MuiPaper-root > .MuiList-root > [data-cy="view-job-test"]'
+      ).click();
+      cy.url().should("eq", "http://localhost:3000/browseJobs");
     });
 
     it("clicks on sign up", () => {
@@ -162,11 +177,37 @@ describe("Test the navbar component", () => {
       // cy.url().should("include", "/network");
     });
 
-    it("clicks on jobs", () => {
+    it("clicks on jobs/view applied jobs", () => {
       cy.login();
       cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000");
-      cy.contains("Jobs").click();
+      cy.wait(1000);
+
+      cy.get('[data-cy="Jobs-test"]').click();
+      cy.get(
+        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-applied-job-test"]'
+      ).click();
+      cy.wait(1000);
+
+      // cy.get(
+      //   ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-job-test"]'
+      // ).click();
+      cy.url().should("include", "/viewMyApplications");
+      cy.url().should("eq", "http://localhost:3000/viewMyApplications");
+    });
+
+    it("clicks on jobs/view jobs", () => {
+      cy.login();
+      cy.viewport(1920, 1080);
+      cy.visit("http://localhost:3000");
+      cy.wait(1000);
+      cy.get('[data-cy="Jobs-test"]').click();
+      cy.get(
+        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-job-test"]'
+      ).click();
+      cy.wait(1000);
+      cy.url().should("include", "/browseJobs");
+      cy.url().should("eq", "http://localhost:3000/browseJobs");
     });
 
     it("clicks on messaging", () => {
@@ -175,6 +216,14 @@ describe("Test the navbar component", () => {
       cy.visit("http://localhost:3000");
       cy.contains("Messaging").click();
       cy.url().should("include", "/messaging");
+    });
+
+    it("clicks on myJobs", () => {
+      cy.login();
+      cy.viewport(1920, 1080);
+      cy.visit("http://localhost:3000");
+      cy.contains("MyJobs").click();
+      cy.url().should("include", "/myJobs");
     });
 
     it("clicks on profile", () => {
@@ -211,18 +260,18 @@ describe("Test the navbar component", () => {
   });
 
   describe("Click buttons on navbar when logged in with mobile resolution", () => {
-    // it("clicks on home", () => {
-    //   cy.login();
-    //   cy.viewport(390, 844);
-    //   // cy.visit("http://localhost:3000/network");
-    //   cy.get('[data-cy="phone-menu-test"]').within(() =>
-    //     cy.get("Button").click()
-    //   );
-    //   cy.wait(500);
-    //   cy.get('[data-cy="Home-phone-test"]').click();
-    //   cy.wait(500);
-    //   cy.url().should("eq", "http://localhost:3000/");
-    // });
+    it("clicks on home", () => {
+      cy.login();
+      cy.viewport(390, 844);
+      // cy.visit("http://localhost:3000/network");
+      cy.get('[data-cy="phone-menu-test"]').within(() =>
+        cy.get("Button").click()
+      );
+      cy.wait(500);
+      cy.get('[data-cy="Home-phone-test"]').click();
+      cy.wait(500);
+      cy.url().should("eq", "http://localhost:3000/");
+    });
 
     // it("clicks on network", () => {
     //   cy.wait(500);
@@ -237,7 +286,7 @@ describe("Test the navbar component", () => {
     //   cy.wait(500);
     // });
 
-    it("clicks on jobs", () => {
+    it("clicks on jobs/view jobs", () => {
       cy.wait(500);
       cy.login();
       cy.viewport(390, 844);
@@ -246,6 +295,32 @@ describe("Test the navbar component", () => {
         cy.get("Button").click()
       );
       cy.get('[data-cy="Jobs-phone-test"]').click();
+      cy.wait(500);
+      cy.get(
+        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-job-test"]'
+      ).click();
+      cy.wait(500);
+      cy.url().should("eq", "http://localhost:3000/browseJobs");
+      cy.url().should("include", "/browseJobs");
+      cy.wait(500);
+    });
+
+    it("clicks on jobs/view applied jobs", () => {
+      cy.wait(500);
+      cy.login();
+      cy.viewport(390, 844);
+      cy.visit("http://localhost:3000");
+      cy.get('[data-cy="phone-menu-test"]').within(() =>
+        cy.get("Button").click()
+      );
+      cy.get('[data-cy="Jobs-phone-test"]').click();
+      cy.wait(500);
+      cy.get(
+        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-applied-job-test"]'
+      ).click();
+      cy.wait(500);
+      cy.url().should("eq", "http://localhost:3000/viewMyApplications");
+      cy.url().should("include", "/viewMyApplications");
       cy.wait(500);
     });
 
@@ -259,6 +334,19 @@ describe("Test the navbar component", () => {
       );
       cy.get('[data-cy="Messaging-phone-test"]').click();
       cy.url().should("include", "/messaging");
+      cy.wait(500);
+    });
+
+    it("clicks on myJobs", () => {
+      cy.wait(500);
+      cy.login();
+      cy.viewport(390, 844);
+      cy.visit("http://localhost:3000");
+      cy.get('[data-cy="phone-menu-test"]').within(() =>
+        cy.get("Button").click()
+      );
+      cy.get('[data-cy="MyJobs-phone-test"]').click();
+      cy.url().should("include", "/myJobs");
       cy.wait(500);
     });
 
@@ -310,6 +398,10 @@ describe("Test the navbar component", () => {
       cy.visit("http://localhost:3000");
       cy.get("[data-testid='MenuIcon']").click();
       cy.get('[data-cy="Jobs-logged-out-test"]').click();
+      cy.get(
+        ':nth-child(5) > .MuiPaper-root > .MuiList-root > [data-cy="view-job-test"]'
+      ).click();
+      cy.url().should("eq", "http://localhost:3000/browseJobs");
     });
 
     it("click on sign up", () => {
