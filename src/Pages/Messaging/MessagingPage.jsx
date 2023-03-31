@@ -136,7 +136,6 @@ const Messaging = () => {
         const data = document.data();
         const mostRecent = data.messages?.at(-1).timestamp.toDate();
         const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
-        console.log("unread", unRead);
         allAuthorsList.push({
           otherAuthors: data.authors.filter((author) => author !== myUser),
           mostRecent,
