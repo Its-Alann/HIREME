@@ -4,6 +4,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { auth, db } from "../../Firebase/firebase";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 const columns = [
   // { field: "id", headerName: "ID", width: 90 },
@@ -30,6 +32,45 @@ const columns = [
     numeric: false,
     width: 180,
     headerName: "Date",
+  },
+  {
+    field: "unflag",
+    width: 180,
+    headerName: "Unflag",
+    headerAlign: "center",
+    sortable: false,
+    filterable: false,
+    hidecolumn: false,
+    disableColumnMenu: true,
+    align: "center",
+    renderCell: (params) => (
+      <Button
+        variant="contained"
+        sx={{ backgroundColor: "#DF9000" }}
+        size="small"
+      >
+        X
+      </Button>
+    ),
+  },
+  {
+    field: "block",
+    width: 180,
+    headerName: "Block",
+    headerAlign: "center",
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    align: "center",
+    renderCell: (params) => (
+      <Button
+        variant="contained"
+        sx={{ backgroundColor: "#C41E3A" }}
+        size="small"
+      >
+        X
+      </Button>
+    ),
   },
 ];
 
@@ -66,35 +107,52 @@ const FlaggedMessages = () => {
     getReportedMessages();
   }, []);
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <>
       {/* TODO: make mass report / warn users with the checklist
             selected rows are in the selectedRowData useState
       */}
-      <Button variant="contained">Button</Button>
-      <Box sx={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={reportedMessages}
-          columns={columns}
-          pageSizeOptions={[5]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="basic tabs example"
+      >
+        <Tab label="Flagged" value={0} />
+        <Tab label="Blocked" />
+      </Tabs>
+      {value === 0 ? (
+        <Box sx={{ height: 700, width: "100%" }}>
+          <DataGrid
+            rows={reportedMessages}
+            columns={columns}
+            pageSizeOptions={[10]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
               },
-            },
-          }}
-          checkboxSelection
-          disableRowSelectionOnClick
-          onRowSelectionModelChange={(ids) => {
-            const selectedIDs = new Set(ids);
-            const data = reportedMessages.filter((row) =>
-              selectedIDs.has(row.id)
-            );
-            setSelectedRowData(data);
-          }}
-        />
-      </Box>
+            }}
+            checkboxSelection
+            disableRowSelectionOnClick
+            onRowSelectionModelChange={(ids) => {
+              const selectedIDs = new Set(ids);
+              const data = reportedMessages.filter((row) =>
+                selectedIDs.has(row.id)
+              );
+              setSelectedRowData(data);
+            }}
+          />
+        </Box>
+      ) : (
+        <div> Blocked users </div>
+      )}
     </>
   );
 };
