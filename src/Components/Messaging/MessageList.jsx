@@ -29,6 +29,7 @@ const MessageList = ({ messages, convoId }) => {
 
     const reportedMessageDocId = `${convoId}-${index}`;
 
+    // unreport a reported message
     if (messages[index].reported) {
       updatedMessages[index] = {
         ...messages[index],
@@ -41,7 +42,9 @@ const MessageList = ({ messages, convoId }) => {
       } catch (err) {
         console.log(err);
       }
-    } else {
+    }
+    // report an unreported message
+    else {
       updatedMessages[index] = {
         ...messages[index],
         reported: true,
@@ -59,8 +62,6 @@ const MessageList = ({ messages, convoId }) => {
     await updateDoc(convoRef, {
       messages: updatedMessages,
     });
-
-    console.log("idol", messages[index]);
   };
 
   return (

@@ -105,7 +105,7 @@ describe("example to-do app", () => {
     //   });
     // });
 
-    it("reports message", () => {
+    it("reports then unreports message", () => {
       cy.logout();
       cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
       cy.visit("http://localhost:3000/messaging");
@@ -114,15 +114,11 @@ describe("example to-do app", () => {
         .click();
 
       cy.get(".messageOptions").last().invoke("show").click({ force: true });
-      // cy.get('[data-testid="messageListItem"]')
-      //   .last()
-      //   .trigger("mouseover")
-      //   .get(".messageOptions")
-      //   .last()
-      //   .should("be.visible")
-      //   .click();
       cy.get(".reportMsgButton").click();
       cy.get('[data-testid="reportedBadge"]').should("be.visible");
+
+      cy.get(".messageOptions").last().invoke("show").click({ force: true });
+      cy.get(".reportMsgButton").click();
     });
 
     it("opens new chat flow", () => {
