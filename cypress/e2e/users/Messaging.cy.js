@@ -64,7 +64,7 @@ describe("example to-do app", () => {
         .last()
         .click();
     });
-
+    
     // it("report a message", () => {
     //   cy.get(".messageOptions").last().click();
     //   cy.get(".reportMsgButton").click();
@@ -124,10 +124,22 @@ describe("example to-do app", () => {
     //   });
     // });
 
+    it("reports message", () => {
+      cy.logout();
+      cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
+      cy.visit("http://localhost:3000/messaging");
+      cy.get(".convo-list > .MuiList-root > :nth-child(1)")
+        .should("be.visible")
+        .click();
+
+      cy.get(".messageOptions").last().click();
+      cy.get(".reportMsgButton").click();
+      cy.get('[data-testid="reportedBadge"]').should("be.visible");
+    });
+
     it("opens new chat flow", () => {
       cy.logout();
       cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
-
       // cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000/messaging");
       cy.get('[data-cy="startNewConvo"]').click();
