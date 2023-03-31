@@ -21,19 +21,20 @@ export const CreateRecruiter = () => {
   async function handleSubmit() {
     console.log(auth.currentUser.uid);
     await setDoc(
-      doc(db, "recruiters", auth.currentUser.uid),
+      doc(db, "recruiters2", auth.currentUser.uid),
       recruiterInformation
     );
   }
 
   async function getCompanies() {
-    const companiesRef = collection(db, "companies");
+    const companiesRef = collection(db, "companies2");
     const companiesQuery = query(companiesRef);
     const queryResultSnapshot = await getDocs(companiesQuery);
     const tempCompanyList = [];
     queryResultSnapshot.forEach((document) => {
       tempCompanyList.push({ id: document.id, label: document.data().name });
     });
+    //console.log(tempCompanyList);
     setCompanyList(tempCompanyList);
   }
 
