@@ -11,7 +11,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import HomeOutlined from "@mui/icons-material/HomeOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -22,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Link } from "@mui/material";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
@@ -135,30 +135,23 @@ const Navbar = () => {
     <AppBar position="static" color="background">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            color="primary"
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "primary",
-              textDecoration: "none",
-            }}
-          >
-            HIRE<i>ME</i>
-          </Typography>
-
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
+          <Link href="/" sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
+            <Box
+              component="img"
+              sx={{
+                width: "13rem",
+                height: "2.5rem",
+              }}
+              src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_logotext.png?alt=media&token=f650bdf2-1892-4106-86d3-c8934ca7de67"
+            />
+          </Link>
           <Box
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+            }}
             data-cy="phone-menu-test"
           >
             <IconButton
@@ -217,29 +210,24 @@ const Navbar = () => {
                   </MenuItem>
                 ))}
             </Menu>
+            <Link
+              href="/"
+              sx={{
+                display: { xs: "flex", md: "none" },
+                ml: "auto",
+                mr: "auto",
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: "13rem",
+                  height: "2.5rem",
+                }}
+                src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_logotext.png?alt=media&token=f650bdf2-1892-4106-86d3-c8934ca7de67"
+              />
+            </Link>
           </Box>
-          <AdbIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            color="primary"
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "primary",
-              textDecoration: "none",
-            }}
-          >
-            HIRE<i>ME</i>
-          </Typography>
 
           {userIsConnected && (
             <>
