@@ -193,7 +193,8 @@ const Messaging = () => {
   };
 
   const markMessagesAsRead = async () => {
-    if (messages?.at(-1).seenBy.includes(myUser)) {
+    console.log("messages", messages);
+    if (messages.length === 0 || messages.at(-1).seenBy.includes(myUser)) {
       return;
     }
     const updatedMessages = messages.map((m) => {
