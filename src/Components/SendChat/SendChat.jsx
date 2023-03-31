@@ -190,6 +190,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               }}
               value={messageContent}
               sx={{ m: 0 }}
+              autoComplete="off"
             />
           )}
         </Grid>
