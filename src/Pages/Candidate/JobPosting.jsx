@@ -28,12 +28,12 @@ export const JobPosting = () => {
   const getJobData = async () => {
     try {
       // Gets the job data using the jobID from the URL
-      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID));
-      console.log(pageJobID);
+      const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
+      //console.log(pageJobID);
       const jobData = jobsSnapshot.data();
       setJob(jobData);
 
-      console.log(jobData);
+      //console.log(jobData);
     } catch (error) {
       console.log(error);
     }
@@ -42,25 +42,25 @@ export const JobPosting = () => {
   // gets the coompany name froom the coompanies collection based on the coompanyID
   const getCompanyName = async () => {
     try {
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+      const companySnapshot = await getDoc(
+        doc(db, "companies2", pageCompanyID)
+      );
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
+      if (companyData.logoPath === "") {
+        companyData.logoPath =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      }
+      setCompaniesLogo(companyData.logoPath);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // loads the logo of a company
-  async function loadLogoCompany() {
-    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
-    setCompaniesLogo(querySnapshot.data().logoPath);
-  }
-
   // calling 2 methods
   useEffect(() => {
     getJobData();
     getCompanyName();
-    loadLogoCompany();
   }, []);
 
   // returns the job posting with the apply button
@@ -79,29 +79,16 @@ export const JobPosting = () => {
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
                   <Stack direction="row" alignItems="center">
-                    {job.companyID === undefined ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "0.25",
-                          height: "0.25",
-                          mr: 2,
-                        }}
-                        src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                      />
-                    ) : (
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo}
-                      />
-                    )}
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo}
+                    />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Typography sx={{ fontSize: 18 }}>
@@ -137,7 +124,8 @@ export const JobPosting = () => {
                       underline="none"
                       style={{ textDecoration: "none" }}
                     >
-                      {console.log("thiws is the job:", job)} Apply
+                      {/* {console.log("thiws is the job:", job)}*/}
+                      Apply
                     </Link>
                   </Button>
                   <StarOutlineIcon />
@@ -154,6 +142,10 @@ export const JobPosting = () => {
               <Box>
                 <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
                 <Typography>{job.requirement}</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                <Typography>{job.benefits}</Typography>
               </Box>
             </Stack>
           </Box>
