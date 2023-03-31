@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
 import { SentInvitationCard } from "../../../Components/Network/SentInvitationCard";
 import { db, auth } from "../../../Firebase/firebase";
@@ -14,33 +15,18 @@ import image2 from "../../../Assets/images/390image2.svg";
 
 const theme = createTheme();
 
-export const SentInvitation = () => {
+export const SentInvitation = ({
+  allUserProfiles,
+  sentInvitationsID,
+  currentUserEmail,
+}) => {
   const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
 
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setCurrentUser(user);
-  //       const getSentRequestedUsers = async () => {
-  //         // READ DATA
-  //         try {
-  //           const docSnap = await getDoc(doc(db, "invitations", user.email));
-  //           const userData = docSnap.data();
-  //           setSentRequestsUserID(userData.sentInvitations);
-  //           //console.log(userData.sentRequests);
-  //         } catch (err) {
-  //           console.log(err);
-  //         }
-  //       };
-  //       //console.log(sentRequestsUserID);
-  //       getSentRequestedUsers();
-  //     } else {
-  //       //take you back to the homepage
-  //       //console.log("2:", user);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    setSentRequestsUserID(sentInvitationsID);
+    setCurrentUser(currentUserEmail);
+  }, [sentInvitationsID]);
 
   return (
     <div>
@@ -89,6 +75,12 @@ export const SentInvitation = () => {
       </ThemeProvider>
     </div>
   );
+};
+
+SentInvitation.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  sentInvitationsID: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currentUserEmail: PropTypes.string.isRequired,
 };
 
 export default SentInvitation;

@@ -7,78 +7,25 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
 const theme = createTheme();
 
-export const NetworkPossibleConnections = () => {
-  const [connectedUsersId, setConnectedUsersId] = useState([]);
-  const [sentInvitationsId, setSentInvitationsId] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
+export const NetworkPossibleConnections = ({
+  nonConnectedUsersID,
+  currentUserEmail,
+}) => {
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
 
-  const getPossibleConnections = async (user) => {
-    // READ DATA
-    try {
-      //get list of user connections of current user
-      const networkDocSnap = await getDoc(doc(db, "network", user.email));
-      const currentUserNetworkData = networkDocSnap.data();
-      setConnectedUsersId(currentUserNetworkData.connectedUsers);
-
-      //get list of users that the current user sent invitations to
-      const sentInvitationsDocSnap = await getDoc(
-        doc(db, "invitations", user.email)
-      );
-      const sentInvitationsData = sentInvitationsDocSnap.data();
-      setSentInvitationsId(sentInvitationsData.sentInvitations);
-
-      // get all users in userProfiles
-      const usersRef = collection(db, "userProfiles");
-      const data = await getDocs(usersRef);
-      const users = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setAllUsers(users);
-    } catch (err) {
-      console.error("err:", err);
-    }
-  };
-
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    getPossibleConnections(currentUser);
-    //console.log(currentUser);
-  }, [currentUser]);
-
-  useEffect(() => {
-    try {
-      //create a new array of users that isnt connected with the currentUser
-      const newNonConnectedUsersArr = allUsers.filter(
-        (user) =>
-          !connectedUsersId.includes(user.id) &&
-          !sentInvitationsId.includes(user.id) &&
-          currentUser.email !== user.id
-      );
-      setNonConnectedUsersArr(newNonConnectedUsersArr);
-      //console.log(newNonConnectedUsersArr);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [connectedUsersId, sentInvitationsId, allUsers, currentUser]);
+    //console.log(nonConnectedUsersID);
+    setNonConnectedUsersArr(nonConnectedUsersID);
+    setCurrentUser(currentUserEmail);
+  }, [nonConnectedUsersID]);
 
   return (
     <div>
@@ -104,7 +51,7 @@ export const NetworkPossibleConnections = () => {
                   <Grid item>
                     <PossibleConnectionCard
                       possibleConnectionUserId={possibleConnectionUserID.id}
-                      currentUser={currentUser.email}
+                      currentUser={currentUser}
                       data-cy={`gridItem${possibleConnectionUserID}`}
                       id={`gridItem${possibleConnectionUserID}`}
                     />
@@ -119,6 +66,11 @@ export const NetworkPossibleConnections = () => {
       </ThemeProvider>
     </div>
   );
+};
+
+NetworkPossibleConnections.propTypes = {
+  nonConnectedUsersID: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  currentUserEmail: PropTypes.string.isRequired,
 };
 
 export default NetworkPossibleConnections;
