@@ -54,8 +54,8 @@ export const SentInvitationCard = ({
     // 2. remove user card
 
     //console.log(5);
-    //console.log(currentUser);
-    //console.log(userID);
+    // console.log(currentUser);
+    // console.log(userID);
     const currentUserInvitationRed = doc(db, "invitations", currentUser);
     const userReceivedInvitationRef = doc(db, "invitations", userID);
 

@@ -27,7 +27,8 @@ export const SentInvitation = ({
   useEffect(() => {
     setSentRequestsUserID(sentInvitationsID);
     setCurrentUser(currentUserEmail);
-  }, [sentInvitationsID]);
+    console.log(currentUserEmail);
+  }, [sentInvitationsID, currentUserEmail]);
 
   useEffect(() => {
     setAllUsers(allUserProfiles);
@@ -52,7 +53,7 @@ export const SentInvitation = ({
                     <SentInvitationCard
                       allUserProfiles={allUsers}
                       userID={userID}
-                      currentUser={currentUser.email}
+                      currentUser={currentUser}
                     />
                   </Grid>
                 ))}
