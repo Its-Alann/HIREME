@@ -333,7 +333,7 @@ const Messaging = () => {
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
-                      selected={selectedIndex === i}
+                      // selected={selectedIndex === i}
                       onClick={async () => {
                         const conversationID = await getConversationId([
                           ...chat.emails,
