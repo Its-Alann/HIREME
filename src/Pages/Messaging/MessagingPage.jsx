@@ -107,7 +107,12 @@ const Messaging = () => {
       })
     );
     const names = nameList.filter(Boolean).join(", ");
-    return { names, emails: list.otherAuthors, mostRecent: list.mostRecent };
+    return {
+      names,
+      emails: list.otherAuthors,
+      mostRecent: list.mostRecent,
+      unRead: list.unRead,
+    };
   };
 
   // get all names of user's receivers
@@ -130,13 +135,16 @@ const Messaging = () => {
       querySnapshot.forEach((document) => {
         const data = document.data();
         const mostRecent = data.messages?.at(-1).timestamp.toDate();
+        const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
+        console.log("unread", unRead);
         allAuthorsList.push({
-          otherAuthors: document
-            .data()
-            .authors.filter((author) => author !== myUser),
+          otherAuthors: data.authors.filter((author) => author !== myUser),
           mostRecent,
+          unRead,
         });
       });
+
+      console.log("allAuthorsList", allAuthorsList);
 
       const allChatProfiles = await Promise.all(
         allAuthorsList.map(getOtherAuthors)
@@ -359,7 +367,12 @@ const Messaging = () => {
                         primary={chat.names}
                         secondary={chat.mostRecent.toDateString()}
                       />
-                      <FiberManualRecordIcon fontSize="small" color="warning" />
+                      {chat.unRead && (
+                        <FiberManualRecordIcon
+                          fontSize="small"
+                          color="warning"
+                        />
+                      )}
                     </ListItemButton>
                     // </Badge>
                   ))}
