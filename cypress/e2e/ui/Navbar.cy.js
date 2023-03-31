@@ -19,7 +19,7 @@ describe("Test the navbar component", () => {
       cy.url().should("eq", "http://localhost:3000/");
       cy.get('[data-cy="Messaging-test"]').click();
       cy.url().should("eq", "http://localhost:3000/messaging");
-      cy.get('[data-cy="MyJobs-test"]').click();
+      cy.get('[data-cy="My Jobs-test"]').click();
       cy.url().should("eq", "http://localhost:3000/myJobs");
       // cy.get('[data-cy="Network-test"]').click();
       // cy.url().should("eq", "http://localhost:3000/network");
@@ -52,7 +52,7 @@ describe("Test the navbar component", () => {
         cy.get("Button").click()
       );
       //click third option
-      cy.get('[data-cy="MyJobs-phone-test"]').should("be.visible").click();
+      cy.get('[data-cy="My Jobs-phone-test"]').should("be.visible").click();
       //verify link
       cy.url().should("eq", "http://localhost:3000/myJobs");
 
@@ -222,7 +222,7 @@ describe("Test the navbar component", () => {
       cy.login();
       cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000");
-      cy.contains("MyJobs").click();
+      cy.contains("My Jobs").click();
       cy.url().should("include", "/myJobs");
     });
 
@@ -345,7 +345,7 @@ describe("Test the navbar component", () => {
       cy.get('[data-cy="phone-menu-test"]').within(() =>
         cy.get("Button").click()
       );
-      cy.get('[data-cy="MyJobs-phone-test"]').click();
+      cy.get('[data-cy="My Jobs-phone-test"]').click();
       cy.url().should("include", "/myJobs");
       cy.wait(500);
     });
