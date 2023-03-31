@@ -28,7 +28,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (authUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { uid, email } = authUser;
         // console.log("uid", uid);
@@ -39,6 +39,7 @@ const HomePage = () => {
         setUser(null);
       }
     });
+    return () => unsubscribe();
   }, []);
 
   const handleSignOut = async () => {

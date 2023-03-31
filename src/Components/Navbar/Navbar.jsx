@@ -18,6 +18,7 @@ import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
@@ -37,16 +38,30 @@ const pageNamesForRecruiter = [
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
 const settings = ["Profile", "Account", "Dashboard"];
 
-const Navbar = () => {
+const Navbar = ({ navbarUpdateToggle }) => {
   const [pageNames, setPageNames] = React.useState([
     "Home",
     "Network",
     "Jobs",
     "Messaging",
   ]);
-  const [userIsConnected, setUserIsConnected] = React.useState(false);
+  const [currentUserID, setCurrentUserID] = React.useState(null);
   const [userData, setUserData] = React.useState([]);
   const [companyID, setCompanyID] = React.useState(null);
+
+  async function getCompanyID(userID) {
+    const recruiter = await getDoc(doc(db, "recruiters", userID));
+    if (recruiter.exists()) {
+      if (recruiter.data().workFor) {
+        setPageNames(pageNamesForRecruiter);
+      } else {
+        setPageNames(pageNamesForApplicant);
+      }
+      setCompanyID(recruiter.data().workFor);
+    } else {
+      setPageNames(pageNamesForApplicant);
+    }
+  }
   //getting user information
   React.useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -54,22 +69,21 @@ const Navbar = () => {
         try {
           const userProfile = await getDoc(doc(db, "userProfiles", user.email));
           setUserData(userProfile.data());
-          setUserIsConnected(true);
-          const recruiter = await getDoc(doc(db, "recruiters", user.uid));
-          if (recruiter.exists()) {
-            setPageNames(pageNamesForRecruiter);
-            setCompanyID(recruiter.data().workFor);
-          } else {
-            setPageNames(pageNamesForApplicant);
-          }
+          setCurrentUserID(user.uid);
         } catch (err) {
           console.log(err);
         }
       } else {
-        setUserIsConnected(false);
+        setCurrentUserID(null);
       }
     });
   }, []);
+
+  React.useEffect(() => {
+    if (currentUserID) {
+      getCompanyID(currentUserID);
+    }
+  }, [currentUserID, navbarUpdateToggle]);
 
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -112,7 +126,7 @@ const Navbar = () => {
       case "dashboard":
         break;*/
       case "logout":
-        setUserIsConnected(false);
+        setCurrentUserID(false);
         signOut(auth);
         navigate("/");
         break;
@@ -196,7 +210,7 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {userIsConnected &&
+              {currentUserID &&
                 pageNames.map((page) => (
                   <MenuItem
                     key={page}
@@ -209,7 +223,7 @@ const Navbar = () => {
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
-              {!userIsConnected &&
+              {!currentUserID &&
                 loggedOutPages.map((page) => (
                   <MenuItem
                     key={page}
@@ -247,7 +261,7 @@ const Navbar = () => {
             HIRE<i>ME</i>
           </Typography>
 
-          {userIsConnected && (
+          {currentUserID && (
             <>
               <Box
                 data-cy="connected-box-test"
@@ -347,7 +361,7 @@ const Navbar = () => {
             </>
           )}
 
-          {!userIsConnected && (
+          {!currentUserID && (
             <Box
               sx={{
                 flexGrow: 1,
@@ -381,6 +395,10 @@ const Navbar = () => {
       </Container>
     </AppBar>
   );
+};
+
+Navbar.propTypes = {
+  navbarUpdateToggle: PropTypes.bool,
 };
 
 export default Navbar;
