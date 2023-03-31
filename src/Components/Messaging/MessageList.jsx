@@ -8,6 +8,8 @@ import MessageListItem from "./MessageListItem";
 import { auth, storage, db } from "../../Firebase/firebase";
 
 const MessageList = ({ messages, convoId }) => {
+  // console.log(findLastSeen(messages, "hypeboy@tok.ki"));
+
   const openAttachment = (path) => {
     getDownloadURL(ref(storage, `messages/${path}`)).then((url) =>
       window.open(url, "_blank")
@@ -77,12 +79,6 @@ const MessageList = ({ messages, convoId }) => {
                 visibility: "visible",
                 color: "grey",
               },
-              ".seenByTag": {
-                visibility: "hidden",
-              },
-              "&:hover .seenByTag": {
-                visibility: "visible",
-              },
             }}
           >
             <MessageListItem
@@ -109,6 +105,7 @@ MessageList.propTypes = {
       // eslint-disable-next-line react/forbid-prop-types
       timestamp: PropTypes.object,
       reported: PropTypes.bool,
+      readRecipt: PropTypes.arrayOf(PropTypes.string),
     })
   ),
   convoId: PropTypes.string,

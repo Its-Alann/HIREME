@@ -46,6 +46,17 @@ const theme = createTheme({
   },
 });
 
+const findLastSeen = (arr, searchValue) => {
+  const reverseIndex = arr
+    .slice()
+    .reverse()
+    .findIndex((x) => x.seenBy.includes(searchValue));
+  const lastIndex =
+    reverseIndex >= 0 ? arr.length - 1 - reverseIndex : reverseIndex;
+  console.log("lastIndex", lastIndex);
+  return lastIndex;
+};
+
 const Messaging = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
@@ -71,6 +82,9 @@ const Messaging = () => {
 
   // tracks when we use the new convo button
   const [newConvo, setNewConvo] = useState(false);
+
+  //all the authors in the selected conversation
+  const [authors, setAuthors] = useState([]);
 
   //to autoscroll
   const messageViewRef = useRef();
@@ -169,21 +183,28 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
-  const selectConvo = async (conversationId, names, index) => {
-    setConvoId(conversationId);
+  const selectConvo = async (conversationId, names, index, emails) => {
+    // !there may be sync issues related to the read receipts
+    // !simply putting setAuthors before setConvoId may not be sufficient
+    setAuthors(emails);
     setName(names);
     setSelectedIndex(index);
+    setConvoId(conversationId);
     scrollToBottom();
   };
 
   const markMessagesAsRead = async () => {
+    if (messages?.at(-1).seenBy.includes(myUser)) {
+      return;
+    }
     const updatedMessages = messages.map((m) => {
       // eslint-disable-next-line no-param-reassign
       if (!m.seenBy) m.seenBy = [myUser];
       if (!m.seenBy?.includes(myUser)) m.seenBy.push(myUser);
       return m;
     });
-    // console.log("updatedMessages", updatedMessages);
+    delete updatedMessages.readReceipt;
+    console.log("updatedMessages", updatedMessages);
 
     const convoRef = doc(db, "messages", convoId);
     await updateDoc(convoRef, {
@@ -222,9 +243,19 @@ const Messaging = () => {
       const convoRef = doc(db, "messages", convoId);
 
       unSub = onSnapshot(convoRef, (document) => {
-        setMessages(document.data().messages);
+        const tempMsgs = document.data().messages;
+        authors.forEach((a) => {
+          const index = findLastSeen(tempMsgs, a);
+          if (index < 0) return;
+          if (!tempMsgs[index].readReceipt) {
+            tempMsgs[index].readReceipt = [a];
+          } else {
+            tempMsgs[index].readReceipt.push(a);
+          }
+        });
+        // console.log("tempMsgs", tempMsgs);
+        setMessages(tempMsgs);
       });
-      // markMessagesAsRead();
     }
   }, [convoId]);
 
@@ -308,7 +339,10 @@ const Messaging = () => {
                           ...chat.emails,
                           myUser,
                         ]);
-                        await selectConvo(conversationID, chat.names, i);
+                        await selectConvo(conversationID, chat.names, i, [
+                          myUser,
+                          ...chat.emails,
+                        ]);
                       }}
                     >
                       <ListItemAvatar>
