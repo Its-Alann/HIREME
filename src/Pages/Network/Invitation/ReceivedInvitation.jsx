@@ -21,12 +21,17 @@ export const ReceivedInvitation = ({
   currentUserEmail,
 }) => {
   const [receivedInvitations, setReceivedInvitations] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
     setReceivedInvitations(receivedInvitationIDs);
     setCurrentUser(currentUserEmail);
   }, [receivedInvitationIDs]);
+
+  useEffect(() => {
+    setAllUsers(allUserProfiles);
+  }, [allUserProfiles]);
 
   return (
     <div>
@@ -46,6 +51,7 @@ export const ReceivedInvitation = ({
                 {receivedInvitations.map((requestedUserID) => (
                   <Grid item>
                     <ReceivedInvitationCard
+                      allUserProfiles={allUsers}
                       receivedInvitationUserID={requestedUserID}
                       currentUser={currentUser}
                     />

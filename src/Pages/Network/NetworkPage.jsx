@@ -131,6 +131,7 @@ const NetworkPage = () => {
   useEffect(() => {
     if (allUsers && networkConnections && sentInvitations) {
       getPossibleConnections();
+      //console.log(allUsers);
     }
   }, [allUsers, networkConnections, sentInvitations]);
 
@@ -166,7 +167,7 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 0}>
             <ViewNetwork
-              allUsersProfiles={allUsers}
+              allUserProfiles={allUsers}
               networkConnections={networkConnections}
               currentUserEmail={currentUser}
             />
@@ -174,7 +175,7 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 1}>
             <ReceivedInvitation
-              allUsersProfiles={allUsers}
+              allUserProfiles={allUsers}
               receivedInvitationIDs={receivedInvitations}
               currentUserEmail={currentUser}
             />
@@ -182,7 +183,7 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 2}>
             <SentInvitation
-              allUsersProfiles={allUsers}
+              allUserProfiles={allUsers}
               sentInvitationsID={sentInvitations}
               currentUserEmail={currentUser}
             />
@@ -190,6 +191,7 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 3}>
             <NetworkPossibleConnections
+              allUserProfiles={allUsers}
               nonConnectedUsersID={nonConnectedUsersArr}
               currentUserEmail={currentUser}
             />

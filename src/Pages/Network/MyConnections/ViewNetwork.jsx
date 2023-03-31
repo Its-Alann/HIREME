@@ -51,6 +51,7 @@ export const ViewNetwork = ({
                 {connectedUsersId.map((connectedUserID) => (
                   <Grid item>
                     <NetworkCards
+                      allUserProfiles={allUsers}
                       connectedUserID={connectedUserID}
                       currentUser={currentUser}
                     />
