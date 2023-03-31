@@ -200,12 +200,12 @@ const Messaging = () => {
     const updatedMessages = messages.map((m) => {
       // eslint-disable-next-line no-param-reassign
       if (!m.seenBy) m.seenBy = [myUser];
-      if (!m.seenBy?.includes(myUser)) m.seenBy.push(myUser);
+      else if (!m.seenBy?.includes(myUser)) m.seenBy.push(myUser);
+      // eslint-disable-next-line no-param-reassign
+      delete m.readReceipt;
       return m;
     });
-    delete updatedMessages.readReceipt;
     console.log("updatedMessages", updatedMessages);
-
     const convoRef = doc(db, "messages", convoId);
     await updateDoc(convoRef, {
       messages: updatedMessages,
