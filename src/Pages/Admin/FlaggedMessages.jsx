@@ -10,6 +10,10 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  query,
+  where,
+  addDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -21,39 +25,11 @@ import { auth, db } from "../../Firebase/firebase";
 const FlaggedMessages = () => {
   // array of reported message objects
   const [reportedMessages, setReportedMessages] = useState([]);
-  const [blockedMessages, setBlockedMessages] = useState([]);
+  // const [blockedMessages, setBlockedMessages] = useState([]);
 
   const [selectedRowData, setSelectedRowData] = useState([]);
 
-  const changeStatusToBlocked = async (docID) => {
-    console.log("USER", getAuth().currentUser);
-
-    console.log("in blocked", docID);
-
-    const reportedMessageDocRef = doc(db, "reportedMessages", docID);
-    // const dataaa = reportedMessageDocRef.data();
-    // console.log("DOCCCC", dataaa);
-    await updateDoc(reportedMessageDocRef, {
-      status: "blocked",
-    });
-    console.log("done");
-
-    // try {
-    //   await updateDoc(reportedMessageDocRef, {
-    //     status: "blocked",
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    // add code to actually block the user
-  };
-
-  const warnUser = async (docID) => {
-    console.log("in warn", docID);
-    // const reportedMessageDocRef = doc(db, "reportedMessages", "test");
-  };
-
+  // removes message from flagged messages
   const unflagUser = async (docID) => {
     console.log("in unflag", docID);
     try {
@@ -63,33 +39,61 @@ const FlaggedMessages = () => {
       console.log(err);
     }
   };
-  // const handleSend = async () => {
-  //   const messageContent =
-  //     "You have been WARNED by the Admin for your behaviour. Be better.";
-  //   // Format a new message
-  //   const timestamp = Timestamp.now();
 
-  //   const sender = "admin@admin.com";
-  //   const newMessage = {
-  //     timestamp,
-  //     sender,
-  //   };
+  // returns a convo id for the warning message from Admin
+  const getConversationId = async (authorsList) => {
+    authorsList.sort();
+    const messagesRef = collection(db, "messages");
+    const convoQuery = query(messagesRef, where("authors", "==", authorsList));
+    const querySnapshot = await getDocs(convoQuery);
 
-  //   if (file) {
-  //     newMessage.attachment = file.name;
-  //   } else {
-  //     newMessage.content = messageContent;
-  //   }
+    // probably redundant cause it should exist
+    if (querySnapshot.empty) {
+      const docRef = await addDoc(collection(db, "messages"), {
+        authors: authorsList,
+        messages: [],
+      });
+      console.log(
+        "findConversation: no existing conversation found, creating new one between",
+        authorsList,
+        "new id:",
+        docRef.id
+      );
+      return docRef.id;
+    }
+    console.log(
+      "Existing conversations found between",
+      authorsList,
+      "id:",
+      querySnapshot.docs[0].id
+    );
+    return querySnapshot.docs[0].id;
+  };
+  // send warning to user & unflags them
+  const handleSend = async (userEmail, convId) => {
+    // Format a new message
+    const timestamp = Timestamp.now();
+    const content = "You have been WARNED by the admin. Be better.";
+    const sender = "admin@hireme.com";
+    const newMessage = {
+      timestamp,
+      sender,
+      content,
+      seenBy: [sender],
+    };
+    console.log("NEWWW", newMessage);
 
-  //   console.log(newMessage, newMessage.timestamp.toDate());
+    // SENDS TO THE DB
+    // ex id: "17k4dPDcymw3GcNjSCSG"
+    const convoId = await getConversationId([sender, userEmail]);
+    console.log("concvooo", convoId);
 
-  //   // SENDS TO THE DB
-  //   // ex id: "17k4dPDcymw3GcNjSCSG"
-  //   await updateDoc(doc(db, "messages", conversationID), {
-  //     messages: arrayUnion(newMessage),
-  //   });
-  // };
-
+    await updateDoc(doc(db, "messages", convoId), {
+      messages: arrayUnion(newMessage),
+    });
+    unflagUser(convId);
+  };
+  // these columns should appear in the flagged messagess page
   const columnsFlagged = [
     // { field: "id", headerName: "ID", width: 90 },
     {
@@ -148,14 +152,17 @@ const FlaggedMessages = () => {
       disableColumnMenu: true,
       align: "center",
       renderCell: (params) => {
-        console.log("AAAAAA", params);
+        console.log("AAAAAA", params.row.user);
         return (
           <Button
             variant="contained"
             sx={{ backgroundColor: "#DF9000" }}
             size="small"
             onClick={() =>
-              warnUser(`${params.row.convoId}-${params.row.index}`)
+              handleSend(
+                params.row.user,
+                `${params.row.convoId}-${params.row.index}`
+              )
             }
           >
             X
@@ -177,79 +184,13 @@ const FlaggedMessages = () => {
           variant="contained"
           sx={{ backgroundColor: "#C41E3A" }}
           size="small"
-          onClick={() =>
-            changeStatusToBlocked(`${params.row.convoId}-${params.row.index}`)
-          }
+          // onClick={() =>
+          //   changeStatusToBlocked(`${params.row.convoId}-${params.row.index}`)
+          // }
         >
           X
         </Button>
       ),
-    },
-  ];
-
-  const columnsBlocked = [
-    // { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "user",
-      numeric: false,
-      width: 240,
-      headerName: "Blocked User",
-    },
-    // {
-    //   field: "message",
-    //   numeric: false,
-    //   width: 360,
-    //   headerName: "Flagged Message 🚩",
-    // },
-    // {
-    //   field: "type",
-    //   numeric: false,
-    //   width: 90,
-    //   headerName: "Type",
-    // },
-    {
-      field: "date",
-      numeric: false,
-      width: 180,
-      headerName: "Date",
-    },
-    {
-      field: "unblock",
-      width: 180,
-      headerName: "Unblock",
-      headerAlign: "center",
-      sortable: false,
-      filterable: false,
-      hidecolumn: false,
-      disableColumnMenu: true,
-      align: "center",
-      renderCell: (params) => (
-        <Button variant="contained" size="small">
-          X
-        </Button>
-      ),
-    },
-    {
-      field: "delete",
-      width: 180,
-      headerName: "Delete",
-      headerAlign: "center",
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      align: "center",
-      renderCell: (params) => {
-        console.log("AAAAAA", params);
-        return (
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#C41E3A" }}
-            size="small"
-          >
-            X
-          </Button>
-        );
-      },
     },
   ];
 
@@ -279,22 +220,6 @@ const FlaggedMessages = () => {
     });
 
     setReportedMessages(tempFlagged);
-    setBlockedMessages(tempBlocked);
-  };
-
-  const blockUser = async (userEmail) => {
-    console.log(userEmail);
-    // console.log("AAAAAAAA user email", userEmail);
-    // getAuth()
-    //   .getUserByEmail(userEmail)
-    //   .then((userRecord) => {
-    //     // See the UserRecord reference doc for the contents of userRecord.
-    //     console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-    //     console.log(`UID: `, userRecord.uid);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error fetching user data:", error);
-    //   });
   };
 
   useEffect(() => {
@@ -346,30 +271,7 @@ const FlaggedMessages = () => {
           />
         </Box>
       ) : (
-        // <div> Blocked users </div>
-        <Box sx={{ height: 700, width: "100%" }}>
-          <DataGrid
-            rows={blockedMessages}
-            columns={columnsBlocked}
-            pageSizeOptions={[10]}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            checkboxSelection
-            disableRowSelectionOnClick
-            onRowSelectionModelChange={(ids) => {
-              const selectedIDs = new Set(ids);
-              const data = reportedMessages.filter((row) =>
-                selectedIDs.has(row.id)
-              );
-              setSelectedRowData(data);
-            }}
-          />
-        </Box>
+        <div> Blocked users </div>
       )}
     </>
   );
