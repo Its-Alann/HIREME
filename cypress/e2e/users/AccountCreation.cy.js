@@ -55,7 +55,7 @@ describe("Filling Up Forms", () => {
       ).type("H1H 1H1");
       cy.get(".MuiInputAdornment-root > .MuiButtonBase-root").click();
       cy.get(
-        ".MuiDayPicker-monthContainer > :nth-child(2) > :nth-child(2)"
+        ".MuiDayPicker-monthContainer > :nth-child(3) > :nth-child(4)"
       ).click();
     });
   });
