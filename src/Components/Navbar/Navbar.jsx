@@ -27,13 +27,7 @@ import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
-const pageNamesForApplicant = [
-  "Home",
-  "Network",
-  "Jobs",
-  "My Jobs",
-  "Messaging",
-];
+const pageNamesForApplicant = ["Home", "Network", "Jobs", "Messaging"];
 const pageNamesForRecruiter = [
   "Home",
   "Network",
