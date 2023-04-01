@@ -168,7 +168,6 @@ const Navbar = () => {
             sx={{
               flexGrow: 1,
               display: { xs: "flex", md: "none" },
-              alignItems: "center",
             }}
             data-cy="phone-menu-test"
           >
@@ -296,13 +295,21 @@ const Navbar = () => {
                   )
                 )}
             </Menu>
+          </Box>
+          <Box
+            sx={{
+              flexGrow: 0,
+              position: "absolute",
+              left: "50%",
+              margin: "auto",
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+            }}
+          >
             <Link
               href="/"
               sx={{
                 display: { xs: "flex", md: "none" },
-                position: "absolute",
-                top: "33.33%",
-                left: "50%",
               }}
             >
               <Box
