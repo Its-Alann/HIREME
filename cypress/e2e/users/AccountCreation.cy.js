@@ -55,7 +55,7 @@ describe("Filling Up Forms", () => {
       ).type("H1H 1H1");
       cy.get(".MuiInputAdornment-root > .MuiButtonBase-root").click();
       cy.get(
-        ".MuiDayPicker-monthContainer > :nth-child(1) > :nth-child(4)"
+        ".MuiDayPicker-monthContainer > :nth-child(2) > :nth-child(2)"
       ).click();
     });
   });
@@ -224,6 +224,7 @@ describe("Filling Up Forms", () => {
         cy.get("#next").click();
         cy.get("#next").click();
         cy.get("#next").click();
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
       });
     });
