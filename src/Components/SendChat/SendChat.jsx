@@ -123,6 +123,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
     const newMessage = {
       timestamp,
       sender,
+      seenBy: [myUser],
     };
 
     if (file) {
@@ -188,18 +189,20 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               </Box>
             )
           ) : (
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <TextField
-                variant="standard"
-                hiddenLabel
-                id="message-input"
-                placeholder="Type Something"
-                fullWidth
-                onChange={(e) => setMessageContent(e.target.value)}
-                value={messageContent}
-                sx={{ m: 0 }}
-              />
-            </Box>
+            <TextField
+              variant="standard"
+              hiddenLabel
+              id="message-input"
+              placeholder="Type Something"
+              fullWidth
+              onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") await handleSend();
+              }}
+              value={messageContent}
+              sx={{ m: 0 }}
+              autoComplete="off"
+            />
           )}
         </Grid>
 
