@@ -103,7 +103,12 @@ export const SentInvitationCard = ({
                       //remove != null when incomplete users are removed
                       sentRequestedUser.values.description !== "" &&
                       sentRequestedUser.values.description != null
-                        ? `${sentRequestedUser.values.description}`
+                        ? sentRequestedUser.values.description.length <= 24
+                          ? `${sentRequestedUser.values.description}`
+                          : `${sentRequestedUser.values.description.substring(
+                              0,
+                              21
+                            )} ...`
                         : "No bio"
                     }
                   />
