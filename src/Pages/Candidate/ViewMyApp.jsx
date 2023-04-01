@@ -182,6 +182,7 @@ export const ViewMyApp = () => {
                         direction="row"
                         // justifyContent="space-between"
                         margin="5"
+                        padding="10"
                       >
                         <Box
                           component="img"
@@ -191,12 +192,21 @@ export const ViewMyApp = () => {
                             height: "6rem",
                             mr: 2,
                             alignItems: "center",
+                            padding: 2,
                           }}
                           src={companiesLogo[job.companyID]}
                         />
                         <Grid>
                           <Stack direction="row" justifyContent="space-between">
-                            <Typography variant="h4">{job.jobTitle}</Typography>
+                            <Typography
+                              variant="h4"
+                              sx={{
+                                paddingTop: 2,
+                                paddingRight: 2,
+                              }}
+                            >
+                              {job.jobTitle}
+                            </Typography>
                             {/* <Button
                               variant="contained"
                               data-cy="remove-button"
@@ -212,14 +222,23 @@ export const ViewMyApp = () => {
                               Remove
                             </Button> */}
                           </Stack>
-                          <Typography>
+                          <Typography
+                            sx={{
+                              paddingRight: 2,
+                            }}
+                          >
                             {companiesName[job.companyID]}{" "}
                           </Typography>
                           <Typography>{`${job.city}, ${job.country}`}</Typography>
                         </Grid>
                       </Stack>
                       <Stack direction="row" sx={{ pt: 2 }}>
-                        <Typography>
+                        <Typography
+                          sx={{
+                            paddingLeft: 2,
+                            paddingBottom: 0.5,
+                          }}
+                        >
                           Deadline:{" "}
                           {new Date(
                             job.deadline.seconds * 1000 +
