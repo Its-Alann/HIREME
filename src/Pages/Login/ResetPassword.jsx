@@ -1,20 +1,14 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { CircularProgress, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import * as EmailValidator from "email-validator";
-import {
-  useAuthState,
-  useSignInWithEmailAndPassword,
-} from "react-firebase-hooks/auth";
-import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
-import { auth, provider } from "../../Firebase/firebase";
+import { IconButton, Stack } from "@mui/material";
+import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
+import { auth } from "../../Firebase/firebase";
 
 const theme = createTheme({
   palette: {
@@ -28,7 +22,16 @@ const theme = createTheme({
 });
 
 const ResetPassword = (props) => {
-  const antinos = "🖖";
+  const [sendPasswordResetEmail, sending, error] =
+    useSendPasswordResetEmail(auth);
+  const handleSubmit = async (event) => {
+    const data = new FormData(event.currentTarget);
+    const email = data.get("email");
+    const success = await sendPasswordResetEmail(email);
+    if (success) {
+      alert("Sent email");
+    }
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main">
@@ -41,10 +44,19 @@ const ResetPassword = (props) => {
             mx: 2,
           }}
         >
-          <Typography component="h1" variant="h5" color="primary">
-            HIRE<em>ME</em> account Sign In
+          <Typography component="h1" variant="h4" color="primary">
+            Forgot password?
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }} data-cy="formTest">
+          <Typography variant="caption">
+            You will receive an email to reset your password
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            data-cy="formTest"
+            onSubmit={handleSubmit}
+          >
             <TextField
               className="TextField"
               type="text"
@@ -63,38 +75,21 @@ const ResetPassword = (props) => {
               variant="standard"
               color="primary"
             />
-            <TextField
-              className="TextField"
-              margin="normal"
-              required
+            <Button
+              type="submit"
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              variant="standard"
+              variant="contained"
+              sx={{ mt: 3, mb: 2, py: 1 }}
               color="primary"
-            />
+              name="resetPassword"
+            >
+              Reset password
+            </Button>
 
             <Stack justifyContent="center" spacing={1}>
-              <Link align="center" href="/" variant="subtitle2">
-                Forgot password?
-              </Link>
-            </Stack>
-            <Stack justifyContent="center" spacing={0} sx={{ mt: 3 }}>
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="gray"
-                sx={{ fontSize: ".9rem" }}
-              >
-                or you can sign in with
-              </Typography>
-              {/* eslint-disable-next-line*/}
-              <div align="center">
-                <SignInGoogleButton sx={{ m: "auto" }} data-cy="GoogleTest" />
-              </div>
+              <IconButton aria-label="back" href="/login">
+                <ArrowBackRoundedIcon />
+              </IconButton>
             </Stack>
             <Stack
               sx={{ pt: 4 }}
