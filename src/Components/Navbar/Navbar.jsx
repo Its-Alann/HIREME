@@ -300,8 +300,9 @@ const Navbar = () => {
               href="/"
               sx={{
                 display: { xs: "flex", md: "none" },
-                ml: "auto",
-                mr: "auto",
+                position: "absolute",
+                top: "33.33%",
+                left: "50%",
               }}
             >
               <Box
