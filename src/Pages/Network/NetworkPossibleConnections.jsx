@@ -57,7 +57,7 @@ export const NetworkPossibleConnections = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
+      <Container component="main" maxWidth="xxl">
         <Stack alignItems="center">
           <Box
             justifyContent="center"
@@ -69,14 +69,13 @@ export const NetworkPossibleConnections = ({
             showingNonConnectedUsers != null ? (
               <Grid
                 container
-                spacing={3}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
                 data-cy="connectionGrid"
               >
                 {showingNonConnectedUsers.map((possibleConnectionUserID) => (
-                  <Grid item>
+                  <Grid item sx={{ m: 2 }}>
                     <PossibleConnectionCard
                       allUserProfiles={allUsers}
                       possibleConnectionUserId={possibleConnectionUserID.id}

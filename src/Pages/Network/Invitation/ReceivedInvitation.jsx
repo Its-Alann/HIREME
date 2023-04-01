@@ -60,7 +60,7 @@ export const ReceivedInvitation = ({
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
+        <Container component="main" maxWidth="xxl">
           <CssBaseline />
           <Stack>
             <Box justifyContent="center" alignItems="center" display="flex">
@@ -69,13 +69,12 @@ export const ReceivedInvitation = ({
               showingReceivedInvites != null ? (
                 <Grid
                   container
-                  spacing={3}
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
                 >
                   {showingReceivedInvites.map((requestedUserID) => (
-                    <Grid item>
+                    <Grid item sx={{ m: 2 }}>
                       <ReceivedInvitationCard
                         allUserProfiles={allUsers}
                         receivedInvitationUserID={requestedUserID}
