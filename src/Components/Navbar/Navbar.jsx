@@ -155,13 +155,17 @@ const Navbar = () => {
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
           <Link
             href="/"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" }, p: 5 }}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              padding: 0,
+            }}
           >
             <Box
               component="img"
+              padding="0px"
               sx={{
-                width: "13rem",
-                height: "2.5rem",
+                width: "9.75rem",
+                height: "1.875rem",
               }}
               src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_logotext.png?alt=media&token=f650bdf2-1892-4106-86d3-c8934ca7de67"
             />
