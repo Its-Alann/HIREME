@@ -25,17 +25,16 @@ const MessageList = ({ messages, convoId }) => {
       return;
     }
     const convoRef = doc(db, "messages", convoId);
-    const updatedMessages = messages;
+    const updatedMessages = messages.map((m) => {
+      const { readReceipt, ...res } = m;
+      return res;
+    });
 
     const reportedMessageDocId = `${convoId}-${index}`;
 
     // unreport a reported message
     if (messages[index].reported) {
-      updatedMessages[index] = {
-        ...messages[index],
-        reported: false,
-      };
-
+      updatedMessages[index].reported = false;
       //delete message doc from reportedMessages collection
       try {
         await deleteDoc(doc(db, "reportedMessages", reportedMessageDocId));
@@ -45,14 +44,11 @@ const MessageList = ({ messages, convoId }) => {
     }
     // report an unreported message
     else {
-      updatedMessages[index] = {
-        ...messages[index],
-        reported: true,
-      };
+      updatedMessages[index].reported = true;
 
       // add the message to the reportedMessages collection
       await setDoc(doc(db, "reportedMessages", reportedMessageDocId), {
-        ...messages[index],
+        ...updatedMessages[index],
         convoId,
         index,
       });

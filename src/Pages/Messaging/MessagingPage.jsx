@@ -143,8 +143,6 @@ const Messaging = () => {
         });
       });
 
-      console.log("allAuthorsList", allAuthorsList);
-
       const allChatProfiles = await Promise.all(
         allAuthorsList.map(getOtherAuthors)
       );
@@ -202,7 +200,6 @@ const Messaging = () => {
   };
 
   const markMessagesAsRead = async () => {
-    console.log("messages", messages);
     if (messages.length === 0 || messages.at(-1).seenBy.includes(myUser)) {
       return;
     }
@@ -215,7 +212,6 @@ const Messaging = () => {
 
       return updated;
     });
-    console.log("updatedMessages", updatedMessages);
     const convoRef = doc(db, "messages", convoId);
     await updateDoc(convoRef, {
       messages: updatedMessages,
