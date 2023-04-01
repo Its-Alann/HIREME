@@ -57,74 +57,76 @@ export const ViewNetwork = ({
   }, [allUserProfiles]);
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
-          <CssBaseline />
-          <Stack>
-            <Box justifyContent="center" alignItems="center" display="flex">
-              {showingConnections?.length > 0 && showingConnections != null ? (
-                <Stack alignItems="center">
-                  <Grid
-                    container
-                    spacing={3}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    {showingConnections.map((connectedUserID) => (
-                      <Grid item>
-                        <NetworkCards
-                          allUserProfiles={allUsers}
-                          connectedUserID={connectedUserID}
-                          currentUser={currentUser}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Stack>
-              ) : (
-                <>
-                  <Box
-                    component="img"
-                    justifyContent="center"
-                    sx={{
-                      width: 0.3,
-                      height: 0.3,
-                    }}
-                    src={image2}
-                    // alt="Trees"
-                  />
-                  <Typography variant="h5" sx={{ ml: 1 }}>
-                    No connections to show
-                  </Typography>
-                </>
-              )}
+    <ThemeProvider theme={theme}>
+      <Container
+        component="main"
+        maxWidth="xxl"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CssBaseline />
+        <Stack>
+          <Box justifyContent="center" alignItems="center" display="flex">
+            {showingConnections?.length > 0 && showingConnections != null ? (
+              <Stack alignItems="center">
+                <Grid
+                  container
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {showingConnections.map((connectedUserID) => (
+                    <Grid item sx={{ m: 2 }}>
+                      <NetworkCards
+                        allUserProfiles={allUsers}
+                        connectedUserID={connectedUserID}
+                        currentUser={currentUser}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+            ) : (
+              <>
+                <Box
+                  component="img"
+                  justifyContent="center"
+                  sx={{
+                    width: 0.3,
+                    height: 0.3,
+                  }}
+                  src={image2}
+                  // alt="Trees"
+                />
+                <Typography variant="h5" sx={{ ml: 1 }}>
+                  No connections to show
+                </Typography>
+              </>
+            )}
+          </Box>
+          {connectedUsersId?.length > pageSize ? (
+            <Box sx={{ mt: 2 }}>
+              <Button
+                id="Button-Previous"
+                onClick={prevPage}
+                disabled={pageNumber === 1}
+              >
+                Prev
+              </Button>
+              <Button
+                id="Button-Next"
+                onClick={nextPage}
+                disabled={
+                  pageNumber === Math.ceil(connectedUsersId.length / pageSize)
+                }
+              >
+                Next
+              </Button>
             </Box>
-            {connectedUsersId?.length > pageSize ? (
-              <Box sx={{ mt: 2 }}>
-                <Button
-                  id="Button-Previous"
-                  onClick={prevPage}
-                  disabled={pageNumber === 1}
-                >
-                  Prev
-                </Button>
-                <Button
-                  id="Button-Next"
-                  onClick={nextPage}
-                  disabled={
-                    pageNumber === Math.ceil(connectedUsersId.length / pageSize)
-                  }
-                >
-                  Next
-                </Button>
-              </Box>
-            ) : null}
-          </Stack>
-        </Container>
-      </ThemeProvider>
-    </div>
+          ) : null}
+        </Stack>
+      </Container>
+    </ThemeProvider>
   );
 };
 
