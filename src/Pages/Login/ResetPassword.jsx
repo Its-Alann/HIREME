@@ -31,6 +31,7 @@ const ResetPassword = (props) => {
     if (success) {
       alert("Sent email");
     }
+    if (error) console.log(error);
   };
   return (
     <ThemeProvider theme={theme}>
@@ -87,7 +88,7 @@ const ResetPassword = (props) => {
             </Button>
 
             <Stack justifyContent="center" spacing={1}>
-              <IconButton aria-label="back" href="/login">
+              <IconButton aria-label="back" href="/login" sx={{ m: "auto" }}>
                 <ArrowBackRoundedIcon />
               </IconButton>
             </Stack>
