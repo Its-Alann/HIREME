@@ -160,9 +160,12 @@ export const NetworkCards = ({
                           View Profile
                         </ColorButtonBlue>
                       </Link>
+                      {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
                       <ColorButtonLightBlue variant="outlined">
                         Message
                       </ColorButtonLightBlue>
+                      {/* </Link> */}
+
                       {/* import PersonRemoveIcon from '@mui/icons-material/PersonRemove'; use this icon instead of the button */}
                       {/* <ColorButtonRed
                     size="medium"

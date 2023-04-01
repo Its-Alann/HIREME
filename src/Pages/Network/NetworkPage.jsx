@@ -136,8 +136,8 @@ const NetworkPage = () => {
   }, [allUsers, networkConnections, sentInvitations]);
 
   return (
-    <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
-      <Divider />
+    <div style={{ height: "100%" }}>
+      <style>{`body {background-color: #EAEAEA; margin: 0; }`}</style>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth={false}>
           <Box sx={{ width: "100%" }}>
