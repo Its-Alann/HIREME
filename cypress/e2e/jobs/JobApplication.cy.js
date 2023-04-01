@@ -22,6 +22,10 @@ describe("Goes to job application", () => {
     cy.get('[data-cy="Jobs-test"]').click();
     cy.wait(500);
     cy.get(
+      ':nth-child(5) > .MuiPaper-root > .MuiList-root > [data-cy="view-job-test"]'
+    ).click();
+    cy.wait(500);
+    cy.get(
       ":nth-child(3) > .MuiPaper-root > .MuiBox-root > .css-qvcdic-MuiStack-root > :nth-child(1) > .link"
     ).click();
     cy.wait(500);
