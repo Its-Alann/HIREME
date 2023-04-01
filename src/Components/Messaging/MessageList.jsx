@@ -8,6 +8,8 @@ import MessageListItem from "./MessageListItem";
 import { auth, storage, db } from "../../Firebase/firebase";
 
 const MessageList = ({ messages, convoId }) => {
+  // console.log(findLastSeen(messages, "hypeboy@tok.ki"));
+
   const openAttachment = (path) => {
     getDownloadURL(ref(storage, `messages/${path}`)).then((url) =>
       window.open(url, "_blank")
@@ -27,6 +29,7 @@ const MessageList = ({ messages, convoId }) => {
 
     const reportedMessageDocId = `${convoId}-${index}`;
 
+    // unreport a reported message
     if (messages[index].reported) {
       updatedMessages[index] = {
         ...messages[index],
@@ -39,7 +42,9 @@ const MessageList = ({ messages, convoId }) => {
       } catch (err) {
         console.log(err);
       }
-    } else {
+    }
+    // report an unreported message
+    else {
       updatedMessages[index] = {
         ...messages[index],
         reported: true,
@@ -57,8 +62,6 @@ const MessageList = ({ messages, convoId }) => {
     await updateDoc(convoRef, {
       messages: updatedMessages,
     });
-
-    console.log("idol", messages[index]);
   };
 
   return (
@@ -73,7 +76,8 @@ const MessageList = ({ messages, convoId }) => {
             sx={{
               justifyContent: alignment,
               "&:hover .messageOptions": {
-                display: "inline-block",
+                // display: "inline-block",
+                visibility: "visible",
                 color: "grey",
               },
             }}
@@ -93,7 +97,18 @@ const MessageList = ({ messages, convoId }) => {
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(),
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      content: PropTypes.string,
+      attachment: PropTypes.string,
+      seenBy: PropTypes.arrayOf(PropTypes.string),
+      sender: PropTypes.string,
+      // eslint-disable-next-line react/forbid-prop-types
+      timestamp: PropTypes.object,
+      reported: PropTypes.bool,
+      readRecipt: PropTypes.arrayOf(PropTypes.string),
+    })
+  ),
   convoId: PropTypes.string,
 };
 export default MessageList;

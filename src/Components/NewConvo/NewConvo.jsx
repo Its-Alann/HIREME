@@ -44,14 +44,13 @@ const NewConvo = ({ selectConvo, getConversationId, getOtherAuthors }) => {
   // ! authors will be a list of authors without the current user
   const handleClick = async () => {
     const list = value.sort();
-    console.log("list", list);
-    const names = await getOtherAuthors(list);
-    console.log("names", names.names);
-    selectConvo(
-      await getConversationId([auth.currentUser.email, ...value]),
-      names.names,
-      99
-    );
+    // console.log("list", list);
+    const obj = { otherAuthors: list, mostRecent: new Date() };
+    // console.log("obj", obj);
+    const names = await getOtherAuthors(obj);
+    // console.log("names", names.names);
+    const emails = [auth.currentUser.email, ...value];
+    selectConvo(await getConversationId(emails), names.names, 99, emails);
   };
   //TODO make a form that allows the currentuser to select from a list of contacts (should be a multiselect to allow group chats)
   //TODO add the emails from the search bar to authors state
