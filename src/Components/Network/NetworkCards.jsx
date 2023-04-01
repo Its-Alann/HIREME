@@ -139,7 +139,12 @@ export const NetworkCards = ({
                         //remove != null when incomplete users are removed
                         connectedUser.values.description !== "" &&
                         connectedUser.values.description != null
-                          ? `${connectedUser.values.description}`
+                          ? connectedUser.values.description.length <= 24
+                            ? `${connectedUser.values.description}`
+                            : `${connectedUser.values.description.substring(
+                                0,
+                                21
+                              )} ...`
                           : "No bio"
                       }
                     />

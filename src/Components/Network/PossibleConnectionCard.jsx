@@ -89,7 +89,12 @@ export const PossibleConnectionCard = ({
                     //remove != null when incomplete users are removed
                     possibleConnectionUser.values.description !== "" &&
                     possibleConnectionUser.values.description != null
-                      ? `${possibleConnectionUser.values.description}`
+                      ? possibleConnectionUser.values.description.length <= 24
+                        ? `${possibleConnectionUser.values.description}`
+                        : `${possibleConnectionUser.values.description.substring(
+                            0,
+                            21
+                          )} ...`
                       : "No bio"
                   }
                 />
