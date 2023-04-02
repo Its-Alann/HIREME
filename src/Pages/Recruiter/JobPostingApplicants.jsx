@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import Switch, { SwitchProps } from "@mui/material/Switch";
+import { styled } from "@mui/material/styles";
 import {
   Box,
   Button,
@@ -225,121 +227,196 @@ export const JobPostingApplicants = () => {
       });
   }, []);
 
+  const AntSwitch = styled(Switch)(({ theme }) => ({
+    width: 28,
+    height: 16,
+    padding: 0,
+    display: "flex",
+    "&:active": {
+      "& .MuiSwitch-thumb": {
+        width: 15,
+      },
+      "& .MuiSwitch-switchBase.Mui-checked": {
+        transform: "translateX(9px)",
+      },
+    },
+    "& .MuiSwitch-switchBase": {
+      padding: 2,
+      "&.Mui-checked": {
+        transform: "translateX(12px)",
+        color: "#fff",
+        "& + .MuiSwitch-track": {
+          opacity: 1,
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#177ddc" : "#1890ff",
+        },
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      transition: theme.transitions.create(["width"], {
+        duration: 200,
+      }),
+    },
+    "& .MuiSwitch-track": {
+      borderRadius: 16 / 2,
+      opacity: 1,
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? "rgba(255,255,255,.35)"
+          : "rgba(0,0,0,.25)",
+      boxSizing: "border-box",
+    },
+  }));
+
   return (
     <Grid container direction="row" alignItems="flex-start" justify="center">
       {/* Job information */}
       <Grid xs={12} sm={12} md={6}>
-        <Box sx={{ p: 5 }}>
-          <Card variant="outlined">
-            <Box sx={{ m: 2 }}>
-              <Box sx={{ pb: 2 }}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Grid
-                    container
-                    spacing={-0.5}
-                    direction="row"
-                    alignItems="center"
-                  >
-                    <Grid>
-                      <Box
-                        component="img"
-                        sx={{
-                          // objectFit: "cover",
-                          width: "6rem",
-                          height: "6rem",
-                          mr: 2,
-                        }}
-                        src={companiesLogo}
-                      />
-                    </Grid>
-                    <Grid>
-                      <Box xs={12} sm={12} md={6}>
-                        <Typography variant="h4">{job.title}</Typography>
-                        <Typography sx={{ fontSize: 18 }}>
-                          {companyName.name}
-                        </Typography>
-                        <Typography sx={{ fontSize: 18 }}>
-                          {`${job.city}, ${job.country}`}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                  <Box>
-                    <Link
-                      to={{
-                        pathname: `/editJob/${pageJobID}`,
-                      }}
+        <Stack spacing={2}>
+          <Box sx={{ p: 5 }}>
+            <Card variant="outlined">
+              <Box sx={{ m: 2 }}>
+                <Box sx={{ pb: 2 }}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Grid
+                      container
+                      spacing={-0.5}
+                      direction="row"
+                      alignItems="center"
                     >
-                      <IconButton>
-                        <EditIcon />
+                      <Grid>
+                        <Box
+                          component="img"
+                          sx={{
+                            // objectFit: "cover",
+                            width: "6rem",
+                            height: "6rem",
+                            mr: 2,
+                          }}
+                          src={companiesLogo}
+                        />
+                      </Grid>
+                      <Grid>
+                        <Box xs={12} sm={12} md={6}>
+                          <Typography variant="h4">{job.title}</Typography>
+                          <Typography sx={{ fontSize: 18 }}>
+                            {companyName.name}
+                          </Typography>
+                          <Typography sx={{ fontSize: 18 }}>
+                            {`${job.city}, ${job.country}`}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                    <Box>
+                      <Link
+                        to={{
+                          pathname: `/editJob/${pageJobID}`,
+                        }}
+                      >
+                        <IconButton>
+                          <EditIcon />
+                        </IconButton>
+                      </Link>
+                      <IconButton onClick={handleOpenRemoveJob}>
+                        <RemoveCircleOutlineIcon />
                       </IconButton>
-                    </Link>
-                    <IconButton onClick={handleOpenRemoveJob}>
-                      <RemoveCircleOutlineIcon />
-                    </IconButton>
+                    </Box>
+                  </Stack>
+
+                  <Dialog
+                    open={openRemoveJob}
+                    onClose={handleCloseRemoveJob}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Are you sure you would like to remove the job posting?
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        This job posting will be removed completely. All data
+                        related to this post will be erased.
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseRemoveJob}>Cancel</Button>
+                      <Button
+                        sx={{ color: "red" }}
+                        onClick={removeJobAndApplicants}
+                        autoFocus
+                      >
+                        Remove
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
+                  {job.deadline && (
+                    <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
+                      {new Date(
+                        (job.deadline.seconds ?? 0) * 1000 +
+                          (job.deadline.nanoseconds ?? 0) / 1000000
+                      ).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "UTC",
+                      })}
+                    </Typography>
+                  )}
+                </Box>
+
+                <Divider />
+                <Stack spacing={2}>
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>About the job</Typography>
+                    <Typography>{job.description}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
+                    <Typography>{job.requirement}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                    <Typography>{job.benefits}</Typography>
                   </Box>
                 </Stack>
-
-                <Dialog
-                  open={openRemoveJob}
-                  onClose={handleCloseRemoveJob}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    Are you sure you would like to remove the job posting?
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      This job posting will be removed completely. All data
-                      related to this post will be erased.
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseRemoveJob}>Cancel</Button>
-                    <Button
-                      sx={{ color: "red" }}
-                      onClick={removeJobAndApplicants}
-                      autoFocus
-                    >
-                      Remove
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-
-                {job.deadline && (
-                  <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
-                    {new Date(
-                      (job.deadline.seconds ?? 0) * 1000 +
-                        (job.deadline.nanoseconds ?? 0) / 1000000
-                    ).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      timeZone: "UTC",
-                    })}
-                  </Typography>
-                )}
               </Box>
-
-              <Divider />
-              <Stack spacing={2}>
-                <Box sx={{ pt: 2 }}>
-                  <Typography sx={{ fontSize: 20 }}>About the job</Typography>
-                  <Typography>{job.description}</Typography>
-                </Box>
-                <Box>
-                  <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
-                  <Typography>{job.requirement}</Typography>
-                </Box>
-                <Box>
-                  <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
-                  <Typography>{job.benefits}</Typography>
-                </Box>
-              </Stack>
-            </Box>
-          </Card>
-        </Box>
+            </Card>
+          </Box>
+          <Box>
+            <Stack spacing={2}>
+              <Box sx={{ px: 5 }}>
+                <Card variant="outlined">
+                  <Box sx={{ m: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>Resume</Typography>
+                    <Typography>{job.description}</Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography>Off</Typography>
+                      <AntSwitch
+                        defaultChecked
+                        inputProps={{ "aria-label": "ant design" }}
+                      />
+                      <Typography>On</Typography>
+                    </Stack>
+                  </Box>
+                  <Box sx={{ m: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>Cover Letter </Typography>
+                    <Typography>{job.requirement}</Typography>
+                  </Box>
+                  <Box sx={{ m: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>Transcript</Typography>
+                    <Typography>{job.benefits}</Typography>
+                  </Box>
+                </Card>
+              </Box>
+            </Stack>
+          </Box>
+        </Stack>
       </Grid>
 
       {/* List of applicants and their statuses */}
