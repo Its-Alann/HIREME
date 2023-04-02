@@ -224,6 +224,7 @@ describe("Filling Up Forms", () => {
         cy.get("#next").click();
         cy.get("#next").click();
         cy.get("#next").click();
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
       });
     });
