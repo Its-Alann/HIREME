@@ -7,14 +7,10 @@ import {
   ListItemText,
   TextField,
   Button,
-  IconButton,
-  Divider,
-  Box,
 } from "@mui/material";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import FileUpload from "../../../Components/FileUpload/FileUpload";
@@ -44,10 +40,6 @@ const JobApplication = () => {
   const [jobTitle, setJobTitle] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [currentUserEmail, setCurrentUserEmail] = useState("");
-  const [resumeReq, setResumeReq] = useState(false);
-  const [coverLetterReq, setCoverLetterReq] = useState(false);
-  const [transcriptReq, setTranscriptReq] = useState(false);
-  const [error2, setError2] = useState(null);
 
   // Patterns that the email, phone number and address must match in order for it to be an
   // eligible application
@@ -150,10 +142,7 @@ const JobApplication = () => {
     if (
       (emailPattern.test(email) &&
         phonePattern.test(phoneNumber) &&
-        addressPattern.test(address)) === false ||
-      (resumeReq === true && resume === null) === true ||
-      (coverLetterReq === true && coverLetter === null) === true ||
-      (transcriptReq === true && transcript === null) === true
+        addressPattern.test(address)) === false
     ) {
       if (!emailPattern.test(email)) {
         console.log("enter a valid email format");
@@ -163,15 +152,6 @@ const JobApplication = () => {
       }
       if (!addressPattern.test(address)) {
         console.log("enter a valid address");
-      }
-      if (resumeReq === true && resume === null) {
-        console.log("upload a resume");
-      }
-      if (coverLetterReq === true && coverLetter === null) {
-        console.log("upload a cover letter");
-      }
-      if (transcriptReq === true && transcript === null) {
-        console.log("upload a transcript");
       }
     } else {
       uploadDocuments();
@@ -187,9 +167,6 @@ const JobApplication = () => {
       const docSnap = await getDoc(doc(db, "jobs2", URLjobID));
       const jobData = docSnap.data();
       setJobTitle(jobData.title);
-      setResumeReq(jobData.resume);
-      setCoverLetterReq(jobData.coverLetter);
-      setTranscriptReq(jobData.transcript);
     } catch (error) {
       console.log(error);
     }
@@ -203,16 +180,6 @@ const JobApplication = () => {
       setCompanyName(jobData.name);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      onFileChange(event, "transcript");
-      setError2(null);
-    } else {
-      setError2("No file selected");
     }
   };
 
@@ -259,115 +226,28 @@ const JobApplication = () => {
 
         {/* List of files to upload */}
         <Grid item>
-          {/* TO DO:
-          - Add: ***mandatory fields for resume/CV/transcript --> DONE
-          - Delete: tests in firebase
-          - update: test of JobApplication +  CreateJob
-          - have option to edit: requires document in JobPostingApplicants
-          - upload files: delete them in jobApplication
-          */}
           <List>
-            {/* Resume Section */}
-            {resumeReq === true ? (
-              <>
-                <ListItem disableGutters>
-                  <ListItemText sx={{ mr: 5 }}>
-                    <Box display="flex" flexDirection="column">
-                      <Typography color="#d32f2f">Resume*</Typography>
-                      <Typography variant="caption" color="#d32f2f">
-                        Required - Please upload a Resume
-                      </Typography>
-                    </Box>
-                  </ListItemText>
-                  <FileUpload
-                    onFileChange={(e) => onFileChange(e, "resume")}
-                    data-testid="upload-resume"
-                  />
-                </ListItem>
-                {/* <Divider /> */}
-              </>
-            ) : (
-              <ListItem disableGutters>
-                <ListItemText sx={{ mr: 5 }}>
-                  <Box display="flex" flexDirection="column">
-                    <Typography>Resume</Typography>
-                    <Typography variant="caption">Optional</Typography>
-                  </Box>
-                </ListItemText>
-                <FileUpload
-                  onFileChange={(e) => onFileChange(e, "resume")}
-                  data-testid="upload-resume"
-                />
-              </ListItem>
-            )}
-
-            {/* Cover Letter Section */}
-            {coverLetterReq === true ? (
-              <>
-                <ListItem disableGutters>
-                  <ListItemText sx={{ mr: 5 }}>
-                    <Box display="flex" flexDirection="column">
-                      <Typography color="#d32f2f">Cover Letter*</Typography>
-                      <Typography variant="caption" color="#d32f2f">
-                        Required - Please upload a Cover Letter
-                      </Typography>
-                    </Box>
-                  </ListItemText>
-                  <FileUpload
-                    onFileChange={(e) => onFileChange(e, "coverLetter")}
-                    data-testid="upload-coverLetter"
-                  />
-                </ListItem>
-                {/* <Divider /> */}
-              </>
-            ) : (
-              <ListItem disableGutters>
-                <ListItemText sx={{ mr: 5 }}>
-                  <Box display="flex" flexDirection="column">
-                    <Typography>Cover Letter</Typography>
-                    <Typography variant="caption">Optional</Typography>
-                  </Box>
-                </ListItemText>
-                <FileUpload
-                  onFileChange={(e) => onFileChange(e, "coverLetter")}
-                  data-testid="upload-coverLetter"
-                />
-              </ListItem>
-            )}
-
-            {/* Transcript Section */}
-            {transcriptReq === true ? (
-              <>
-                <ListItem disableGutters>
-                  <ListItemText sx={{ mr: 5 }}>
-                    <Box display="flex" flexDirection="column">
-                      <Typography color="#d32f2f">Transcript*</Typography>
-                      <Typography variant="caption" color="#d32f2f">
-                        Required - Please upload a Transcript
-                      </Typography>
-                    </Box>
-                  </ListItemText>
-                  <FileUpload
-                    onFileChange={(e) => onFileChange(e, "transcript")}
-                    data-testid="upload-transcript"
-                  />
-                </ListItem>
-                {/* <Divider /> */}
-              </>
-            ) : (
-              <ListItem disableGutters>
-                <ListItemText sx={{ mr: 5 }}>
-                  <Box display="flex" flexDirection="column">
-                    <Typography>Transcript</Typography>
-                    <Typography variant="caption">Optional</Typography>
-                  </Box>
-                </ListItemText>{" "}
-                <FileUpload
-                  onFileChange={(e) => onFileChange(e, "transcript")}
-                  data-testid="upload-transcript"
-                />
-              </ListItem>
-            )}
+            <ListItem disableGutters>
+              <ListItemText sx={{ mr: 5 }}> Resume </ListItemText>
+              <FileUpload
+                onFileChange={(e) => onFileChange(e, "resume")}
+                data-testid="upload-resume"
+              />
+            </ListItem>
+            <ListItem disableGutters>
+              <ListItemText sx={{ mr: 5 }}> Cover Letter </ListItemText>
+              <FileUpload
+                onFileChange={(e) => onFileChange(e, "coverLetter")}
+                data-testid="upload-coverLetter"
+              />
+            </ListItem>
+            <ListItem disableGutters>
+              <ListItemText sx={{ mr: 5 }}> Transcript </ListItemText>
+              <FileUpload
+                onFileChange={(e) => onFileChange(e, "transcript")}
+                data-testid="upload-transcript"
+              />
+            </ListItem>
           </List>
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
