@@ -145,6 +145,9 @@ const NetworkPage = () => {
               value={value}
               onChange={handleChange}
               aria-label="nav tabs example"
+              variant="scrollable"
+              scrollButtons
+              allowScrollButtonsMobile
             >
               <Tab label="My Network" value={0} data-cy="NetworkTab" />
               <Tab
