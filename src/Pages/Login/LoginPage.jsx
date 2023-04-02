@@ -9,12 +9,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CircularProgress, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
+import { getDoc, doc } from "firebase/firestore";
 import {
   useAuthState,
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
-import { auth, provider } from "../../Firebase/firebase";
+import { auth, provider, db } from "../../Firebase/firebase";
 
 const theme = createTheme({
   palette: {
@@ -30,6 +31,7 @@ const theme = createTheme({
 const LoginPage = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
+  const [blockedUser, setBlockedUser] = React.useState(false);
 
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
@@ -47,9 +49,14 @@ const LoginPage = () => {
         password,
       });
 
-      signInWithEmailAndPassword(email, password);
-
-      navigate("/");
+      const docRef = doc(db, "blockedUsers", email);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists() === false) {
+        signInWithEmailAndPassword(email, password);
+        navigate("/");
+      } else {
+        setBlockedUser(true);
+      }
     }
   };
 
@@ -101,6 +108,7 @@ const LoginPage = () => {
               helperText={!emailError ? "" : "Please enter valid credentials"}
               variant="standard"
               color="primary"
+              onChange={() => setBlockedUser(false)}
             />
             <TextField
               className="TextField"
@@ -117,6 +125,14 @@ const LoginPage = () => {
             />
 
             {error && <Typography color="error">{error.message}</Typography>}
+
+            {blockedUser ? (
+              <Typography color="error">
+                Your account has been banned
+              </Typography>
+            ) : (
+              ""
+            )}
 
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
