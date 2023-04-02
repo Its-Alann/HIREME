@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -8,6 +8,7 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { IconButton, Stack } from "@mui/material";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
+import * as EmailValidator from "email-validator";
 import { auth } from "../../Firebase/firebase";
 
 const theme = createTheme({
@@ -22,16 +23,19 @@ const theme = createTheme({
 });
 
 const ResetPassword = (props) => {
+  const [emailError, setEmailError] = useState(false);
+
   const [sendPasswordResetEmail, sending, error] =
     useSendPasswordResetEmail(auth);
   const handleSubmit = async (event) => {
+    event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
     const success = await sendPasswordResetEmail(email);
     if (success) {
       alert("Sent email");
     }
-    if (error) console.log(error);
+    if (error) console.log(error.message);
   };
   return (
     <ThemeProvider theme={theme}>
@@ -54,7 +58,7 @@ const ResetPassword = (props) => {
           <Box
             component="form"
             noValidate
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, minWidth: "300px" }}
             data-cy="formTest"
             onSubmit={handleSubmit}
           >
@@ -73,9 +77,20 @@ const ResetPassword = (props) => {
               inputProps={{
                 "aria-label": "email",
               }}
+              onBlur={(e) => {
+                setEmailError(
+                  e.target.value === ""
+                    ? false
+                    : !EmailValidator.validate(e.target.value)
+                );
+              }}
+              error={emailError}
+              helperText={!emailError ? "" : "Please enter valid credentials"}
               variant="standard"
               color="primary"
             />
+            {error && <Typography color="error">User not found</Typography>}
+
             <Button
               type="submit"
               fullWidth
@@ -83,6 +98,8 @@ const ResetPassword = (props) => {
               sx={{ mt: 3, mb: 2, py: 1 }}
               color="primary"
               name="resetPassword"
+              disableTouchRipple
+              disabled={emailError}
             >
               Reset password
             </Button>
