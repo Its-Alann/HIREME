@@ -67,7 +67,7 @@ describe("example to-do app", () => {
         .last()
         .click();
     });
-    
+
     // it("report a message", () => {
     //   cy.get(".messageOptions").last().click();
     //   cy.get(".reportMsgButton").click();
@@ -152,10 +152,10 @@ describe("example to-do app", () => {
       cy.get('[data-cy="selectConnections"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').should("be.disabled");
       cy.get('[data-testid="ArrowDropDownIcon"]').click();
-      cy.get(".MuiAutocomplete-noOptions").should("be.visible");
-      //cy.get("li.MuiAutocomplete-option").click();
-      //cy.get('[data-testid="CancelIcon"]').should("be.visible");
-      //cy.get('[data-cy="submitConnections"]').click();
+      // cy.get(".MuiAutocomplete-noOptions").should("be.visible");
+      cy.get("li.MuiAutocomplete-option").click();
+      cy.get('[data-testid="CancelIcon"]').should("be.visible");
+      cy.get('[data-cy="submitConnections"]').click();
     });
   });
 
