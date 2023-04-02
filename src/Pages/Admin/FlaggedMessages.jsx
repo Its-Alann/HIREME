@@ -26,8 +26,11 @@ const FlaggedMessages = () => {
   // array of reported message objects
   const [reportedMessages, setReportedMessages] = useState([]);
   // const [blockedMessages, setBlockedMessages] = useState([]);
+  const [blockedUsers, setBlockedUsers] = useState([]);
 
   const [selectedRowData, setSelectedRowData] = useState([]);
+
+  const [value, setValue] = useState(0);
 
   // removes message from flagged messages
   const unflagUser = async (docID) => {
@@ -93,6 +96,41 @@ const FlaggedMessages = () => {
     });
     unflagUser(convId);
   };
+
+  const handleBlockUser = async (email) => {
+    const blockedUserRef = doc(db, "blockedUsers", email);
+    await setDoc(blockedUserRef, {});
+
+    try {
+      const messagesRef = collection(db, "reportedMessages");
+      const q = query(messagesRef, where("sender", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((document) => {
+        console.log(document.id);
+        // deleteDoc(document.ref);
+        deleteDoc(doc(db, "reportedMessages", document.id));
+      });
+
+      localStorage.setItem("activeTab", 0);
+      window.location.reload();
+
+      // Add ban: true in userProfile
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUnblockUser = async (email) => {
+    try {
+      await deleteDoc(doc(db, "blockedUsers", email));
+      localStorage.setItem("activeTab", 1);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // these columns should appear in the flagged messagess page
   const columnsFlagged = [
     // { field: "id", headerName: "ID", width: 90 },
@@ -151,29 +189,26 @@ const FlaggedMessages = () => {
       filterable: false,
       disableColumnMenu: true,
       align: "center",
-      renderCell: (params) => {
-        console.log("AAAAAA", params.row.user);
-        return (
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#DF9000" }}
-            size="small"
-            onClick={() =>
-              handleSend(
-                params.row.user,
-                `${params.row.convoId}-${params.row.index}`
-              )
-            }
-          >
-            X
-          </Button>
-        );
-      },
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#DF9000" }}
+          size="small"
+          onClick={() =>
+            handleSend(
+              params.row.user,
+              `${params.row.convoId}-${params.row.index}`
+            )
+          }
+        >
+          X
+        </Button>
+      ),
     },
     {
-      field: "block",
+      field: "ban",
       width: 180,
-      headerName: "Block",
+      headerName: "Ban",
       headerAlign: "center",
       sortable: false,
       filterable: false,
@@ -187,6 +222,37 @@ const FlaggedMessages = () => {
           // onClick={() =>
           //   changeStatusToBlocked(`${params.row.convoId}-${params.row.index}`)
           // }
+          onClick={() => handleBlockUser(params.row.user)}
+        >
+          X
+        </Button>
+      ),
+    },
+  ];
+
+  const columnsBlocked = [
+    // { field: "id", headerName: "ID", width: 90 },
+    {
+      field: "user",
+      numeric: false,
+      width: 240,
+      headerName: "User",
+    },
+    {
+      field: "unbanned",
+      width: 180,
+      headerName: "Unban",
+      headerAlign: "center",
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      align: "center",
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#C41E3A" }}
+          size="small"
+          onClick={() => handleUnblockUser(params.row.user)}
         >
           X
         </Button>
@@ -222,13 +288,33 @@ const FlaggedMessages = () => {
     setReportedMessages(tempFlagged);
   };
 
+  const getBlockedUsers = async () => {
+    const blockedUsersRef = collection(db, "blockedUsers");
+    const querySnapshot = await getDocs(blockedUsersRef);
+    const blockedUsersArr = [];
+    let ii = 0;
+    querySnapshot.forEach((document) => {
+      const thingy2 = {
+        user: document.id,
+        id: ii,
+      };
+      blockedUsersArr.push(thingy2);
+      ii += 1;
+    });
+    setBlockedUsers(blockedUsersArr);
+  };
+
   useEffect(() => {
+    const storedActiveTab = localStorage.getItem("activeTab");
+    if (storedActiveTab) {
+      setValue(parseInt(storedActiveTab, 10));
+    }
     getReportedMessages();
+    getBlockedUsers();
   }, []);
 
-  const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
+    localStorage.setItem("activeTab", newValue);
     setValue(newValue);
   };
 
@@ -237,42 +323,39 @@ const FlaggedMessages = () => {
       {/* TODO: make mass report / warn users with the checklist
             selected rows are in the selectedRowData useState
       */}
-
       <Tabs
         value={value}
         onChange={handleChange}
         aria-label="basic tabs example"
       >
         <Tab label="Flagged" value={0} />
-        <Tab label="Blocked" />
+        <Tab label="Banned" value={1} />
       </Tabs>
-      {value === 0 ? (
-        <Box sx={{ height: 700, width: "100%" }}>
-          <DataGrid
-            rows={reportedMessages}
-            columns={columnsFlagged}
-            pageSizeOptions={[10]}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
+      <Box sx={{ height: 700, width: "100%" }}>
+        <DataGrid
+          rows={value === 0 ? reportedMessages : blockedUsers}
+          columns={value === 0 ? columnsFlagged : columnsBlocked}
+          pageSizeOptions={[10]}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
               },
-            }}
-            checkboxSelection
-            disableRowSelectionOnClick
-            onRowSelectionModelChange={(ids) => {
-              const selectedIDs = new Set(ids);
-              const data = reportedMessages.filter((row) =>
-                selectedIDs.has(row.id)
-              );
-              setSelectedRowData(data);
-            }}
-          />
-        </Box>
-      ) : (
-        <div> Blocked users </div>
-      )}
+            },
+            sorting: { sortModel: [{ field: "date", sort: "desc" }] },
+          }}
+          checkboxSelection
+          disableRowSelectionOnClick
+          onRowSelectionModelChange={(ids) => {
+            const selectedIDs = new Set(ids);
+            const data = reportedMessages.filter((row) =>
+              selectedIDs.has(row.id)
+            );
+            setSelectedRowData(data);
+          }}
+        />
+      </Box>
+      )
     </>
   );
 };
