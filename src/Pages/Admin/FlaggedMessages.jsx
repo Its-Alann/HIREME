@@ -113,7 +113,7 @@ const FlaggedMessages = () => {
       });
 
       localStorage.setItem("activeTab", 0);
-      window.location.reload();
+      setTimeout(() => window.location.reload(), 100);
 
       // Add ban: true in userProfile
     } catch (err) {
