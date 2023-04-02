@@ -100,6 +100,7 @@ const ResetPassword = (props) => {
               name="resetPassword"
               disableTouchRipple
               disabled={emailError}
+              data-cy="resetSubmit"
             >
               Reset password
             </Button>
