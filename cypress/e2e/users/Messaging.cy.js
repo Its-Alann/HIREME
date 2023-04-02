@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "cypress-file-upload";
 
@@ -31,7 +32,6 @@ describe("example to-do app", () => {
       cy.get("#message-input").should("be.visible").type("Hi");
       cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
       cy.get("#message-chats").last().should("contain", "Hi");
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
 
       //send Hi with an emoji
@@ -45,7 +45,6 @@ describe("example to-do app", () => {
 
       //send image
       const fileName = "src/Assets/fonts/Images/IMG_0524.png";
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
@@ -54,7 +53,6 @@ describe("example to-do app", () => {
       cy.get('[data-testid="ClearIcon"]').click();
 
       //send image
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
@@ -141,6 +139,7 @@ describe("example to-do app", () => {
 
       cy.get(".messageOptions").last().invoke("show").click({ force: true });
       cy.get(".reportMsgButton").click();
+      cy.wait(1000);
     });
 
     it("opens new chat flow", () => {
