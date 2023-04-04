@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import Switch, { SwitchProps } from "@mui/material/Switch";
-import { styled } from "@mui/material/styles";
 import {
   Box,
   Button,
@@ -66,6 +64,10 @@ export const JobPostingApplicants = () => {
   const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const [open, setOpen] = useState(false);
+  const [checkedResume, setCheckedResume] = React.useState("");
+  const [checkedCoverLetter, setCheckedCoverLetter] = React.useState("");
+  const [checkedTranscript, setCheckedTranscript] = React.useState("");
+
   const [openRemoveJob, setOpenRemoveJob] = useState(false);
   const tempArray2 = [];
 
@@ -109,6 +111,21 @@ export const JobPostingApplicants = () => {
       const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
       const jobData = jobsSnapshot.data();
       setJob(jobData);
+      if (jobData.resume === true) {
+        setCheckedResume("Required");
+      } else {
+        setCheckedResume("Optional");
+      }
+      if (jobData.coverLetter === true) {
+        setCheckedCoverLetter("Required");
+      } else {
+        setCheckedCoverLetter("Optional");
+      }
+      if (jobData.transcript === true) {
+        setCheckedTranscript("Required");
+      } else {
+        setCheckedTranscript("Optional");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -227,57 +244,12 @@ export const JobPostingApplicants = () => {
       });
   }, []);
 
-  const AntSwitch = styled(Switch)(({ theme }) => ({
-    width: 28,
-    height: 16,
-    padding: 0,
-    display: "flex",
-    "&:active": {
-      "& .MuiSwitch-thumb": {
-        width: 15,
-      },
-      "& .MuiSwitch-switchBase.Mui-checked": {
-        transform: "translateX(9px)",
-      },
-    },
-    "& .MuiSwitch-switchBase": {
-      padding: 2,
-      "&.Mui-checked": {
-        transform: "translateX(12px)",
-        color: "#fff",
-        "& + .MuiSwitch-track": {
-          opacity: 1,
-          backgroundColor:
-            theme.palette.mode === "dark" ? "#177ddc" : "#1890ff",
-        },
-      },
-    },
-    "& .MuiSwitch-thumb": {
-      boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      transition: theme.transitions.create(["width"], {
-        duration: 200,
-      }),
-    },
-    "& .MuiSwitch-track": {
-      borderRadius: 16 / 2,
-      opacity: 1,
-      backgroundColor:
-        theme.palette.mode === "dark"
-          ? "rgba(255,255,255,.35)"
-          : "rgba(0,0,0,.25)",
-      boxSizing: "border-box",
-    },
-  }));
-
   return (
     <Grid container direction="row" alignItems="flex-start" justify="center">
       {/* Job information */}
       <Grid xs={12} sm={12} md={6}>
         <Stack spacing={2}>
-          <Box sx={{ p: 5 }}>
+          <Box sx={{ px: 5, pt: 5 }}>
             <Card variant="outlined">
               <Box sx={{ m: 2 }}>
                 <Box sx={{ pb: 2 }}>
@@ -393,6 +365,22 @@ export const JobPostingApplicants = () => {
                   <Box>
                     <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
                     <Typography>{job.benefits}</Typography>
+                  </Box>
+                </Stack>
+
+                <Divider />
+                <Stack spacing={2}>
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>Resume</Typography>
+                    <Typography>{checkedResume}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Cover Letter</Typography>
+                    <Typography>{checkedCoverLetter}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Transcript</Typography>
+                    <Typography>{checkedTranscript}</Typography>
                   </Box>
                 </Stack>
               </Box>
