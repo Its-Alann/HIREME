@@ -259,13 +259,6 @@ const JobApplication = () => {
 
         {/* List of files to upload */}
         <Grid item>
-          {/* TO DO:
-          - Add: ***mandatory fields for resume/CV/transcript --> DONE
-          - Delete: tests in firebase
-          - update: test of JobApplication +  CreateJob
-          - have option to edit: requires document in JobPostingApplicants
-          - upload files: delete them in jobApplication
-          */}
           <List>
             {/* Resume Section */}
             {resumeReq === true ? (
