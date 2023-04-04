@@ -302,7 +302,17 @@ export const JobPostingApplicants = () => {
                       </Grid>
                       <Grid>
                         <Box xs={12} sm={12} md={6}>
-                          <Typography variant="h4">{job.title}</Typography>
+                          <Typography
+                            variant="h4"
+                            sx={{
+                              maxWidth: "1000px",
+                              overflow: "hidden",
+                              whiteSpace: "normal",
+                              wordWrap: "break-word",
+                            }}
+                          >
+                            {job.title}
+                          </Typography>
                           <Typography sx={{ fontSize: 18 }}>
                             {companyName.name}
                           </Typography>
@@ -387,34 +397,6 @@ export const JobPostingApplicants = () => {
                 </Stack>
               </Box>
             </Card>
-          </Box>
-          <Box>
-            <Stack spacing={2}>
-              <Box sx={{ px: 5 }}>
-                <Card variant="outlined">
-                  <Box sx={{ m: 2 }}>
-                    <Typography sx={{ fontSize: 20 }}>Resume</Typography>
-                    <Typography>{job.description}</Typography>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Typography>Off</Typography>
-                      <AntSwitch
-                        defaultChecked
-                        inputProps={{ "aria-label": "ant design" }}
-                      />
-                      <Typography>On</Typography>
-                    </Stack>
-                  </Box>
-                  <Box sx={{ m: 2 }}>
-                    <Typography sx={{ fontSize: 20 }}>Cover Letter </Typography>
-                    <Typography>{job.requirement}</Typography>
-                  </Box>
-                  <Box sx={{ m: 2 }}>
-                    <Typography sx={{ fontSize: 20 }}>Transcript</Typography>
-                    <Typography>{job.benefits}</Typography>
-                  </Box>
-                </Card>
-              </Box>
-            </Stack>
           </Box>
         </Stack>
       </Grid>
