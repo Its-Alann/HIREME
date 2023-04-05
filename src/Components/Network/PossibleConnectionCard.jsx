@@ -22,33 +22,26 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
 }));
 
 export const PossibleConnectionCard = ({
-  allUserProfiles,
   possibleConnectionUserId,
   currentUser,
 }) => {
   const [possibleConnectionUser, setPossibleConnectionUser] = useState([]);
 
   useEffect(() => {
-    // console.log(connectedUserID);
-    // console.log(allUserProfiles);
-    const findPossibleConnectionUserProfile = allUserProfiles.find(
-      (el) => el.id === possibleConnectionUserId
-    );
-    // console.log(findConnectUserProfile);
-    setPossibleConnectionUser(findPossibleConnectionUserProfile);
-  }, [allUserProfiles, possibleConnectionUserId]);
+    setPossibleConnectionUser(possibleConnectionUserId);
+  }, [possibleConnectionUserId]);
 
   const sendInvitation = async () => {
     const currentUserSendingInvitationRef = doc(db, "invitations", currentUser);
     const userReceivingInvitationRef = doc(
       db,
       "invitations",
-      possibleConnectionUserId
+      possibleConnectionUserId.id
     );
 
     try {
       await updateDoc(currentUserSendingInvitationRef, {
-        sentInvitations: arrayUnion(possibleConnectionUserId),
+        sentInvitations: arrayUnion(possibleConnectionUserId.id),
       });
 
       await updateDoc(userReceivingInvitationRef, {
@@ -131,8 +124,8 @@ export const PossibleConnectionCard = ({
 };
 
 PossibleConnectionCard.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  possibleConnectionUserId: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  possibleConnectionUserId: PropTypes.object.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
 

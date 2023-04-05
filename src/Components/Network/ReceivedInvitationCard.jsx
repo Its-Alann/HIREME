@@ -49,7 +49,6 @@ export const ReceivedInvitationCard = ({
   const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
 
   useEffect(() => {
-    console.log(receivedInvitationUserID);
     setReceivedInvitationUser(receivedInvitationUserID);
   }, [receivedInvitationUserID]);
 

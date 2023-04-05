@@ -145,6 +145,7 @@ const NetworkPage = () => {
           !sentInvitations.includes(user) &&
           currentUser !== user.id
       );
+      newNonConnectedUsersArr.sort(compareByName);
       setNonConnectedUsersArr(newNonConnectedUsersArr);
       //console.log(newNonConnectedUsersArr);
     } catch (error) {
@@ -235,7 +236,6 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 3}>
             <NetworkPossibleConnections
-              allUserProfiles={allUsers}
               nonConnectedUsersID={nonConnectedUsersArr}
               currentUserEmail={currentUser}
             />

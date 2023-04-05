@@ -13,12 +13,10 @@ import { PossibleConnectionCard } from "../../Components/Network/PossibleConnect
 const theme = createTheme();
 
 export const NetworkPossibleConnections = ({
-  allUserProfiles,
   nonConnectedUsersID,
   currentUserEmail,
 }) => {
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
   const [showingNonConnectedUsers, setShowingNonConnectedUsers] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -37,30 +35,6 @@ export const NetworkPossibleConnections = ({
     setPageNumber(pageNumber - 1);
   };
 
-  const compareByName = (a, b) => {
-    const firstNameA = a.values.firstName.toUpperCase();
-    const firstNameB = b.values.firstName.toUpperCase();
-    const lastNameA = a.values.lastName.toUpperCase();
-    const lastNameB = b.values.lastName.toUpperCase();
-
-    if (firstNameA < firstNameB) {
-      return -1;
-    }
-    if (firstNameA > firstNameB) {
-      return 1;
-    }
-    if (firstNameA === firstNameB) {
-      if (lastNameA < lastNameB) {
-        return -1;
-      }
-      if (lastNameA > lastNameB) {
-        return 1;
-      }
-      return 0;
-    }
-    return 0;
-  };
-
   useEffect(() => {
     setShowingNonConnectedUsers(
       paginate(nonConnectedUsersArr, pageSize, pageNumber)
@@ -69,16 +43,9 @@ export const NetworkPossibleConnections = ({
   }, [pageNumber, nonConnectedUsersArr]);
 
   useEffect(() => {
-    //console.log(nonConnectedUsersID);
-    nonConnectedUsersID.sort(compareByName);
     setNonConnectedUsersArr(nonConnectedUsersID);
     setCurrentUser(currentUserEmail);
   }, [nonConnectedUsersID]);
-
-  useEffect(() => {
-    setAllUsers(allUserProfiles);
-    // console.log(paginate(nonConnectedUsersArr, pageSize, pageNumber));
-  }, [allUserProfiles]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -102,8 +69,7 @@ export const NetworkPossibleConnections = ({
                 {showingNonConnectedUsers.map((possibleConnectionUserID) => (
                   <Grid item sx={{ m: 2 }}>
                     <PossibleConnectionCard
-                      allUserProfiles={allUsers}
-                      possibleConnectionUserId={possibleConnectionUserID.id}
+                      possibleConnectionUserId={possibleConnectionUserID}
                       currentUser={currentUser}
                       data-cy={`gridItem${possibleConnectionUserID}`}
                       id={`gridItem${possibleConnectionUserID}`}
@@ -143,7 +109,6 @@ export const NetworkPossibleConnections = ({
 };
 
 NetworkPossibleConnections.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
   nonConnectedUsersID: PropTypes.arrayOf(PropTypes.Object).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };
