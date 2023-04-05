@@ -40,7 +40,7 @@ describe("Testing the login feature", () => {
       cy.get('[data-testid="GoogleIcon"]').click();
     });
 
-    it("Logs In with right email, right password", () => {
+    it("Logs In with right email, right password, then signs out", () => {
       cy.visit("http://localhost:3000/login");
       cy.get("#email").type("hypeboy@tok.ki");
       cy.get("#password").type("newjeans");
@@ -57,7 +57,16 @@ describe("Testing the login feature", () => {
         expect(user).to.equal("hypeboy@tok.ki");
         cy.wait(500);
         cy.get('[data-testid="homeLink"]').click();
+        cy.wait(500);
       }
+    });
+  });
+  describe("Testing the password reset", () => {
+    it("accepts an email and sends password reset", () => {
+      cy.visit("http://localhost:3000/login");
+      cy.get('[data-testid="forgotPassword"]').click();
+      cy.get('[data-cy="emailTest"]').type("hypeboy@tok.ki");
+      cy.get('[data-cy="resetSubmit"]').click();
     });
   });
 });
