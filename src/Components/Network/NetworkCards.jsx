@@ -129,11 +129,11 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                         //remove != null when incomplete users are removed
                         connectedUser.values.description !== "" &&
                         connectedUser.values.description != null
-                          ? connectedUser.values.description.length <= 24
+                          ? connectedUser.values.description.length <= 16
                             ? `${connectedUser.values.description}`
                             : `${connectedUser.values.description.substring(
                                 0,
-                                21
+                                13
                               )} ...`
                           : "No bio"
                       }
@@ -149,26 +149,17 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
                       {/*view profile will go to the user's profile and message will be sent to the */}
                       <Link
                         to={`/editProfile/${connectedUser.values.firstName}${connectedUser.values.lastName}`}
-                        state={{ userID: connectedUserID }}
+                        state={{ userID: connectedUserID.id }}
                       >
                         <ColorButtonBlue size="medium" sx={{ mx: 1 }}>
                           View Profile
                         </ColorButtonBlue>
                       </Link>
-                      {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
-                      <ColorButtonLightBlue variant="outlined">
-                        Message
-                      </ColorButtonLightBlue>
-                      {/* </Link> */}
-
-                      {/* import PersonRemoveIcon from '@mui/icons-material/PersonRemove'; use this icon instead of the button */}
-                      {/* <ColorButtonRed
-                    size="medium"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                  >
-                    Remove Connection
-                  </ColorButtonRed> */}
+                      <Link to="/messaging" style={{ textDecoration: "none" }}>
+                        <ColorButtonLightBlue variant="outlined">
+                          Message
+                        </ColorButtonLightBlue>
+                      </Link>
 
                       <Dialog
                         open={open}

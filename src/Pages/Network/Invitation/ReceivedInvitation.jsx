@@ -14,12 +14,10 @@ import image2 from "../../../Assets/images/390image2.svg";
 const theme = createTheme();
 
 export const ReceivedInvitation = ({
-  allUserProfiles,
   receivedInvitationIDs,
   currentUserEmail,
 }) => {
   const [receivedInvitations, setReceivedInvitations] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
   const [showingReceivedInvites, setShowingReceivedInvites] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -53,10 +51,6 @@ export const ReceivedInvitation = ({
     setCurrentUser(currentUserEmail);
   }, [receivedInvitationIDs]);
 
-  useEffect(() => {
-    setAllUsers(allUserProfiles);
-  }, [allUserProfiles]);
-
   return (
     <div>
       <ThemeProvider theme={theme}>
@@ -76,7 +70,6 @@ export const ReceivedInvitation = ({
                   {showingReceivedInvites.map((requestedUserID) => (
                     <Grid item sx={{ m: 2 }}>
                       <ReceivedInvitationCard
-                        allUserProfiles={allUsers}
                         receivedInvitationUserID={requestedUserID}
                         currentUser={currentUser}
                       />
@@ -131,8 +124,7 @@ export const ReceivedInvitation = ({
 };
 
 ReceivedInvitation.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  receivedInvitationIDs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  receivedInvitationIDs: PropTypes.arrayOf(PropTypes.Object).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };
 

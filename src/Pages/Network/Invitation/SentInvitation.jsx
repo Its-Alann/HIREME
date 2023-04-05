@@ -13,13 +13,8 @@ import image2 from "../../../Assets/images/390image2.svg";
 
 const theme = createTheme();
 
-export const SentInvitation = ({
-  allUserProfiles,
-  sentInvitationsID,
-  currentUserEmail,
-}) => {
+export const SentInvitation = ({ sentInvitationsID, currentUserEmail }) => {
   const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
   const [showingSentInvites, setShowingSentInvites] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -52,10 +47,6 @@ export const SentInvitation = ({
     //console.log(currentUserEmail);
   }, [sentInvitationsID, currentUserEmail]);
 
-  useEffect(() => {
-    setAllUsers(allUserProfiles);
-  }, [allUserProfiles]);
-
   return (
     <div>
       <ThemeProvider theme={theme}>
@@ -73,7 +64,6 @@ export const SentInvitation = ({
                   {showingSentInvites.map((userID) => (
                     <Grid item data-cy="invitationsGrid" sx={{ m: 2 }}>
                       <SentInvitationCard
-                        allUserProfiles={allUsers}
                         userID={userID}
                         currentUser={currentUser}
                       />
@@ -129,8 +119,7 @@ export const SentInvitation = ({
 };
 
 SentInvitation.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  sentInvitationsID: PropTypes.arrayOf(PropTypes.string).isRequired,
+  sentInvitationsID: PropTypes.arrayOf(PropTypes.Object).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };
 

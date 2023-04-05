@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Divider from "@mui/material/Divider";
-import { Route, Link, Routes } from "react-router-dom";
-import { PropTypes } from "prop-types";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
@@ -82,10 +78,10 @@ const NetworkPage = () => {
     try {
       const docSnap = await getDoc(doc(db, "network", auth.currentUser.email));
       const userData = docSnap.data();
-      const connectedUserIdArr = userData.connectedUsers;
+      const connectedUserIds = userData.connectedUsers;
       //console.log(connectedUserIdArr);
       const connectedUserProfiles = allUsers.filter((user) =>
-        connectedUserIdArr.includes(user.id)
+        connectedUserIds.includes(user.id)
       );
       //console.log(connectedUserProfiles);
       connectedUserProfiles.sort(compareByName);
@@ -103,8 +99,21 @@ const NetworkPage = () => {
         doc(db, "invitations", auth.currentUser.email)
       );
       const userData = docSnap.data();
-      setReceivedInvitations(userData.receivedInvitations);
-      setSentInvitations(userData.sentInvitations);
+
+      const receivedInvitationIDs = userData.receivedInvitations;
+      const receivedInvitationUserProfiles = allUsers.filter((user) =>
+        receivedInvitationIDs.includes(user.id)
+      );
+      receivedInvitationUserProfiles.sort(compareByName);
+
+      const sentInvitationIDs = userData.sentInvitations;
+      const sentInvitationUserProfiles = allUsers.filter((user) =>
+        sentInvitationIDs.includes(user.id)
+      );
+      sentInvitationUserProfiles.sort(compareByName);
+
+      setReceivedInvitations(receivedInvitationUserProfiles);
+      setSentInvitations(sentInvitationUserProfiles);
       // console.log(userData.receivedInvitations);
       // console.log(userData.sentInvitations);
     } catch (err) {
@@ -132,8 +141,8 @@ const NetworkPage = () => {
       //create a new array of users that isnt connected with the currentUser
       const newNonConnectedUsersArr = allUsers.filter(
         (user) =>
-          !networkConnections.includes(user.id) &&
-          !sentInvitations.includes(user.id) &&
+          !networkConnections.includes(user) &&
+          !sentInvitations.includes(user) &&
           currentUser !== user.id
       );
       setNonConnectedUsersArr(newNonConnectedUsersArr);
@@ -212,7 +221,6 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 1}>
             <ReceivedInvitation
-              allUserProfiles={allUsers}
               receivedInvitationIDs={receivedInvitations}
               currentUserEmail={currentUser}
             />
@@ -220,7 +228,6 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 2}>
             <SentInvitation
-              allUserProfiles={allUsers}
               sentInvitationsID={sentInvitations}
               currentUserEmail={currentUser}
             />

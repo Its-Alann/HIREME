@@ -32,22 +32,18 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const SentInvitationCard = ({
-  allUserProfiles,
-  userID,
-  currentUser,
-}) => {
+export const SentInvitationCard = ({ userID, currentUser }) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
 
   useEffect(() => {
     // console.log(connectedUserID);
     // console.log(allUserProfiles);
-    const findSentInviteUserProfile = allUserProfiles.find(
-      (el) => el.id === userID
-    );
+    // const findSentInviteUserProfile = allUserProfiles.find(
+    //   (el) => el.id === userID
+    // );
     // console.log(findConnectUserProfile);
-    setSentRequestedUser(findSentInviteUserProfile);
-  }, [allUserProfiles, userID]);
+    setSentRequestedUser(userID);
+  }, [userID]);
 
   const withdrawInvitation = async () => {
     // 1. remove user from invitations.sentRequest
@@ -57,11 +53,11 @@ export const SentInvitationCard = ({
     // console.log(currentUser);
     // console.log(userID);
     const currentUserInvitationRed = doc(db, "invitations", currentUser);
-    const userReceivedInvitationRef = doc(db, "invitations", userID);
+    const userReceivedInvitationRef = doc(db, "invitations", userID.id);
 
     try {
       await updateDoc(currentUserInvitationRed, {
-        sentInvitations: arrayRemove(userID),
+        sentInvitations: arrayRemove(userID.id),
       });
 
       await updateDoc(userReceivedInvitationRef, {
@@ -136,8 +132,8 @@ export const SentInvitationCard = ({
 };
 
 SentInvitationCard.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  userID: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  userID: PropTypes.object.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
 

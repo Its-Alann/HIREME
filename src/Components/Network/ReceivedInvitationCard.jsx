@@ -43,19 +43,15 @@ const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
 }));
 
 export const ReceivedInvitationCard = ({
-  allUserProfiles,
   receivedInvitationUserID,
   currentUser,
 }) => {
   const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
 
   useEffect(() => {
-    const findReceivedInviteUserProfile = allUserProfiles.find(
-      (el) => el.id === receivedInvitationUserID
-    );
-    // console.log(findConnectUserProfile);
-    setReceivedInvitationUser(findReceivedInviteUserProfile);
-  }, [allUserProfiles, receivedInvitationUserID]);
+    console.log(receivedInvitationUserID);
+    setReceivedInvitationUser(receivedInvitationUserID);
+  }, [receivedInvitationUserID]);
 
   const ignoreInvite = async () => {
     // 1. remove user from invitations.requestUsers collection
@@ -68,12 +64,12 @@ export const ReceivedInvitationCard = ({
     const userSentInvitationRef = doc(
       db,
       "invitations",
-      receivedInvitationUserID
+      receivedInvitationUserID.id
     );
 
     try {
       await updateDoc(currentUserReceivedInvitationsRef, {
-        receivedInvitations: arrayRemove(receivedInvitationUserID),
+        receivedInvitations: arrayRemove(receivedInvitationUserID.id),
       });
 
       await updateDoc(userSentInvitationRef, {
@@ -95,22 +91,22 @@ export const ReceivedInvitationCard = ({
     const userSentInvitiationRef = doc(
       db,
       "invitations",
-      receivedInvitationUserID
+      receivedInvitationUserID.id
     );
     const userSentInvitationNetworkRef = doc(
       db,
       "network",
-      receivedInvitationUserID
+      receivedInvitationUserID.id
     );
 
     try {
       //remove received invitation from current user array
       await updateDoc(currentUserInvitationRef, {
-        receivedInvitations: arrayRemove(receivedInvitationUserID),
+        receivedInvitations: arrayRemove(receivedInvitationUserID.id),
       });
       //add user that sent the invitation to current user network
       await updateDoc(currentUserNetworkRef, {
-        connectedUsers: arrayUnion(receivedInvitationUserID),
+        connectedUsers: arrayUnion(receivedInvitationUserID.id),
       });
 
       //remove current user from the sent invitation array of the user that send the invitation
@@ -207,8 +203,8 @@ export const ReceivedInvitationCard = ({
 };
 
 ReceivedInvitationCard.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  receivedInvitationUserID: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  receivedInvitationUserID: PropTypes.object.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
 
