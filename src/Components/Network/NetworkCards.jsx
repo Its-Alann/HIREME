@@ -60,11 +60,7 @@ const ColorButtonRed = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const NetworkCards = ({
-  allUserProfiles,
-  connectedUserID,
-  currentUser,
-}) => {
+export const NetworkCards = ({ connectedUserID, currentUser }) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
 
@@ -78,11 +74,11 @@ export const NetworkCards = ({
 
   const removeConnection = async () => {
     const currentUserNetworkRef = doc(db, "network", currentUser);
-    const connectedUserNetworkRef = doc(db, "network", connectedUserID);
+    const connectedUserNetworkRef = doc(db, "network", connectedUserID.id);
 
     try {
       await updateDoc(currentUserNetworkRef, {
-        connectedUsers: arrayRemove(connectedUserID),
+        connectedUsers: arrayRemove(connectedUserID.id),
       });
 
       await updateDoc(connectedUserNetworkRef, {
@@ -96,14 +92,8 @@ export const NetworkCards = ({
   };
 
   useEffect(() => {
-    // console.log(connectedUserID);
-    // console.log(allUserProfiles);
-    const findConnectUserProfile = allUserProfiles.find(
-      (el) => el.id === connectedUserID
-    );
-    // console.log(findConnectUserProfile);
-    setConnectedUser(findConnectUserProfile);
-  }, [allUserProfiles, connectedUserID]);
+    setConnectedUser(connectedUserID);
+  }, [connectedUserID]);
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -223,8 +213,8 @@ export const NetworkCards = ({
 };
 
 NetworkCards.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  connectedUserID: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  connectedUserID: PropTypes.object.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
 

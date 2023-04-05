@@ -52,14 +52,45 @@ const NetworkPage = () => {
     setValue(newValue);
   };
 
+  const compareByName = (a, b) => {
+    const firstNameA = a.values.firstName.toUpperCase();
+    const firstNameB = b.values.firstName.toUpperCase();
+    const lastNameA = a.values.lastName.toUpperCase();
+    const lastNameB = b.values.lastName.toUpperCase();
+
+    if (firstNameA < firstNameB) {
+      return -1;
+    }
+    if (firstNameA > firstNameB) {
+      return 1;
+    }
+    if (firstNameA === firstNameB) {
+      if (lastNameA < lastNameB) {
+        return -1;
+      }
+      if (lastNameA > lastNameB) {
+        return 1;
+      }
+      return 0;
+    }
+    return 0;
+  };
+
   //get connected user IDs
   const getConnectedUserIDs = async () => {
     // READ DATA
     try {
       const docSnap = await getDoc(doc(db, "network", auth.currentUser.email));
       const userData = docSnap.data();
-      setNetworkConnections(userData.connectedUsers);
-      //console.log(networkConnections);
+      const connectedUserIdArr = userData.connectedUsers;
+      //console.log(connectedUserIdArr);
+      const connectedUserProfiles = allUsers.filter((user) =>
+        connectedUserIdArr.includes(user.id)
+      );
+      //console.log(connectedUserProfiles);
+      connectedUserProfiles.sort(compareByName);
+      setNetworkConnections(connectedUserProfiles);
+      //console.log(connectedUserProfiles);
     } catch (err) {
       console.log("err:", err);
     }
@@ -116,17 +147,21 @@ const NetworkPage = () => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser(auth.currentUser.email);
-        await Promise.all([
-          getConnectedUserIDs(),
-          getSentAndReceivedInvitations(),
-          getAllUsers(),
-        ]);
+        await Promise.all([getAllUsers()]);
       } else {
         //take you back to the homepage
         //console.log(user);
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (allUsers) {
+      getConnectedUserIDs();
+      getSentAndReceivedInvitations();
+      //console.log(allUsers);
+    }
+  }, [allUsers]);
 
   useEffect(() => {
     if (allUsers && networkConnections && sentInvitations) {
@@ -170,7 +205,6 @@ const NetworkPage = () => {
 
           <Box sx={{ p: 3 }} hidden={value !== 0}>
             <ViewNetwork
-              allUserProfiles={allUsers}
               networkConnections={networkConnections}
               currentUserEmail={currentUser}
             />

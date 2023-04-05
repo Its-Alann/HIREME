@@ -43,7 +43,7 @@ export const SentInvitation = ({
 
   useEffect(() => {
     setShowingSentInvites(paginate(sentRequestsUserID, pageSize, pageNumber));
-    console.log(showingSentInvites);
+    //console.log(showingSentInvites);
   }, [pageNumber, sentRequestsUserID]);
 
   useEffect(() => {

@@ -65,7 +65,7 @@ export const NetworkPossibleConnections = ({
     setShowingNonConnectedUsers(
       paginate(nonConnectedUsersArr, pageSize, pageNumber)
     );
-    console.log(showingNonConnectedUsers);
+    //console.log(showingNonConnectedUsers);
   }, [pageNumber, nonConnectedUsersArr]);
 
   useEffect(() => {

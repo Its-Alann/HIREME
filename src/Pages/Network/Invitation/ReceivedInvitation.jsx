@@ -45,7 +45,7 @@ export const ReceivedInvitation = ({
     setShowingReceivedInvites(
       paginate(receivedInvitations, pageSize, pageNumber)
     );
-    console.log(showingReceivedInvites);
+    //console.log(showingReceivedInvites);
   }, [pageNumber, receivedInvitations]);
 
   useEffect(() => {

@@ -14,11 +14,7 @@ import image2 from "../../../Assets/images/390image2.svg";
 
 const theme = createTheme();
 
-export const ViewNetwork = ({
-  allUserProfiles,
-  networkConnections,
-  currentUserEmail,
-}) => {
+export const ViewNetwork = ({ networkConnections, currentUserEmail }) => {
   const [connectedUsersId, setConnectedUsersId] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
@@ -44,17 +40,13 @@ export const ViewNetwork = ({
 
   useEffect(() => {
     setShowingConnections(paginate(connectedUsersId, pageSize, pageNumber));
-    console.log(showingConnections);
+    //console.log(showingConnections);
   }, [pageNumber, connectedUsersId]);
 
   useEffect(() => {
     setConnectedUsersId(networkConnections);
     setCurrentUser(currentUserEmail);
   }, [networkConnections]);
-
-  useEffect(() => {
-    setAllUsers(allUserProfiles);
-  }, [allUserProfiles]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -131,8 +123,7 @@ export const ViewNetwork = ({
 };
 
 ViewNetwork.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  networkConnections: PropTypes.arrayOf(PropTypes.string).isRequired,
+  networkConnections: PropTypes.arrayOf(PropTypes.Object).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };
 
