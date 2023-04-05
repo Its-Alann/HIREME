@@ -37,6 +37,30 @@ export const NetworkPossibleConnections = ({
     setPageNumber(pageNumber - 1);
   };
 
+  const compareByName = (a, b) => {
+    const firstNameA = a.values.firstName.toUpperCase();
+    const firstNameB = b.values.firstName.toUpperCase();
+    const lastNameA = a.values.lastName.toUpperCase();
+    const lastNameB = b.values.lastName.toUpperCase();
+
+    if (firstNameA < firstNameB) {
+      return -1;
+    }
+    if (firstNameA > firstNameB) {
+      return 1;
+    }
+    if (firstNameA === firstNameB) {
+      if (lastNameA < lastNameB) {
+        return -1;
+      }
+      if (lastNameA > lastNameB) {
+        return 1;
+      }
+      return 0;
+    }
+    return 0;
+  };
+
   useEffect(() => {
     setShowingNonConnectedUsers(
       paginate(nonConnectedUsersArr, pageSize, pageNumber)
@@ -46,6 +70,7 @@ export const NetworkPossibleConnections = ({
 
   useEffect(() => {
     //console.log(nonConnectedUsersID);
+    nonConnectedUsersID.sort(compareByName);
     setNonConnectedUsersArr(nonConnectedUsersID);
     setCurrentUser(currentUserEmail);
   }, [nonConnectedUsersID]);
