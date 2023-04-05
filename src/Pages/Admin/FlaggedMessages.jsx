@@ -344,15 +344,15 @@ const FlaggedMessages = () => {
             },
             sorting: { sortModel: [{ field: "date", sort: "desc" }] },
           }}
-          checkboxSelection
-          disableRowSelectionOnClick
-          onRowSelectionModelChange={(ids) => {
-            const selectedIDs = new Set(ids);
-            const data = reportedMessages.filter((row) =>
-              selectedIDs.has(row.id)
-            );
-            setSelectedRowData(data);
-          }}
+          // checkboxSelection
+          // disableRowSelectionOnClick
+          // onRowSelectionModelChange={(ids) => {
+          //   const selectedIDs = new Set(ids);
+          //   const data = reportedMessages.filter((row) =>
+          //     selectedIDs.has(row.id)
+          //   );
+          //   setSelectedRowData(data);
+          // }}
         />
       </Box>
       )
