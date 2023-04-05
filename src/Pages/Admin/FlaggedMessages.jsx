@@ -19,17 +19,14 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { getAuth, getUserByEmail } from "firebase/auth";
-
 import { auth, db } from "../../Firebase/firebase";
 
 const FlaggedMessages = () => {
   // array of reported message objects
   const [reportedMessages, setReportedMessages] = useState([]);
-  // const [blockedMessages, setBlockedMessages] = useState([]);
+  // array of blocked users
   const [blockedUsers, setBlockedUsers] = useState([]);
-
-  const [selectedRowData, setSelectedRowData] = useState([]);
-
+  // holds value of currently selected tab
   const [value, setValue] = useState(0);
 
   // removes message from flagged messages
@@ -50,7 +47,7 @@ const FlaggedMessages = () => {
     const convoQuery = query(messagesRef, where("authors", "==", authorsList));
     const querySnapshot = await getDocs(convoQuery);
 
-    // probably redundant cause it should exist
+    // if no conversation between these users exists, create a new one
     if (querySnapshot.empty) {
       const docRef = await addDoc(collection(db, "messages"), {
         authors: authorsList,
@@ -97,6 +94,7 @@ const FlaggedMessages = () => {
     unflagUser(convId);
   };
 
+  // functioon the takes the email of the user to be blocked, and adds this email to the blocked users collection
   const handleBlockUser = async (email) => {
     const blockedUserRef = doc(db, "blockedUsers", email);
     await setDoc(blockedUserRef, {});
@@ -120,7 +118,7 @@ const FlaggedMessages = () => {
       console.log(err);
     }
   };
-
+  // this function unblocks a user by deleting the document with the email as docID from the blockedusers collection
   const handleUnblockUser = async (email) => {
     try {
       await deleteDoc(doc(db, "blockedUsers", email));
@@ -133,7 +131,6 @@ const FlaggedMessages = () => {
 
   // these columns should appear in the flagged messagess page
   const columnsFlagged = [
-    // { field: "id", headerName: "ID", width: 90 },
     {
       field: "user",
       numeric: false,
@@ -219,9 +216,6 @@ const FlaggedMessages = () => {
           variant="contained"
           sx={{ backgroundColor: "#C41E3A" }}
           size="small"
-          // onClick={() =>
-          //   changeStatusToBlocked(`${params.row.convoId}-${params.row.index}`)
-          // }
           onClick={() => handleBlockUser(params.row.user)}
         >
           X
@@ -230,6 +224,7 @@ const FlaggedMessages = () => {
     },
   ];
 
+  // these columns should appear in the blocked users tab
   const columnsBlocked = [
     // { field: "id", headerName: "ID", width: 90 },
     {
@@ -288,6 +283,7 @@ const FlaggedMessages = () => {
     setReportedMessages(tempFlagged);
   };
 
+  // this functiono fetches sall blocked users from blocked users collection in database
   const getBlockedUsers = async () => {
     const blockedUsersRef = collection(db, "blockedUsers");
     const querySnapshot = await getDocs(blockedUsersRef);
@@ -304,6 +300,7 @@ const FlaggedMessages = () => {
     setBlockedUsers(blockedUsersArr);
   };
 
+  // useeffect that populates tabs with the right informattioon either selects the right tab with reported messages or blocked users
   useEffect(() => {
     const storedActiveTab = localStorage.getItem("activeTab");
     if (storedActiveTab) {
@@ -344,15 +341,6 @@ const FlaggedMessages = () => {
             },
             sorting: { sortModel: [{ field: "date", sort: "desc" }] },
           }}
-          // checkboxSelection
-          // disableRowSelectionOnClick
-          // onRowSelectionModelChange={(ids) => {
-          //   const selectedIDs = new Set(ids);
-          //   const data = reportedMessages.filter((row) =>
-          //     selectedIDs.has(row.id)
-          //   );
-          //   setSelectedRowData(data);
-          // }}
         />
       </Box>
       )
