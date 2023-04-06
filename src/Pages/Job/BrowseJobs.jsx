@@ -194,15 +194,25 @@ export const BrowseJobs = () => {
                       sx={{ my: 1 }}
                       id={`Button-${job.documentID}`}
                     >
-                      <Link
-                        to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
-                        className="link"
-                        underline="none"
-                        style={{ textDecoration: "none" }}
-                      >
-                        {/* <Link to="/job/1"> */}
-                        View job
-                      </Link>
+                      {/* if there's no link field in db, button links to viewJobPosting, otherwise external link */}
+                      {job.link === undefined || job.link === "" ? (
+                        <Link
+                          to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+                          className="link"
+                          underline="none"
+                          style={{ textDecoration: "none" }}
+                        >
+                          {/* <Link to="/job/1"> */}
+                          View job
+                        </Link>
+                      ) : (
+                        <a
+                          href={job.link}
+                          style={{ color: "white", textDecoration: "none" }}
+                        >
+                          Apply On Other Site
+                        </a>
+                      )}
                     </Button>
                     <Typography>
                       Deadline:{" "}
