@@ -38,7 +38,7 @@ describe("Goes to job application", () => {
 describe("Fills application", () => {
   it("enters invalid form entries", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/6OBaDdXVkjdJiiOkK5Qz"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
     cy.get("#mui-1").type("1234");
     cy.get('[data-testid="submit-button"]').click();
@@ -52,7 +52,7 @@ describe("Fills application", () => {
 
   it("enters invalid form entries", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/6OBaDdXVkjdJiiOkK5Qz"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
     cy.wait(500);
     cy.get("#mui-1").type("1234@test.com");
@@ -63,7 +63,7 @@ describe("Fills application", () => {
 
   it("uploads files", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/6OBaDdXVkjdJiiOkK5Qz"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
     // upload file
     cy.get(".MuiList-root > :nth-child(1) > .MuiButtonBase-root").selectFile(

@@ -29,7 +29,7 @@ describe("Display job applications", () => {
 describe("Applies for a job", () => {
   it("apply for a job", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/6OBaDdXVkjdJiiOkK5Qz"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
     // upload file
     cy.get(".MuiList-root > :nth-child(1) > .MuiButtonBase-root").selectFile(
@@ -50,8 +50,9 @@ describe("Applies for a job", () => {
     cy.wait(1000);
 
     cy.get("#mui-1").type("1234@test.com");
-    cy.get("#mui-2").type("1111111111");
-    cy.get("#mui-3").type("something street");
+    cy.get("#mui-2").type("1234567890");
+    cy.get("#mui-3").type("123 name street");
+    cy.wait(1000);
     cy.get('[data-testid="submit-button"]').click();
     cy.wait(3000);
   });
@@ -61,55 +62,49 @@ describe("Remove a job", () => {
   it("clicks on the remove button", () => {
     cy.visit("http://localhost:3000/viewmyapplications");
     cy.wait(1000);
-    // cy.get(
-    //   ':nth-child(2) > .MuiPaper-root > :nth-child(1) > .css-1glpfpa-MuiGrid2-root > .css-1mx9e1j-MuiStack-root > .MuiGrid2-root > .css-gmwslw-MuiStack-root > [data-cy="remove-button"]'
-    // ).click();
+    cy.get(
+      ':nth-child(2) > .MuiPaper-root > :nth-child(1) > .css-1glpfpa-MuiGrid2-root > .css-1mx9e1j-MuiStack-root > .MuiGrid2-root > .css-gmwslw-MuiStack-root > [data-cy="remove-button"]'
+    ).click();
     cy.wait(1000);
     cy.visit("http://localhost:3000/viewmyapplications");
   });
 });
 
-// describe("Applies for a job", () => {
-//   it("applies to a job", () => {
-//     cy.visit(
-//       "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/6OBaDdXVkjdJiiOkK5Qz"
-//     );
-//     cy.wait(500);
-//     // upload file
-//     cy.get(".MuiList-root > :nth-child(1) > .MuiButtonBase-root").selectFile(
-//       "cypress/fixtures/IMG_0524.jpg"
-//     );
-//     cy.wait(1000);
-//     // upload file 2
-//     cy.get(".MuiList-root > :nth-child(2) > .MuiButtonBase-root").selectFile(
-//       "cypress/fixtures/IMG_0524.jpg"
-//     );
-//     cy.wait(1000);
-//     // upload file 3
-//     cy.get(".MuiList-root > :nth-child(3) > .MuiButtonBase-root").selectFile(
-//       "cypress/fixtures/IMG_0524.jpg"
-//     );
-//     cy.wait(1000);
+describe("Applies for a job", () => {
+  it("apply for a job", () => {
+    cy.visit(
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
+    );
+    // upload file
+    cy.get(".MuiList-root > :nth-child(1) > .MuiButtonBase-root").selectFile(
+      "cypress/fixtures/IMG_0524.jpg"
+    );
+    cy.wait(1000);
 
-//     // cy.visit("http://localhost:3000/browsejobs");
-//     // cy.get(
-//     //   ":nth-child(3) > .MuiPaper-root > .MuiBox-root > .css-qvcdic-MuiStack-root > :nth-child(1) > .link"
-//     // ).click();
-//     // cy.wait(1000);
-//     // cy.get(
-//     //   ".css-1mhd35f-MuiStack-root > .MuiBox-root > .MuiButtonBase-root"
-//     // ).click();
-//     cy.get("#mui-1").type("viewapp@test.com");
-//     cy.get("#mui-2").type("1111111111");
-//     cy.get("#mui-3").type("something street");
-//     cy.get('[data-testid="submit-button"]').click();
-//     cy.wait(1000);
-//   });
-// });
+    // upload file 2
+    cy.get(".MuiList-root > :nth-child(2) > .MuiButtonBase-root").selectFile(
+      "cypress/fixtures/IMG_0524.jpg"
+    );
+    cy.wait(1000);
 
-// describe("Returns to job applications", () => {
-//   it("applies to a job", () => {
-//     cy.visit("http://localhost:3000/viewmyapplications");
-//     cy.wait(1000);
-//   });
-// });
+    // upload file 3
+    cy.get(".MuiList-root > :nth-child(3) > .MuiButtonBase-root").selectFile(
+      "cypress/fixtures/IMG_0524.jpg"
+    );
+    cy.wait(1000);
+
+    cy.get("#mui-1").type("1234@test.com");
+    cy.get("#mui-2").type("1234567890");
+    cy.get("#mui-3").type("123 name street");
+    cy.wait(1000);
+    cy.get('[data-testid="submit-button"]').click();
+    cy.wait(3000);
+  });
+});
+
+describe("Returns to job applications", () => {
+  it("return to initial page - job applications", () => {
+    cy.visit("http://localhost:3000/viewmyapplications");
+    cy.wait(1000);
+  });
+});
