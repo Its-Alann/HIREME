@@ -280,12 +280,12 @@ export const ViewMyApp = () => {
                           sx: 12,
                           backgroundColor:
                             job.status === "interview"
-                              ? "green"
+                              ? "#17A500"
                               : job.status === "viewed"
-                              ? "yellow"
+                              ? "#DE8B50"
                               : job.status === "rejected"
-                              ? "red"
-                              : "darkgray",
+                              ? "#8F0000"
+                              : "#A9A9A9",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
