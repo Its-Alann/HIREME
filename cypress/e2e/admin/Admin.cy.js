@@ -96,7 +96,7 @@ describe("Admin Features", () => {
     cy.get(
       '.MuiDataGrid-row:nth-last-child(10) > [data-field="unflag"] > .MuiButtonBase-root'
     ).click();
-    cy.wait(100);
+    cy.wait(1000);
 
     // warn a user
     cy.get(
@@ -106,7 +106,7 @@ describe("Admin Features", () => {
     cy.get(
       '.MuiDataGrid-row:nth-last-child(10) > [data-field="warn"] > .MuiButtonBase-root'
     ).click();
-    cy.wait(1000);
+    cy.wait(5000);
 
     // ban a user
     cy.get(
