@@ -171,12 +171,19 @@ export const ViewMyApp = () => {
               // Create cards
               <Grid sx={{ py: 1 }}>
                 <Card variant="outlined">
-                  <Stack direction="row" justifyContent="space-between">
-                    <Grid sx={{ md: 8, sm: 12, sx: 12 }}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    // flexWrap="wrap"
+                    sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}
+                  >
+                    {/* <Grid sx={{ md: 12, sm: 12, sx: 12 }}> */}
+                    <div style={{ width: "100%" }}>
                       <Stack
                         direction="row"
-                        justifyContent="space-between"
+                        // justifyContent="space-between"
                         margin="5"
+                        padding="10"
                       >
                         <Box
                           component="img"
@@ -186,13 +193,22 @@ export const ViewMyApp = () => {
                             height: "6rem",
                             mr: 2,
                             alignItems: "center",
+                            padding: 2,
                           }}
                           src={companiesLogo[job.companyID]}
                         />
                         <Grid>
                           <Stack direction="row" justifyContent="space-between">
-                            <Typography variant="h4">{job.jobTitle}</Typography>
-                            <Button
+                            <Typography
+                              variant="h4"
+                              sx={{
+                                paddingTop: 2,
+                                paddingRight: 2,
+                              }}
+                            >
+                              {job.jobTitle}
+                            </Typography>
+                            {/* <Button
                               variant="contained"
                               data-cy="remove-button"
                               sx={{
@@ -205,16 +221,25 @@ export const ViewMyApp = () => {
                               onClick={() => handleRemoveJob(job.jobID)}
                             >
                               Remove
-                            </Button>
+                            </Button> */}
                           </Stack>
-                          <Typography>
+                          <Typography
+                            sx={{
+                              paddingRight: 2,
+                            }}
+                          >
                             {companiesName[job.companyID]}{" "}
                           </Typography>
                           <Typography>{`${job.city}, ${job.country}`}</Typography>
                         </Grid>
                       </Stack>
                       <Stack direction="row" sx={{ pt: 2 }}>
-                        <Typography>
+                        <Typography
+                          sx={{
+                            paddingLeft: 2,
+                            paddingBottom: 0.5,
+                          }}
+                        >
                           Deadline:{" "}
                           {new Date(
                             job.deadline.seconds * 1000 +
@@ -222,39 +247,71 @@ export const ViewMyApp = () => {
                           ).toDateString()}
                         </Typography>
                       </Stack>
-                    </Grid>
-
-                    <Grid
+                      {/* </Grid> */}
+                    </div>
+                    <Stack
                       sx={{
-                        md: 2,
-                        sm: 12,
-                        sx: 12,
-                        backgroundColor:
-                          job.status === "interview"
-                            ? "green"
-                            : job.status === "viewed"
-                            ? "yellow"
-                            : job.status === "rejected"
-                            ? "red"
-                            : "darkgray",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "70px",
+                        flexDirection: { xs: "column", md: "row" },
+                        width: {
+                          xs: "100%",
+                          md: "inherit",
+                        },
                       }}
+                      // direction="row"
                     >
-                      <Typography
+                      <Button
+                        variant="contained"
+                        data-cy="remove-button"
                         sx={{
-                          writingMode: "vertical-rl",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          color: "white",
-                          textTransform: "uppercase",
+                          backgroundColor: "black",
+                          m: 2,
+                          height: 30,
+                          width: 100,
+                          textTransform: "none",
+                        }}
+                        onClick={() => handleRemoveJob(job.jobID)}
+                      >
+                        Remove
+                      </Button>
+                      <Grid
+                        sx={{
+                          md: 2,
+                          sm: 12,
+                          sx: 12,
+                          backgroundColor:
+                            job.status === "interview"
+                              ? "green"
+                              : job.status === "viewed"
+                              ? "yellow"
+                              : job.status === "rejected"
+                              ? "red"
+                              : "darkgray",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          // width: "70px",
+                          width: {
+                            xs: "100%",
+                            md: "70px",
+                          },
                         }}
                       >
-                        {job.status}
-                      </Typography>
-                    </Grid>
+                        <Typography
+                          sx={{
+                            writingMode: {
+                              xs: "horizontal-lr",
+                              md: "vertical-rl",
+                            },
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            color: "white",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {job.status}
+                        </Typography>
+                      </Grid>
+                    </Stack>
                   </Stack>
                 </Card>
               </Grid>

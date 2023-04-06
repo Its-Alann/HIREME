@@ -63,7 +63,7 @@ describe("Remove a job", () => {
     cy.visit("http://localhost:3000/viewmyapplications");
     cy.wait(1000);
     cy.get(
-      ':nth-child(2) > .MuiPaper-root > :nth-child(1) > .css-1glpfpa-MuiGrid2-root > .css-1mx9e1j-MuiStack-root > .MuiGrid2-root > .css-gmwslw-MuiStack-root > [data-cy="remove-button"]'
+      ':nth-child(2) > .MuiPaper-root > .css-1t7ij07-MuiStack-root > .css-6hd0e3-MuiStack-root > [data-cy="remove-button"]'
     ).click();
     cy.wait(1000);
     cy.visit("http://localhost:3000/viewmyapplications");
