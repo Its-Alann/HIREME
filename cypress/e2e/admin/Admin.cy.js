@@ -30,17 +30,17 @@ describe("Reports messages", () => {
     //write 3 messages
     cy.get("#message-input").should("be.visible").type("toUnflag");
     cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
-    cy.wait(100);
+    cy.wait(1000);
     cy.get("#message-chats").last().should("contain", "toUnflag");
 
     cy.get("#message-input").should("be.visible").type("toWarn");
     cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
-    cy.wait(100);
+    cy.wait(1000);
     cy.get("#message-chats").last().should("contain", "toWarn");
 
     cy.get("#message-input").should("be.visible").type("toBlock");
     cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
-    cy.wait(100);
+    cy.wait(1000);
     cy.get("#message-chats").last().should("contain", "toBlock");
   });
 
