@@ -23,7 +23,7 @@ describe("Reports messages", () => {
     cy.visit("http://localhost:3000/messaging");
     cy.wait(1000);
 
-    cy.get(":nth-child(1) > .MuiListItemText-root > .MuiTypography-body1")
+    cy.get(":nth-child(2) > .MuiListItemText-root > .MuiTypography-body1")
       .should("have.text", "Admin15 Test")
       .click();
 
@@ -97,17 +97,17 @@ describe("Admin Features", () => {
     cy.get(
       '[data-id="13"] > [data-field="unflag"] > .MuiButtonBase-root'
     ).click();
-    cy.wait(1000);
+    cy.wait(2000);
 
     // warn a user
     cy.get(
-      '[data-id="14"] > [data-field="user"] > .MuiDataGrid-cellContent'
+      '[data-id="13"] > [data-field="user"] > .MuiDataGrid-cellContent'
     ).should("have.text", "flaggedusers@test.com");
 
     cy.get(
-      '[data-id="14"] > [data-field="warn"] > .MuiButtonBase-root'
+      '[data-id="13"] > [data-field="warn"] > .MuiButtonBase-root'
     ).click();
-    cy.wait(5000);
+    cy.wait(2000);
 
     // ban a user
     cy.get(
