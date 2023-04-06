@@ -18,8 +18,10 @@ import {
   writeBatch,
   query,
   where,
+  getDocs,
+  updateDoc
 } from "firebase/firestore";
-import { Link } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
@@ -58,10 +60,42 @@ export const CreateJob = () => {
       ...jobInformation,
     });
 
+    // Query the DB to get the job ID
+    const q1 = query(collection(db,"jobs2"), where("title", "==", jobInformation.title), where("companyID", "==", jobInformation.companyID), where("publishedAt", "==", jobInformation.publishedAt));
+    const jobIDSnapshots = await getDocs(q1);
+    let jobID = "";
+    jobIDSnapshots.forEach( (doc) => {
+       jobID = doc.id; 
+    })
+
     // Retrieve user information in order to properly create job suggestion notifications
+    const titleArray = jobInformation.title.split(" ");
     const notificationsRef = collection(db, "notifications");
-    const q = query(notificationsRef, where("field", ">=", jobInformation.title).where("field", "<=", `${jobInformation.title}\uf7ff`))
-    console.log(q);
+    const currentDate = new Date();
+
+    for(let i = 0; i < titleArray.length; i += 1)
+    {
+      const q = query(notificationsRef, where("field", ">=", titleArray[i]), where("field", "<=", `${titleArray[i]}\uf7ff`));
+      const notificationSnapshots = await getDocs(q);
+      notificationSnapshots.forEach(async (document) => {
+        try {
+          const notificationDocRef = doc(
+            db,
+            "notifications",
+            document.id
+          );
+          await updateDoc(notificationDocRef, {
+          notifications: arrayUnion(...[{
+            type: "jobs",
+            content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
+            timestamp: currentDate,
+            link: `viewJobPosting/${jobInformation.companyID}/${jobID}`
+          }])
+          })
+        }catch (error) {
+          console.log(error);
+        }});
+    }
   }
 
   // We need to include Recruiter ID & their company ID in the new Job

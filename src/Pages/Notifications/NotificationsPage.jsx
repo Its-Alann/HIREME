@@ -6,7 +6,6 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { app, auth } from "../../Firebase/firebase";
-import { WidthFull } from "@mui/icons-material";
 import { db } from "../../Firebase/firebase";
 import { NavLink } from "react-router-dom";
 import "./Notifications.css";
@@ -122,7 +121,7 @@ const NotificationsPage = () => {
         }
         else if (notifications[i].type === "jobs")
         {
-
+          redirectLink = `/${notifications[i].link}`
         }
         cards.push(
           <Card className="notificationCards" variant="outlined">
