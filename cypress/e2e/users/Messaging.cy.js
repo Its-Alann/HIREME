@@ -17,6 +17,7 @@ describe("example to-do app", () => {
     it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
+      cy.wait(500);
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
       cy.login(messagingTestAccountUid);
