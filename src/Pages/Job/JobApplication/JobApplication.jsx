@@ -49,10 +49,7 @@ const JobApplication = () => {
   const [resumeReq, setResumeReq] = useState(false);
   const [coverLetterReq, setCoverLetterReq] = useState(false);
   const [transcriptReq, setTranscriptReq] = useState(false);
-  const [error2, setError2] = useState(null);
-  const [urlCoverLetter, setUrlCoverLetter] = useState("");
   const [fileUrls, setFileUrls] = useState({});
-  const [fileUrls2, setFileUrls2] = useState({});
 
   // Patterns that the email, phone number and address must match in order for it to be an
   // eligible application
@@ -162,13 +159,17 @@ const JobApplication = () => {
   // Adds the job application information to the applications collection on Firestore. Appends to user's
   // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
-    console.log("inJOB22", fileUrls.coverLetter);
+    console.log("inJOB22", fileUrls);
 
     if (
       ((resumeReq && fileUrls.resume !== null) || !resumeReq) &&
       ((coverLetterReq && fileUrls.coverLetter !== null) || !coverLetterReq) &&
       ((transcriptReq && fileUrls.transcript !== null) || !transcriptReq)
     ) {
+      const coverletterURL = fileUrls.coverLetter ? fileUrls.coverLetter : "";
+      const transcriptURL = fileUrls.transcript ? fileUrls.transcript : "";
+      const resumeURL = fileUrls.resume ? fileUrls.resume : "";
+
       await addDoc(
         collection(db, "applications2"),
         // eslint-disable-next-line no-undef
@@ -179,9 +180,9 @@ const JobApplication = () => {
           applicantEmail: currentUserEmail,
           phoneNumber,
           address,
-          urlCoverLetter: fileUrls.coverLetter,
-          urlResume: fileUrls.resume,
-          urlTranscript: fileUrls.transcript,
+          urlCoverLetter: coverletterURL,
+          urlResume: resumeURL,
+          urlTranscript: transcriptURL,
         },
         { merge: true }
       );
@@ -252,16 +253,6 @@ const JobApplication = () => {
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      onFileChange(event, "transcript");
-      setError2(null);
-    } else {
-      setError2("No file selected");
-    }
-  };
-
   // On load, this will set the current user's email and retrieve the job title and company name
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -317,15 +308,6 @@ const JobApplication = () => {
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", transcript.name);
-    document.body.appendChild(link);
-    link.click();
-  };
-
-  const onDownloadFile = (file) => {
-    const url = window.URL.createObjectURL(new Blob([file]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", file.name);
     document.body.appendChild(link);
     link.click();
   };
