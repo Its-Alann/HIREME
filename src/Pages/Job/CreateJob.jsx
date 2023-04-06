@@ -14,6 +14,8 @@ import {
   addDoc,
   arrayUnion,
   writeBatch,
+  query,
+  where,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -49,6 +51,8 @@ export const CreateJob = () => {
     await addDoc(collection(db, "jobs2"), {
       ...jobInformation,
     });
+
+    // Retrieve user information in order to properly create job suggestion notifications
   }
 
   // We need to include Recruiter ID & their company ID in the new Job
