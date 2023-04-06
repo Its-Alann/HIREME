@@ -18,6 +18,7 @@ import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
@@ -27,13 +28,20 @@ import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
-const pageNamesForApplicant = ["Home", "Network", "Jobs", "Messaging"];
+const pageNamesForApplicant = [
+  "Home",
+  "Network",
+  "Jobs",
+  "Messaging",
+  "Notifications",
+];
 const pageNamesForRecruiter = [
   "Home",
   "Network",
   "Jobs",
   "My Jobs",
   "Messaging",
+  "Notifications",
 ];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
 const settings = ["Profile", "Account", "Dashboard"];
@@ -44,6 +52,7 @@ const Navbar = () => {
     "Network",
     "Jobs",
     "Messaging",
+    "Notifications",
   ]);
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
@@ -108,6 +117,9 @@ const Navbar = () => {
         break;
       case "network":
         navigate("/network");
+        break;
+      case "notifications":
+        navigate("/notifications");
         break;
       /*
       case "profile":
@@ -393,6 +405,9 @@ const Navbar = () => {
                     >
                       {page === "Home" && <HomeOutlined />}
                       {page === "Messaging" && <MessageOutlinedIcon />}
+                      {page === "Notifications" && (
+                        <NotificationsActiveOutlinedIcon />
+                      )}
                       {page === "Network" && <GroupsOutlinedIcon />}
 
                       {page === "My Jobs" && <WorkHistoryOutlinedIcon />}

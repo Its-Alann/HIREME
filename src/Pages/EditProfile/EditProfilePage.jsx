@@ -34,6 +34,7 @@ const EditProfilePage = () => {
     values: {
       firstName: "",
       lastName: "",
+      field: "",
       phoneNumber: "",
       address: "",
       city: "",
@@ -373,6 +374,13 @@ const EditProfilePage = () => {
                 placeholder="Country"
                 variant="standard"
                 value={profile.values.country}
+                readOnly
+              />
+              <InputBase
+                id="standard-basic"
+                variant="standard"
+                placeholder="Desired Job Title"
+                value={profile.values.field}
                 readOnly
               />
             </Grid>
