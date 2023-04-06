@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import StarIcon from "@mui/icons-material/Star";
 import * as React from "react";
 import {
   collection,
@@ -13,21 +17,125 @@ import {
   doc,
   getDoc,
   limit,
+  getFirestore,
+  updateDoc,
 } from "firebase/firestore";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 // import JobPostingApplicants from "../Recruiter/JobPostingApplicants";
 import { Link } from "react-router-dom";
-import { db } from "../../Firebase/firebase";
+import { auth, db, app } from "../../Firebase/firebase";
 import "./Job.css";
 
 export const BrowseJobs = () => {
-  const [jobs, setJobs] = React.useState([]);
-  const [lastJob, setLastJob] = React.useState(null);
-  const [firstJob, setFirstJob] = React.useState(null);
-  const [companiesName, setCompaniesName] = React.useState({});
-  const [companiesLogo, setCompaniesLogo] = React.useState({});
+  const [userEmail, setUserEmail] = useState(null);
+  const [jobs, setJobs] = useState([]);
+  const [lastJob, setLastJob] = useState(null);
+  const [firstJob, setFirstJob] = useState(null);
+  const [companiesName, setCompaniesName] = useState({});
+  const [companiesLogo, setCompaniesLogo] = useState({});
+  const [favCompanyStrIn, setFavCompanyStrIn] = useState("");
+  const [favCompanyStrOut, setFavCompanyStrOut] = useState("");
+  const [favCompanyArr, setFavCompanyArr] = useState([]);
+  const [hasFavorite, setHasFavorite] = useState(false);
+  const database = getFirestore(app);
+
+  // Only once, attach listener to onAuthStateChanged
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const { uid, email } = authUser;
+        console.log("uid", uid);
+        console.log("useEffect: ", email);
+        setUserEmail(email);
+      } else {
+        setUserEmail(null);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (userEmail !== null) {
+        const notificationsDocRef = doc(database, "notifications", userEmail);
+        // Get notifications data and set it to local array
+        const notificationsSnapShot = await getDoc(notificationsDocRef);
+        if (notificationsSnapShot.exists()) {
+          console.log("Notifications for user Exist");
+          if (notificationsSnapShot.data().favCompanies !== undefined) {
+            setFavCompanyStrIn(notificationsSnapShot.data().favCompanies);
+          } else {
+            setFavCompanyStrIn("");
+          }
+        } else {
+          console.log("Notifications for user does not Exist");
+        }
+      }
+    }
+    console.log("get fav companies");
+    fetchData();
+  }, [userEmail]);
+
+  useEffect(() => {
+    if (favCompanyStrIn !== "") {
+      setFavCompanyArr(favCompanyStrIn.split(","));
+      setHasFavorite(true);
+    } else {
+      console.log("empty favs");
+    }
+  }, [favCompanyStrIn]);
+
+  const isFavorite = (companyID) => {
+    //console.log("isFav called");
+    if (hasFavorite) {
+      for (let i = 0; i < favCompanyArr.length; i += 1) {
+        //console.log(favCompanyArr[i]);
+        if (favCompanyArr[i] === companyID) {
+          // console.log(
+          //   "companyID: ",
+          //   companyID,
+          //   " matches company: ",
+          //   favCompanyArr[i]
+          // );
+          return true;
+        }
+        // console.log(
+        //   "companyID: ",
+        //   typeof companyID,
+        //   " not company: ",
+        //   typeof company
+        // );
+      }
+    }
+    //console.log("here");
+    return false;
+  };
+
+  const handleMakeFavorite = (companyId) => {
+    if (!favCompanyArr.includes(companyId)) {
+      setFavCompanyArr((prevList) => [...prevList, companyId]);
+    }
+  };
+
+  const handleRemoveFavorite = (companyId) => {
+    setFavCompanyArr((prev) => prev.filter((temp) => temp !== companyId));
+  };
+
+  useEffect(() => {
+    console.log(favCompanyArr);
+    setFavCompanyStrOut(favCompanyArr.join());
+  }, [favCompanyArr]);
+
+  useEffect(() => {
+    try {
+      const notificationsDocRef = doc(database, "notifications", userEmail);
+      updateDoc(notificationsDocRef, { favCompanies: favCompanyStrOut });
+    } catch (err) {
+      console.log(err);
+    }
+    setFavCompanyStrIn(favCompanyStrOut);
+  }, [favCompanyStrOut]);
 
   const jobsPerPage = 5;
 
@@ -173,7 +281,23 @@ export const BrowseJobs = () => {
                     />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
-                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                        <Typography>{companiesName[job.companyID]}</Typography>
+                        {userEmail !== null &&
+                          (isFavorite(job.companyID) ? (
+                            <StarIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                handleRemoveFavorite(job.companyID)
+                              }
+                            />
+                          ) : (
+                            <StarOutlineIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => handleMakeFavorite(job.companyID)}
+                            />
+                          ))}
+                      </Box>
                       <Typography>{`${job.city}, ${job.country}`}</Typography>
                     </Box>
                   </Stack>
