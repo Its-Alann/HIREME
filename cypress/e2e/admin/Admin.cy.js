@@ -51,7 +51,7 @@ describe("Reports messages", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(5000);
   });
 
   it("reports the messages that the user has sent", () => {
