@@ -67,6 +67,7 @@ const ProfilePicture = ({ urlProfilePicture, visitingProfile }) => {
           sx={{
             width: 200,
             height: 200,
+            cursor: "pointer",
           }}
           textAlign="center"
           alignItems="center"
