@@ -24,6 +24,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateJob = () => {
+  const [thirdPartyLink, setThirdPartyLink] = React.useState(false);
   const [jobInformation, setJobInformation] = React.useState({
     companyID: "",
     deadline: new Date(),
@@ -38,6 +39,7 @@ export const CreateJob = () => {
     resume: "",
     coverLetter: "",
     transcript: "",
+    link: "",
   });
   const [companyName, setCompanyName] = React.useState({
     name: "",
@@ -273,6 +275,38 @@ export const CreateJob = () => {
               />
             </LocalizationProvider>
           </Box>
+
+          <Box>
+            <Typography>Link to third party application</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="thirdPartyCheck"
+                  checked={thirdPartyLink}
+                  onChange={() => setThirdPartyLink(!thirdPartyLink)}
+                />
+              }
+              label="This application requires a link to a third party website for application"
+              labelPlacement="end"
+            />
+            {thirdPartyLink && (
+              <TextField
+                required
+                id="TextField-Title"
+                variant="standard"
+                placeholder="www.glassdoor.com"
+                fullWidth
+                value={jobInformation.link}
+                onChange={(e) =>
+                  setJobInformation({
+                    ...jobInformation,
+                    link: e.target.value,
+                  })
+                }
+              />
+            )}
+          </Box>
+
           <Divider />
 
           <Box>
