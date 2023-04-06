@@ -121,44 +121,54 @@ const JobApplication = () => {
     );
 
     const temp = fileUrls;
-    const temp2 = [];
     // If the resume, cover letter or transcript are null, they will not send any data to the Firestore storage
     if (resume != null) {
-      uploadBytes(resumeRef, resume);
+      try {
+        await uploadBytes(resumeRef, resume);
+        const url = await getDownloadURL(resumeRef);
+        //console.log("url", url);
+        temp.resume = url;
+        setFileUrls({ ...temp });
+      } catch (error) {
+        console.log(error);
+      }
     }
     if (coverLetter != null) {
-      await uploadBytes(coverLetterRef, coverLetter).then(() => {
-        getDownloadURL(coverLetterRef).then((url) => {
-          console.log("url", url);
-          setUrlCoverLetter(url);
-          temp.coverLetter = url;
-          setFileUrls({ ...temp });
-          temp2.push({
-            coverLetter2: url,
-          });
-          // stuck here as:
-          // have to get url first then add in the db
-          // but download url too slow -> how to use promise
-          // for 1- download url; 2-add in db ?
-        });
-      });
+      try {
+        await uploadBytes(coverLetterRef, coverLetter);
+        const url = await getDownloadURL(coverLetterRef);
+        //console.log("url", url);
+        temp.coverLetter = url;
+        setFileUrls({ ...temp });
+      } catch (error) {
+        console.log(error);
+      }
     }
-    setFileUrls({ ...temp });
-    setFileUrls2(temp2);
-    console.log(fileUrls);
+    // setFileUrls({ ...temp });
+    //console.log(fileUrls);
     if (transcript != null) {
-      uploadBytes(transcriptRef, transcript);
+      try {
+        await uploadBytes(transcriptRef, transcript);
+        const url = await getDownloadURL(transcriptRef);
+        //console.log("url", url);
+        temp.transcript = url;
+        setFileUrls({ ...temp });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   // Adds the job application information to the applications collection on Firestore. Appends to user's
   // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
-    console.log("injobApp ", urlCoverLetter);
     console.log("inJOB22", fileUrls.coverLetter);
-    console.log("inJOB3333", fileUrls2.coverLetter2);
 
-    if (urlCoverLetter) {
+    if (
+      ((resumeReq && fileUrls.resume !== null) || !resumeReq) &&
+      ((coverLetterReq && fileUrls.coverLetter !== null) || !coverLetterReq) &&
+      ((transcriptReq && fileUrls.transcript !== null) || !transcriptReq)
+    ) {
       await addDoc(
         collection(db, "applications2"),
         // eslint-disable-next-line no-undef
@@ -169,7 +179,9 @@ const JobApplication = () => {
           applicantEmail: currentUserEmail,
           phoneNumber,
           address,
-          urlCoverLetter,
+          urlCoverLetter: fileUrls.coverLetter,
+          urlResume: fileUrls.resume,
+          urlTranscript: fileUrls.transcript,
         },
         { merge: true }
       );
@@ -207,7 +219,9 @@ const JobApplication = () => {
         console.log("upload a transcript");
       }
     } else {
-      Promise.all(uploadDocuments()).then(addJobApplication());
+      uploadDocuments().then(() => {
+        addJobApplication();
+      });
       console.log("completed");
       navigate(`/browseJobs`);
     }
