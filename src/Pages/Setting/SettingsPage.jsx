@@ -125,7 +125,6 @@ const SettingsPage = () => {
 
     // On change for connections notifications
     const changeConnectionsNotification = async () => {
-        setConnectionsNotifications(!connectionsNotifications);
         try{
           const notificationsDocRef = doc(
             database,
@@ -134,18 +133,16 @@ const SettingsPage = () => {
           );
           // Get notifications data and set it to local array
           await updateDoc(notificationsDocRef, {
-            notificationForConnections: connectionsNotifications,
+            notificationForConnections: !connectionsNotifications,
           })
         }catch (error) {
           console.log(error);
         }
+        setConnectionsNotifications(!connectionsNotifications);
     }
 
     // On change for jobs notification
     const changeJobNotification = async () => {
-      setJobNotifications(!jobNotifications);
-      console.log(`YIPEEE: ${jobNotifications}`)
-
       try{
         const notificationsDocRef = doc(
           database,
@@ -154,11 +151,12 @@ const SettingsPage = () => {
         );
         // Get notifications data and set it to local array
         await updateDoc(notificationsDocRef, {
-          notificationForJobs: jobNotifications,
+          notificationForJobs: !jobNotifications,
         })
       }catch (error) {
         console.log(error);
       }
+      setJobNotifications(!jobNotifications);
     }
 
     return (
