@@ -135,8 +135,8 @@ const NotificationsPage = () => {
           redirectLink = `/${notifications[i].link}`
         }
         cards.push(
-          <Card className="notificationCards" variant="outlined">
-            <Grid container xs={12} sm={12} md={12}>
+          <Card className="notificationCards" variant="outlined" sx={{width: `100%`}}>
+            <Grid container xs={12} sm={12} md={12} justifyContent="space-between">
               <NavLink className="nav_link" to={redirectLink} style={{textDecoration: "none"}}>
                 <Grid item xs={12} style={{marginLeft: 15}}>
                   <h4>{notifications[i].content}</h4>
@@ -151,7 +151,7 @@ const NotificationsPage = () => {
                   </h4>
                 </Grid>
               </NavLink>
-              <Grid item xs={1} >
+              <Grid item xs={0} >
                 <Button
                   aria-controls={open ? "basic menu" : undefined}
                   aria-haspopup="true"
