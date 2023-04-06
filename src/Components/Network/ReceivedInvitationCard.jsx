@@ -121,6 +121,30 @@ export const ReceivedInvitationCard = ({
       await updateDoc(userSentInvitationNetworkRef, {
         connectedUsers: arrayUnion(currentUser),
       });
+
+      // Add notification for user being accepted 
+      const userSentInvitationNotificationsRef = doc(
+        db,
+        "notifications",
+        receivedInvitationUserID
+      );
+      const userSentInvitationNotificationsSnap = await getDoc(
+        userSentInvitationNotificationsRef
+      );
+      // Check if the user receiving the notification has the setting turned on
+      if(userSentInvitationNotificationsSnap.data().notificationForConnections === true)
+      {
+        const currentUserRef = doc(db, "userProfiles", currentUser);
+        const currentUserSnap = await getDoc(currentUserRef);
+        const currentDate = new Date();
+        await updateDoc(userSentInvitationNotificationsRef, {
+        notifications: arrayUnion(...[{
+          type: "connections",
+          content: `${currentUserSnap.data().values.firstName} ${currentUserSnap.data().values.lastName} accepted your invitation request`,
+          timestamp: currentDate,
+        }])
+        })
+      }
       window.location.reload();
     } catch (error) {
       console.log(error);

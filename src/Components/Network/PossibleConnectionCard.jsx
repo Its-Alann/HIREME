@@ -55,6 +55,29 @@ export const PossibleConnectionCard = ({
         receivedInvitations: arrayUnion(currentUser),
       });
 
+      // Add notification for user receiving invitation
+      const userReceivingInvitationNotificationsRef = doc(
+        db,
+        "notifications",
+        possibleConnectionUserId
+      );
+      const userReceivingInvitationNotificationsSnap = await getDoc(
+        userReceivingInvitationNotificationsRef
+      );
+      // Check if the user receiving the notification has the setting turned on
+      if(userReceivingInvitationNotificationsSnap.data().notificationForConnections === true)
+      {
+        const currentUserRef = doc(db, "userProfiles", currentUser);
+        const currentUserSnap = await getDoc(currentUserRef);
+        const currentDate = new Date();
+        await updateDoc(userReceivingInvitationNotificationsRef, {
+        notifications: arrayUnion(...[{
+          type: "connections",
+          content: `Invitation sent from: ${currentUserSnap.data().values.firstName} ${currentUserSnap.data().values.lastName}`,
+          timestamp: currentDate,
+        }])
+        })
+      }
       window.location.reload();
     } catch (error) {
       console.log(error);

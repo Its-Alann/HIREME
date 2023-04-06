@@ -237,6 +237,8 @@ const AccountCreationPage = () => {
       await setDoc(doc(db, "notifications", user.email), {
         notifications: [],
         field,
+        notificationForJobs: true,
+        notificationForConnections: true,
       });
     } catch (error) {
       console.log(error);

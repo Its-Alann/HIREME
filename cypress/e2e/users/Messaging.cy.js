@@ -17,6 +17,7 @@ describe("example to-do app", () => {
     it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
+      cy.wait(500);
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
       cy.login(messagingTestAccountUid);
@@ -29,7 +30,7 @@ describe("example to-do app", () => {
 
       //send Hi message
       cy.get("#message-input").should("be.visible").type("Hi");
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get("#message-chats").last().should("contain", "Hi");
 
       //send image
@@ -49,7 +50,7 @@ describe("example to-do app", () => {
         .find("input")
         .selectFile(fileName, { force: true });
 
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get('[data-testid="messageListItem"]')
         .last()
         .get('[data-testid="attachment"]')

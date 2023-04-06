@@ -2,6 +2,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { Divider } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -20,6 +22,7 @@ import {
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import Checkbox from "@mui/material/Checkbox";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateJob = () => {
@@ -34,6 +37,9 @@ export const CreateJob = () => {
     requirement: "",
     title: "",
     benefits: "",
+    resume: "",
+    coverLetter: "",
+    transcript: "",
   });
   const [companyName, setCompanyName] = React.useState({
     name: "",
@@ -53,6 +59,9 @@ export const CreateJob = () => {
     });
 
     // Retrieve user information in order to properly create job suggestion notifications
+    const notificationsRef = collection(db, "notifications");
+    const q = query(notificationsRef, where("field", ">=", jobInformation.title).where("field", "<=", `${jobInformation.title}\uf7ff`))
+    console.log(q);
   }
 
   // We need to include Recruiter ID & their company ID in the new Job
@@ -270,6 +279,69 @@ export const CreateJob = () => {
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
+          </Box>
+          <Divider />
+
+          <Box>
+            <Typography>
+              Please specify which documents are required by candidates among
+              the following. <br />
+              (By default, documents are not required.)
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography>Resume</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.resume}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      resume: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
+
+          <Box>
+            <Typography>Cover Letter</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.coverLetter}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      coverLetter: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
+
+          <Box>
+            <Typography>Transcript</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.transcript}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      transcript: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
           </Box>
         </Stack>
 
