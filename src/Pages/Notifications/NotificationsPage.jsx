@@ -89,7 +89,7 @@ const NotificationsPage = () => {
   }, [notifications]);
 
   // Delete notification item in array
-  const deleteNotfication = async (index) => {
+  const deleteNotification = async (index) => {
     console.log(index);
     const notificationRef = doc(db, "notifications", currentUserEmail);
     try{
@@ -155,7 +155,7 @@ const NotificationsPage = () => {
                   onClose={handleClose}
                   MenuListProps={{ "aria-labelledby": "basic-button" }}
                 >
-                  <MenuItem onClick={() => deleteNotfication(i-1)}>
+                  <MenuItem onClick={() => deleteNotification(i)}>
                     <DeleteOutlineIcon /> Delete this notification
                   </MenuItem>
                 </Menu>
