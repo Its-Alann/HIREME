@@ -11,7 +11,7 @@ describe("Login to test account", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(5000);
   });
 });
 
@@ -29,14 +29,17 @@ describe("Reports messages", () => {
     //write 3 messages
     cy.get("#message-input").should("be.visible").type("toUnflag");
     cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+    cy.wait(2000);
     cy.get("#message-chats").last().should("contain", "toUnflag");
 
     cy.get("#message-input").should("be.visible").type("toWarn");
     cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+    cy.wait(2000);
     cy.get("#message-chats").last().should("contain", "toWarn");
 
     cy.get("#message-input").should("be.visible").type("toBlock");
     cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+    cy.wait(2000);
     cy.get("#message-chats").last().should("contain", "toBlock");
   });
 
@@ -60,7 +63,7 @@ describe("Reports messages", () => {
       .should("have.text", "Flagged User Test")
       .click();
 
-    cy.wait(500); // Scroll the window 500px down
+    cy.wait(500);
 
     // report last 3 messages
     cy.get(".messageOptions").last().invoke("show").click({ force: true });
@@ -69,13 +72,13 @@ describe("Reports messages", () => {
 
     cy.get(".messageOptions").eq(-2).invoke("show").click({ force: true });
     cy.get(
-      ":nth-child(7) > .MuiPaper-root > .MuiList-root > .MuiButtonBase-root"
+      ":nth-child(6) > .MuiPaper-root > .MuiList-root > .MuiButtonBase-root"
     ).click();
     cy.get('[data-testid="reportedBadge"]').should("be.visible");
 
     cy.get(".messageOptions").eq(-3).invoke("show").click({ force: true });
     cy.get(
-      ":nth-child(8) > .MuiPaper-root > .MuiList-root > .MuiButtonBase-root"
+      ":nth-child(7) > .MuiPaper-root > .MuiList-root > .MuiButtonBase-root"
     ).click();
     cy.get('[data-testid="reportedBadge"]').should("be.visible");
   });
@@ -103,7 +106,7 @@ describe("Admin Features", () => {
     cy.get(
       '.MuiDataGrid-row:nth-last-child(10) > [data-field="warn"] > .MuiButtonBase-root'
     ).click();
-    cy.wait(100);
+    cy.wait(1000);
 
     // ban a user
     cy.get(
@@ -113,22 +116,24 @@ describe("Admin Features", () => {
     cy.get(
       '.MuiDataGrid-row:nth-last-child(10) > [data-field="ban"] > .MuiButtonBase-root'
     ).click();
-    cy.wait(100);
+    cy.wait(1000);
+  });
 
-    it("unbans the user", () => {
-      // go to banned users tab
-      cy.get('.MuiTabs-flexContainer > [tabindex="-1"]').click();
-      cy.wait(500);
+  it("unbans the user", () => {
+    cy.visit("http://localhost:3000/admin/flaggedMessages");
 
-      // unban the user
-      cy.get(
-        ".MuiDataGrid-row--lastVisible > .MuiDataGrid-cell--textLeft > .MuiDataGrid-cellContent"
-      ).should("have.text", "flaggedusers@test.com");
-      cy.get(
-        '.MuiDataGrid-row--lastVisible > [data-field="unbanned"] > .MuiButtonBase-root'
-      ).click();
-      // unbans the user
-      cy.wait(100);
-    });
+    // go to banned users tab
+    cy.get('.MuiTabs-flexContainer > [tabindex="-1"]').click();
+    cy.wait(500);
+
+    // unban the user
+    cy.get(
+      ".MuiDataGrid-row--lastVisible > .MuiDataGrid-cell--textLeft > .MuiDataGrid-cellContent"
+    ).should("have.text", "flaggedusers@test.com");
+    cy.get(
+      '.MuiDataGrid-row--lastVisible > [data-field="unbanned"] > .MuiButtonBase-root'
+    ).click();
+    // unbans the user
+    cy.wait(500);
   });
 });
