@@ -32,7 +32,9 @@ import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
+import ResetPassword from "./Pages/Login/ResetPassword";
 import NotificationsPage from "./Pages/Notifications/NotificationsPage";
+import SettingsPage from "./Pages/Setting/SettingsPage"
 
 const App = () => {
   const hello = "helloo";
@@ -114,11 +116,8 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
-            <Route
-              path="/notifications"
-              exact
-              element={<NotificationsPage />}
-            />
+            <Route path="/notifications" exact element={<NotificationsPage/>}/>
+            <Route path="/settings" exact element={<SettingsPage/>}/>
           </Routes>
         </Router>
       </div>
