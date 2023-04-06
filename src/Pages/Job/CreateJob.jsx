@@ -84,14 +84,21 @@ export const CreateJob = () => {
             "notifications",
             document.id
           );
-          await updateDoc(notificationDocRef, {
-          notifications: arrayUnion(...[{
-            type: "jobs",
-            content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
-            timestamp: currentDate,
-            link: `viewJobPosting/${jobInformation.companyID}/${jobID}`
-          }])
-          })
+          // Check if user has notifications ON or OFF for jobs
+          const notificationJobSnapshot = await getDoc(
+            notificationDocRef
+          );
+          if(notificationJobSnapshot.data().notificationForJobs)
+          {
+            await updateDoc(notificationDocRef, {
+            notifications: arrayUnion(...[{
+              type: "jobs",
+              content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
+              timestamp: currentDate,
+              link: `viewJobPosting/${jobInformation.companyID}/${jobID}`
+            }])
+            })
+          }
         }catch (error) {
           console.log(error);
         }});

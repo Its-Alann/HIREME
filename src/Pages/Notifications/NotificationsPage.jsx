@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { doc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getFirestore, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Stack, Menu, MenuItem, Button, Card, CardContent } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -29,6 +29,13 @@ const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [numOfNotifications, setNumOfNotifications] = useState(0);
   const [infoAvailable, setInfoAvailable] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(0);
+
+  // Delete function to remove the selected notification
+  const deleteIndexNotification = (index) => {
+    setDeleteIndex(index);
+    deleteNotification();
+  }
 
   // Consts for menu
   const [anchorEl, setAnchorEl] = useState(null);
@@ -89,12 +96,16 @@ const NotificationsPage = () => {
   }, [notifications]);
 
   // Delete notification item in array
-  const deleteNotification = async (index) => {
-    console.log(index);
+  const deleteNotification = async () => {
+    console.log(deleteIndex);
     const notificationRef = doc(db, "notifications", currentUserEmail);
+    var array = notifications;
+    array.splice(deleteIndex, 1);
+    setNotifications(array);
+    setNumOfNotifications(notifications.length)
     try{
       await updateDoc(notificationRef, {
-        notifications: notifications.filter(notification => notification.id !== index), 
+        notifications,
       })
     } 
     catch (error) {
@@ -155,7 +166,7 @@ const NotificationsPage = () => {
                   onClose={handleClose}
                   MenuListProps={{ "aria-labelledby": "basic-button" }}
                 >
-                  <MenuItem onClick={() => deleteNotification(i)}>
+                  <MenuItem onClick={() => deleteIndexNotification(i)}>
                     <DeleteOutlineIcon /> Delete this notification
                   </MenuItem>
                 </Menu>
