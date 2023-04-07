@@ -1,38 +1,31 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Link,
-  Navigate,
-} from "react-router-dom";
-import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import HomePage from "./Pages/Home/HomePage";
-import LoginPage from "./Pages/Login/LoginPage";
-import SignUpPage from "./Pages/SignUp/SignUpPage";
-import MessagingPage from "./Pages/Messaging/MessagingPage";
-import AccountCreationPage from "./Pages/AccountCreation/AccountCreationPage";
-import EditProfilePage from "./Pages/EditProfile/EditProfilePage";
-import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
-import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
-import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
-import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
-import { CreateCompany } from "./Pages/Company/CreateCompany";
-import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
-import { CreateJob } from "./Pages/Job/CreateJob";
-import { BrowseJobs } from "./Pages/Job/BrowseJobs";
-import { MyJobs } from "./Pages/Job/MyJobs";
-import { EditJob } from "./Pages/Job/EditJob";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
-import NetworkPage from "./Pages/Network/NetworkPage";
+import AccountCreationPage from "./Pages/AccountCreation/AccountCreationPage";
 import FlaggedMessages from "./Pages/Admin/FlaggedMessages";
-import JobApplication from "./Pages/Job/JobApplication/JobApplication";
-import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
+import { CreateCompany } from "./Pages/Company/CreateCompany";
+import EditProfilePage from "./Pages/EditProfile/EditProfilePage";
+import HomePage from "./Pages/Home/HomePage";
+import { BrowseJobs } from "./Pages/Job/BrowseJobs";
+import { CreateJob } from "./Pages/Job/CreateJob";
+import { EditJob } from "./Pages/Job/EditJob";
+import JobApplication from "./Pages/Job/JobApplication/JobApplication";
+import { MyJobs } from "./Pages/Job/MyJobs";
+import LoginPage from "./Pages/Login/LoginPage";
 import ResetPassword from "./Pages/Login/ResetPassword";
+import MessagingPage from "./Pages/Messaging/MessagingPage";
+import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
+import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
+import NetworkPage from "./Pages/Network/NetworkPage";
+import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
+import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
+import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
+import SignUpPage from "./Pages/SignUp/SignUpPage";
 
 const App = () => {
   const hello = "helloo";

@@ -1,40 +1,39 @@
-import React, { useState, useEffect, useRef } from "react";
-import Grid from "@mui/material/Unstable_Grid2";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
-  Typography,
-  List,
-  ListItem,
   Avatar,
-  ListItemAvatar,
   Box,
   IconButton,
-  Stack,
-  useMediaQuery,
+  List,
+  ListItemAvatar,
   ListItemButton,
   ListItemText,
-  Badge,
+  Stack,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Grid from "@mui/material/Unstable_Grid2";
+import { onAuthStateChanged } from "firebase/auth";
 import {
-  doc,
   addDoc,
-  getDocs,
-  getDoc,
   collection,
+  doc,
+  getDoc,
+  getDocs,
   onSnapshot,
   query,
-  where,
   updateDoc,
+  where,
 } from "firebase/firestore";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import AddCommentIcon from "@mui/icons-material/AddComment";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { onAuthStateChanged } from "firebase/auth";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
-import { auth, db } from "../../Firebase/firebase";
 import NewConvo from "../../Components/NewConvo/NewConvo";
+import { auth, db } from "../../Firebase/firebase";
 
 const theme = createTheme({
   palette: {
@@ -59,11 +58,12 @@ const findLastSeen = (arr, searchValue) => {
 };
 
 const Messaging = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const conversationIDParam = params.get("conversationID");
+
   // State for writing messages
   const [messages, setMessages] = useState([]);
-
-  // State for the current conversation to display
-  const [convoId, setConvoId] = useState("");
 
   // an array with info for displaying the convo info
   const [chatProfiles, setChatProfiles] = useState([]);
@@ -93,6 +93,8 @@ const Messaging = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
 
+  const [convoId, setConvoId] = useState("");
+
   // takes an object {otherAuthors, mostRecent}
   const getOtherAuthors = async (list) => {
     const nameList = await Promise.all(
@@ -112,51 +114,8 @@ const Messaging = () => {
       emails: list.otherAuthors,
       mostRecent: list.mostRecent,
       unRead: list.unRead,
+      messageConvoID: list.messageConvoID,
     };
-  };
-
-  // get all names of user's receivers
-  // populate the message sidebar
-  const getAllReceivers = async () => {
-    setChatProfiles([]);
-    const messagesRef = collection(db, "messages");
-
-    // Searches all converstations containing the currentUser
-    const convosQuery = query(
-      messagesRef,
-      where("authors", "array-contains", myUser)
-    );
-
-    // set listener to convos involving the user
-    const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
-      //list of author lists
-      const allAuthorsList = [];
-      //each document is a convo
-      querySnapshot.forEach((document) => {
-        const data = document.data();
-        const mostRecent = data.messages?.at(-1).timestamp.toDate();
-        const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
-        allAuthorsList.push({
-          otherAuthors: data.authors.filter((author) => author !== myUser),
-          mostRecent,
-          unRead,
-        });
-      });
-
-      const allChatProfiles = await Promise.all(
-        allAuthorsList.map(getOtherAuthors)
-      );
-      /*
-      {
-        names: "Billy Bob, Yodie Gang"
-        emails: ["billybob@gmail.com", "yodiegang@ful.com"]
-      }   
-      */
-      allChatProfiles.sort((a, b) =>
-        a.mostRecent < b.mostRecent ? 1 : a.mostRecent > b.mostRecent ? -1 : 0
-      );
-      setChatProfiles(allChatProfiles);
-    });
   };
 
   // returns the ID of the currently selected conversation
@@ -189,6 +148,53 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
+  // get all names of user's receivers
+  // populate the message sidebar
+  const getAllReceivers = async () => {
+    setChatProfiles([]);
+    const messagesRef = collection(db, "messages");
+
+    // Searches all converstations containing the currentUser
+    const convosQuery = query(
+      messagesRef,
+      where("authors", "array-contains", myUser)
+    );
+
+    // set listener to convos involving the user
+    const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
+      //list of author lists
+      const allAuthorsList = [];
+      //each document is a convo
+      querySnapshot.forEach((document) => {
+        const data = document.data();
+        const mostRecent = data.messages?.at(-1).timestamp.toDate();
+        const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
+        allAuthorsList.push({
+          otherAuthors: data.authors.filter((author) => author !== myUser),
+          mostRecent,
+          unRead,
+          messageConvoID: document.id,
+        });
+      });
+
+      console.log("allAuthorsList", allAuthorsList);
+
+      const allChatProfiles = await Promise.all(
+        allAuthorsList.map(getOtherAuthors)
+      );
+      /*
+      {
+        names: "Billy Bob, Yodie Gang"
+        emails: ["billybob@gmail.com", "yodiegang@ful.com"]
+      }   
+      */
+      allChatProfiles.sort((a, b) =>
+        a.mostRecent < b.mostRecent ? 1 : a.mostRecent > b.mostRecent ? -1 : 0
+      );
+      setChatProfiles(allChatProfiles);
+    });
+  };
+
   const selectConvo = async (conversationId, names, index, emails) => {
     // !there may be sync issues related to the read receipts
     // !simply putting setAuthors before setConvoId may not be sufficient
@@ -198,6 +204,37 @@ const Messaging = () => {
     setConvoId(conversationId);
     scrollToBottom();
   };
+
+  //const conversationID = useParams().conversationID ?? "";
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // State for the current conversation to display
+
+  useEffect(() => {
+    // Add this block to handle the conversationIDParam
+    if (conversationIDParam) {
+      const openConvo = async () => {
+        const convoIndex = chatProfiles.findIndex(
+          (chatProfile) => conversationIDParam === chatProfile.messageConvoID
+        );
+        if (convoIndex >= 0) {
+          const chatProfile = chatProfiles[convoIndex];
+          await selectConvo(
+            conversationIDParam,
+            chatProfile.names,
+            convoIndex,
+            [myUser, ...chatProfile.emails]
+          );
+        }
+      };
+      openConvo();
+    } else {
+      setSelectedIndex(-1);
+      setMessages([]);
+      setConvoId("");
+      setName("New Convo");
+    }
+  }, [chatProfiles]);
 
   const markMessagesAsRead = async () => {
     if (messages.length === 0 || messages.at(-1).seenBy.includes(myUser)) {
@@ -342,14 +379,12 @@ const Messaging = () => {
                       key={i}
                       // selected={selectedIndex === i}
                       onClick={async () => {
-                        const conversationID = await getConversationId([
-                          ...chat.emails,
-                          myUser,
-                        ]);
+                        const conversationID = chat.messageConvoID;
                         await selectConvo(conversationID, chat.names, i, [
                           myUser,
                           ...chat.emails,
                         ]);
+                        setSearchParams({ conversationID });
                       }}
                     >
                       <ListItemAvatar>

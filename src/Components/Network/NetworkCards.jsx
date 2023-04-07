@@ -1,16 +1,5 @@
 /* eslint-disable react/function-component-definition */
-import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import Button from "@mui/material/Button";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import { PropTypes } from "prop-types";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { blue } from "@mui/material/colors";
-import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
-import Stack from "@mui/material/Stack";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import {
   Dialog,
   DialogActions,
@@ -18,8 +7,26 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import { Link } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardHeader from "@mui/material/CardHeader";
+import Stack from "@mui/material/Stack";
+import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import {
+  arrayRemove,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { PropTypes } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -67,6 +74,10 @@ export const NetworkCards = ({
 }) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  console.log("currentUser", currentUser);
+  console.log("connectedUserID", connectedUserID);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -93,6 +104,32 @@ export const NetworkCards = ({
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const findConversationId = async () => {
+    const messagesRef = collection(db, "messages");
+
+    const querySnapshot = await getDocs(
+      query(messagesRef, where("authors", "==", [connectedUserID, currentUser]))
+    );
+
+    const matchingDocs = [];
+
+    querySnapshot.forEach((document) => {
+      if (
+        document.data().authors.includes(currentUser) &&
+        document.data().authors.includes(connectedUserID)
+      ) {
+        matchingDocs.push({ id: document.id });
+      }
+    });
+
+    if (matchingDocs.length > 1) {
+      console.log("more than one convo matched ERROR");
+      return undefined;
+    }
+
+    return matchingDocs?.[0]?.id;
   };
 
   useEffect(() => {
@@ -166,7 +203,15 @@ export const NetworkCards = ({
                         </ColorButtonBlue>
                       </Link>
                       {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
-                      <ColorButtonLightBlue variant="outlined">
+                      <ColorButtonLightBlue
+                        variant="outlined"
+                        onClick={async () => {
+                          const convoId = await findConversationId();
+                          if (convoId !== undefined) {
+                            navigate(`/messaging?conversationID=${convoId}`);
+                          }
+                        }}
+                      >
                         Message
                       </ColorButtonLightBlue>
                       {/* </Link> */}
