@@ -137,7 +137,7 @@ const NotificationsPage = () => {
         cards.push(
           <Card className="notificationCards" variant="outlined" sx={{width: `100%`}}>
             <Grid container xs={12} sm={12} md={12} justifyContent="space-between">
-              <NavLink className="nav_link" to={redirectLink} style={{textDecoration: "none"}}>
+              <NavLink id="nav_link" to={redirectLink} style={{textDecoration: "none"}}>
                 <Grid item xs={12} style={{marginLeft: 15}}>
                   <h4>{notifications[i].content}</h4>
                 </Grid>
@@ -195,7 +195,7 @@ const NotificationsPage = () => {
         >
           Manage your notifications
           <br></br>
-          <NavLink to="/settings">View Settings</NavLink>
+          <NavLink id="visitSettings" to="/settings">View Settings</NavLink>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <Stack

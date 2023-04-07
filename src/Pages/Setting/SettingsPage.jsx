@@ -177,7 +177,7 @@ const SettingsPage = () => {
             </Grid>
             {infoAvailable &&
             <Grid item xs={6}>
-                <FormControlLabel control={<IOSSwitch sx={{ m: 1 }} defaultChecked={connectionsNotifications} />}
+                <FormControlLabel data-testid="connectionsForm" control={<IOSSwitch data-testid="connectionsSwitch" sx={{ m: 1 }} defaultChecked={connectionsNotifications} />}
                 label={connectionsNotifications ? "On" : "Off"} onChange={changeConnectionsNotification}/>
             </Grid>} 
             {!infoAvailable && <p>Loading...</p>}
@@ -186,7 +186,7 @@ const SettingsPage = () => {
             </Grid>
             {infoAvailable &&
             <Grid item xs={6}>
-                <FormControlLabel control={<IOSSwitch sx={{ m: 1 }} defaultChecked={jobNotifications} />}
+                <FormControlLabel data-testid="jobForm" control={<IOSSwitch data-testid="jobSwitch" sx={{ m: 1 }} defaultChecked={jobNotifications} />}
                 label={jobNotifications ? "On" : "Off"} onChange={changeJobNotification}/>
             </Grid>} 
             {!infoAvailable && <p>Loading...</p>}
