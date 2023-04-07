@@ -133,7 +133,7 @@ export const NetworkCards = ({
     //if the convo doesn't exist, create it
     if (matchingDocs?.[0]?.id === undefined) {
       const docRef = await addDoc(collection(db, "messages"), {
-        authors: [currentUser, connectedUserID],
+        authors: [connectedUserID, currentUser],
         messages: [],
       });
       return docRef.id;
