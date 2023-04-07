@@ -15,7 +15,7 @@ const JobCard = ({
   logo,
   editable,
 }) => (
-  <Box sx={{ py: 1 }}>
+  <Box sx={{ py: 1, px: "5%" }}>
     <Card variant="outlined">
       <Box sx={{ m: 3 }}>
         <Stack direction="row" alignItems="center">
