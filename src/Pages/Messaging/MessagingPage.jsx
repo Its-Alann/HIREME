@@ -167,14 +167,17 @@ const Messaging = () => {
       //each document is a convo
       querySnapshot.forEach((document) => {
         const data = document.data();
-        const mostRecent = data.messages?.at(-1).timestamp.toDate();
-        const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
-        allAuthorsList.push({
-          otherAuthors: data.authors.filter((author) => author !== myUser),
-          mostRecent,
-          unRead,
-          messageConvoID: document.id,
-        });
+        if (data.messages !== undefined) {
+          const mostRecent = data.messages?.at(-1)?.timestamp.toDate();
+          const unRead = !data.messages?.at(-1)?.seenBy.includes(myUser);
+
+          allAuthorsList.push({
+            otherAuthors: data.authors.filter((author) => author !== myUser),
+            mostRecent,
+            unRead,
+            messageConvoID: document.id,
+          });
+        }
       });
 
       console.log("allAuthorsList", allAuthorsList);
@@ -395,9 +398,9 @@ const Messaging = () => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={chat.names}
-                        secondary={chat.mostRecent.toDateString()}
+                        secondary={chat.mostRecent?.toDateString()}
                       />
-                      {chat.unRead && (
+                      {chat?.unRead && (
                         <FiberManualRecordIcon
                           fontSize="small"
                           color="warning"

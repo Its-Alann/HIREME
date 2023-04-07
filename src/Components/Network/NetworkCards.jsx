@@ -16,6 +16,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Stack from "@mui/material/Stack";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import {
+  addDoc,
   arrayRemove,
   collection,
   doc,
@@ -127,6 +128,15 @@ export const NetworkCards = ({
     if (matchingDocs.length > 1) {
       console.log("more than one convo matched ERROR");
       return undefined;
+    }
+
+    //if the convo doesn't exist, create it
+    if (matchingDocs?.[0]?.id === undefined) {
+      const docRef = await addDoc(collection(db, "messages"), {
+        authors: [currentUser, connectedUserID],
+        messages: [],
+      });
+      return docRef.id;
     }
 
     return matchingDocs?.[0]?.id;
