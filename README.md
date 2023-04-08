@@ -25,3 +25,5 @@ This will also generate a Clover coverage report.
 
 Launches the cypress tests in the Cypress console.\
 This will generate individual coverage reports based on the E2E test that runs.
+
+This is a test line, don't merge this
