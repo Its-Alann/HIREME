@@ -5,10 +5,7 @@ import {
   TextField,
   Container,
   Stack,
-  Divider,
 } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -34,9 +31,6 @@ export const EditJob = () => {
     requirement: "",
     title: "",
     benefits: "",
-    resume: "",
-    coverLetter: "",
-    transcript: "",
   });
   const [companyName, setCompanyName] = React.useState("");
 
@@ -246,69 +240,6 @@ export const EditJob = () => {
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
-          </Box>
-          <Divider />
-
-          <Box>
-            <Typography>
-              Please specify which documents are required by candidates among
-              the following. <br />
-              (By default, documents are not required.)
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography>Resume</Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={jobInformation.resume}
-                  onChange={(e) =>
-                    setJobInformation({
-                      ...jobInformation,
-                      resume: e.target.checked,
-                    })
-                  }
-                />
-              }
-              label="required"
-            />
-          </Box>
-
-          <Box>
-            <Typography>Cover Letter</Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={jobInformation.coverLetter}
-                  onChange={(e) =>
-                    setJobInformation({
-                      ...jobInformation,
-                      coverLetter: e.target.checked,
-                    })
-                  }
-                />
-              }
-              label="required"
-            />
-          </Box>
-
-          <Box>
-            <Typography>Transcript</Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={jobInformation.transcript}
-                  onChange={(e) =>
-                    setJobInformation({
-                      ...jobInformation,
-                      transcript: e.target.checked,
-                    })
-                  }
-                />
-              }
-              label="required"
-            />
           </Box>
         </Stack>
         <Link
