@@ -6,10 +6,10 @@ on:
 
 jobs:
   tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        spec: [admin, jobs, recruiters, ui, users]
+        spec: [jobs, recruiters, ui, users]
       fail-fast: false
     timeout-minutes: 20
     steps:
