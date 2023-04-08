@@ -15,11 +15,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set Port Number
+        id: set-port-number
+        run: echo "::set-output name=port::$(( 3000 + ${{ matrix.spec | index }} ))"
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
-          start: |
-            npm start -- --port $((3000 + ${{ matrix.index }})) --spec "cypress/e2e/${{ matrix.spec }}.spec.js"
-          wait-on: "http://localhost:$((3000 + ${{ matrix.index }}))"
+          start: npm start -- --port ${{ steps.set-port-number.outputs.port }} --spec "cypress/e2e/${{ matrix.spec }}.spec.js"
+          wait-on: "http://localhost:${{ steps.set-port-number.outputs.port }}"
           wait-on-timeout: 120
           spec: cypress/e2e/${{ matrix.spec }}
