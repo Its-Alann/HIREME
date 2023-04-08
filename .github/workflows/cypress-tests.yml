@@ -10,18 +10,16 @@ jobs:
     strategy:
       matrix:
         spec: [admin, jobs, recruiters, ui, users]
-        port: [3001, 3002, 3003, 3004, 3005]
       fail-fast: false
     timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set Port Number
-        run: echo "::set-env name=PORT::${{ matrix.port }}"
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
-          start: npm start -- --port $PORT
-          wait-on: "http://localhost:${{ matrix.port }}"
+          start: |
+            npm start -- --port $((3000 + ${{ matrix.index }})) --spec "cypress/e2e/${{ matrix.spec }}.spec.js"
+          wait-on: "http://localhost:$((3000 + ${{ matrix.index }}))"
           wait-on-timeout: 120
           spec: cypress/e2e/${{ matrix.spec }}
