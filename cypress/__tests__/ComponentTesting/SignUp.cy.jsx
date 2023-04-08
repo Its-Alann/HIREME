@@ -20,7 +20,7 @@ describe("<SignUp />", () => {
     );
   });
 
-  it("shows helper text when typing a wrong email", () => {
+  it("shows helper text when typing a wrongg email", () => {
     cy.get("#email").type("email@test");
     cy.get("input").tab();
     cy.get('[data-cy="emailTest"]').contains("Please enter a valid email");
