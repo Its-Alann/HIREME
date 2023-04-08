@@ -20,7 +20,7 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.6.1
         with:
-          start: PORT=$CYPRESS_PORT npm start
+          start: npm start -- --port ${{ env.CYPRESS_PORT }}
           wait-on: "http://localhost:${{ env.CYPRESS_PORT }}"
           wait-on-timeout: 120
           spec: cypress/e2e/${{ matrix.spec }}
