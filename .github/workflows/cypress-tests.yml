@@ -9,12 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spec: [jobs, recruiters, ui, users]
+        spec: [admin, jobs, recruiters, ui, users]
       fail-fast: false
     timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.2'
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.6.1
         with:
