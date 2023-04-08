@@ -31,6 +31,7 @@ import {
   query,
   where,
   collection,
+  arrayUnion
 } from "firebase/firestore";
 import Grid from "@mui/material/Unstable_Grid2";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -193,6 +194,30 @@ export const JobPostingApplicants = () => {
       applicantApplications = applicationStatusToUpdate;
       const applicantRef = doc(db, "applications2", applicantDocID);
 
+      // Create a notification for the applicant
+      const notificationDocRef = doc(
+        db,
+        "notifications",
+        applicantEmail
+      );
+
+      // Check if user has notifications ON or OFF for jobs
+      const notificationJobSnapshot = await getDoc(
+        notificationDocRef
+      );
+      const currentDate = new Date();
+      if(notificationJobSnapshot.data().notificationForJobs)
+      {
+        await updateDoc(notificationDocRef, {
+        notifications: arrayUnion(...[{
+          type: "job alert",
+          content: `Your application for "${job.title}", from ${companyName.name}, has been updated!`,
+          timestamp: currentDate
+        }])
+        })
+      }
+
+      // Update the database with the new status
       await updateDoc(applicantRef, applicantApplications)
         .then(() => {
           console.log("Status updated successfully!");
@@ -201,6 +226,8 @@ export const JobPostingApplicants = () => {
         .catch((error) => {
           console.error("Error updating status", error);
         });
+      
+      console.log(applicantEmail);
     });
   };
 
