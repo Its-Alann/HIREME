@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spec: [admin, jobs, recruiters, ui, users]
+        spec: [jobs, recruiters, ui, users]
       fail-fast: false
     timeout-minutes: 20
     steps:
@@ -18,7 +18,21 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v5.4.0
         with:
-          start: npm start -- --port 8000
+          start: npm start
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           spec: cypress/e2e/${{ matrix.spec }}
+          
+  admin-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v5.4.0
+        with:
+          start: npm start
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
+          spec: cypress/e2e/admin
