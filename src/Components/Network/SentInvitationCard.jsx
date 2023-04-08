@@ -32,31 +32,30 @@ const ColorButtonBlue = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const SentInvitationCard = ({ userID, currentUser }) => {
+export const SentInvitationCard = ({
+  allUserProfiles,
+  userID,
+  currentUser,
+}) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
 
   useEffect(() => {
-    const getSentRequestUsers = async () => {
-      try {
-        const docSnap = await getDoc(doc(db, "userProfiles", userID));
-        const userData = docSnap.data();
-        setSentRequestedUser(userData);
-        //console.log(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getSentRequestUsers();
-  }, []);
+    // console.log(connectedUserID);
+    // console.log(allUserProfiles);
+    const findSentInviteUserProfile = allUserProfiles.find(
+      (el) => el.id === userID
+    );
+    // console.log(findConnectUserProfile);
+    setSentRequestedUser(findSentInviteUserProfile);
+  }, [allUserProfiles, userID]);
 
   const withdrawInvitation = async () => {
     // 1. remove user from invitations.sentRequest
     // 2. remove user card
 
     //console.log(5);
-    //console.log(currentUser);
-    //console.log(userID);
+    // console.log(currentUser);
+    // console.log(userID);
     const currentUserInvitationRed = doc(db, "invitations", currentUser);
     const userReceivedInvitationRef = doc(db, "invitations", userID);
 
@@ -76,57 +75,68 @@ export const SentInvitationCard = ({ userID, currentUser }) => {
   };
 
   return (
-    <ThemeProvider theme={theme2}>
-      <div>
-        <Box sx={{ width: 300, minWidth: 100 }}>
-          <Card variant="outlined" sx={{ p: 1 }}>
-            <>
-              <CardHeader
-                avatar={
-                  //source will be the user's image
-                  <Avatar
-                    aria-label="user"
-                    sx={{ width: 56, height: 56 }}
-                    src={sentRequestedUser.values.image}
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {sentRequestedUser ? (
+        <ThemeProvider theme={theme2}>
+          <div>
+            <Box sx={{ width: 300, minWidth: 100 }}>
+              <Card variant="outlined" sx={{ p: 1 }}>
+                <>
+                  <CardHeader
+                    avatar={
+                      //source will be the user's image
+                      <Avatar
+                        aria-label="user"
+                        sx={{ width: 56, height: 56 }}
+                        src={sentRequestedUser.values.image}
+                      />
+                    }
+                    //title will be the user's name and subheader is their bio
+                    title={
+                      sentRequestedUser.values.firstName !== "" &&
+                      sentRequestedUser.values.lastName !== ""
+                        ? `${sentRequestedUser.values.firstName} ${sentRequestedUser.values.lastName}`
+                        : "No name"
+                    }
+                    subheader={
+                      //remove != null when incomplete users are removed
+                      sentRequestedUser.values.description !== "" &&
+                      sentRequestedUser.values.description != null
+                        ? sentRequestedUser.values.description.length <= 24
+                          ? `${sentRequestedUser.values.description}`
+                          : `${sentRequestedUser.values.description.substring(
+                              0,
+                              21
+                            )} ...`
+                        : "No bio"
+                    }
                   />
-                }
-                //title will be the user's name and subheader is their bio
-                title={
-                  sentRequestedUser.values.firstName !== "" &&
-                  sentRequestedUser.values.lastName !== ""
-                    ? `${sentRequestedUser.values.firstName} ${sentRequestedUser.values.lastName}`
-                    : "No name"
-                }
-                subheader={
-                  //remove != null when incomplete users are removed
-                  sentRequestedUser.values.description !== "" &&
-                  sentRequestedUser.values.description != null
-                    ? `${sentRequestedUser.values.description}`
-                    : "No bio"
-                }
-              />
-              {/*moves the buttons to the right*/}
-              <Box display="flex" justifyContent="center">
-                <CardActions>
-                  {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue
-                    size="medium"
-                    onClick={withdrawInvitation}
-                    id="withdrawButton"
-                  >
-                    Withdraw
-                  </ColorButtonBlue>
-                </CardActions>
-              </Box>
-            </>
-          </Card>
-        </Box>
-      </div>
-    </ThemeProvider>
+                  {/*moves the buttons to the right*/}
+                  <Box display="flex" justifyContent="center">
+                    <CardActions>
+                      {/*view profile will go to the user's profile and message will be sent to the */}
+                      <ColorButtonBlue
+                        size="medium"
+                        onClick={withdrawInvitation}
+                        id="withdrawButton"
+                      >
+                        Withdraw
+                      </ColorButtonBlue>
+                    </CardActions>
+                  </Box>
+                </>
+              </Card>
+            </Box>
+          </div>
+        </ThemeProvider>
+      ) : null}
+    </>
   );
 };
 
 SentInvitationCard.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
   userID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
