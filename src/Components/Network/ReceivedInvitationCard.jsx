@@ -43,26 +43,19 @@ const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
 }));
 
 export const ReceivedInvitationCard = ({
+  allUserProfiles,
   receivedInvitationUserID,
   currentUser,
 }) => {
   const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
 
   useEffect(() => {
-    const getAcceptInvitationUsers = async () => {
-      try {
-        const docSnap = await getDoc(
-          doc(db, "userProfiles", receivedInvitationUserID)
-        );
-        const userData = docSnap.data();
-        setReceivedInvitationUser(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getAcceptInvitationUsers();
-  }, []);
+    const findReceivedInviteUserProfile = allUserProfiles.find(
+      (el) => el.id === receivedInvitationUserID
+    );
+    // console.log(findConnectUserProfile);
+    setReceivedInvitationUser(findReceivedInviteUserProfile);
+  }, [allUserProfiles, receivedInvitationUserID]);
 
   const ignoreInvite = async () => {
     // 1. remove user from invitations.requestUsers collection
@@ -135,75 +128,86 @@ export const ReceivedInvitationCard = ({
   };
 
   return (
-    <ThemeProvider theme={theme2}>
-      <div>
-        <Box sx={{ width: 300, minWidth: 100 }}>
-          <Card variant="outlined" sx={{ p: 1 }} data-cy="ReceivedCard">
-            <>
-              <CardHeader
-                avatar={
-                  //source will be the user's image
-                  <Avatar
-                    aria-label="user"
-                    sx={{ width: 56, height: 56 }}
-                    src={receivedInvitationUser.values.image}
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {receivedInvitationUser ? (
+        <ThemeProvider theme={theme2}>
+          <div>
+            <Box sx={{ width: 300, minWidth: 100 }}>
+              <Card variant="outlined" sx={{ p: 1 }} data-cy="ReceivedCard">
+                <>
+                  <CardHeader
+                    avatar={
+                      //source will be the user's image
+                      <Avatar
+                        aria-label="user"
+                        sx={{ width: 56, height: 56 }}
+                        src={receivedInvitationUser.values.image}
+                      />
+                    }
+                    //title will be the user's name and subheader is their bio
+                    title={
+                      receivedInvitationUser.values.firstName !== "" &&
+                      receivedInvitationUser.values.lastName !== ""
+                        ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
+                        : "No name"
+                    }
+                    subheader={
+                      //remove != null when incomplete users are removed
+                      receivedInvitationUser.values.description !== "" &&
+                      receivedInvitationUser.values.description != null
+                        ? receivedInvitationUser.values.description.length <= 24
+                          ? `${receivedInvitationUser.values.description}`
+                          : `${receivedInvitationUser.values.description.substring(
+                              0,
+                              21
+                            )} ...`
+                        : "No bio"
+                    }
                   />
-                }
-                //title will be the user's name and subheader is their bio
-                title={
-                  receivedInvitationUser.values.firstName !== "" &&
-                  receivedInvitationUser.values.lastName !== ""
-                    ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
-                    : "No name"
-                }
-                subheader={
-                  //remove != null when incomplete users are removed
-                  receivedInvitationUser.values.description !== "" &&
-                  receivedInvitationUser.values.description != null
-                    ? `${receivedInvitationUser.values.description}`
-                    : "No bio"
-                }
-              />
-              {/*moves the buttons to the right*/}
-              <Box display="flex" justifyContent="flex-end">
-                <CardActions>
-                  {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue
-                    size="medium"
-                    onClick={acceptInvite}
-                    data-cy={`AcceptInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                    id={`AcceptInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                  >
-                    Accept
-                  </ColorButtonBlue>
-                  <ColorButtonLightBlue
-                    size="medium"
-                    variant="outlined"
-                    onClick={ignoreInvite}
-                    data-cy={`IgnoreInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                    id={`IgnoreInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                  >
-                    Ignore
-                  </ColorButtonLightBlue>
-                </CardActions>
-              </Box>
-            </>
-          </Card>
-        </Box>
-      </div>
-    </ThemeProvider>
+                  {/*moves the buttons to the right*/}
+                  <Box display="flex" justifyContent="flex-end">
+                    <CardActions>
+                      {/*view profile will go to the user's profile and message will be sent to the */}
+                      <ColorButtonBlue
+                        size="medium"
+                        onClick={acceptInvite}
+                        data-cy={`AcceptInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                        id={`AcceptInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                      >
+                        Accept
+                      </ColorButtonBlue>
+                      <ColorButtonLightBlue
+                        size="medium"
+                        variant="outlined"
+                        onClick={ignoreInvite}
+                        data-cy={`IgnoreInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                        id={`IgnoreInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                      >
+                        Ignore
+                      </ColorButtonLightBlue>
+                    </CardActions>
+                  </Box>
+                </>
+              </Card>
+            </Box>
+          </div>
+        </ThemeProvider>
+      ) : null}
+    </>
   );
 };
 
 ReceivedInvitationCard.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
   receivedInvitationUserID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };

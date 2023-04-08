@@ -10,6 +10,7 @@ import { PropTypes } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import Stack from "@mui/material/Stack";
 import {
   Dialog,
   DialogActions,
@@ -17,6 +18,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 
@@ -58,7 +60,11 @@ const ColorButtonRed = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const NetworkCards = ({ connectedUserID, currentUser }) => {
+export const NetworkCards = ({
+  allUserProfiles,
+  connectedUserID,
+  currentUser,
+}) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
 
@@ -90,110 +96,134 @@ export const NetworkCards = ({ connectedUserID, currentUser }) => {
   };
 
   useEffect(() => {
-    const getConnectedUsers = async () => {
-      try {
-        const docSnap = await getDoc(doc(db, "userProfiles", connectedUserID));
-        const userData = docSnap.data();
-        setConnectedUser(userData);
-        console.log("NetworkCards");
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getConnectedUsers();
-  }, []);
+    // console.log(connectedUserID);
+    // console.log(allUserProfiles);
+    const findConnectUserProfile = allUserProfiles.find(
+      (el) => el.id === connectedUserID
+    );
+    // console.log(findConnectUserProfile);
+    setConnectedUser(findConnectUserProfile);
+  }, [allUserProfiles, connectedUserID]);
 
   return (
-    <ThemeProvider theme={theme2}>
-      <div>
-        <Box sx={{ width: 300, minWidth: 100 }}>
-          <Card variant="outlined" sx={{ p: 1 }} data-cy="userProfileInNetwork">
-            <>
-              <CardHeader
-                avatar={
-                  //source will be the user's image
-                  <Avatar
-                    aria-label="user"
-                    sx={{ width: 56, height: 56 }}
-                    src={connectedUser.values.image}
-                  />
-                }
-                //title will be the user's name and subheader is their bio
-                title={
-                  connectedUser.values.firstName !== "" &&
-                  connectedUser.values.lastName !== ""
-                    ? `${connectedUser.values.firstName} ${connectedUser.values.lastName}`
-                    : "No name"
-                }
-                subheader={
-                  //remove != null when incomplete users are removed
-                  connectedUser.values.description !== "" &&
-                  connectedUser.values.description != null
-                    ? `${connectedUser.values.description}`
-                    : "No bio"
-                }
-              />
-              {/*moves the buttons to the right*/}
-              <Box display="flex" flexDirection="column">
-                <CardActions>
-                  {/*view profile will go to the user's profile and message will be sent to the */}
-                  <Link
-                    to={`/editProfile/${connectedUser.values.firstName}${connectedUser.values.lastName}`}
-                    state={{ userID: connectedUserID }}
-                  >
-                    <ColorButtonBlue size="medium">
-                      View Profile
-                    </ColorButtonBlue>
-                  </Link>
-                  <ColorButtonLightBlue variant="outlined">
-                    Message
-                  </ColorButtonLightBlue>
-                  {/* import PersonRemoveIcon from '@mui/icons-material/PersonRemove'; use this icon instead of the button */}
-                  <ColorButtonRed
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {connectedUser ? (
+        <ThemeProvider theme={theme2}>
+          <div>
+            <Box sx={{ width: 300, minWidth: 100 }}>
+              <Card
+                variant="outlined"
+                sx={{ p: 1 }}
+                data-cy="userProfileInNetwork"
+              >
+                <>
+                  <Stack direction="row" justifyContent="space-between">
+                    <CardHeader
+                      avatar={
+                        //source will be the user's image
+                        <Avatar
+                          aria-label="user"
+                          sx={{ width: 56, height: 56 }}
+                          src={connectedUser.values.image}
+                        />
+                      }
+                      //title will be the user's name and subheader is their bio
+                      title={
+                        connectedUser.values.firstName !== "" &&
+                        connectedUser.values.lastName !== ""
+                          ? `${connectedUser.values.firstName} ${connectedUser.values.lastName}`
+                          : "No name"
+                      }
+                      subheader={
+                        //remove != null when incomplete users are removed
+                        connectedUser.values.description !== "" &&
+                        connectedUser.values.description != null
+                          ? connectedUser.values.description.length <= 24
+                            ? `${connectedUser.values.description}`
+                            : `${connectedUser.values.description.substring(
+                                0,
+                                21
+                              )} ...`
+                          : "No bio"
+                      }
+                    />
+                    <Button onClick={handleClickOpen}>
+                      <PersonRemoveIcon />
+                    </Button>
+                  </Stack>
+
+                  {/*moves the buttons to the right*/}
+                  <Box display="flex" flexDirection="column">
+                    <CardActions>
+                      {/*view profile will go to the user's profile and message will be sent to the */}
+                      <Link
+                        to={`/editProfile/${connectedUser.values.firstName}${connectedUser.values.lastName}`}
+                        state={{ userID: connectedUserID }}
+                      >
+                        <ColorButtonBlue size="medium" sx={{ mx: 1 }}>
+                          View Profile
+                        </ColorButtonBlue>
+                      </Link>
+                      {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
+                      <ColorButtonLightBlue variant="outlined">
+                        Message
+                      </ColorButtonLightBlue>
+                      {/* </Link> */}
+
+                      {/* import PersonRemoveIcon from '@mui/icons-material/PersonRemove'; use this icon instead of the button */}
+                      {/* <ColorButtonRed
                     size="medium"
                     variant="outlined"
                     onClick={handleClickOpen}
                   >
                     Remove Connection
-                  </ColorButtonRed>
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      Remove{" "}
-                      {`${connectedUser?.values?.firstName ?? ""} ${
-                        connectedUser?.values?.lastname ?? ""
-                      }`}
-                      from your connections?
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        The user will not be notified that you have removed him
-                        from your connections
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={removeConnection} autoFocus>
-                        Remove user
-                      </Button>
-                      <Button onClick={handleClose}>Cancel</Button>
-                    </DialogActions>
-                  </Dialog>
-                </CardActions>
-              </Box>
-            </>
-          </Card>
-        </Box>
-      </div>
-    </ThemeProvider>
+                  </ColorButtonRed> */}
+
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          Remove{" "}
+                          {`${connectedUser?.values?.firstName ?? ""} ${
+                            connectedUser?.values?.lastname ?? ""
+                          }`}
+                          from your connections?
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            The user will not be notified that you have removed
+                            him from your connections
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose}>Cancel</Button>
+                          <Button
+                            onClick={removeConnection}
+                            autoFocus
+                            style={{ color: "red" }}
+                          >
+                            Remove user
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </CardActions>
+                  </Box>
+                </>
+              </Card>
+            </Box>
+          </div>
+        </ThemeProvider>
+      ) : null}
+    </>
   );
 };
 
 NetworkCards.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
   connectedUserID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
