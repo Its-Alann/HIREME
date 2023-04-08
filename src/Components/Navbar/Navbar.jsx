@@ -28,8 +28,6 @@ import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
 const pageNamesForApplicant = ["Home", "Network", "Jobs", "Messaging"];
-const pageNamesForAdmin = [];
-
 const pageNamesForRecruiter = [
   "Home",
   "Network",
@@ -58,11 +56,8 @@ const Navbar = () => {
           setUserData(userProfile.data());
           setUserIsConnected(true);
           const recruiter = await getDoc(doc(db, "recruiters2", user.uid));
-          const admin = await getDoc(doc(db, "admins", user.email));
           if (recruiter.exists()) {
             setPageNames(pageNamesForRecruiter);
-          } else if (admin.exists()) {
-            setPageNames(pageNamesForAdmin);
           } else {
             setPageNames(pageNamesForApplicant);
           }
