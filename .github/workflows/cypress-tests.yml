@@ -15,12 +15,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set Port Environment Variable
-        run: echo "CYPRESS_PORT=$(case ${{ matrix.spec }} in admin) echo 3000 ;; jobs) echo 3001 ;; recruiters) echo 3002 ;; ui) echo 3003 ;; users) echo 3004 ;; esac)" >> $GITHUB_ENV
       - name: Run Cypress Tests
-        uses: cypress-io/github-action@v5.6.1
+        uses: cypress-io/github-action@v5.4.0
         with:
-          start: npm start -- --port ${{ env.CYPRESS_PORT }}
-          wait-on: "http://localhost:${{ env.CYPRESS_PORT }}"
+          start: npm start -- --port 8000
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           spec: cypress/e2e/${{ matrix.spec }}
