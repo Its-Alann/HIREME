@@ -12,7 +12,7 @@ describe("Login to test account", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 });
 
@@ -52,7 +52,7 @@ describe("Reports messages", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 
   it("reports the messages that the user has sent", () => {
@@ -94,7 +94,7 @@ describe("Admin Features", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 
   it("clicks on the 3 buttons", () => {

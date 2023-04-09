@@ -67,7 +67,6 @@ describe("Test the navbar component", () => {
       //verify link
       // cy.url().should("eq", "http://localhost:3000/network");
 
-
       // //open menu
       // cy.get('[data-cy="phone-menu-test"]').within(() =>
       //  cy.get("Button").click()
@@ -170,7 +169,7 @@ describe("Test the navbar component", () => {
       cy.get("input").tab();
       cy.get(".MuiButton-contained").click();
       // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(1000);
+      cy.wait(3000);
     });
 
     it("clicks on home", () => {
