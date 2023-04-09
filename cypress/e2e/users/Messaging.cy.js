@@ -30,7 +30,7 @@ describe("example to-do app", () => {
 
       //send Hi message
       cy.get("#message-input").should("be.visible").type("Hi");
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get("#message-chats").last().should("contain", "Hi");
       cy.wait(1000);
 
@@ -58,7 +58,7 @@ describe("example to-do app", () => {
         .find("input")
         .selectFile(fileName, { force: true });
 
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get('[data-testid="messageListItem"]')
         .last()
         .get('[data-testid="attachment"]')
