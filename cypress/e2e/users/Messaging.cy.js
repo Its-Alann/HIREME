@@ -17,11 +17,13 @@ describe("example to-do app", () => {
     it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(500);
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
       cy.login(messagingTestAccountUid);
       cy.visit("http://localhost:3000/messaging");
+      32;
 
       //open first conversation and checks if it's visible
       cy.get(".convo-list > .MuiList-root > :nth-child(1)")
