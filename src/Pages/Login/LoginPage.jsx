@@ -138,7 +138,12 @@ const LoginPage = () => {
             )}
 
             <Stack justifyContent="center" spacing={1}>
-              <Link align="center" href="/" variant="subtitle2">
+              <Link
+                align="center"
+                href="/resetPassword"
+                variant="subtitle2"
+                data-testid="forgotPassword"
+              >
                 Forgot password?
               </Link>
             </Stack>
