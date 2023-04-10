@@ -19,9 +19,9 @@ import {
   query,
   where,
   getDocs,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
-import { useParams,Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
@@ -61,47 +61,54 @@ export const CreateJob = () => {
     });
 
     // Query the DB to get the job ID
-    const q1 = query(collection(db,"jobs2"), where("title", "==", jobInformation.title), where("companyID", "==", jobInformation.companyID), where("publishedAt", "==", jobInformation.publishedAt));
+    const q1 = query(
+      collection(db, "jobs2"),
+      where("title", "==", jobInformation.title),
+      where("companyID", "==", jobInformation.companyID),
+      where("publishedAt", "==", jobInformation.publishedAt)
+    );
     const jobIDSnapshots = await getDocs(q1);
     let jobID = "";
-    jobIDSnapshots.forEach( (doc) => {
-       jobID = doc.id; 
-    })
+    // eslint-disable-next-line no-shadow
+    jobIDSnapshots.forEach((doc) => {
+      jobID = doc.id;
+    });
 
     // Retrieve user information in order to properly create job suggestion notifications
     const titleArray = jobInformation.title.split(" ");
     const notificationsRef = collection(db, "notifications");
-    const currentDate = new Date();
 
-    for(let i = 0; i < titleArray.length; i += 1)
-    {
-      const q = query(notificationsRef, where("field", ">=", titleArray[i]), where("field", "<=", `${titleArray[i]}\uf7ff`));
-      const notificationSnapshots = await getDocs(q);
+    const currentDate = new Date();
+    for (let i = 0; i < titleArray.length; i += 1) {
+      const q = query(
+        notificationsRef,
+        where("field", ">=", titleArray[i]),
+        where("field", "<=", `${titleArray[i]}\uf7ff`)
+      );
+      const notificationSnapshots = getDocs(q);
+      // eslint-disable-next-line no-loop-func
       notificationSnapshots.forEach(async (document) => {
         try {
-          const notificationDocRef = doc(
-            db,
-            "notifications",
-            document.id
-          );
-          // Check if user has notifications ON or OFF for jobs
-          const notificationJobSnapshot = await getDoc(
-            notificationDocRef
-          );
-          if(notificationJobSnapshot.data().notificationForJobs)
-          {
-            await updateDoc(notificationDocRef, {
-            notifications: arrayUnion(...[{
-              type: "jobs",
-              content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
-              timestamp: currentDate,
-              link: `viewJobPosting/${jobInformation.companyID}/${jobID}`
-            }])
-            })
+          const notificationDocRef = doc(db, "notifications", document.id);
+          const notificationJobSnapshot = getDoc(notificationDocRef);
+          if (notificationJobSnapshot.data().notificationForJobs) {
+            updateDoc(notificationDocRef, {
+              notifications: arrayUnion(
+                ...[
+                  {
+                    type: "jobs",
+                    content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
+                    timestamp: currentDate,
+                    link: `viewJobPosting/${jobInformation.companyID}/${jobID}`,
+                  },
+                ]
+              ),
+            });
           }
-        }catch (error) {
+        } catch (error) {
           console.log(error);
-        }});
+        }
+      });
     }
   }
 
