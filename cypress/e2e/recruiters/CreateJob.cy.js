@@ -29,17 +29,14 @@ describe("Creates a new job", () => {
     cy.get("#TextField-Description").type("Tester Job Description");
     cy.get("#TextField-Requirement").type("Tester Job Requirement");
     cy.get("#TextField-Benefits").type("Tester Job Benefits");
-    // somehow cannot get date picker by id
-    // cy.get("#DatePicker-Deadline").click();
-    cy.get(
-      ":nth-child(11) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(12) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(13) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
+    cy.get('[data-testid="CalendarIcon"]').click();
+    cy.get("button").contains("28").click();
+    cy.get('[name="thirdPartyCheck"]').check();
+    cy.get("#TextField-thirdParty").type("https://www.glassdoor.com");
+    cy.get('[name="thirdPartyCheck"]').uncheck();
+    cy.get('[name="resumeCheck"]').check();
+    cy.get('[name="coverCheck"]').check();
+    cy.get('[name="transcriptCheck"]').check();
     cy.get("#Button-Save").click();
     cy.wait(1000);
   });
@@ -51,11 +48,7 @@ describe("Delete the new job", () => {
     cy.wait(2000);
     cy.get('[data-cy="My Jobs-test"]').click();
     cy.wait(2000);
-    cy.get(
-      ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
-    )
-      .first()
-      .click();
+    cy.get('[data-cy="viewJob"]').first().click();
     cy.get(".css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)").click();
     cy.get(".css-847nqu-MuiButtonBase-root-MuiButton-root").click();
     cy.wait(500);
