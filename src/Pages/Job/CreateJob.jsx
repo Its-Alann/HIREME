@@ -283,7 +283,15 @@ export const CreateJob = () => {
                 <Checkbox
                   name="thirdPartyCheck"
                   checked={thirdPartyLink}
-                  onChange={() => setThirdPartyLink(!thirdPartyLink)}
+                  onChange={() => {
+                    if (thirdPartyLink) {
+                      setJobInformation({
+                        ...jobInformation,
+                        link: "",
+                      });
+                    }
+                    setThirdPartyLink(!thirdPartyLink);
+                  }}
                 />
               }
               label="This application requires a link to a third party website for application"
@@ -292,9 +300,9 @@ export const CreateJob = () => {
             {thirdPartyLink && (
               <TextField
                 required
-                id="TextField-Title"
+                id="TextField-thirdParty"
                 variant="standard"
-                placeholder="www.glassdoor.com"
+                placeholder="https://www.glassdoor.com"
                 fullWidth
                 value={jobInformation.link}
                 onChange={(e) =>
@@ -322,6 +330,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="resumeCheck"
                   checked={jobInformation.resume}
                   onChange={(e) =>
                     setJobInformation({
@@ -340,6 +349,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="coverCheck"
                   checked={jobInformation.coverLetter}
                   onChange={(e) =>
                     setJobInformation({
@@ -358,6 +368,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="transcriptCheck"
                   checked={jobInformation.transcript}
                   onChange={(e) =>
                     setJobInformation({
