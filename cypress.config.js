@@ -5,7 +5,6 @@ const admin = require("firebase-admin");
 const webpackPreprocessor = require("@cypress/webpack-preprocessor");
 
 module.exports = defineConfig({
-  projectId: '3grtfc',
   chromeWebSecurity: false,
   video: false,
   screenshotOnRunFailure: false,
