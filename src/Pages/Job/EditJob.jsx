@@ -307,6 +307,7 @@ export const EditJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="resumeCheck"
                   checked={jobInformation.resume}
                   onChange={(e) =>
                     setJobInformation({
@@ -325,6 +326,7 @@ export const EditJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="coverCheck"
                   checked={jobInformation.coverLetter}
                   onChange={(e) =>
                     setJobInformation({
@@ -343,6 +345,7 @@ export const EditJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="transcriptCheck"
                   checked={jobInformation.transcript}
                   onChange={(e) =>
                     setJobInformation({
