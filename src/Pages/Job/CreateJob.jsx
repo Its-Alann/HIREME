@@ -76,19 +76,19 @@ export const CreateJob = () => {
 
     // Retrieve user information in order to properly create job suggestion notifications
     const titleArray = jobInformation.title.split(" ");
-    const notificationsRef = collection(db, "notifications");
+    const userProfileRef = collection(db, "notifications");
     const currentDate = new Date();
 
     for (let i = 0; i < titleArray.length; i += 1) {
       const q = query(
-        notificationsRef,
+        userProfileRef,
         where("field", ">=", titleArray[i]),
         where("field", "<=", `${titleArray[i]}\uf7ff`)
       );
       // eslint-disable-next-line no-await-in-loop
-      const notificationSnapshots = await getDocs(q);
+      const userProfileSnapShot = await getDocs(q);
       // eslint-disable-next-line no-loop-func
-      notificationSnapshots.forEach(async (document) => {
+      userProfileSnapShot.forEach(async (document) => {
         try {
           console.log(`Sending notification to ${document.id}`);
           const notificationDocRef = doc(db, "notifications", document.id);
