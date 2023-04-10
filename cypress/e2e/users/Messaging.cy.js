@@ -23,7 +23,6 @@ describe("example to-do app", () => {
       //CONDITION: USER MUST HAVE A CONVERSATION
       cy.login(messagingTestAccountUid);
       cy.visit("http://localhost:3000/messaging");
-      32;
 
       //open first conversation and checks if it's visible
       cy.get(".convo-list > .MuiList-root > :nth-child(1)")
