@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
 import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
 import { db } from "../../Firebase/firebase";
 
@@ -61,22 +61,50 @@ export const PossibleConnectionCard = ({
         "notifications",
         possibleConnectionUserId
       );
-      const userReceivingInvitationNotificationsSnap = await getDoc(
+      let userReceivingInvitationNotificationsSnap = await getDoc(
         userReceivingInvitationNotificationsRef
       );
+
+      // Check if the document exists
+      if (userReceivingInvitationNotificationsSnap.exists()) {
+        console.log("Notification document exists for this user");
+      } else {
+        console.log("Notification document exists for this user");
+        console.log("Creating notification document for this user!");
+        console.log(possibleConnectionUserId);
+        // Add user email to notifications collection
+        await setDoc(doc(db, "notifications", possibleConnectionUserId), {
+          notifications: [],
+          // eslint-disable-next-line no-undef
+          field: "",
+          notificationForJobs: true,
+          notificationForConnections: true,
+        });
+        userReceivingInvitationNotificationsSnap = await getDoc(
+          userReceivingInvitationNotificationsRef
+        );
+      }
       // Check if the user receiving the notification has the setting turned on
-      if(userReceivingInvitationNotificationsSnap.data().notificationForConnections === true)
-      {
+      if (
+        userReceivingInvitationNotificationsSnap.data()
+          .notificationForConnections === true
+      ) {
         const currentUserRef = doc(db, "userProfiles", currentUser);
         const currentUserSnap = await getDoc(currentUserRef);
         const currentDate = new Date();
         await updateDoc(userReceivingInvitationNotificationsRef, {
-        notifications: arrayUnion(...[{
-          type: "connections",
-          content: `Invitation sent from: ${currentUserSnap.data().values.firstName} ${currentUserSnap.data().values.lastName}`,
-          timestamp: currentDate,
-        }])
-        })
+          notifications: arrayUnion(
+            ...[
+              {
+                type: "connections",
+                content: `Invitation sent from: ${
+                  currentUserSnap.data().values.firstName
+                } ${currentUserSnap.data().values.lastName}`,
+                timestamp: currentDate,
+              },
+            ]
+          ),
+        });
       }
       window.location.reload();
     } catch (error) {
