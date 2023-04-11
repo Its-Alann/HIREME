@@ -16,6 +16,8 @@ const HomePage = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const [firstName, setFirstName] = useState("");
 
   const checkFormCompletion = async (email) => {
@@ -27,6 +29,17 @@ const HomePage = () => {
     }
   };
 
+  const checkAdmin = async (email) => {
+    const adminRef = doc(db, "admins", email);
+    const docSnap = await getDoc(adminRef);
+    console.log("aaaadmin", docSnap);
+    if (docSnap.exists()) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
@@ -35,6 +48,8 @@ const HomePage = () => {
         // console.log("email", email);
         setUser(uid);
         checkFormCompletion(email);
+        console.log("useEffect", email);
+        checkAdmin(email);
       } else {
         setUser(null);
       }
@@ -118,28 +133,58 @@ const HomePage = () => {
                     Welcome Back {firstName}!{" "}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} alignItems="center">
-                  <Typography variant="h6"> Done for the day? </Typography>
-                  <Button
-                    id="signout"
-                    data-testid="homeLink"
-                    variant="contained"
-                    sx={{
-                      mt: 3,
-                      mb: 2,
-                      py: 1,
-                      minWidth: 1 / 4,
-                      maxWidth: 1 / 2,
-                    }}
-                    color="primary"
-                    onClick={handleSignOut}
-                  >
-                    Sign Out
-                  </Button>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <div>
+                    <Typography variant="h6"> Done for the day? </Typography>
+                    <Button
+                      fullWidth
+                      id="signout"
+                      data-testid="homeLink"
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2, py: 1 }}
+                      color="primary"
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </Button>
+                    {isAdmin === true ? (
+                      <Button
+                        fullWidth
+                        id="signout"
+                        data-testid="homeLink"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = "/admin/flaggedMessages";
+                        }}
+                      >
+                        Admin Page
+                      </Button>
+                    ) : (
+                      <Typography> </Typography>
+                    )}
+                  </div>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} alignItems="center">
-                  {formCompleted === false ? (
-                    <>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  display="flex"
+                  alignItems="center"
+                >
+                  {isAdmin === true ? (
+                    <Typography> </Typography>
+                  ) : formCompleted === false ? (
+                    <div>
                       <Typography variant="h6">
                         Looks like you&apos;re new!
                       </Typography>
@@ -189,15 +234,19 @@ const HomePage = () => {
                     </>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} alignItems="center">
-                  <Link
-                    onClick={() => {
-                      window.location.href = "/createRecruiter";
-                    }}
-                  >
-                    I&apos;m a recruiter
-                  </Link>
-                </Grid>
+                <div>
+                  {isAdmin === true ? (
+                    <Typography> </Typography>
+                  ) : (
+                    <Link
+                      onClick={() => {
+                        window.location.href = "/createRecruiter";
+                      }}
+                    >
+                      I&apos;m a recruiter
+                    </Link>
+                  )}
+                </div>
               </Grid>
             </Grid>
           ) : (

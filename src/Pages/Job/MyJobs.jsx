@@ -13,87 +13,85 @@ import {
   documentId,
   where,
 } from "firebase/firestore";
-import JobCard from "../../Components/Jobs/JobCard";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import { db, auth } from "../../Firebase/firebase";
 
 export const MyJobs = () => {
-  const [myJobsID, setMyJobsID] = React.useState([]);
+  const [myJobs, setMyJobs] = React.useState([]);
   const [jobs, setJobs] = React.useState([]);
   const [companyName, setCompanyName] = React.useState("");
   const [cursorPosition, setCursorPosition] = React.useState(0);
   const [companyLogo, setCompanyLogo] = React.useState("");
 
   const jobsPerPage = 4;
-
-  // Go to the recruiter, and get his company
-  // Then get all the job id under company
-  async function getMyJobsID() {
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
-    const recruiterSnapshot = await getDoc(recruiterRef);
-    if (recruiterSnapshot.exists()) {
-      const companyID = recruiterSnapshot.data().workFor;
-      if (companyID) {
-        const companyRef = doc(db, "companies", companyID);
-        const companySnapshot = await getDoc(companyRef);
-        const companyInformation = companySnapshot.data();
-        const tempArray = [...companyInformation.jobs];
-
-        // Sort the list of jobID based on the publishedAt, newest first
-        tempArray.sort((a, b) => {
-          if (a.publishedAt.seconds === b.publishedAt.seconds) {
-            return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds
-              ? 1
-              : -1;
-          }
-          return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
-        });
-
-        setMyJobsID(tempArray);
-        setCompanyName(companyInformation.name);
-        setCompanyLogo(companyInformation.logoPath);
-      }
-    }
-  }
   // Using the list of jobsID & the cursor position
   // determine 5 jobID
   // Then query jobs whose ID within the 5 jobID
   async function getJobs() {
-    if (cursorPosition >= myJobsID.length) {
+    if (cursorPosition >= myJobs.length) {
       return;
     }
-    const tempJobIDList = [];
+    const tempJobList = [];
     for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
-      if (i >= myJobsID.length) {
+      if (i >= myJobs.length) {
         break;
       }
-      tempJobIDList.push(myJobsID[i].jobID);
+      tempJobList.push(myJobs[i]);
     }
+    setJobs(tempJobList);
+  }
 
-    const jobsQuery = query(
-      collection(db, "jobs"),
-      where(documentId(), "in", tempJobIDList)
+  // Go to the recruiter, and get his list of jobs he posted
+  async function getMyJobs() {
+    const jobQuery = query(
+      collection(db, "jobs2"),
+      where("owner", "==", auth.currentUser.uid)
     );
+    const jobsSnapshot = await getDocs(jobQuery);
+    const tempArray = jobsSnapshot.docs.map((job) => ({
+      id: job.id,
+      ...job.data(),
+    }));
 
-    const jobsSnapshot = await getDocs(jobsQuery);
-
-    const temp = [];
-    jobsSnapshot.docs.forEach((document) => {
-      temp.push({ ...document.data(), documentID: document.id });
-    });
-
-    // Sort the list of jobs based on the publishedAt, newest first
-    temp.sort((a, b) => {
+    // Sort the list of jobID based on the publishedAt, newest first
+    tempArray.sort((a, b) => {
       if (a.publishedAt.seconds === b.publishedAt.seconds) {
         return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
       }
       return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
     });
-    setJobs(temp);
+    // console.log(tempArray);
+    setMyJobs(tempArray);
+
+    await getJobs();
+  }
+
+  // Get companies' name using the companyID of each Job
+  // And store them.
+  // If the companies' name has already been stored, skip
+  function getCompaniesName() {
+    const temp = companiesName;
+    const temp2 = companiesLogo;
+
+    jobs.forEach(async (job) => {
+      const companyRef = doc(db, "companies2", job.companyID);
+      const companySnapshot = await getDoc(companyRef);
+      if (!temp[job.companyID]) {
+        temp[job.companyID] = "querying";
+        temp[job.companyID] = companySnapshot.data().name;
+        setCompaniesName({ ...temp });
+      }
+      if (companySnapshot.data().logoPath === "") {
+        temp2[job.companyID] =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      setCompaniesLogo({ ...temp2 });
+    });
   }
 
   function setCursorToNextPosition() {
     const nextPosition = cursorPosition + jobsPerPage;
-    if (nextPosition >= myJobsID.length) {
+    if (nextPosition >= myJobs.length) {
       return;
     }
     setCursorPosition(nextPosition);
@@ -110,7 +108,7 @@ export const MyJobs = () => {
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        getMyJobsID();
+        getMyJobs();
       }
     });
   }, []);
@@ -118,7 +116,12 @@ export const MyJobs = () => {
   // when cursor position change jobs to display
   React.useEffect(() => {
     getJobs();
-  }, [cursorPosition, myJobsID]);
+  }, [cursorPosition, myJobs]);
+
+  // when jobs change, get the companies names
+  React.useEffect(() => {
+    getCompaniesName();
+  }, [jobs]);
 
   // Uncomment this code to verify infinite loop of query
   // React.useEffect(() => {
@@ -136,29 +139,117 @@ export const MyJobs = () => {
   return (
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
-        <Typography variant="h4" sx={{ pb: 2 }}>
-          My Jobs
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="h4" sx={{ pb: 2 }}>
+            My Jobs
+          </Typography>
+          {/* button for recruiter's view */}
+          <Button
+            variant="contained"
+            size="medium"
+            sx={{ my: 1 }}
+            id="create-job"
+            data-cy="view"
+          >
+            <Link
+              to="/createJob"
+              className="link"
+              underline="none"
+              style={{ textDecoration: "none" }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                alignContent="center"
+                alignSelf="center"
+                justifyContent="space-between"
+              >
+                Create Job &nbsp;&nbsp;
+                <PostAddIcon sx={{ fontSize: "25px" }} />
+              </Stack>
+            </Link>
+          </Button>
+        </Stack>
         <Typography>
           This Page list all jobs belong to me, {jobsPerPage} per page. Only I
           should be able to see the page.
         </Typography>
+        {jobs.map((job) => {
+          // Anti eslint
+          const hello = "hello";
 
-        {jobs.map((job) => (
-          <JobCard
-            key={`JobCard-${job.documentID}`}
-            companyID={job.companyID}
-            companyName={companyName}
-            jobID={job.documentID}
-            title={job.title}
-            city={job.city}
-            country={job.country}
-            deadlineSeconds={job.deadline.seconds}
-            deadlineNanoSeconds={job.deadline.nanoseconds}
-            logo={companyLogo}
-            editable
-          />
-        ))}
+          // do this to show what is inside job
+          // console.log(job);
+          return (
+            <Box key={job.documentID} sx={{ py: 1 }}>
+              <Card variant="outlined">
+                <Box sx={{ m: 3 }}>
+                  <Stack direction="row" alignItems="center">
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo[job.companyID]}
+                    />
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Typography>{`${job.city}, ${job.country}`}</Typography>
+                    </Box>
+                  </Stack>
+
+                  {/* <Link
+                    to={{
+                      pathname: `/editJob/${job.documentID}`,
+                    }}
+                  >
+                    <Button id={`Button-Edit-${job.documentID}`}>Edit</Button>
+                  </Link> */}
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-end"
+                    sx={{ pt: 2 }}
+                  >
+                    {/* button for recruiter's view */}
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ my: 1 }}
+                      id={`Button-${job.documentID}`}
+                      data-cy="view"
+                    >
+                      <Link
+                        to={`/viewJobPostingApplicants/${job.companyID}/${job.id}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job
+                      </Link>
+                    </Button>
+                    <Typography>
+                      Deadline:{" "}
+                      {new Date(
+                        job.deadline.seconds * 1000 +
+                          job.deadline.nanoseconds / 1000000
+                      ).toDateString()}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Card>
+            </Box>
+          );
+        })}
         <Button
           id="Button-Previous"
           onClick={() => setCursorToPreviousPosition()}

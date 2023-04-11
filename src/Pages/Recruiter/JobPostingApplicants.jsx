@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -7,7 +7,6 @@ import {
   Button,
   Modal,
   Select,
-  Menu,
   MenuItem,
   Typography,
   IconButton,
@@ -29,11 +28,13 @@ import {
   getDoc,
   updateDoc,
   getDocs,
+  query,
+  where,
   collection,
 } from "firebase/firestore";
 import Grid from "@mui/material/Unstable_Grid2";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { db, auth } from "../../Firebase/firebase";
+import { db } from "../../Firebase/firebase";
 
 const style = {
   position: "absolute",
@@ -47,6 +48,7 @@ const style = {
 };
 
 export const JobPostingApplicants = () => {
+  const navigate = useNavigate();
   const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
 
@@ -55,60 +57,75 @@ export const JobPostingApplicants = () => {
   const [applicants, setApplicants] = useState([]);
 
   const [selectedApplicantStatus, setSelectedApplicantStatus] = useState("");
-  const [selectedApplicantId, setSelectedApplicantId] = useState("");
   const [selectedApplicantName, setSelectedApplicantName] = useState("");
+  const [selectedApplicantEmail, setSelectedApplicantEmail] = useState("");
+  const [selectedApplicantDocID, setSelectedApplicantDocID] = useState("");
   const [changedApplicationStatus, setChangedApplicationStatus] = useState("");
   const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const [open, setOpen] = useState(false);
+  const [checkedResume, setCheckedResume] = React.useState("");
+  const [checkedCoverLetter, setCheckedCoverLetter] = React.useState("");
+  const [checkedTranscript, setCheckedTranscript] = React.useState("");
+
   const [openRemoveJob, setOpenRemoveJob] = useState(false);
+  const tempArray2 = [];
 
-  const getApplicationStatuses = async (listOfApplicants) => {
-    //console.log(listOfApplicants);
+  const getApplicationStatuses = async () => {
+    const querySnapshot = await getDocs(
+      query(collection(db, "applications2"), where("jobID", "==", pageJobID))
+    );
 
-    const tempArray = [];
+    const tempArray = querySnapshot.docs.map((docJob) => ({
+      id: docJob.id,
+      applicantEmail: docJob.data().applicantEmail,
+      applicationStatus: docJob.data().status,
+    }));
 
-    if (listOfApplicants != null) {
+    if (applicants != null) {
       await Promise.all(
-        listOfApplicants.map(async (applicant) => {
-          const applicantSnapshot = await getDoc(
-            doc(db, "applications", applicant)
-          );
-          const applicantApplications = applicantSnapshot.data().jobs;
-
+        tempArray.map(async (applicant) => {
           const applicantNameSnapshot = await getDoc(
-            doc(db, "userProfiles", applicant)
+            doc(db, "userProfiles", applicant.applicantEmail)
           );
 
-          let applicationStatus = "";
-          applicantApplications.forEach((jobApplication) => {
-            if (jobApplication.jobID === pageJobID) {
-              applicationStatus = jobApplication.status;
-            }
-          });
-
-          tempArray.push({
-            applicantId: applicant,
-            applicantStatus: applicationStatus,
+          tempArray2.push({
+            applicantID: applicant.id,
+            applicantStatus: applicant.applicationStatus,
             applicantFirstName: applicantNameSnapshot.data().values.firstName,
             applicantLastName: applicantNameSnapshot.data().values.lastName,
+            applicantEmail: applicant.applicantEmail,
           });
         })
       );
     } else {
       console.log("no applicants");
     }
-    setApplicants(tempArray);
+
+    setApplicants(tempArray2);
   };
 
   const getJobData = async () => {
     try {
       // Gets the job data using the jobID from the URL
-      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID));
+      const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
       const jobData = jobsSnapshot.data();
       setJob(jobData);
-      //console.log(jobData);
-      await getApplicationStatuses(jobData.applicants);
+      if (jobData.resume === true) {
+        setCheckedResume("Required");
+      } else {
+        setCheckedResume("Optional");
+      }
+      if (jobData.coverLetter === true) {
+        setCheckedCoverLetter("Required");
+      } else {
+        setCheckedCoverLetter("Optional");
+      }
+      if (jobData.transcript === true) {
+        setCheckedTranscript("Required");
+      } else {
+        setCheckedTranscript("Optional");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -117,38 +134,28 @@ export const JobPostingApplicants = () => {
   const getCompanyName = async () => {
     try {
       // Gets the name of the company from the companyID in job data
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
+      const companySnapshot = await getDoc(
+        doc(db, "companies2", pageCompanyID)
+      );
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
+      if (companyData.logoPath === "") {
+        companyData.logoPath =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      }
+      setCompaniesLogo(companyData.logoPath);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // loads the logo of a company
-  async function loadLogoCompany() {
-    const querySnapshot = await getDoc(doc(db, "companies", pageCompanyID));
-    setCompaniesLogo(querySnapshot.data().logoPath);
-  }
-
-  useEffect(() => {
-    console.log(5);
-    Promise.all([getJobData(), getCompanyName()])
-      .then(() => {
-        console.log("Finished loading data");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    loadLogoCompany();
-  }, []);
-
   // Handle modal operations for remove job
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
-  const handleOpen = (status, id, name) => {
+  const handleOpen = (status, fName, lName, email, docID) => {
     setSelectedApplicantStatus(status);
-    setSelectedApplicantId(id);
-    setSelectedApplicantName(name);
+    setSelectedApplicantName(fName + lName);
+    setSelectedApplicantEmail(email);
+    setSelectedApplicantDocID(docID);
     setOpen(true);
   };
 
@@ -160,45 +167,41 @@ export const JobPostingApplicants = () => {
 
   const handleSubmit = async () => {
     setSelectedApplicantStatus(changedApplicationStatus);
+
     // 1. Get changed application status and applicant id
     const newApplicationStatus = changedApplicationStatus;
-    const applicantId = selectedApplicantId;
     const jobId = pageJobID;
+    const applicantEmail = selectedApplicantEmail;
+    const applicantDocID = selectedApplicantDocID;
 
-    // 2. Update doc
-    // Change database to directly update doc instead of iterate through the whole array
-    const applicantRef = doc(db, "applications", applicantId);
-    const applicantSnapshot = await getDoc(
-      doc(db, "applications", applicantId)
+    const querySnapshot = await getDocs(
+      query(
+        collection(db, "applications2"),
+        where("applicantEmail", "==", applicantEmail)
+      )
     );
-    const applicantApplications = applicantSnapshot.data().jobs;
-    console.log(applicantApplications);
+    querySnapshot.forEach(async (docApplicant) => {
+      let applicantApplications = docApplicant.data();
+      const applicationStatusToUpdate = {
+        address: applicantApplications.address,
+        applicantEmail,
+        email: applicantApplications.email,
+        jobID: jobId,
+        phoneNumber: applicantApplications.phoneNumber,
+        status: newApplicationStatus,
+      };
+      applicantApplications = applicationStatusToUpdate;
+      const applicantRef = doc(db, "applications2", applicantDocID);
 
-    // get index in array to update
-    const applicationIndex = applicantApplications.findIndex(
-      (jobIndex) => jobIndex.jobID === jobId
-    );
-
-    const applicationStatusToUpdate = {
-      address: applicantApplications[applicationIndex].address,
-      email: applicantApplications[applicationIndex].email,
-      jobID: jobId,
-      phoneNumber: applicantApplications[applicationIndex].phoneNumber,
-      status: newApplicationStatus,
-    };
-
-    applicantApplications[applicationIndex] = applicationStatusToUpdate;
-
-    await updateDoc(applicantRef, { jobs: applicantApplications })
-      .then(() => {
-        console.log("Array index updated successfully!");
-      })
-      .catch((error) => {
-        console.error("Error updating array index: ", error);
-      });
-
-    handleClose(); // close the modal
-    window.location.reload();
+      await updateDoc(applicantRef, applicantApplications)
+        .then(() => {
+          console.log("Status updated successfully!");
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error("Error updating status", error);
+        });
+    });
   };
 
   // Remove job dialog
@@ -211,94 +214,53 @@ export const JobPostingApplicants = () => {
   };
 
   // Remove job from backend
-  const removeJobFromJobs = async () => {
-    await deleteDoc(doc(db, "jobs", pageJobID));
-  };
+  const removeJobAndApplicants = async () => {
+    const jobId = pageJobID;
 
-  const removeJobFromCompany = async () => {
-    // Delete doc in companies where jobID = pageJobID
-    const companyRef = doc(db, "companies", pageCompanyID);
-    const companySnapshot = await getDoc(companyRef);
-    const companyData = companySnapshot.data().jobs;
-    const companyJobIndex = companyData.findIndex(
-      (jobIndex) => jobIndex.jobID === pageJobID
+    const querySnapshot = await getDocs(
+      query(collection(db, "applications2"), where("jobID", "==", jobId))
     );
-    if (companyJobIndex !== -1) {
-      companyData.splice(companyJobIndex, 1);
-      await updateDoc(companyRef, { jobs: companyData });
-    }
-  };
 
-  const removeJobFromRecruiter = async () => {
-    // Delete doc in recruiters
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
-    const recruiterSnapshot = await getDoc(recruiterRef);
-    const recruiterData = recruiterSnapshot.data().jobs;
-    const recruiterJobIndex = recruiterData.findIndex(
-      (jobIndex) => jobIndex.jobID === pageJobID
-    );
-    if (recruiterJobIndex !== -1) {
-      recruiterData.splice(recruiterJobIndex, 1);
-      await updateDoc(recruiterRef, { jobs: recruiterData });
-    }
-  };
-
-  const removeJobFromApplicants = async () => {
-    // Delete doc in applicants
-    const applicantsSnapshot = await getDocs(collection(db, "applications"));
-    const allApplicants = applicantsSnapshot.docs.map((document) => ({
-      id: document.id,
-      ...document.data(),
+    const tempArray = querySnapshot.docs.map((docJob) => ({
+      id: docJob.id,
     }));
 
-    allApplicants.forEach(async (applicant) => {
-      const listOfApplications = applicant.jobs;
-      const applicationJobIndex = listOfApplications.findIndex(
-        (jobIndex) => jobIndex.jobID === pageJobID
-      );
-      if (applicationJobIndex !== -1) {
-        const applicantRef = await doc(db, "applications", applicant.id);
-        listOfApplications.splice(applicationJobIndex, 1);
-        await updateDoc(applicantRef, { jobs: listOfApplications });
-      }
-    });
+    await Promise.all(
+      tempArray.map(async (docJob) => {
+        await deleteDoc(doc(db, "applications2", docJob.id));
+      })
+    );
+    await deleteDoc(doc(db, "jobs2", jobId));
+    navigate("/myJobs");
   };
 
-  const deleteJob = async () => {
-    removeJobFromJobs();
-    removeJobFromCompany();
-    removeJobFromRecruiter();
-    removeJobFromApplicants();
-  };
+  useEffect(() => {
+    Promise.all([getJobData(), getCompanyName(), getApplicationStatuses()])
+      .then(() => {
+        console.log("Finished loading data");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Grid container direction="row" alignItems="flex-start" justify="center">
       {/* Job information */}
       <Grid xs={12} sm={12} md={6}>
-        <Box sx={{ p: 5 }}>
-          <Card variant="outlined">
-            <Box sx={{ m: 2 }}>
-              <Box sx={{ pb: 2 }}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Grid
-                    container
-                    spacing={-0.5}
-                    direction="row"
-                    alignItems="center"
-                  >
-                    <Grid>
-                      {job.companyID === undefined ? (
-                        <Box
-                          component="img"
-                          sx={{
-                            // objectFit: "cover",
-                            width: "0.25",
-                            height: "0.25",
-                            mr: 2,
-                          }}
-                          src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FDefault_logo.png?alt=media&token=bd9790a2-63bb-4083-8c4e-fba1a8fca4a3"
-                        />
-                      ) : (
+        <Stack spacing={2}>
+          <Box sx={{ px: 5, pt: 5 }}>
+            <Card variant="outlined">
+              <Box sx={{ m: 2 }}>
+                <Box sx={{ pb: 2 }}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Grid
+                      container
+                      spacing={-0.5}
+                      direction="row"
+                      alignItems="center"
+                    >
+                      <Grid>
                         <Box
                           component="img"
                           sx={{
@@ -309,100 +271,122 @@ export const JobPostingApplicants = () => {
                           }}
                           src={companiesLogo}
                         />
-                      )}
-                    </Grid>
-                    <Grid>
-                      <Box xs={12} sm={12} md={6}>
-                        <Typography variant="h4">{job.title}</Typography>
-                        <Link to={`/viewCompany/${pageCompanyID}`}>
+                      </Grid>
+                      <Grid>
+                        <Box xs={12} sm={12} md={6}>
+                          <Typography
+                            variant="h4"
+                            sx={{
+                              maxWidth: "1000px",
+                              overflow: "hidden",
+                              whiteSpace: "normal",
+                              wordWrap: "break-word",
+                            }}
+                          >
+                            {job.title}
+                          </Typography>
                           <Typography sx={{ fontSize: 18 }}>
                             {companyName.name}
                           </Typography>
-                        </Link>
-                        <Typography sx={{ fontSize: 18 }}>
-                          {`${job.city}, ${job.country}`}
-                        </Typography>
-                      </Box>
+                          <Typography sx={{ fontSize: 18 }}>
+                            {`${job.city}, ${job.country}`}
+                          </Typography>
+                        </Box>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Box>
-                    <Link
-                      to={{
-                        pathname: `/editJob/${pageJobID}`,
-                      }}
-                    >
-                      <IconButton>
-                        <EditIcon />
+                    <Box>
+                      <Link
+                        to={{
+                          pathname: `/editJob/${pageJobID}`,
+                        }}
+                      >
+                        <IconButton>
+                          <EditIcon />
+                        </IconButton>
+                      </Link>
+                      <IconButton onClick={handleOpenRemoveJob}>
+                        <RemoveCircleOutlineIcon />
                       </IconButton>
-                    </Link>
-                    <IconButton onClick={handleOpenRemoveJob}>
-                      <RemoveCircleOutlineIcon />
-                    </IconButton>
-                  </Box>
-                </Stack>
+                    </Box>
+                  </Stack>
 
-                <Dialog
-                  open={openRemoveJob}
-                  onClose={handleCloseRemoveJob}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    Are you sure you would like to remove the job posting?
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      This job posting will be removed completely. All data
-                      related to this post will be erased.
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseRemoveJob}>Cancel</Button>
-                    <Link to="/myJobs" style={{ textDecoration: "none" }}>
+                  <Dialog
+                    open={openRemoveJob}
+                    onClose={handleCloseRemoveJob}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Are you sure you would like to remove the job posting?
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        This job posting will be removed completely. All data
+                        related to this post will be erased.
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseRemoveJob}>Cancel</Button>
                       <Button
                         sx={{ color: "red" }}
-                        onClick={deleteJob}
+                        onClick={removeJobAndApplicants}
                         autoFocus
                       >
                         Remove
                       </Button>
-                    </Link>
-                  </DialogActions>
-                </Dialog>
+                    </DialogActions>
+                  </Dialog>
 
-                {job.deadline && (
-                  <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
-                    {new Date(
-                      (job.deadline.seconds ?? 0) * 1000 +
-                        (job.deadline.nanoseconds ?? 0) / 1000000
-                    ).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      timeZone: "UTC",
-                    })}
-                  </Typography>
-                )}
+                  {job.deadline && (
+                    <Typography sx={{ fontSize: 16, color: "#8B8B8B" }}>
+                      {new Date(
+                        (job.deadline.seconds ?? 0) * 1000 +
+                          (job.deadline.nanoseconds ?? 0) / 1000000
+                      ).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "UTC",
+                      })}
+                    </Typography>
+                  )}
+                </Box>
+
+                <Divider />
+                <Stack spacing={2}>
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>About the job</Typography>
+                    <Typography>{job.description}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
+                    <Typography>{job.requirement}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                    <Typography>{job.benefits}</Typography>
+                  </Box>
+                </Stack>
+
+                <Divider />
+                <Stack spacing={2}>
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>Resume</Typography>
+                    <Typography>{checkedResume}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Cover Letter</Typography>
+                    <Typography>{checkedCoverLetter}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 20 }}>Transcript</Typography>
+                    <Typography>{checkedTranscript}</Typography>
+                  </Box>
+                </Stack>
               </Box>
-
-              <Divider />
-              <Stack spacing={2}>
-                <Box sx={{ pt: 2 }}>
-                  <Typography sx={{ fontSize: 20 }}>About the job</Typography>
-                  <Typography>{job.description}</Typography>
-                </Box>
-                <Box>
-                  <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
-                  <Typography>{job.requirement}</Typography>
-                </Box>
-                <Box>
-                  <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
-                  <Typography>{job.benefits}</Typography>
-                </Box>
-              </Stack>
-            </Box>
-          </Card>
-        </Box>
+            </Card>
+          </Box>
+        </Stack>
       </Grid>
 
       {/* List of applicants and their statuses */}
@@ -412,11 +396,9 @@ export const JobPostingApplicants = () => {
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
                 <Typography variant="h4">Applicants</Typography>
-
                 {applicants !== null && applicants.length > 0 ? (
                   applicants.map((applicant) => {
                     const hello = "hello";
-
                     return (
                       <Stack
                         display="flex"
@@ -437,8 +419,10 @@ export const JobPostingApplicants = () => {
                             onClick={() =>
                               handleOpen(
                                 applicant.applicantStatus,
-                                applicant.applicantId,
-                                `${applicant.applicantFirstName} ${applicant.applicantLastName}`
+                                applicant.applicantFirstName,
+                                applicant.applicantLastName,
+                                applicant.applicantEmail,
+                                applicant.applicantID
                               )
                             }
                           >

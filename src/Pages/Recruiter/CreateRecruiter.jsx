@@ -35,35 +35,22 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
   const [currentUserID, setCurrentUserID] = React.useState(null);
 
   async function handleSubmit() {
-    const companyRef = doc(db, "companies", recruiterInformation.workFor);
-    const companySnapshot = await getDoc(companyRef);
-    if (!companySnapshot.exists()) {
-      return;
-    }
-
-    const batch = writeBatch(db);
-    batch.set(doc(db, "recruiters", currentUserID), recruiterInformation);
-    batch.update(companyRef, {
-      employees: arrayUnion(currentUserID),
-    });
-    if (previousCompany) {
-      batch.update(doc(db, "companies", previousCompany), {
-        employees: arrayRemove(currentUserID),
-        managers: arrayRemove(currentUserID),
-      });
-    }
-    await batch.commit();
-    toggleNavbarUpdate();
+    console.log(auth.currentUser.uid);
+    await setDoc(
+      doc(db, "recruiters2", auth.currentUser.uid),
+      recruiterInformation
+    );
   }
 
   async function getCompanies() {
-    const companiesRef = collection(db, "companies");
+    const companiesRef = collection(db, "companies2");
     const companiesQuery = query(companiesRef);
     const queryResultSnapshot = await getDocs(companiesQuery);
     const tempCompanyList = [];
     queryResultSnapshot.forEach((document) => {
       tempCompanyList.push({ id: document.id, label: document.data().name });
     });
+    //console.log(tempCompanyList);
     setCompanyList(tempCompanyList);
   }
 
