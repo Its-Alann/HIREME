@@ -142,8 +142,6 @@ export const ReceivedInvitationCard = ({
         // Add user email to notifications collection
         await setDoc(doc(db, "notifications", receivedInvitationUserID), {
           notifications: [],
-          // eslint-disable-next-line no-undef
-          field: "",
           notificationForJobs: true,
           notificationForConnections: true,
         });

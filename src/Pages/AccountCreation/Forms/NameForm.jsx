@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import "./Forms.css";
 import ProfilePicture from "../../../Components/ProfileCards/ProfilePicture";
 
-const NameForm = ({ setFirstName, setLastName, setField, values }) => (
+const NameForm = ({ setFirstName, setLastName, setField, values, field }) => (
   <Grid
     container
     textAlign="center"
@@ -51,7 +51,7 @@ const NameForm = ({ setFirstName, setLastName, setField, values }) => (
           id="standard-required"
           placeholder="Desired Job Title"
           variant="standard"
-          value={values.field}
+          value={field}
           onChange={(e) => setField(e.target.value)}
         />
       </Grid>
@@ -68,6 +68,7 @@ NameForm.propTypes = {
     lastName: PropTypes.string.isRequired,
     field: PropTypes.string.isRequired,
   }).isRequired,
+  field: PropTypes.string.isRequired,
 };
 
 export default NameForm;

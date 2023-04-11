@@ -190,8 +190,6 @@ export const JobPostingApplicants = () => {
       // Add user email to notifications collection
       await setDoc(doc(db, "notifications", applicantEmail), {
         notifications: [],
-        // eslint-disable-next-line no-undef
-        field: "",
         notificationForJobs: true,
         notificationForConnections: true,
       });
