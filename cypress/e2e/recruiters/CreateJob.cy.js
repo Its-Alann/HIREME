@@ -31,6 +31,15 @@ describe("Creates a new job", () => {
     cy.get("#TextField-Benefits").type("Tester Job Benefits");
     // somehow cannot get date picker by id
     // cy.get("#DatePicker-Deadline").click();
+    cy.get(
+      ":nth-child(11) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
+    ).click();
+    cy.get(
+      ":nth-child(12) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
+    ).click();
+    cy.get(
+      ":nth-child(13) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
+    ).click();
     cy.get("#Button-Save").click();
     cy.wait(1000);
   });
@@ -40,7 +49,7 @@ describe("Delete the new job", () => {
   it("deletes the new created job", () => {
     cy.visit("http://localhost:3000/");
     cy.wait(2000);
-    cy.get('[data-cy="MyJobs-test"]').click();
+    cy.get('[data-cy="My Jobs-test"]').click();
     cy.wait(2000);
     cy.get(
       ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
@@ -48,6 +57,7 @@ describe("Delete the new job", () => {
       .first()
       .click();
     cy.get(".css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)").click();
-    cy.get(".MuiDialogActions-root > a > .MuiButtonBase-root").click();
+    cy.get(".css-847nqu-MuiButtonBase-root-MuiButton-root").click();
+    cy.wait(500);
   });
 });

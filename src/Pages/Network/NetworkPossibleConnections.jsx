@@ -1,125 +1,87 @@
 /* eslint-disable no-shadow */
 import React, { useEffect, useState } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import { getDoc, doc, collection, getDocs } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
-import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
 const theme = createTheme();
 
-export const NetworkPossibleConnections = () => {
-  const [connectedUsersId, setConnectedUsersId] = useState([]);
-  const [sentInvitationsId, setSentInvitationsId] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
+export const NetworkPossibleConnections = ({
+  allUserProfiles,
+  nonConnectedUsersID,
+  currentUserEmail,
+}) => {
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
+  const [allUsers, setAllUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
+  const [showingNonConnectedUsers, setShowingNonConnectedUsers] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
 
-  const getPossibleConnections = async (user) => {
-    // READ DATA
-    try {
-      if (!user || !user.email) {
-        return;
-      }
-      //get list of user connections of current user
-      console.log("getpossibleconnections", user.email);
-      const networkDocSnap = await getDoc(doc(db, "network", user.email));
-      if (networkDocSnap.exists()) {
-        console.log("exist", user.email);
-        const currentUserNetworkData = networkDocSnap.data();
-        setConnectedUsersId(currentUserNetworkData.connectedUsers);
+  const pageSize = 15;
 
-        //get list of users that the current user sent invitations to
-        const sentInvitationsDocSnap = await getDoc(
-          doc(db, "invitations", user.email)
-        );
-        const sentInvitationsData = sentInvitationsDocSnap.data();
-        setSentInvitationsId(sentInvitationsData.sentInvitations);
+  function paginate(arr, pageSize, pageNum) {
+    return arr.slice((pageNum - 1) * pageSize, pageNum * pageSize);
+  }
 
-        // get all users in userProfiles
-        const usersRef = collection(db, "userProfiles");
-        const data = await getDocs(usersRef);
-        const users = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setAllUsers(users);
-      }
-    } catch (err) {
-      console.error("err:", err);
-    }
+  const nextPage = () => {
+    setPageNumber(pageNumber + 1);
+  };
+
+  const prevPage = () => {
+    setPageNumber(pageNumber - 1);
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        //take you back to the homepage
-        //console.log(user);
-      }
-    });
-  }, []);
+    setShowingNonConnectedUsers(
+      paginate(nonConnectedUsersArr, pageSize, pageNumber)
+    );
+    console.log(showingNonConnectedUsers);
+  }, [pageNumber, nonConnectedUsersArr]);
 
   useEffect(() => {
-    getPossibleConnections(currentUser);
-    //console.log(currentUser);
-  }, [currentUser]);
+    //console.log(nonConnectedUsersID);
+    setNonConnectedUsersArr(nonConnectedUsersID);
+    setCurrentUser(currentUserEmail);
+  }, [nonConnectedUsersID]);
 
   useEffect(() => {
-    try {
-      //create a new array of users that isnt connected with the currentUser
-      const newNonConnectedUsersArr = allUsers.filter(
-        (user) =>
-          !connectedUsersId.includes(user.id) &&
-          !sentInvitationsId.includes(user.id) &&
-          currentUser.email !== user.id
-      );
-      setNonConnectedUsersArr(newNonConnectedUsersArr);
-      //console.log(newNonConnectedUsersArr);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [connectedUsersId, sentInvitationsId, allUsers, currentUser]);
+    setAllUsers(allUserProfiles);
+    // console.log(paginate(nonConnectedUsersArr, pageSize, pageNumber));
+  }, [allUserProfiles]);
 
   return (
-    <div style={{ backgroundColor: "#EAEAEA", height: "100vh" }}>
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xxl" sx={{ m: 2 }}>
-          <Typography variant="h4" gutterBottom sx={{ ml: 10, my: 5 }}>
-            People you may know
-          </Typography>
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xxl">
+        <Stack alignItems="center">
           <Box
             justifyContent="center"
             alignItems="center"
             display="flex"
             data-cy="connectionsBox"
           >
-            {nonConnectedUsersArr?.length > 0 &&
-            nonConnectedUsersArr != null ? (
+            {showingNonConnectedUsers?.length > 0 &&
+            showingNonConnectedUsers != null ? (
               <Grid
                 container
-                spacing={3}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
                 data-cy="connectionGrid"
               >
-                {nonConnectedUsersArr.map((possibleConnectionUser) => (
-                  <Grid
-                    item
-                    key={`PossibleConnectionCard${possibleConnectionUser.id}`}
-                  >
+                {showingNonConnectedUsers.map((possibleConnectionUserID) => (
+                  <Grid item sx={{ m: 2 }}>
                     <PossibleConnectionCard
-                      possibleConnectionUserId={possibleConnectionUser.id}
-                      currentUser={currentUser.email}
-                      data-cy={`gridItem${possibleConnectionUser}`}
-                      id={`gridItem${possibleConnectionUser}`}
+                      allUserProfiles={allUsers}
+                      possibleConnectionUserId={possibleConnectionUserID.id}
+                      currentUser={currentUser}
+                      data-cy={`gridItem${possibleConnectionUserID}`}
+                      id={`gridItem${possibleConnectionUserID}`}
                     />
                   </Grid>
                 ))}
@@ -128,10 +90,37 @@ export const NetworkPossibleConnections = () => {
               <Typography>No connections yet :/</Typography>
             )}
           </Box>
-        </Container>
-      </ThemeProvider>
-    </div>
+          {nonConnectedUsersArr?.length > pageSize ? (
+            <Box sx={{ mt: 2 }}>
+              <Button
+                id="Button-Previous"
+                onClick={prevPage}
+                disabled={pageNumber === 1}
+              >
+                Prev
+              </Button>
+              <Button
+                id="Button-Next"
+                onClick={nextPage}
+                disabled={
+                  pageNumber ===
+                  Math.ceil(nonConnectedUsersArr.length / pageSize)
+                }
+              >
+                Next
+              </Button>
+            </Box>
+          ) : null}
+        </Stack>
+      </Container>
+    </ThemeProvider>
   );
+};
+
+NetworkPossibleConnections.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  nonConnectedUsersID: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  currentUserEmail: PropTypes.string.isRequired,
 };
 
 export default NetworkPossibleConnections;

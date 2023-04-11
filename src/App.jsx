@@ -35,6 +35,7 @@ import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
+import ResetPassword from "./Pages/Login/ResetPassword";
 
 const App = () => {
   const theme = createTheme({
@@ -133,6 +134,7 @@ const App = () => {
               exact
               element={<ViewProfile />}
             />
+            <Route path="/resetPassword" exact element={<ResetPassword />} />
           </Routes>
         </Router>
       </div>

@@ -5,7 +5,10 @@ import {
   TextField,
   Container,
   Stack,
+  Divider,
 } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -24,7 +27,6 @@ export const EditJob = () => {
     companyID: "",
     deadline: new Date(),
     description: "",
-    location: "",
     owner: "",
     country: "",
     city: "",
@@ -32,12 +34,16 @@ export const EditJob = () => {
     requirement: "",
     title: "",
     benefits: "",
+    resume: "",
+    coverLetter: "",
+    transcript: "",
   });
   const [companyName, setCompanyName] = React.useState("");
 
   async function getJob() {
-    const jobRef = doc(db, "jobs", jobID);
+    const jobRef = doc(db, "jobs2", jobID);
     const jobSnapshot = await getDoc(jobRef);
+    console.log(jobSnapshot.data());
     if (jobSnapshot.exists()) {
       setJobInformation({
         ...jobSnapshot.data(),
@@ -50,7 +56,7 @@ export const EditJob = () => {
 
   async function getCompanyName() {
     if (jobInformation.companyID) {
-      const companyRef = doc(db, "companies", jobInformation.companyID);
+      const companyRef = doc(db, "companies2", jobInformation.companyID);
       const companySnapshot = await getDoc(companyRef);
       if (companySnapshot.exists()) {
         setCompanyName(companySnapshot.data().name);
@@ -61,7 +67,7 @@ export const EditJob = () => {
   }
 
   async function handleSubmit() {
-    const jobRef = doc(db, "jobs", jobID);
+    const jobRef = doc(db, "jobs2", jobID);
     await updateDoc(jobRef, jobInformation);
   }
 
@@ -85,7 +91,7 @@ export const EditJob = () => {
           Edit Job
         </Typography>
         <Typography>
-          This Page shows a single Job@aposs information & allow the owner to
+          This Page shows a single Job&apos;s information & allow the owner to
           edit them
         </Typography>
 
@@ -172,24 +178,6 @@ export const EditJob = () => {
             </Box>
           </Stack>
 
-          {/* <Box>
-            <Typography>Location</Typography>
-            <TextField
-              required
-              id="TextField-Location"
-              variant="standard"
-              placeholder="Location"
-              fullWidth
-              value={jobInformation.location}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  location: e.target.value,
-                })
-              }
-            />
-          </Box> */}
-
           <Box>
             <Typography>Job description</Typography>
             <TextField
@@ -258,6 +246,69 @@ export const EditJob = () => {
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
+          </Box>
+          <Divider />
+
+          <Box>
+            <Typography>
+              Please specify which documents are required by candidates among
+              the following. <br />
+              (By default, documents are not required.)
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography>Resume</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.resume}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      resume: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
+
+          <Box>
+            <Typography>Cover Letter</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.coverLetter}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      coverLetter: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
+
+          <Box>
+            <Typography>Transcript</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.transcript}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      transcript: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
           </Box>
         </Stack>
         <Link

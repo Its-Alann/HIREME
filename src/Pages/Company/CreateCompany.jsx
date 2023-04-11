@@ -30,7 +30,7 @@ export const CreateCompany = () => {
         .then(async (url) => {
           setUrl(url);
           // Add the company information to the database
-          await addDoc(collection(db, "companies"), {
+          await addDoc(collection(db, "companies2"), {
             name: companyInformation.name,
             logoPath: url, // Store the path to the uploaded logo file in the database
           });

@@ -1,5 +1,9 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "cypress-file-upload";
+
+const messagingTestAccountUid = "9Da7DZCwxRhEKEgC4eQAM1KXQjp1";
+const beaUid = "uusviMjzW7P3ehh4r5CCyu9ujvI3";
 
 describe("example to-do app", () => {
   beforeEach(() => {
@@ -14,9 +18,10 @@ describe("example to-do app", () => {
     it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
+      cy.wait(500);
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
-      cy.login();
+      cy.login(messagingTestAccountUid);
       cy.visit("http://localhost:3000/messaging");
 
       //open first conversation and checks if it's visible
@@ -26,12 +31,21 @@ describe("example to-do app", () => {
 
       //send Hi message
       cy.get("#message-input").should("be.visible").type("Hi");
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get("#message-chats").last().should("contain", "Hi");
+      cy.wait(1000);
+
+      //send Hi with an emoji
+      cy.get("#message-input").should("be.visible").type("Hi");
+      cy.get('[data-cy="emojiPickerButton"]').click();
+      cy.get('[data-unified="1f602"] > .__EmojiPicker__').click();
+      cy.get('[data-testid="SendRoundedIcon"]')
+        .should("be.visible")
+        .click({ force: true });
+      cy.get("#message-chats").last().should("contain", "Hi😂");
 
       //send image
       const fileName = "src/Assets/fonts/Images/IMG_0524.png";
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
@@ -40,25 +54,23 @@ describe("example to-do app", () => {
       cy.get('[data-testid="ClearIcon"]').click();
 
       //send image
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
         .selectFile(fileName, { force: true });
 
-      cy.get('[data-testid="SendRoundedIcon"]').should("be.visible").click();
+      cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get('[data-testid="messageListItem"]')
         .last()
         .get('[data-testid="attachment"]')
         .last()
         .click();
-
-      cy.get(".messageOptions").last().click();
-      cy.get(".reportMsgButton").click();
-      cy.get('[data-testid="reportedBadge"]').should("be.visible");
     });
 
     // it("report a message", () => {
+    //   cy.get(".messageOptions").last().click();
+    //   cy.get(".reportMsgButton").click();
+    //   cy.get('[data-testid="reportedBadge"]').should("be.visible");
     //   cy.login();
     //   cy.visit("http://localhost:3000/messaging");
     // });
@@ -79,7 +91,7 @@ describe("example to-do app", () => {
   describe("Testing the phone resolution changes", () => {
     it("displays icon of returning to all convos when using phone resolution", () => {
       cy.logout();
-      cy.login();
+      cy.login(messagingTestAccountUid);
 
       //Iphone resolution
       cy.viewport(390, 844);
@@ -114,16 +126,33 @@ describe("example to-do app", () => {
     //   });
     // });
 
+    it("reports then unreports message", () => {
+      cy.logout();
+      cy.login(beaUid);
+      cy.visit("http://localhost:3000/messaging");
+      cy.get(".convo-list > .MuiList-root > :nth-child(1)")
+        .should("be.visible")
+        .click();
+
+      cy.get(".messageOptions").last().invoke("show").click({ force: true });
+      cy.get(".reportMsgButton").click();
+      cy.get('[data-testid="reportedBadge"]').should("be.visible");
+
+      cy.get(".messageOptions").last().invoke("show").click({ force: true });
+      cy.get(".reportMsgButton").click();
+      cy.wait(1000);
+    });
+
     it("opens new chat flow", () => {
       cy.logout();
-      cy.login("9Da7DZCwxRhEKEgC4eQAM1KXQjp1");
-
+      cy.login(messagingTestAccountUid);
       // cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000/messaging");
       cy.get('[data-cy="startNewConvo"]').click();
       cy.get('[data-cy="selectConnections"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').should("be.disabled");
       cy.get('[data-testid="ArrowDropDownIcon"]').click();
+      // cy.get(".MuiAutocomplete-noOptions").should("be.visible");
       cy.get("li.MuiAutocomplete-option").click();
       cy.get('[data-testid="CancelIcon"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').click();

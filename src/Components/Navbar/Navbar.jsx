@@ -11,7 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import Stack from "@mui/material/Stack";
 import HomeOutlined from "@mui/icons-material/HomeOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -23,10 +23,14 @@ import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Link } from "@mui/material";
+import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import { db, auth } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
 const pageNamesForApplicant = ["Home", "Network", "Jobs", "Messaging"];
+const pageNamesForAdmin = [];
+
 const pageNamesForRecruiter = [
   "Home",
   "Network",
@@ -88,21 +92,27 @@ const Navbar = ({ navbarUpdateToggle }) => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser2, setAnchorElUser2] = React.useState(null);
   //const [redirectToPage, setRedirectToPage] = React.useState("");
   //const [user, userLoading, userError] = useAuthState(auth);
   const [signOut, logoutLoading, logoutError] = useSignOut(auth);
 
   let redirectToPage2 = "";
+  // Manages open & close of the menus in Navbar for mobile & web version
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
+  const handleOpenUserMenu2 = (event) => {
+    setAnchorElUser2(event.currentTarget);
+  };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+  const handleCloseUserMenu2 = () => {
+    setAnchorElUser2(null);
   };
 
   //navigation to other pages
@@ -130,10 +140,13 @@ const Navbar = ({ navbarUpdateToggle }) => {
         signOut(auth);
         navigate("/");
         break;
-      case "jobs":
+      case "view jobs":
         navigate("/browseJobs");
         break;
-      case "myjobs":
+      case "view applied jobs":
+        navigate("/viewMyApplications");
+        break;
+      case "my jobs":
         navigate("/myJobs");
         break;
       case "sign up":
@@ -155,30 +168,30 @@ const Navbar = ({ navbarUpdateToggle }) => {
     <AppBar position="static" color="background">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            color="primary"
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
+          <Link
             href="/"
             sx={{
-              mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "primary",
-              textDecoration: "none",
+              padding: 0,
             }}
           >
-            HIRE<i>ME</i>
-          </Typography>
-
+            <Box
+              component="img"
+              padding="0px"
+              sx={{
+                width: "9.75rem",
+                height: "1.875rem",
+              }}
+              src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_logotext.png?alt=media&token=f650bdf2-1892-4106-86d3-c8934ca7de67"
+            />
+          </Link>
           <Box
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+            }}
             data-cy="phone-menu-test"
           >
             <IconButton
@@ -210,57 +223,131 @@ const Navbar = ({ navbarUpdateToggle }) => {
                 display: { xs: "block", md: "none" },
               }}
             >
+              {/* display sub-menu of Jobs which has menu-items of View Jobs & View Applied Jobs (only for logged in users), 
+                  and redirect to their respective page */}
               {currentUserID &&
-                pageNames.map((page) => (
-                  <MenuItem
-                    key={page}
-                    data-cy={`${page}-phone-test`}
-                    onClick={() => {
-                      redirectToPage2 = page;
-                      handleCloseNavMenu();
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
+                pageNames.map((page) =>
+                  page === "Jobs" ? (
+                    <MenuItem
+                      onClick={handleOpenUserMenu2}
+                      key={page}
+                      data-cy={`${page}-phone-test`}
+                    >
+                      Jobs
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorElUser2}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                        open={Boolean(anchorElUser2)}
+                        onClose={handleCloseUserMenu2}
+                        keepMounted
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view jobs";
+                          }}
+                          data-cy="view-job-test"
+                        >
+                          View Jobs
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view applied jobs";
+                          }}
+                          data-cy="view-applied-job-test"
+                        >
+                          View Applied Jobs
+                        </MenuItem>
+                      </Menu>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      key={page}
+                      data-cy={`${page}-phone-test`}
+                      onClick={() => {
+                        redirectToPage2 = page;
+                        handleCloseNavMenu();
+                      }}
+                    >
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  )
+                )}
               {!currentUserID &&
-                loggedOutPages.map((page) => (
-                  <MenuItem
-                    key={page}
-                    data-cy={`${page}-logged-out-test`}
-                    onClick={() => {
-                      redirectToPage2 = page;
-                      handleCloseNavMenu();
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
+                loggedOutPages.map((page) =>
+                  page === "Jobs" ? (
+                    <MenuItem
+                      onClick={handleOpenUserMenu2}
+                      key={page}
+                      data-cy={`${page}-logged-out-test`}
+                    >
+                      Jobs
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorElUser2}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                        open={Boolean(anchorElUser2)}
+                        onClose={handleCloseUserMenu2}
+                        keepMounted
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view jobs";
+                          }}
+                          data-cy="view-job-test"
+                        >
+                          View Jobs
+                        </MenuItem>
+                      </Menu>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      key={page}
+                      data-cy={`${page}-logged-out-test`}
+                      onClick={() => {
+                        redirectToPage2 = page;
+                        handleCloseNavMenu();
+                      }}
+                    >
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  )
+                )}
             </Menu>
-          </Box>
-          <AdbIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            color="primary"
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
+            {/* </Box>
+          <Box
             sx={{
-              mr: 2,
+              flexGrow: 0,
+              position: "absolute",
+              left: "50%",
+              margin: "auto",
               display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "primary",
-              textDecoration: "none",
+              alignItems: "center",
             }}
-          >
-            HIRE<i>ME</i>
-          </Typography>
+          > */}
+            <Link
+              href="/"
+              sx={{
+                display: { xs: "flex", md: "none" },
+                mx: "auto",
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: "7rem",
+                  height: "1.45rem",
+                }}
+                src="https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_logotext.png?alt=media&token=f650bdf2-1892-4106-86d3-c8934ca7de67"
+              />
+            </Link>
+          </Box>
 
+          {/* display navbar of web version and redirect to their respective page */}
           {currentUserID && (
             <>
               <Box
@@ -270,30 +357,82 @@ const Navbar = ({ navbarUpdateToggle }) => {
                   display: { xs: "none", md: "flex", justifyContent: "end" },
                 }}
               >
-                {pageNames.map((page) => (
-                  <Button
-                    key={page}
-                    data-cy={`${page}-test`}
-                    onClick={() => {
-                      redirectToPage2 = page;
-                      handleCloseNavMenu();
-                    }}
-                    sx={{
-                      my: 2,
-                      color: "main",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {page === "Home" && <HomeOutlined />}
-                    {page === "Messaging" && <MessageOutlinedIcon />}
-                    {page === "Network" && <GroupsOutlinedIcon />}
-                    {page === "Jobs" && <WorkOutlineOutlinedIcon />}
-                    {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
-                    {page === "MyCompany" && <WorkOutlineOutlinedIcon />}
-                    {page}
-                  </Button>
-                ))}
+                {/* display sub-menu of Jobs which has menu-items of View Jobs & View Applied Jobs, 
+                  and redirect to their respective page */}
+                {pageNames.map((page) =>
+                  page === "Jobs" ? (
+                    <>
+                      <Button
+                        data-cy={`${page}-test`}
+                        onClick={handleOpenUserMenu2}
+                        sx={{
+                          my: 2,
+                          color: "main",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Stack justifyContent="center" alignItems="center">
+                          <WorkOutlineOutlinedIcon justifyContent="center" />
+                          JOBS
+                        </Stack>
+                      </Button>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorElUser2}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                        open={Boolean(anchorElUser2)}
+                        onClose={handleCloseUserMenu2}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view jobs";
+                            handleCloseUserMenu2();
+                            handleCloseNavMenu();
+                          }}
+                          data-cy="view-job-test"
+                        >
+                          View Jobs
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "view applied jobs";
+                            handleCloseUserMenu2();
+                            handleCloseNavMenu();
+                          }}
+                          data-cy="view-applied-job-test"
+                        >
+                          View Applied Jobs
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  ) : (
+                    <Button
+                      key={page}
+                      data-cy={`${page}-test`}
+                      onClick={() => {
+                        redirectToPage2 = page;
+                        handleCloseNavMenu();
+                      }}
+                      sx={{
+                        my: 2,
+                        color: "main",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {page === "Home" && <HomeOutlined />}
+                      {page === "Messaging" && <MessageOutlinedIcon />}
+                      {page === "Network" && <GroupsOutlinedIcon />}
+                      {page === "Jobs" && <WorkOutlineOutlinedIcon />}
+                      {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
+                      {page === "MyCompany" && <WorkOutlineOutlinedIcon />}
+                      {page}
+                    </Button>
+                  )
+                )}
               </Box>
 
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
@@ -368,27 +507,67 @@ const Navbar = ({ navbarUpdateToggle }) => {
                 display: { xs: "none", md: "flex", justifyContent: "end" },
               }}
             >
-              {loggedOutPages.map((page) => (
-                <Button
-                  key={page}
-                  data-cy={`${page}-test`}
-                  onClick={() => {
-                    redirectToPage2 = page;
-                    handleCloseNavMenu();
-                  }}
-                  sx={{
-                    my: 2,
-                    color: "main",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  {page === "Jobs" && <WorkOutlineOutlinedIcon />}
-                  {page === "Sign Up" && <PersonOutlineOutlinedIcon />}
-                  {page === "Log In" && <LoginOutlinedIcon />}
-                  {page}
-                </Button>
-              ))}
+              {loggedOutPages.map((page) =>
+                page === "Jobs" ? (
+                  <>
+                    <Button
+                      data-cy={`${page}-test`}
+                      onClick={handleOpenUserMenu2}
+                      sx={{
+                        my: 2,
+                        color: "main",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Stack justifyContent="center" alignItems="center">
+                        <WorkOutlineOutlinedIcon justifyContent="center" />
+                        JOBS
+                      </Stack>
+                    </Button>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorElUser2}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                      open={Boolean(anchorElUser2)}
+                      onClose={handleCloseUserMenu2}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          redirectToPage2 = "view jobs";
+                          handleCloseUserMenu2();
+                          handleCloseNavMenu();
+                        }}
+                        data-cy="view-job-test"
+                      >
+                        View Jobs
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <Button
+                    key={page}
+                    data-cy={`${page}-test`}
+                    onClick={() => {
+                      redirectToPage2 = page;
+                      handleCloseNavMenu();
+                    }}
+                    sx={{
+                      my: 2,
+                      color: "main",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    {/* {page === "Jobs" && <WorkOutlineOutlinedIcon />} */}
+                    {page === "Sign Up" && <PersonOutlineOutlinedIcon />}
+                    {page === "Log In" && <LoginOutlinedIcon />}
+                    {page}
+                  </Button>
+                )
+              )}
             </Box>
           )}
         </Toolbar>

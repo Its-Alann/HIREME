@@ -37,7 +37,7 @@ export const BrowseJobs = () => {
   // these will be selected.
   // then shown in reverse order.
   const initialJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     limitToLast(jobsPerPage)
   );
@@ -61,7 +61,7 @@ export const BrowseJobs = () => {
   // L F
   // 1 & 2 become the new lastJob & firstJob
   const nextJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     endBefore(lastJob),
     limitToLast(jobsPerPage)
@@ -75,7 +75,7 @@ export const BrowseJobs = () => {
   //     L       F
   // 3 & 7 become the new lastJob & firstJob
   const previousJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     startAfter(firstJob),
     limit(jobsPerPage)
@@ -110,31 +110,26 @@ export const BrowseJobs = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
+    const temp2 = companiesLogo;
+
     jobs.forEach(async (job) => {
+      const companyRef = doc(db, "companies2", job.companyID);
+      const companySnapshot = await getDoc(companyRef);
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies", job.companyID);
-        const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
         setCompaniesName({ ...temp });
       }
-    });
-  }
-
-  // Load the logo of each company that has job listings
-  function loadLogoCompany() {
-    const temp = companiesLogo;
-    jobs.forEach(async (job) => {
-      const querySnapshot = await getDoc(doc(db, "companies", job.companyID));
-      temp[job.companyID] = querySnapshot.data().logoPath;
-      // triggers a re-render and display the newly loaded logos
-      setCompaniesLogo({ ...temp });
+      if (companySnapshot.data().logoPath === "") {
+        temp2[job.companyID] =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      setCompaniesLogo({ ...temp2 });
     });
   }
 
   React.useEffect(() => {
     getCompaniesName();
-    loadLogoCompany();
   }, [jobs]);
 
   React.useEffect(() => {
@@ -152,20 +147,73 @@ export const BrowseJobs = () => {
           this page.
         </Typography>
 
-        {jobs.map((job) => (
-          <JobCard
-            key={`JobCard-${job.documentID}`}
-            companyID={job.companyID}
-            companyName={companiesName[job.companyID]}
-            jobID={job.documentID}
-            title={job.title}
-            city={job.city}
-            country={job.country}
-            deadlineSeconds={job.deadline.seconds}
-            deadlineNanoSeconds={job.deadline.nanoseconds}
-            logo={companiesLogo[job.companyID]}
-          />
-        ))}
+        {jobs.map((job) => {
+          const hello = "hello";
+
+          // do this to show what is inside job
+          // console.log(job);
+          return (
+            // Create cards instead
+            <Box key={job.documentID} sx={{ py: 1 }}>
+              <Card variant="outlined">
+                <Box sx={{ m: 3 }}>
+                  <Stack direction="row" alignItems="center">
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo[job.companyID]}
+                    />
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Typography>{`${job.city}, ${job.country}`}</Typography>
+                    </Box>
+                  </Stack>
+
+                  {/* do we need to show company id? */}
+                  {/* <Typography>Company ID: {job.companyID}</Typography> */}
+
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-end"
+                    sx={{ pt: 2 }}
+                  >
+                    {/* Added this button for candidate's view */}
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ my: 1 }}
+                      id={`Button-${job.documentID}`}
+                    >
+                      <Link
+                        to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+                        className="link"
+                        underline="none"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {/* <Link to="/job/1"> */}
+                        View job
+                      </Link>
+                    </Button>
+                    <Typography>
+                      Deadline:{" "}
+                      {new Date(
+                        job.deadline.seconds * 1000 +
+                          job.deadline.nanoseconds / 1000000
+                      ).toDateString()}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Card>
+            </Box>
+          );
+        })}
         <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
           Previous
         </Button>

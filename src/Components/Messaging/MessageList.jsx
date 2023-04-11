@@ -8,6 +8,8 @@ import MessageListItem from "./MessageListItem";
 import { auth, storage, db } from "../../Firebase/firebase";
 
 const MessageList = ({ messages, convoId }) => {
+  // console.log(findLastSeen(messages, "hypeboy@tok.ki"));
+
   const openAttachment = (path) => {
     getDownloadURL(ref(storage, `messages/${path}`)).then((url) =>
       window.open(url, "_blank")
@@ -23,31 +25,30 @@ const MessageList = ({ messages, convoId }) => {
       return;
     }
     const convoRef = doc(db, "messages", convoId);
-    const updatedMessages = messages;
+    const updatedMessages = messages.map((m) => {
+      const { readReceipt, ...res } = m;
+      return res;
+    });
 
     const reportedMessageDocId = `${convoId}-${index}`;
 
+    // unreport a reported message
     if (messages[index].reported) {
-      updatedMessages[index] = {
-        ...messages[index],
-        reported: false,
-      };
-
+      updatedMessages[index].reported = false;
       //delete message doc from reportedMessages collection
       try {
         await deleteDoc(doc(db, "reportedMessages", reportedMessageDocId));
       } catch (err) {
         console.log(err);
       }
-    } else {
-      updatedMessages[index] = {
-        ...messages[index],
-        reported: true,
-      };
+    }
+    // report an unreported message
+    else {
+      updatedMessages[index].reported = true;
 
       // add the message to the reportedMessages collection
       await setDoc(doc(db, "reportedMessages", reportedMessageDocId), {
-        ...messages[index],
+        ...updatedMessages[index],
         convoId,
         index,
       });
@@ -57,8 +58,6 @@ const MessageList = ({ messages, convoId }) => {
     await updateDoc(convoRef, {
       messages: updatedMessages,
     });
-
-    console.log("idol", messages[index]);
   };
 
   return (
@@ -73,7 +72,8 @@ const MessageList = ({ messages, convoId }) => {
             sx={{
               justifyContent: alignment,
               "&:hover .messageOptions": {
-                display: "inline-block",
+                // display: "inline-block",
+                visibility: "visible",
                 color: "grey",
               },
             }}
@@ -93,8 +93,18 @@ const MessageList = ({ messages, convoId }) => {
 };
 
 MessageList.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  messages: PropTypes.arrayOf(PropTypes.any),
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      content: PropTypes.string,
+      attachment: PropTypes.string,
+      seenBy: PropTypes.arrayOf(PropTypes.string),
+      sender: PropTypes.string,
+      // eslint-disable-next-line react/forbid-prop-types
+      timestamp: PropTypes.object,
+      reported: PropTypes.bool,
+      readRecipt: PropTypes.arrayOf(PropTypes.string),
+    })
+  ),
   convoId: PropTypes.string,
 };
 export default MessageList;
