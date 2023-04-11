@@ -32,6 +32,10 @@ describe("Name Form", () => {
       ":nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > #standard-required"
     ).type("Account");
     // cy.get("#next").click();
+
+    cy.get(
+      ":nth-child(3) > .MuiFormControl-root > .MuiInputBase-root > #standard-required"
+    ).type("Software Developer");
   });
 });
 

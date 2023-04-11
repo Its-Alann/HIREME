@@ -76,7 +76,7 @@ export const CreateJob = () => {
 
     // Retrieve user information in order to properly create job suggestion notifications
     const titleArray = jobInformation.title.split(" ");
-    const userProfileRef = collection(db, "notifications");
+    const userProfileRef = collection(db, "userProfiles");
     const currentDate = new Date();
 
     for (let i = 0; i < titleArray.length; i += 1) {

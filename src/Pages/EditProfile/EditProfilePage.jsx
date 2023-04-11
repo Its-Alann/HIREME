@@ -35,7 +35,6 @@ const EditProfilePage = () => {
     values: {
       firstName: "",
       lastName: "",
-      field: "",
       phoneNumber: "",
       address: "",
       city: "",
@@ -69,6 +68,7 @@ const EditProfilePage = () => {
       awardDesc: "",
     },
   });
+  const [field, setField] = useState("");
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
   const [imageUrl, setImageUrl] = useState();
@@ -112,6 +112,7 @@ const EditProfilePage = () => {
         if (userProfileSnapShot.exists()) {
           console.log("User profile Exist");
           setProfile(userProfileSnapShot.data());
+          setField(userProfileSnapShot.data().field);
         } else {
           console.log("User Profile Not Exist");
         }
@@ -152,6 +153,9 @@ const EditProfilePage = () => {
     if (currentUserEmail != null) {
       const userProfileDocRef = doc(database, "userProfiles", currentUserEmail);
       await updateDoc(userProfileDocRef, profile);
+      await updateDoc(userProfileDocRef, {
+        field,
+      });
       console.log("Update finished");
     }
   }
@@ -340,7 +344,7 @@ const EditProfilePage = () => {
                   style={{ fontSize: "45px" }}
                   placeholder="First Name"
                   value={profile.values.firstName}
-                  data-cy="firstName-test"
+                  name="firstName"
                   readOnly={!editButton}
                   error={editButton}
                   onChange={(e) =>
@@ -358,6 +362,7 @@ const EditProfilePage = () => {
                   variant="standard"
                   placeholder="Last Name"
                   value={profile.values.lastName}
+                  name="lastName"
                   readOnly={!editButton}
                   error={editButton}
                   onChange={(e) =>
@@ -376,6 +381,7 @@ const EditProfilePage = () => {
                   placeholder="School Name"
                   variant="standard"
                   value={profile.values.school}
+                  name="school"
                   readOnly={!editButton}
                   error={editButton}
                   onChange={(e) =>
@@ -407,17 +413,11 @@ const EditProfilePage = () => {
                   id="standard-basic"
                   variant="standard"
                   placeholder="Desired Job Title"
-                  value={profile.values.field}
+                  name="field"
+                  value={field}
                   readOnly={!editButton}
                   error={editButton}
-                  onChange={(e) =>
-                    setProfile({
-                      values: {
-                        ...profile.values,
-                        field: e.target.value,
-                      },
-                    })
-                  }
+                  onChange={(e) => setField(e.target.value)}
                 />
               </Grid>
             </Grid>

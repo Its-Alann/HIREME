@@ -82,7 +82,6 @@ const AccountCreationPage = () => {
   const values = {
     firstName,
     lastName,
-    field,
     phoneNumber,
     address,
     city,
@@ -122,6 +121,7 @@ const AccountCreationPage = () => {
       setLastName={setLastName}
       setField={setField}
       values={values}
+      field={field}
     />,
     <ContactInfo
       setPhoneNumber={setPhoneNumber}
@@ -219,6 +219,7 @@ const AccountCreationPage = () => {
 
       // Set user profile data
       await setDoc(doc(db, "userProfiles", user.email), {
+        field,
         values,
       });
 
@@ -236,7 +237,6 @@ const AccountCreationPage = () => {
       // Add user email to notifications collection
       await setDoc(doc(db, "notifications", user.email), {
         notifications: [],
-        field,
         notificationForJobs: true,
         notificationForConnections: true,
       });
