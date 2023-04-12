@@ -156,6 +156,7 @@ const SettingsPage = () => {
         // Add user email to notifications collection
         await setDoc(doc(db, "notifications", currentUserEmail), {
           notifications: [],
+
           // eslint-disable-next-line no-undef
           field: "",
           notificationForJobs: false,
