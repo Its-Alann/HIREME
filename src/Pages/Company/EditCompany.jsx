@@ -365,38 +365,55 @@ export const EditCompany = ({ props }) => {
                 justifyContent: "center",
               }}
             >
-              <TextField
-                required
-                id="TextField-Name"
-                variant="standard"
-                placeholder="Company name"
-                label="Company Name"
-                name="companyName"
-                margin="normal"
-                value={companyInformation.name}
-                onChange={(e) =>
-                  setCompanyInformation({
-                    ...companyInformation,
-                    name: e.target.value,
-                  })
-                }
-                sx={{
-                  fontSize: "3em",
-                }}
-                disabled={!editMode}
-                InputProps={{
-                  style: { fontSize: 30 },
-                  endAdornment: !editMode ? (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleClick}>
-                        <Edit />
-                      </IconButton>
-                    </InputAdornment>
-                  ) : (
-                    ""
-                  ),
-                }}
-              />
+              {isAdmin ? (
+                <TextField
+                  required
+                  id="TextField-Name"
+                  variant="standard"
+                  placeholder="Company name"
+                  label="Company Name"
+                  name="companyName"
+                  margin="normal"
+                  value={companyInformation.name}
+                  onChange={(e) =>
+                    setCompanyInformation({
+                      ...companyInformation,
+                      name: e.target.value,
+                    })
+                  }
+                  sx={{
+                    fontSize: "3em",
+                  }}
+                  disabled={!editMode}
+                  InputProps={{
+                    style: { fontSize: 30 },
+                    endAdornment: !editMode ? (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClick}>
+                          <Edit />
+                        </IconButton>
+                      </InputAdornment>
+                    ) : (
+                      ""
+                    ),
+                  }}
+                />
+              ) : (
+                <TextField
+                  id="TextField-Name"
+                  variant="standard"
+                  label="Company Name"
+                  disabled
+                  value={companyInformation.name}
+                  margin="normal"
+                  sx={{
+                    fontSize: "3em",
+                  }}
+                  InputProps={{
+                    style: { fontSize: 30 },
+                  }}
+                />
+              )}
             </Box>
 
             <Box
@@ -407,20 +424,24 @@ export const EditCompany = ({ props }) => {
                 marginLeft: "5%",
               }}
             >
-              <Typography>Modify company logo</Typography>
-              <IconButton>
-                <input
-                  accept="image/*"
-                  id="contained-button-file"
-                  type="file"
-                  onChange={(e) => {
-                    if (e.target.files.length < 1) {
-                      return;
-                    }
-                    uploadImage(e.target.files[0]);
-                  }}
-                />
-              </IconButton>
+              {isAdmin && (
+                <>
+                  <Typography>Modify company logo</Typography>
+                  <IconButton>
+                    <input
+                      accept="image/*"
+                      id="contained-button-file"
+                      type="file"
+                      onChange={(e) => {
+                        if (e.target.files.length < 1) {
+                          return;
+                        }
+                        uploadImage(e.target.files[0]);
+                      }}
+                    />
+                  </IconButton>
+                </>
+              )}
             </Box>
 
             <Avatar
@@ -437,19 +458,22 @@ export const EditCompany = ({ props }) => {
                 color: "#263aaf",
               }}
             />
-            <Button
-              onClick={() => {
-                saveCompanyInformation();
-                setEditMode(false);
-              }}
-              data-cy="saveBtn"
-              variant="contained"
-              size="medium"
-              sx={{ my: 1 }}
-              id="ButtonSave"
-            >
-              Save
-            </Button>
+
+            {isAdmin && (
+              <Button
+                onClick={() => {
+                  saveCompanyInformation();
+                  setEditMode(false);
+                }}
+                data-cy="saveBtn"
+                variant="contained"
+                size="medium"
+                sx={{ my: 1 }}
+                id="ButtonSave"
+              >
+                Save
+              </Button>
+            )}
           </Box>
 
           <Box
