@@ -87,6 +87,8 @@ const Messaging = () => {
   //all the authors in the selected conversation
   const [authors, setAuthors] = useState([]);
 
+  const [groupNameEdit, setGroupNameEdit] = useState("");
+
   //to autoscroll
   const messageViewRef = useRef();
   const scrollToBottom = () => {
@@ -225,6 +227,14 @@ const Messaging = () => {
     const convoRef = doc(db, "messages", convoId);
     await updateDoc(convoRef, {
       messages: updatedMessages,
+    });
+  };
+
+  // changes the groupname in the convo documentn
+  const changeGroupName = async (docId, newName) => {
+    const convoRef = doc(db, "messages", docId);
+    await updateDoc(convoRef, {
+      groupName: newName,
     });
   };
 
@@ -435,11 +445,20 @@ const Messaging = () => {
                       variant="standard"
                       color="secondary"
                       fullWidth
+                      value={groupNameEdit}
+                      onChange={(e) => {
+                        setGroupNameEdit(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          console.log("pressed enter lole", groupNameEdit);
+                          changeGroupName(convoId, groupNameEdit);
+                        }
+                      }}
                       inputProps={{
                         sx: {
                           color: "white",
                           fontSize: "2.125rem",
-
                           "&::placeholder": {
                             opacity: 1,
                           },
