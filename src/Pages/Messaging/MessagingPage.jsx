@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   ListItemButton,
   ListItemText,
-  Badge,
+  TextField,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -429,9 +429,21 @@ const Messaging = () => {
                     </IconButton>
                   )}
 
-                  <Typography variant="h4" noWrap>
-                    {name}
-                  </Typography>
+                  {authors.length > 2 ? (
+                    <TextField
+                      placeholder={name}
+                      variant="standard"
+                      color="secondary"
+                      fullWidth
+                      inputProps={{
+                        sx: { color: "white", fontSize: "2.125rem" },
+                      }}
+                    />
+                  ) : (
+                    <Typography variant="h4" noWrap>
+                      {name}
+                    </Typography>
+                  )}
                   <Avatar
                     alt="sumn random"
                     src="https://picsum.photos/200/300"
