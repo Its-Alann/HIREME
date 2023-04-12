@@ -93,10 +93,10 @@ const Messaging = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
 
-  // takes an object {otherAuthors, mostRecent}
-  const getOtherAuthors = async (list) => {
+  // takes an object {otherAuthors, mostRecent, unRead, groupName}
+  const getOtherAuthors = async (chatInfo) => {
     const nameList = await Promise.all(
-      list.otherAuthors.map(async (author) => {
+      chatInfo.otherAuthors.map(async (author) => {
         const docSnap = await getDoc(doc(db, "userProfiles", author));
         if (docSnap.exists()) {
           return `${docSnap.data().values.firstName} ${
@@ -109,9 +109,10 @@ const Messaging = () => {
     const names = nameList.filter(Boolean).join(", ");
     return {
       names,
-      emails: list.otherAuthors,
-      mostRecent: list.mostRecent,
-      unRead: list.unRead,
+      emails: chatInfo.otherAuthors,
+      mostRecent: chatInfo.mostRecent,
+      unRead: chatInfo.unRead,
+      groupName: chatInfo.groupName,
     };
   };
 
@@ -136,10 +137,12 @@ const Messaging = () => {
         const data = document.data();
         const mostRecent = data.messages?.at(-1).timestamp.toDate();
         const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
+        const groupName = data.groupName ?? null;
         allAuthorsList.push({
           otherAuthors: data.authors.filter((author) => author !== myUser),
           mostRecent,
           unRead,
+          groupName,
         });
       });
 
@@ -189,11 +192,18 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
-  const selectConvo = async (conversationId, names, index, emails) => {
+  const selectConvo = async (
+    conversationId,
+    names,
+    index,
+    emails,
+    groupName
+  ) => {
     // !there may be sync issues related to the read receipts
     // !simply putting setAuthors before setConvoId may not be sufficient
     setAuthors(emails);
-    setName(names);
+    if (groupName) setName(groupName);
+    else setName(names);
     setSelectedIndex(index);
     setConvoId(conversationId);
     scrollToBottom();
@@ -346,10 +356,13 @@ const Messaging = () => {
                           ...chat.emails,
                           myUser,
                         ]);
-                        await selectConvo(conversationID, chat.names, i, [
-                          myUser,
-                          ...chat.emails,
-                        ]);
+                        await selectConvo(
+                          conversationID,
+                          chat.names,
+                          i,
+                          [myUser, ...chat.emails],
+                          chat.groupName
+                        );
                       }}
                     >
                       <ListItemAvatar>
@@ -359,7 +372,7 @@ const Messaging = () => {
                         />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={chat.names}
+                        primary={chat.groupName || chat.names}
                         secondary={chat.mostRecent.toDateString()}
                       />
                       {chat.unRead && (
