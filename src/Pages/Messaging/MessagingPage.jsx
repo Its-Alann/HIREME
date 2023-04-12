@@ -236,6 +236,7 @@ const Messaging = () => {
     await updateDoc(convoRef, {
       groupName: newName,
     });
+    setGroupNameEdit("");
   };
 
   // auth listener on load
@@ -281,6 +282,8 @@ const Messaging = () => {
         });
         // console.log("tempMsgs", tempMsgs);
         setMessages(tempMsgs);
+        if (document.data().authors.length > 2 && document.data().groupName)
+          setName(document.data().groupName);
       });
     }
   }, [convoId]);
@@ -383,6 +386,7 @@ const Messaging = () => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={chat.groupName || chat.names}
+                        primaryTypographyProps={{ noWrap: true }}
                         secondary={chat.mostRecent.toDateString()}
                       />
                       {chat.unRead && (
