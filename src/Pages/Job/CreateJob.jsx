@@ -16,6 +16,7 @@ import {
   addDoc,
   arrayUnion,
   writeBatch,
+  CollectionReference,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -46,16 +47,21 @@ export const CreateJob = () => {
 
   async function handleSubmit() {
     // Here we are updating different document
-    // With batch, either all of the updates succeed or none.
-    // const batch = writeBatch(db);
-
-    // const jobDocumentRef = doc(collection(db, "jobs2"));
-    // batch.set(jobDocumentRef, jobInformation);
-
-    // await batch.commit();
-    await addDoc(collection(db, "jobs2"), {
+    // By creating a job.
+    // First add a new document in the collection jobs
+    // Then update the document in companies
+    const newJobRef = doc(collection(db, "jobs2"));
+    const batch = writeBatch(db);
+    batch.set(doc(db, "jobs2", newJobRef.id), {
       ...jobInformation,
     });
+    batch.update(doc(db, "companies2", jobInformation.companyID), {
+      jobs: arrayUnion({
+        jobID: newJobRef.id,
+        publishedAt: jobInformation.publishedAt,
+      }),
+    });
+    await batch.commit();
   }
 
   // We need to include Recruiter ID & their company ID in the new Job
@@ -104,6 +110,7 @@ export const CreateJob = () => {
           Job Creation
         </Typography>
         {/* is this supposed to be a public comment? */}
+        {/* for developers only */}
         <Typography gutterBottom>
           This page has purpose of creating a new job posting. If you are logged
           in, and you are a Recruiter. Then, after you click SAVE, there should
@@ -343,7 +350,7 @@ export const CreateJob = () => {
           </Box>
         </Stack>
 
-        <Link to="/myJobs">
+        <Link to="/">
           <Button
             variant="contained"
             size="medium"

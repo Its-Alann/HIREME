@@ -41,7 +41,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+    onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { uid, email } = authUser;
         // console.log("uid", uid);
@@ -54,7 +54,6 @@ const HomePage = () => {
         setUser(null);
       }
     });
-    return () => unsubscribe();
   }, []);
 
   const handleSignOut = async () => {
@@ -118,13 +117,14 @@ const HomePage = () => {
                 justify="center"
                 alignItems="center"
                 display="flex"
-                container
+                direction="column"
               >
                 <Grid
                   item
                   s={12}
                   sm={12}
                   md={12}
+                  display="flex"
                   alignItems="center"
                   data-cy="grid-test"
                 >
@@ -192,13 +192,7 @@ const HomePage = () => {
                         fullWidth
                         data-testid="createProfileLink"
                         variant="outlined"
-                        sx={{
-                          mt: 3,
-                          mb: 2,
-                          py: 1,
-                          minWidth: 1 / 4,
-                          maxWidth: 1 / 2,
-                        }}
+                        sx={{ mt: 3, mb: 2, py: 1 }}
                         color="primary"
                         onClick={() => {
                           window.location.href = "/accountCreation";
@@ -206,9 +200,9 @@ const HomePage = () => {
                       >
                         Create your profile
                       </Button>
-                    </>
+                    </div>
                   ) : (
-                    <>
+                    <div>
                       <Typography variant="h6">
                         {" "}
                         Need to make some changes?{" "}
@@ -217,13 +211,7 @@ const HomePage = () => {
                         fullWidth
                         data-testid="editProfileButton"
                         variant="outlined"
-                        sx={{
-                          mt: 3,
-                          mb: 2,
-                          py: 1,
-                          minWidth: 1 / 4,
-                          maxWidth: 1 / 2,
-                        }}
+                        sx={{ mt: 3, mb: 2, py: 1 }}
                         color="primary"
                         onClick={() => {
                           window.location.href = "/editProfile/myprofile";
@@ -231,7 +219,7 @@ const HomePage = () => {
                       >
                         Edit your profile
                       </Button>
-                    </>
+                    </div>
                   )}
                 </Grid>
                 <div>

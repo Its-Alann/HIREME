@@ -35,7 +35,6 @@ const pageNamesForRecruiter = [
   "Home",
   "Network",
   "Jobs",
-  "MyJobs",
   "MyCompany",
   "Messaging",
 ];
@@ -54,7 +53,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
   const [companyID, setCompanyID] = React.useState(null);
 
   async function getCompanyID(userID) {
-    const recruiter = await getDoc(doc(db, "recruiters", userID));
+    const recruiter = await getDoc(doc(db, "recruiters2", userID));
     if (recruiter.exists()) {
       if (recruiter.data().workFor) {
         setPageNames(pageNamesForRecruiter);
@@ -145,9 +144,6 @@ const Navbar = ({ navbarUpdateToggle }) => {
         break;
       case "view applied jobs":
         navigate("/viewMyApplications");
-        break;
-      case "my jobs":
-        navigate("/myJobs");
         break;
       case "sign up":
         navigate("/SignUp");
@@ -373,7 +369,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                         }}
                       >
                         <Stack justifyContent="center" alignItems="center">
-                          <WorkOutlineOutlinedIcon justifyContent="center" />
+                          <WorkOutlineOutlinedIcon />
                           JOBS
                         </Stack>
                       </Button>
@@ -427,7 +423,6 @@ const Navbar = ({ navbarUpdateToggle }) => {
                       {page === "Messaging" && <MessageOutlinedIcon />}
                       {page === "Network" && <GroupsOutlinedIcon />}
                       {page === "Jobs" && <WorkOutlineOutlinedIcon />}
-                      {page === "MyJobs" && <WorkOutlineOutlinedIcon />}
                       {page === "MyCompany" && <WorkOutlineOutlinedIcon />}
                       {page}
                     </Button>
@@ -521,7 +516,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                       }}
                     >
                       <Stack justifyContent="center" alignItems="center">
-                        <WorkOutlineOutlinedIcon justifyContent="center" />
+                        <WorkOutlineOutlinedIcon />
                         JOBS
                       </Stack>
                     </Button>

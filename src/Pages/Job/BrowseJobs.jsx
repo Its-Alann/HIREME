@@ -1,6 +1,3 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import * as React from "react";
 import {
   collection,
@@ -14,7 +11,15 @@ import {
   getDoc,
   limit,
 } from "firebase/firestore";
-import Container from "@mui/material/Container";
+import {
+  Box,
+  Container,
+  Button,
+  Typography,
+  Card,
+  Stack,
+} from "@mui/material/";
+import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 import "./Job.css";
 import JobCard from "../../Components/Jobs/JobCard";
