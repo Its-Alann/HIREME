@@ -436,7 +436,14 @@ const Messaging = () => {
                       color="secondary"
                       fullWidth
                       inputProps={{
-                        sx: { color: "white", fontSize: "2.125rem" },
+                        sx: {
+                          color: "white",
+                          fontSize: "2.125rem",
+
+                          "&::placeholder": {
+                            opacity: 1,
+                          },
+                        },
                       }}
                     />
                   ) : (
