@@ -35,11 +35,15 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
   const [currentUserID, setCurrentUserID] = React.useState(null);
 
   async function handleSubmit() {
-    console.log(auth.currentUser.uid);
-    await setDoc(
+    const batch = writeBatch(db);
+    batch.set(
       doc(db, "recruiters2", auth.currentUser.uid),
       recruiterInformation
     );
+    batch.update(doc(db, "companies2", recruiterInformation.workFor), {
+      recruiters: arrayUnion(auth.currentUser.uid),
+    });
+    await batch.commit();
   }
 
   async function getCompanies() {
@@ -50,13 +54,12 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
     queryResultSnapshot.forEach((document) => {
       tempCompanyList.push({ id: document.id, label: document.data().name });
     });
-    //console.log(tempCompanyList);
     setCompanyList(tempCompanyList);
   }
 
   async function getPreviousCompany() {
     const recruiterSnapshot = await getDoc(
-      doc(db, "recruiters", currentUserID)
+      doc(db, "recruiters2", currentUserID)
     );
     if (recruiterSnapshot.exists()) {
       if (recruiterSnapshot.data().workFor) {

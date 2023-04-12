@@ -18,6 +18,9 @@ export const ViewProfile = () => {
   const { userEmail } = useParams();
   const [currentUserID, setCurrentUserID] = React.useState(null);
   const [profile, setProfile] = React.useState(null);
+  const [isConnectedWith, setIsConnectedWith] = React.useState(false);
+  const [isCurrentUserInvited, setIsCurrentUserInvited] = React.useState(false);
+  const [hasCurrentUserInvite, setHasCurrentUserInvite] = React.useState(false);
 
   async function getProfile() {
     const profileSnapshot = await getDoc(doc(db, "userProfiles", userEmail));

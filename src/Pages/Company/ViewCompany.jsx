@@ -28,7 +28,7 @@ export const ViewCompany = () => {
   const jobsPerPage = 4;
 
   async function getCompanyInformation() {
-    const companyRef = doc(db, "companies", companyID);
+    const companyRef = doc(db, "companies2", companyID);
     const companySnapshot = await getDoc(companyRef);
     if (companySnapshot.exists()) {
       setCompanyInformation(companySnapshot.data());
@@ -37,7 +37,7 @@ export const ViewCompany = () => {
 
   async function getEmployees() {
     if (companyInformation.employees.length > 0) {
-      const recruitersRef = collection(db, "recruiters");
+      const recruitersRef = collection(db, "recruiters2");
       const employeesQuery = query(
         recruitersRef,
         where(documentId(), "in", companyInformation.employees)
@@ -59,7 +59,7 @@ export const ViewCompany = () => {
 
   async function getManagers() {
     if (companyInformation.managers.length > 0) {
-      const recruitersRef = collection(db, "recruiters");
+      const recruitersRef = collection(db, "recruiters2");
       const employeesQuery = query(
         recruitersRef,
         where(documentId(), "in", companyInformation.managers)

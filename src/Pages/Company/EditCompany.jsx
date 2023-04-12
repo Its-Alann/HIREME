@@ -37,12 +37,12 @@ export const EditCompany = ({ props }) => {
     name: "",
     logoPath: "", // new state for the uploaded logo file
     jobs: [],
-    employees: [],
+    recruiters: [],
     managers: [],
   });
   const [isNewJobAllowed, setIsnewJobAllowed] = React.useState(false);
   const [isAdmin, setIsAdmin] = React.useState(false);
-  const [employeesInformation, setEmployeesInformation] = React.useState([]);
+  const [recruitersInformation, setRecruitersInformation] = React.useState([]);
   const [managersInformation, setManagersInformation] = React.useState([]);
   const [currentUserID, setCurrentUserID] = React.useState("");
   const [cursorPosition, setCursorPosition] = React.useState(0);
@@ -84,7 +84,7 @@ export const EditCompany = ({ props }) => {
   };
 
   async function getCompanyInformation() {
-    const companyRef = doc(db, "companies", companyID);
+    const companyRef = doc(db, "companies2", companyID);
     const companySnapshot = await getDoc(companyRef);
     if (companySnapshot.exists()) {
       setCompanyInformation(companySnapshot.data());
@@ -100,18 +100,18 @@ export const EditCompany = ({ props }) => {
   }
 
   async function saveCompanyInformation() {
-    const companyRef = doc(db, "companies", companyID);
+    const companyRef = doc(db, "companies2", companyID);
     await updateDoc(companyRef, companyInformation);
   }
 
-  async function getEmployees() {
-    if (companyInformation.employees.length > 0) {
-      const recruitersRef = collection(db, "recruiters");
-      const employeesQuery = query(
+  async function getRecruiters() {
+    if (companyInformation.recruiters.length > 0) {
+      const recruitersRef = collection(db, "recruiters2");
+      const recruitersQuery = query(
         recruitersRef,
-        where(documentId(), "in", companyInformation.employees)
+        where(documentId(), "in", companyInformation.recruiters)
       );
-      const querySnapshot = await getDocs(employeesQuery);
+      const querySnapshot = await getDocs(recruitersQuery);
       const temp = [];
       querySnapshot.forEach((document) => {
         temp.push({
@@ -121,20 +121,20 @@ export const EditCompany = ({ props }) => {
           email: document.data().email,
         });
       });
-      setEmployeesInformation(temp);
+      setRecruitersInformation(temp);
     } else {
-      setEmployeesInformation([]);
+      setRecruitersInformation([]);
     }
   }
 
   async function getManagers() {
     if (companyInformation.managers.length > 0) {
-      const recruitersRef = collection(db, "recruiters");
-      const employeesQuery = query(
+      const recruitersRef = collection(db, "recruiters2");
+      const recuitersQuery = query(
         recruitersRef,
         where(documentId(), "in", companyInformation.managers)
       );
-      const querySnapshot = await getDocs(employeesQuery);
+      const querySnapshot = await getDocs(recuitersQuery);
       const temp = [];
       querySnapshot.forEach((document) => {
         temp.push({
@@ -150,68 +150,68 @@ export const EditCompany = ({ props }) => {
     }
   }
 
-  async function removeEmployee(employeeID) {
+  async function removeRecruiter(recruiterID) {
     const batch = writeBatch(db);
-    batch.update(doc(db, "companies", companyID), {
-      employees: arrayRemove(employeeID),
+    batch.update(doc(db, "companies2", companyID), {
+      recruiters: arrayRemove(recruiterID),
     });
-    batch.update(doc(db, "recruiters", employeeID), { workFor: null });
+    batch.update(doc(db, "recruiters2", recruiterID), { workFor: null });
     await batch.commit();
-    const employees = [...companyInformation.employees];
-    employees.splice(employees.indexOf(employeeID), 1);
+    const recruiters = [...companyInformation.recruiters];
+    recruiters.splice(recruiters.indexOf(recruiterID), 1);
     setCompanyInformation({
       ...companyInformation,
-      employees,
+      recruiters,
     });
-    if (employeeID === currentUserID) {
+    if (recruiterID === currentUserID) {
       props.toggleNavbarUpdate();
     }
   }
 
-  async function promoteToManager(employeeID) {
+  async function promoteToManager(recruiterID) {
     const batch = writeBatch(db);
-    batch.update(doc(db, "companies", companyID), {
-      employees: arrayRemove(employeeID),
+    batch.update(doc(db, "companies2", companyID), {
+      recruiters: arrayRemove(recruiterID),
     });
-    batch.update(doc(db, "companies", companyID), {
-      managers: arrayUnion(employeeID),
+    batch.update(doc(db, "companies2", companyID), {
+      managers: arrayUnion(recruiterID),
     });
     await batch.commit();
-    const employees = [...companyInformation.employees];
-    employees.splice(employees.indexOf(employeeID), 1);
+    const recruiters = [...companyInformation.recruiters];
+    recruiters.splice(recruiters.indexOf(recruiterID), 1);
     let managers;
     if (companyInformation.managers) {
-      managers = [...companyInformation.managers, employeeID];
+      managers = [...companyInformation.managers, recruiterID];
     } else {
-      managers = [employeeID];
+      managers = [recruiterID];
     }
     setCompanyInformation({
       ...companyInformation,
-      employees,
+      recruiters,
       managers,
     });
   }
 
-  async function demoteManager(employeeID) {
+  async function demoteManager(recruiterID) {
     const batch = writeBatch(db);
-    batch.update(doc(db, "companies", companyID), {
-      managers: arrayRemove(employeeID),
+    batch.update(doc(db, "companies2", companyID), {
+      managers: arrayRemove(recruiterID),
     });
-    batch.update(doc(db, "companies", companyID), {
-      employees: arrayUnion(employeeID),
+    batch.update(doc(db, "companies2", companyID), {
+      recruiters: arrayUnion(recruiterID),
     });
     await batch.commit();
     const managers = [...companyInformation.managers];
-    managers.splice(managers.indexOf(employeeID), 1);
-    let employees;
-    if (companyInformation.employees) {
-      employees = [...companyInformation.employees, employeeID];
+    managers.splice(managers.indexOf(recruiterID), 1);
+    let recruiters;
+    if (companyInformation.recruiters) {
+      recruiters = [...companyInformation.recruiters, recruiterID];
     } else {
-      employees = [employeeID];
+      recruiters = [recruiterID];
     }
     setCompanyInformation({
       ...companyInformation,
-      employees,
+      recruiters,
       managers,
     });
   }
@@ -220,6 +220,9 @@ export const EditCompany = ({ props }) => {
   // determine 5 jobID
   // Then query jobs whose ID within the 5 jobID
   async function getJobs() {
+    if (companyInformation.jobs == null) {
+      return;
+    }
     if (cursorPosition >= companyInformation.jobs.length) {
       return;
     }
@@ -228,11 +231,13 @@ export const EditCompany = ({ props }) => {
       if (i >= companyInformation.jobs.length) {
         break;
       }
-      tempJobIDList.push(companyInformation.jobs[i].jobID);
+      tempJobIDList.push(
+        companyInformation.jobs[companyInformation.jobs.length - i - 1].jobID
+      );
     }
 
     const jobsQuery = query(
-      collection(db, "jobs"),
+      collection(db, "jobs2"),
       where(documentId(), "in", tempJobIDList)
     );
 
@@ -246,9 +251,9 @@ export const EditCompany = ({ props }) => {
     // Sort the list of jobs based on the publishedAt, newest first
     temp.sort((a, b) => {
       if (a.publishedAt.seconds === b.publishedAt.seconds) {
-        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? 1 : -1;
+        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? -1 : 1;
       }
-      return a.publishedAt.seconds > b.publishedAt ? 1 : -1;
+      return a.publishedAt.seconds > b.publishedAt ? -1 : 1;
     });
     setJobs(temp);
   }
@@ -282,7 +287,7 @@ export const EditCompany = ({ props }) => {
 
   React.useEffect(() => {
     // if a company has manager, then only the manager is allowed to edit company
-    // if a copmany does not have manager, but has employee, then only employee is allowed to edit company
+    // if a copmany does not have manager, but has recruiter, then only recruiter is allowed to edit company
     let hasManager = false;
     if (companyInformation.managers && companyInformation.managers.length > 0) {
       hasManager = true;
@@ -293,10 +298,10 @@ export const EditCompany = ({ props }) => {
       }
     }
     if (
-      companyInformation.employees &&
-      companyInformation.employees.length > 0
+      companyInformation.recruiters &&
+      companyInformation.recruiters.length > 0
     ) {
-      if (companyInformation.employees.includes(currentUserID)) {
+      if (companyInformation.recruiters.includes(currentUserID)) {
         setIsnewJobAllowed(true);
         setIsAdmin(!hasManager);
         return;
@@ -307,8 +312,8 @@ export const EditCompany = ({ props }) => {
   }, [companyInformation, currentUserID]);
 
   React.useEffect(() => {
-    if (companyInformation.employees) {
-      getEmployees();
+    if (companyInformation.recruiters) {
+      getRecruiters();
     }
     if (companyInformation.managers) {
       getManagers();
@@ -320,8 +325,8 @@ export const EditCompany = ({ props }) => {
   }, [companyInformation, cursorPosition]);
 
   React.useEffect(() => {
-    console.log(employeesInformation);
-  }, [employeesInformation]);
+    console.log(recruitersInformation);
+  }, [recruitersInformation]);
 
   return (
     <>
@@ -335,10 +340,10 @@ export const EditCompany = ({ props }) => {
             If there is at least 1 manager, then only managers can update
           </Typography>
           <Typography>
-            Else If there is at least 1 employee, then only employees can update
+            Else If there is at least 1 recruiter, then only recruiters can update
           </Typography>
           <Typography>
-            Else If there is no employee, then only everyone can update
+            Else If there is no recruiter, then everyone can update
           </Typography>
       <Typography sx={{ marginLeft: "5%" }}>Company Name</Typography>*/}
 
@@ -499,30 +504,27 @@ export const EditCompany = ({ props }) => {
             </Button>
           </Box>
 
-          <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
-            Recruiters List
-          </Typography>
-          {/*<Typography>Promote employee to be a manager</Typography>
-          <Typography>Demote a manager to be an employee</Typography>
-          <Typography>Remove an employee</Typography>
+          {/*<Typography>Promote recruiter to be a manager</Typography>
+          <Typography>Demote a manager to be an recruiter</Typography>
+          <Typography>Remove an recruiter</Typography>
           */}
 
           <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
-            Employee List
+            Recruiters List
           </Typography>
-          {employeesInformation.map((employee) => (
+          {recruitersInformation.map((recruiter) => (
             <Box
-              key={`employeeCard-${employee.ID}`}
+              key={`recruiterCard-${recruiter.ID}`}
               sx={{ justifyContent: "center", paddingLeft: "5%" }}
             >
               <EmployeeCard
-                employeeId={employee.ID}
-                employeeFirstName={employee.firstName}
-                employeeLastName={employee.lastName}
-                employeeImage={employee.description}
+                employeeId={recruiter.ID}
+                employeeFirstName={recruiter.firstName}
+                employeeLastName={recruiter.lastName}
+                employeeImage={recruiter.description}
               >
-                {employee.email && (
-                  <Link to={`/viewProfile/${employee.email}`}>
+                {recruiter.email && (
+                  <Link to={`/viewProfile/${recruiter.email}`}>
                     <Button>View Profile</Button>
                   </Link>
                 )}
@@ -530,14 +532,14 @@ export const EditCompany = ({ props }) => {
                   <>
                     <Button
                       onClick={() => {
-                        removeEmployee(employee.ID);
+                        removeRecruiter(recruiter.ID);
                       }}
                     >
                       Remove
                     </Button>
                     <Button
                       onClick={() => {
-                        promoteToManager(employee.ID);
+                        promoteToManager(recruiter.ID);
                       }}
                     >
                       Promote
