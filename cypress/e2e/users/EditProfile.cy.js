@@ -58,6 +58,7 @@ describe("Edit Profile Page", () => {
     cy.get('input[name="ContactInfoCity"]').type("123");
     cy.get('input[name="ContactInfoCountry"]').type("123");
     cy.get('input[name="ContactInfoPostCode"]').type("123");
+    cy.wait(500);
 
     //education card
     cy.get('input[name="SchoolName"]').type("abc");
@@ -66,6 +67,7 @@ describe("Edit Profile Page", () => {
     cy.get('svg[name="eduAdd"]').click();
     cy.get('svg[name="eduDel"]').click();
     cy.get('button[name="eduPopupDel"]').click();
+    cy.wait(500);
 
     //experience card
     cy.get('input[name="CompanyName"]').type("abc");
@@ -76,11 +78,13 @@ describe("Edit Profile Page", () => {
     cy.get('svg[name="expAdd"]').click();
     cy.get('svg[name="expDel"]').click();
     cy.get('button[name="expPopupDel"]').click();
+    cy.wait(500);
 
     //skill card
     cy.get('input[name="SkillInput"]').type("abc");
     cy.get('svg[name="skillAdd"]').click();
     cy.get('[data-testid="CancelIcon"]').first().click();
+    cy.wait(500);
 
     //language card
     cy.get('input[name="Language"]').type("abc");
@@ -89,6 +93,7 @@ describe("Edit Profile Page", () => {
     cy.get('svg[name="langAdd"]').click();
     cy.get('svg[name="langDel"]').click();
     cy.get('button[name="langPopupDel"]').click();
+    cy.wait(500);
 
     //project card
     cy.get('input[name="ProjectTitle"]').type("abc");
@@ -96,6 +101,7 @@ describe("Edit Profile Page", () => {
     cy.get('svg[name="projAdd"]').click();
     cy.get('svg[name="projDel"]').click();
     cy.get('button[name="projPopupDel"]').click();
+    cy.wait(500);
 
     // //volunteering card
     cy.get('input[name="OrgName"]').type("abc");
@@ -103,6 +109,7 @@ describe("Edit Profile Page", () => {
     cy.get('svg[name="volAdd"]').click();
     cy.get('svg[name="volDel"]').click();
     cy.get('button[name="volPopupDel"]').click();
+    cy.wait(500);
 
     // //awards card
     cy.get('input[name="AwardTitle"]').type("abc");
@@ -111,6 +118,7 @@ describe("Edit Profile Page", () => {
     cy.get('svg[name="awardAdd"]').click();
     cy.get('svg[name="awardDel"]').click();
     cy.get('button[name="awardPopupDel"]').click();
+    cy.wait(500);
   });
 
   it("adds a resume", () => {
