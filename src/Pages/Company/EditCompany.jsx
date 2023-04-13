@@ -253,7 +253,7 @@ export const EditCompany = ({ props }) => {
       if (a.publishedAt.seconds === b.publishedAt.seconds) {
         return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? -1 : 1;
       }
-      return a.publishedAt.seconds > b.publishedAt ? -1 : 1;
+      return a.publishedAt.seconds > b.publishedAt.seconds ? -1 : 1;
     });
     setJobs(temp);
   }
