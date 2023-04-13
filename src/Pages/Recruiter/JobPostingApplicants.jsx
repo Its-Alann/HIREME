@@ -31,6 +31,8 @@ import {
   query,
   where,
   collection,
+  arrayUnion,
+  setDoc,
 } from "firebase/firestore";
 import Grid from "@mui/material/Unstable_Grid2";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -178,6 +180,41 @@ export const JobPostingApplicants = () => {
     const applicantEmail = selectedApplicantEmail;
     const applicantDocID = selectedApplicantDocID;
 
+    // Create a notification for the applicant
+    const notificationDocRef = doc(db, "notifications", applicantEmail);
+    let notificationJobSnapshot = await getDoc(notificationDocRef);
+    const currentDate = new Date();
+
+    // Check if document exists in the db
+    if (notificationJobSnapshot.exists()) {
+      console.log("Notification document exists for this user");
+    } else {
+      console.log("Notification document does not exist for this user");
+      console.log("Creating notification document for this user!");
+      // Add user email to notifications collection
+      await setDoc(doc(db, "notifications", applicantEmail), {
+        notifications: [],
+        notificationForJobs: true,
+        notificationForConnections: true,
+      });
+      notificationJobSnapshot = await getDoc(notificationDocRef);
+    }
+
+    // Check if user has notifications ON or OFF for jobs
+    if (notificationJobSnapshot.data().notificationForJobs === true) {
+      await updateDoc(notificationDocRef, {
+        notifications: arrayUnion(
+          ...[
+            {
+              type: "job alert",
+              content: `Your application for "${job.title}", from ${companyName.name}, has been updated!`,
+              timestamp: currentDate,
+            },
+          ]
+        ),
+      });
+    }
+
     const querySnapshot = await getDocs(
       query(
         collection(db, "applications2"),
@@ -197,6 +234,7 @@ export const JobPostingApplicants = () => {
       applicantApplications = applicationStatusToUpdate;
       const applicantRef = doc(db, "applications2", applicantDocID);
 
+      // Update the database with the new status
       await updateDoc(applicantRef, applicantApplications)
         .then(() => {
           console.log("Status updated successfully!");
@@ -205,6 +243,8 @@ export const JobPostingApplicants = () => {
         .catch((error) => {
           console.error("Error updating status", error);
         });
+
+      console.log(applicantEmail);
     });
   };
 
