@@ -28,6 +28,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateJob = () => {
+  const [thirdPartyLink, setThirdPartyLink] = React.useState(false);
   const [jobInformation, setJobInformation] = React.useState({
     companyID: "",
     deadline: new Date(),
@@ -42,6 +43,7 @@ export const CreateJob = () => {
     resume: "",
     coverLetter: "",
     transcript: "",
+    link: "",
   });
   const [companyName, setCompanyName] = React.useState({
     name: "",
@@ -330,6 +332,46 @@ export const CreateJob = () => {
               />
             </LocalizationProvider>
           </Box>
+
+          <Box>
+            <Typography>Link to third party application</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="thirdPartyCheck"
+                  checked={thirdPartyLink}
+                  onChange={() => {
+                    if (thirdPartyLink) {
+                      setJobInformation({
+                        ...jobInformation,
+                        link: "",
+                      });
+                    }
+                    setThirdPartyLink(!thirdPartyLink);
+                  }}
+                />
+              }
+              label="This application requires a link to a third party website for application"
+              labelPlacement="end"
+            />
+            {thirdPartyLink && (
+              <TextField
+                required
+                id="TextField-thirdParty"
+                variant="standard"
+                placeholder="https://www.glassdoor.com"
+                fullWidth
+                value={jobInformation.link}
+                onChange={(e) =>
+                  setJobInformation({
+                    ...jobInformation,
+                    link: e.target.value,
+                  })
+                }
+              />
+            )}
+          </Box>
+
           <Divider />
 
           <Box>
@@ -345,6 +387,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="resumeCheck"
                   checked={jobInformation.resume}
                   onChange={(e) =>
                     setJobInformation({
@@ -363,6 +406,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="coverCheck"
                   checked={jobInformation.coverLetter}
                   onChange={(e) =>
                     setJobInformation({
@@ -381,6 +425,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="transcriptCheck"
                   checked={jobInformation.transcript}
                   onChange={(e) =>
                     setJobInformation({

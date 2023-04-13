@@ -69,6 +69,7 @@ export const JobPostingApplicants = () => {
   const [checkedResume, setCheckedResume] = React.useState("");
   const [checkedCoverLetter, setCheckedCoverLetter] = React.useState("");
   const [checkedTranscript, setCheckedTranscript] = React.useState("");
+  const [thirdPartyLink, setThirdPartyLink] = React.useState("");
 
   const [openRemoveJob, setOpenRemoveJob] = useState(false);
   const tempArray2 = [];
@@ -127,6 +128,9 @@ export const JobPostingApplicants = () => {
         setCheckedTranscript("Required");
       } else {
         setCheckedTranscript("Optional");
+      }
+      if (jobData.link !== "") {
+        setThirdPartyLink(jobData.link);
       }
     } catch (error) {
       console.log(error);
@@ -422,6 +426,14 @@ export const JobPostingApplicants = () => {
                     <Typography sx={{ fontSize: 20 }}>Transcript</Typography>
                     <Typography>{checkedTranscript}</Typography>
                   </Box>
+                  {thirdPartyLink !== "" && (
+                    <Box>
+                      <Typography sx={{ fontSize: 20 }}>
+                        Third Party Link
+                      </Typography>
+                      <Typography>{thirdPartyLink}</Typography>
+                    </Box>
+                  )}
                 </Stack>
               </Box>
             </Card>
