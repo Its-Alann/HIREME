@@ -77,6 +77,7 @@ const ProfilePicture = ({ urlProfilePicture, visitingProfile }) => {
             border: "solid",
             borderColor: "#263aaf",
             color: "#263aaf",
+            cursor: "pointer",
           }}
         >
           {!visitingProfile ? "Upload Picture" : null}

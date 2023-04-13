@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "cypress-file-upload";
 
@@ -17,6 +18,7 @@ describe("example to-do app", () => {
     it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(500);
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION
@@ -32,10 +34,19 @@ describe("example to-do app", () => {
       cy.get("#message-input").should("be.visible").type("Hi");
       cy.get('[data-cy="send-button"]').should("be.visible").click();
       cy.get("#message-chats").last().should("contain", "Hi");
+      cy.wait(1000);
+
+      //send Hi with an emoji
+      cy.get("#message-input").should("be.visible").type("Hi");
+      cy.get('[data-cy="emojiPickerButton"]').click();
+      cy.get('[data-unified="1f602"] > .__EmojiPicker__').click();
+      cy.get('[data-testid="SendRoundedIcon"]')
+        .should("be.visible")
+        .click({ force: true });
+      cy.get("#message-chats").last().should("contain", "Hi😂");
 
       //send image
       const fileName = "src/Assets/fonts/Images/IMG_0524.png";
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
@@ -44,7 +55,6 @@ describe("example to-do app", () => {
       cy.get('[data-testid="ClearIcon"]').click();
 
       //send image
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000);
       cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
         .find("input")
@@ -57,6 +67,14 @@ describe("example to-do app", () => {
         .last()
         .click();
     });
+
+    // it("report a message", () => {
+    //   cy.get(".messageOptions").last().click();
+    //   cy.get(".reportMsgButton").click();
+    //   cy.get('[data-testid="reportedBadge"]').should("be.visible");
+    //   cy.login();
+    //   cy.visit("http://localhost:3000/messaging");
+    // });
 
     it("shows message if user is not signed in", () => {
       cy.logout();
@@ -123,6 +141,7 @@ describe("example to-do app", () => {
 
       cy.get(".messageOptions").last().invoke("show").click({ force: true });
       cy.get(".reportMsgButton").click();
+      cy.wait(1000);
     });
 
     it("opens new chat flow", () => {
@@ -134,6 +153,7 @@ describe("example to-do app", () => {
       cy.get('[data-cy="selectConnections"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').should("be.disabled");
       cy.get('[data-testid="ArrowDropDownIcon"]').click();
+      // cy.get(".MuiAutocomplete-noOptions").should("be.visible");
       cy.get("li.MuiAutocomplete-option").click();
       cy.get('[data-testid="CancelIcon"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').click();
