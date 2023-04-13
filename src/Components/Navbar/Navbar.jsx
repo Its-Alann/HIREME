@@ -313,12 +313,22 @@ const Navbar = () => {
                   )
                 )}
             </Menu>
+            {/* </Box>
+          <Box
+            sx={{
+              flexGrow: 0,
+              position: "absolute",
+              left: "50%",
+              margin: "auto",
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+            }}
+          > */}
             <Link
               href="/"
               sx={{
                 display: { xs: "flex", md: "none" },
-                ml: "auto",
-                mr: "auto",
+                mx: "auto",
               }}
             >
               <Box

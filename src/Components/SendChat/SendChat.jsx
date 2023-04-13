@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
-import { IconButton, Stack, Box, TextField, Typography } from "@mui/material";
+import {
+  IconButton,
+  Stack,
+  Box,
+  TextField,
+  Typography,
+  Button,
+  Popover,
+} from "@mui/material";
 import { getAuth } from "firebase/auth";
 import Fab from "@mui/material/Fab";
 import { SendRounded as SendRoundedIcon, Clear } from "@mui/icons-material";
@@ -16,13 +24,16 @@ import {
   listAll,
   deleteObject,
 } from "firebase/storage";
+import EmojiPicker from "emoji-picker-react";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
+import EmojiPickerButton from "../EmojiPicker/EmojiPickerButton";
 
 const SendChat = ({ conversationID, myUser, selectedIndex }) => {
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
   const [url, setUrl] = useState();
+  const [showPicker, setShowPicker] = useState(false);
 
   const [file, setFile] = useState();
 
@@ -210,7 +221,20 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             />
           </Grid>
         )}
-
+        {!file && (
+          <Grid
+            xs={1}
+            align="center"
+            data-cy="emojiPickerButton"
+            justifyContent="center"
+            sx={{ display: "flex", height: 56 }}
+          >
+            <EmojiPickerButton
+              setMessageContent={setMessageContent}
+              setShowPicker={setShowPicker}
+            />
+          </Grid>
+        )}
         <Grid
           xs={1}
           align="center"
@@ -227,7 +251,6 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             onClick={async () => {
               await handleSend();
             }}
-            // sx={{ p: 1 }}
           >
             <SendRoundedIcon color="primary" />
           </IconButton>
