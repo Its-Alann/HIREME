@@ -11,6 +11,8 @@ import {
   Stack,
   useMediaQuery,
   ListItemButton,
+  ListItemText,
+  Badge,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -22,11 +24,13 @@ import {
   onSnapshot,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { onAuthStateChanged } from "firebase/auth";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import { useTranslation } from "react-i18next";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import { onAuthStateChanged } from "firebase/auth";
 import SendChat from "../../Components/SendChat/SendChat";
 // import "./Messaging.css";
 import MessageList from "../../Components/Messaging/MessageList";
@@ -45,6 +49,16 @@ const theme = createTheme({
   },
 });
 
+const findLastSeen = (arr, searchValue) => {
+  const reverseIndex = arr
+    .slice()
+    .reverse()
+    .findIndex((x) => x.seenBy.includes(searchValue));
+  const lastIndex =
+    reverseIndex >= 0 ? arr.length - 1 - reverseIndex : reverseIndex;
+  return lastIndex;
+};
+
 const Messaging = () => {
   // State for writing messages
   const [messages, setMessages] = useState([]);
@@ -56,6 +70,7 @@ const Messaging = () => {
   const [chatProfiles, setChatProfiles] = useState([]);
   const [name, setName] = useState([]);
 
+  // current user's email
   const [myUser, setMyUser] = useState("");
 
   //tracks the convo in the sidebar
@@ -70,6 +85,9 @@ const Messaging = () => {
   // tracks when we use the new convo button
   const [newConvo, setNewConvo] = useState(false);
 
+  //all the authors in the selected conversation
+  const [authors, setAuthors] = useState([]);
+
   //to autoscroll
   const messageViewRef = useRef();
   const scrollToBottom = () => {
@@ -78,9 +96,10 @@ const Messaging = () => {
 
   const { t, i18n } = useTranslation();
 
+  // takes an object {otherAuthors, mostRecent}
   const getOtherAuthors = async (list) => {
     const nameList = await Promise.all(
-      list.map(async (author) => {
+      list.otherAuthors.map(async (author) => {
         const docSnap = await getDoc(doc(db, "userProfiles", author));
         if (docSnap.exists()) {
           return `${docSnap.data().values.firstName} ${
@@ -91,10 +110,16 @@ const Messaging = () => {
       })
     );
     const names = nameList.filter(Boolean).join(", ");
-    return { names, emails: list };
+    return {
+      names,
+      emails: list.otherAuthors,
+      mostRecent: list.mostRecent,
+      unRead: list.unRead,
+    };
   };
 
   // get all names of user's receivers
+  // populate the message sidebar
   const getAllReceivers = async () => {
     setChatProfiles([]);
     const messagesRef = collection(db, "messages");
@@ -109,10 +134,16 @@ const Messaging = () => {
     const unSub = onSnapshot(convosQuery, async (querySnapshot) => {
       //list of author lists
       const allAuthorsList = [];
+      //each document is a convo
       querySnapshot.forEach((document) => {
-        allAuthorsList.push(
-          document.data().authors.filter((author) => author !== myUser)
-        );
+        const data = document.data();
+        const mostRecent = data.messages?.at(-1).timestamp.toDate();
+        const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
+        allAuthorsList.push({
+          otherAuthors: data.authors.filter((author) => author !== myUser),
+          mostRecent,
+          unRead,
+        });
       });
 
       const allChatProfiles = await Promise.all(
@@ -124,6 +155,9 @@ const Messaging = () => {
         emails: ["billybob@gmail.com", "yodiegang@ful.com"]
       }   
       */
+      allChatProfiles.sort((a, b) =>
+        a.mostRecent < b.mostRecent ? 1 : a.mostRecent > b.mostRecent ? -1 : 0
+      );
       setChatProfiles(allChatProfiles);
     });
   };
@@ -158,11 +192,33 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
-  const selectConvo = async (conversationId, names, index) => {
-    setConvoId(conversationId);
+  const selectConvo = async (conversationId, names, index, emails) => {
+    // !there may be sync issues related to the read receipts
+    // !simply putting setAuthors before setConvoId may not be sufficient
+    setAuthors(emails);
     setName(names);
     setSelectedIndex(index);
+    setConvoId(conversationId);
     scrollToBottom();
+  };
+
+  const markMessagesAsRead = async () => {
+    if (messages.length === 0 || messages.at(-1).seenBy.includes(myUser)) {
+      return;
+    }
+    const updatedMessages = messages.map((m) => {
+      // dont want the readReceipt part to write to the db
+      const { readReceipt, ...updated } = m;
+
+      if (!m.seenBy) updated.seenBy = [myUser];
+      else if (!m.seenBy?.includes(myUser)) updated.seenBy.push(myUser);
+
+      return updated;
+    });
+    const convoRef = doc(db, "messages", convoId);
+    await updateDoc(convoRef, {
+      messages: updatedMessages,
+    });
   };
 
   // auth listener on load
@@ -193,8 +249,21 @@ const Messaging = () => {
     let unSub;
     if (convoId) {
       setNewConvo(false);
-      unSub = onSnapshot(doc(db, "messages", convoId), (document) => {
-        setMessages(document.data().messages);
+      const convoRef = doc(db, "messages", convoId);
+
+      unSub = onSnapshot(convoRef, (document) => {
+        const tempMsgs = document.data().messages;
+        authors.forEach((a) => {
+          const index = findLastSeen(tempMsgs, a);
+          if (index < 0) return;
+          if (!tempMsgs[index].readReceipt) {
+            tempMsgs[index].readReceipt = [a];
+          } else {
+            tempMsgs[index].readReceipt.push(a);
+          }
+        });
+        // console.log("tempMsgs", tempMsgs);
+        setMessages(tempMsgs);
       });
     }
   }, [convoId]);
@@ -209,6 +278,7 @@ const Messaging = () => {
     if (messages.length > 0) {
       scrollToBottom();
     }
+    markMessagesAsRead();
   }, [messages]);
 
   return (
@@ -268,17 +338,21 @@ const Messaging = () => {
               >
                 <List>
                   {chatProfiles.map((chat, i) => (
+                    // <Badge badgeContent="hi">
                     <ListItemButton
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
-                      selected={selectedIndex === i}
+                      // selected={selectedIndex === i}
                       onClick={async () => {
                         const conversationID = await getConversationId([
                           ...chat.emails,
                           myUser,
                         ]);
-                        await selectConvo(conversationID, chat.names, i);
+                        await selectConvo(conversationID, chat.names, i, [
+                          myUser,
+                          ...chat.emails,
+                        ]);
                       }}
                     >
                       <ListItemAvatar>
@@ -287,13 +361,18 @@ const Messaging = () => {
                           src="https://picsum.photos/200/300"
                         />
                       </ListItemAvatar>
-                      <Typography
-                        sx={{ textTransform: "lowercase" }}
-                        variant="body1"
-                      >
-                        {chat.names}
-                      </Typography>
+                      <ListItemText
+                        primary={chat.names}
+                        secondary={chat.mostRecent.toDateString()}
+                      />
+                      {chat.unRead && (
+                        <FiberManualRecordIcon
+                          fontSize="small"
+                          color="warning"
+                        />
+                      )}
                     </ListItemButton>
+                    // </Badge>
                   ))}
                 </List>
               </Grid>

@@ -22,7 +22,13 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
 
-const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
+const LanguagesCard = ({
+  profile,
+  setProfile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const language = `language${cardNum}`;
   const proficiency = `language${cardNum}proficiency`;
   const [editButton, setEditButton] = useState(false);
@@ -58,7 +64,10 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -66,6 +75,7 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Language"
+                name="Language"
                 variant="standard"
                 size="small"
                 value={profile.values[language]}
@@ -86,6 +96,7 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
                   <InputLabel> Proficiency</InputLabel>
                   <Select
                     id="language-dropdown"
+                    name="LanguageDropdown"
                     value={profile.values[proficiency]}
                     label="Proficiency"
                     onChange={(e) =>
@@ -111,6 +122,7 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="langDel"
                   />
                 )}
 
@@ -122,12 +134,19 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="langPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.languageNum + 1;
                     console.log(newCardNum);
@@ -138,6 +157,7 @@ const LanguagesCard = ({ profile, setProfile, cardNum, isLast }) => {
                       },
                     });
                   }}
+                  name="langAdd"
                 />
               </>
             )}
@@ -152,6 +172,7 @@ LanguagesCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
 };
 
 export default LanguagesCard;

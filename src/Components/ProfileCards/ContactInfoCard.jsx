@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import dayjs from "dayjs";
 import {
   Grid,
   Box,
@@ -14,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ContactInfoCard = ({ setProfile, profile }) => {
+const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
   const [editButton, setEditButton] = useState(false);
   const [tempDob, setTempDob] = useState("");
 
@@ -35,7 +34,10 @@ const ContactInfoCard = ({ setProfile, profile }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -55,6 +57,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoPhoneNumber"
               />
             </Grid>
             <Grid item>
@@ -72,10 +75,11 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoAddress"
               />
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ marginBottom: "1%" }}>
             <Grid item>
               <TextField
                 label="City"
@@ -91,6 +95,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoCity"
               />
             </Grid>
             <Grid item>
@@ -108,6 +113,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoCountry"
               />
             </Grid>
             <Grid item>
@@ -125,6 +131,7 @@ const ContactInfoCard = ({ setProfile, profile }) => {
                   readOnly: !editButton,
                   error: editButton,
                 }}
+                name="ContactInfoPostCode"
               />
             </Grid>
           </Grid>
@@ -156,6 +163,7 @@ ContactInfoCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
   currentUserEmail: PropTypes.string,
 };
 

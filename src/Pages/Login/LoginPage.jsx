@@ -1,28 +1,22 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CircularProgress, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import * as EmailValidator from "email-validator";
+import { getDoc, doc } from "firebase/firestore";
 import {
   useAuthState,
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
 import { useTranslation } from "react-i18next";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
-import { auth, provider } from "../../Firebase/firebase";
-import Navbar from "../../Components/Navbar/Navbar";
+import { auth, provider, db } from "../../Firebase/firebase";
 
 const theme = createTheme({
   palette: {
@@ -38,8 +32,8 @@ const theme = createTheme({
 const LoginPage = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
-  const [authError, setAuthError] = React.useState(false);
-  const [authErrorMsg, setAuthErrorMsg] = React.useState("");
+  const [blockedUser, setBlockedUser] = React.useState(false);
+
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const { t, i18n } = useTranslation();
@@ -56,18 +50,21 @@ const LoginPage = () => {
         email,
         password,
       });
-      try {
+
+      const docRef = doc(db, "blockedUsers", email);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists() === false) {
         signInWithEmailAndPassword(email, password);
         navigate("/");
-      } catch (err) {
-        console.error(err.code, err.message);
+      } else {
+        setBlockedUser(true);
       }
     }
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main">
         <Box
           sx={{
             marginTop: 5,
@@ -113,6 +110,7 @@ const LoginPage = () => {
               helperText={!emailError ? "" : "Please enter valid credentials"}
               variant="standard"
               color="primary"
+              onChange={() => setBlockedUser(false)}
             />
             <TextField
               className="TextField"
@@ -126,11 +124,18 @@ const LoginPage = () => {
               autoComplete="current-password"
               variant="standard"
               color="primary"
-              onFocus={() => setAuthErrorMsg("")}
             />
-            <Typography color={theme.palette.error.main}>
-              {authError && authErrorMsg}
-            </Typography>
+
+            {error && <Typography color="error">{error.message}</Typography>}
+
+            {blockedUser ? (
+              <Typography color="error">
+                Your account has been banned
+              </Typography>
+            ) : (
+              ""
+            )}
+
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -145,18 +150,22 @@ const LoginPage = () => {
                 sx={{ mt: 3, mb: 2, py: 1 }}
                 color="primary"
                 name="signIn"
-                inputProps={{ "aria-label": "signIn" }}
               >
                 {t("SignIn")}
               </Button>
             )}
-            {error && <Typography color="red">{error}</Typography>}
-            <Stack container justifyContent="center" spacing={1}>
-              <Link item xs align="center" href="/" variant="subtitle2">
-                {t("ForgotPassword")}
+
+            <Stack justifyContent="center" spacing={1}>
+              <Link
+                align="center"
+                href="/resetPassword"
+                variant="subtitle2"
+                data-testid="forgotPassword"
+              >
+                {t("ForgotPassword")}?
               </Link>
             </Stack>
-            <Stack container justifyContent="center" spacing={0} sx={{ mt: 3 }}>
+            <Stack justifyContent="center" spacing={0} sx={{ mt: 3 }}>
               <Typography
                 variant="subtitle1"
                 align="center"
@@ -173,7 +182,6 @@ const LoginPage = () => {
             <Stack
               sx={{ pt: 4 }}
               spacing={1}
-              container
               justifyContent="center"
               alignItems="center"
             >

@@ -6,7 +6,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import * as React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import { setDoc, collection, query, getDocs, doc } from "firebase/firestore";
 import { auth, db } from "../../Firebase/firebase";
 
@@ -21,19 +21,20 @@ export const CreateRecruiter = () => {
   async function handleSubmit() {
     console.log(auth.currentUser.uid);
     await setDoc(
-      doc(db, "recruiters", auth.currentUser.uid),
+      doc(db, "recruiters2", auth.currentUser.uid),
       recruiterInformation
     );
   }
 
   async function getCompanies() {
-    const companiesRef = collection(db, "companies");
+    const companiesRef = collection(db, "companies2");
     const companiesQuery = query(companiesRef);
     const queryResultSnapshot = await getDocs(companiesQuery);
     const tempCompanyList = [];
     queryResultSnapshot.forEach((document) => {
       tempCompanyList.push({ id: document.id, label: document.data().name });
     });
+    //console.log(tempCompanyList);
     setCompanyList(tempCompanyList);
   }
 
@@ -104,28 +105,20 @@ export const CreateRecruiter = () => {
                 })
               }
             />
-            <div>
-              <Link
-                sx={{ fontSize: 12 }}
-                onClick={() => {
-                  window.location.href = "/createCompany";
-                }}
-              >
-                Company does not exist yet?
-              </Link>
-            </div>
+            <a href="/createCompany">Company does not exist yet?</a>
           </Box>
         </Stack>
-
-        <Button
-          variant="contained"
-          id="Button-Save"
-          size="medium"
-          sx={{ mt: 2 }}
-          onClick={() => handleSubmit()}
-        >
-          Save
-        </Button>
+        <Link to="/">
+          <Button
+            variant="contained"
+            id="Button-Save"
+            size="medium"
+            sx={{ mt: 2 }}
+            onClick={() => handleSubmit()}
+          >
+            Save
+          </Button>
+        </Link>
       </Box>
     </Container>
   );

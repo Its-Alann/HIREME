@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/firebase";
 
-const ProfilePicture = ({ urlProfilePicture }) => {
+const ProfilePicture = ({ urlProfilePicture, visitingProfile }) => {
   // const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const [hidden, setHidden] = useState(true);
@@ -76,9 +76,10 @@ const ProfilePicture = ({ urlProfilePicture }) => {
             border: "solid",
             borderColor: "#263aaf",
             color: "#263aaf",
+            cursor: "pointer",
           }}
         >
-          Upload Picture
+          {!visitingProfile ? "Upload Picture" : null}
         </Avatar>
         {/* <button
           onClick={handleSubmit}
@@ -96,6 +97,7 @@ const ProfilePicture = ({ urlProfilePicture }) => {
 
 ProfilePicture.propTypes = {
   urlProfilePicture: PropTypes.string,
+  visitingProfile: PropTypes.bool,
 };
 
 export default ProfilePicture;

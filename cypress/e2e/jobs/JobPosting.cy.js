@@ -12,7 +12,7 @@ describe("Login to test account", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 });
 
@@ -34,57 +34,52 @@ describe("Display Job Posting", () => {
 describe("Display unique job posting", () => {
   it("visits unique job posting page", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
   });
 
   it("shows job title", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
-    cy.get(
-      ".css-1mhd35f-MuiStack-root > .MuiBox-root > .MuiTypography-root"
-    ).should("have.text", "Food supplier");
+    cy.get(".MuiTypography-h4").should("have.text", "Food Supplier");
   });
 
   it("shows job company", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
-    cy.get(".css-1mhd35f-MuiStack-root > :nth-child(2)").should(
+    cy.get(".css-1d9cypr-MuiStack-root > .css-0 > :nth-child(2)").should(
       "have.text",
       "Microsoft"
     );
   });
 
-  it("shows job company info", () => {
+  it("shows job company city and country", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
-    cy.get(".css-1mhd35f-MuiStack-root > :nth-child(3)").should(
-      "have.text",
-      "Nobel Prize Association Building"
-    );
+    cy.get(".css-0 > :nth-child(3)").should("have.text", "Las Vegas, Nevada");
   });
 
   it("shows job last date to apply", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(".css-bqdipl-MuiTypography-root").should(
       "have.text",
-      "October 20, 2023"
+      "Deadline: Fri Oct 20 2023"
     );
   });
 
   it("shows job about", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(".css-1v3caum > .css-1jv6ejj-MuiTypography-root").should(
@@ -95,7 +90,7 @@ describe("Display unique job posting", () => {
 
   it("shows job about info", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(".css-1v3caum > .css-1augsz5-MuiTypography-root").should(
@@ -106,10 +101,10 @@ describe("Display unique job posting", () => {
 
   it("shows job requirements", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
-    cy.get(".css-0 > .css-1jv6ejj-MuiTypography-root").should(
+    cy.get(":nth-child(2) > .css-1jv6ejj-MuiTypography-root").should(
       "have.text",
       "Requirements"
     );
@@ -117,10 +112,10 @@ describe("Display unique job posting", () => {
 
   it("shows job requirements info", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
-    cy.get(".css-0 > .css-1augsz5-MuiTypography-root").should(
+    cy.get(":nth-child(2) > .css-1augsz5-MuiTypography-root").should(
       "have.text",
       "5000 IQ"
     );
@@ -128,7 +123,7 @@ describe("Display unique job posting", () => {
 
   it("clicks on apply button", () => {
     cy.visit(
-      "http://localhost:3000/viewJobPosting/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/viewJobPosting/npx38jzGfcSJNhpN5LJx/CC1SEANIn2nmuSluL5ij"
     );
     cy.wait(1000);
     cy.get(

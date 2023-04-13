@@ -21,7 +21,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
+const VolunteeringCard = ({
+  profile,
+  setProfile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const volunteerOrg = `volunteer${cardNum}org`;
   const volunteerDesc = `volunteer${cardNum}desc`;
   const volunteerDate = `volunteer${cardNum}date`;
@@ -65,14 +71,18 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Project Title"
+                label="Organization Name"
+                name="OrgName"
                 variant="standard"
                 size="small"
                 value={profile.values[volunteerOrg]}
@@ -117,7 +127,8 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
           <Grid container spacing={3}>
             <Grid item sx={{ mr: "auto" }}>
               <TextField
-                label="Project Description"
+                label="Volunteering Description"
+                name="VolDesc"
                 variant="standard"
                 size="small"
                 multiline
@@ -143,6 +154,7 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="volDel"
                   />
                 )}
 
@@ -154,12 +166,19 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="volPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.volunteerNum + 1;
                     console.log(newCardNum);
@@ -170,6 +189,7 @@ const VolunteeringCard = ({ profile, setProfile, cardNum, isLast }) => {
                       },
                     });
                   }}
+                  name="volAdd"
                 />
               </>
             )}
@@ -184,6 +204,7 @@ VolunteeringCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
 };
 
 export default VolunteeringCard;

@@ -6,7 +6,7 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const MessageOptions = ({ index, convoId, reportMessage }) => {
+const MessageOptions = ({ index, convoId, reportMessage, reported }) => {
   const antinos = "🖖";
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,8 +29,8 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
           height: "fit-content",
           alignSelf: "center",
           p: 0,
-          // display: "none",
-          color: "white",
+          visibility: "hidden",
+          // color: "white",
         }}
       >
         <MoreVertIcon />
@@ -47,7 +47,7 @@ const MessageOptions = ({ index, convoId, reportMessage }) => {
           className="reportMsgButton"
         >
           <FlagIcon />
-          {t("Report")}
+          {reported ? t("Unreport") : t("Report")}
         </MenuItem>
       </Menu>
     </>
@@ -58,6 +58,7 @@ MessageOptions.propTypes = {
   index: PropTypes.number,
   convoId: PropTypes.string,
   reportMessage: PropTypes.func,
+  reported: PropTypes.bool,
 };
 
 export default MessageOptions;

@@ -15,6 +15,7 @@ import {
   arrayRemove,
   updateDoc,
   arrayUnion,
+  setDoc,
 } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
 import { db } from "../../Firebase/firebase";
@@ -44,6 +45,7 @@ const ColorButtonLightBlue = styled(Button)(({ theme }) => ({
 }));
 
 export const ReceivedInvitationCard = ({
+  allUserProfiles,
   receivedInvitationUserID,
   currentUser,
 }) => {
@@ -51,20 +53,12 @@ export const ReceivedInvitationCard = ({
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    const getAcceptInvitationUsers = async () => {
-      try {
-        const docSnap = await getDoc(
-          doc(db, "userProfiles", receivedInvitationUserID)
-        );
-        const userData = docSnap.data();
-        setReceivedInvitationUser(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getAcceptInvitationUsers();
-  }, []);
+    const findReceivedInviteUserProfile = allUserProfiles.find(
+      (el) => el.id === receivedInvitationUserID
+    );
+    // console.log(findConnectUserProfile);
+    setReceivedInvitationUser(findReceivedInviteUserProfile);
+  }, [allUserProfiles, receivedInvitationUserID]);
 
   const ignoreInvite = async () => {
     // 1. remove user from invitations.requestUsers collection
@@ -130,6 +124,55 @@ export const ReceivedInvitationCard = ({
       await updateDoc(userSentInvitationNetworkRef, {
         connectedUsers: arrayUnion(currentUser),
       });
+
+      // Add notification for user being accepted
+      const userSentInvitationNotificationsRef = doc(
+        db,
+        "notifications",
+        receivedInvitationUserID
+      );
+      let userSentInvitationNotificationsSnap = await getDoc(
+        userSentInvitationNotificationsRef
+      );
+
+      // Check if the document exists
+      if (userSentInvitationNotificationsSnap.exists()) {
+        console.log("Notification document exists for this user");
+      } else {
+        console.log("Notification document exists for this user");
+        console.log("Creating notification document for this user!");
+        // Add user email to notifications collection
+        await setDoc(doc(db, "notifications", receivedInvitationUserID), {
+          notifications: [],
+          notificationForJobs: true,
+          notificationForConnections: true,
+        });
+        userSentInvitationNotificationsSnap = await getDoc(
+          userSentInvitationNotificationsRef
+        );
+      }
+      // Check if the user receiving the notification has the setting turned on
+      if (
+        userSentInvitationNotificationsSnap.data()
+          .notificationForConnections === true
+      ) {
+        const currentUserRef = doc(db, "userProfiles", currentUser);
+        const currentUserSnap = await getDoc(currentUserRef);
+        const currentDate = new Date();
+        await updateDoc(userSentInvitationNotificationsRef, {
+          notifications: arrayUnion(
+            ...[
+              {
+                type: "connections",
+                content: `${currentUserSnap.data().values.firstName} ${
+                  currentUserSnap.data().values.lastName
+                } accepted your invitation request`,
+                timestamp: currentDate,
+              },
+            ]
+          ),
+        });
+      }
       window.location.reload();
     } catch (error) {
       console.log(error);
@@ -137,75 +180,86 @@ export const ReceivedInvitationCard = ({
   };
 
   return (
-    <ThemeProvider theme={theme2}>
-      <div>
-        <Box sx={{ width: 300, minWidth: 100 }}>
-          <Card variant="outlined" sx={{ p: 1 }} data-cy="ReceivedCard">
-            <>
-              <CardHeader
-                avatar={
-                  //source will be the user's image
-                  <Avatar
-                    aria-label="user"
-                    sx={{ width: 56, height: 56 }}
-                    src={receivedInvitationUser.values.image}
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {receivedInvitationUser ? (
+        <ThemeProvider theme={theme2}>
+          <div>
+            <Box sx={{ width: 300, minWidth: 100 }}>
+              <Card variant="outlined" sx={{ p: 1 }} data-cy="ReceivedCard">
+                <>
+                  <CardHeader
+                    avatar={
+                      //source will be the user's image
+                      <Avatar
+                        aria-label="user"
+                        sx={{ width: 56, height: 56 }}
+                        src={receivedInvitationUser.values.image}
+                      />
+                    }
+                    //title will be the user's name and subheader is their bio
+                    title={
+                      receivedInvitationUser.values.firstName !== "" &&
+                      receivedInvitationUser.values.lastName !== ""
+                        ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
+                        : "No name"
+                    }
+                    subheader={
+                      //remove != null when incomplete users are removed
+                      receivedInvitationUser.values.description !== "" &&
+                      receivedInvitationUser.values.description != null
+                        ? receivedInvitationUser.values.description.length <= 24
+                          ? `${receivedInvitationUser.values.description}`
+                          : `${receivedInvitationUser.values.description.substring(
+                              0,
+                              21
+                            )} ...`
+                        : "No bio"
+                    }
                   />
-                }
-                //title will be the user's name and subheader is their bio
-                title={
-                  receivedInvitationUser.values.firstName !== "" &&
-                  receivedInvitationUser.values.lastName !== ""
-                    ? `${receivedInvitationUser.values.firstName} ${receivedInvitationUser.values.lastName}`
-                    : "No name"
-                }
-                subheader={
-                  //remove != null when incomplete users are removed
-                  receivedInvitationUser.values.description !== "" &&
-                  receivedInvitationUser.values.description != null
-                    ? `${receivedInvitationUser.values.description}`
-                    : "No bio"
-                }
-              />
-              {/*moves the buttons to the right*/}
-              <Box display="flex" justifyContent="flex-end">
-                <CardActions>
-                  {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue
-                    size="medium"
-                    onClick={acceptInvite}
-                    data-cy={`AcceptInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                    id={`AcceptInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                  >
-                    {t("Accept")}
-                  </ColorButtonBlue>
-                  <ColorButtonLightBlue
-                    size="medium"
-                    variant="outlined"
-                    onClick={ignoreInvite}
-                    data-cy={`IgnoreInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                    id={`IgnoreInvitationBtn${
-                      receivedInvitationUser?.values?.firstName ?? ""
-                    }`}
-                  >
-                    {t("Ignore")}
-                  </ColorButtonLightBlue>
-                </CardActions>
-              </Box>
-            </>
-          </Card>
-        </Box>
-      </div>
-    </ThemeProvider>
+                  {/*moves the buttons to the right*/}
+                  <Box display="flex" justifyContent="flex-end">
+                    <CardActions>
+                      {/*view profile will go to the user's profile and message will be sent to the */}
+                      <ColorButtonBlue
+                        size="medium"
+                        onClick={acceptInvite}
+                        data-cy={`AcceptInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                        id={`AcceptInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                      >
+                        {t("Accept")}
+                      </ColorButtonBlue>
+                      <ColorButtonLightBlue
+                        size="medium"
+                        variant="outlined"
+                        onClick={ignoreInvite}
+                        data-cy={`IgnoreInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                        id={`IgnoreInvitationBtn${
+                          receivedInvitationUser?.values?.firstName ?? ""
+                        }`}
+                      >
+                        {t("Ignore")}
+                      </ColorButtonLightBlue>
+                    </CardActions>
+                  </Box>
+                </>
+              </Card>
+            </Box>
+          </div>
+        </ThemeProvider>
+      ) : null}
+    </>
   );
 };
 
 ReceivedInvitationCard.propTypes = {
+  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
   receivedInvitationUserID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };

@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Chip,
   TextField,
   Dialog,
   DialogContent,
@@ -18,12 +17,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PropTypes from "prop-types";
-import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
+const EducationCard = ({
+  setProfile,
+  profile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const schName = `schoolName${cardNum}`;
   const schDegree = `schoolDegree${cardNum}`;
   const schProgram = `schoolProgram${cardNum}`;
@@ -74,7 +78,10 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -82,6 +89,7 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="School name"
+                name="SchoolName"
                 variant="standard"
                 size="small"
                 value={profile.values[schName]}
@@ -154,6 +162,7 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Degree"
+                name="Degree"
                 variant="standard"
                 size="small"
                 value={profile.values[schDegree]}
@@ -174,6 +183,7 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Program"
+                name="Program"
                 variant="standard"
                 size="small"
                 value={profile.values[schProgram]}
@@ -205,6 +215,7 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="eduDel"
                   />
                 )}
 
@@ -216,12 +227,19 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="eduPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.schoolNum + 1;
                     setProfile({
@@ -231,6 +249,7 @@ const EducationCard = ({ setProfile, profile, cardNum, isLast }) => {
                       },
                     });
                   }}
+                  name="eduAdd"
                 />
               </>
             )}
@@ -246,6 +265,7 @@ EducationCard.propTypes = {
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
   currentUserEmail: PropTypes.string,
+  visitingProfile: PropTypes.bool,
 };
 
 export default EducationCard;

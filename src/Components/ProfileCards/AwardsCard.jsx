@@ -21,7 +21,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
+const AwardsCard = ({
+  profile,
+  setProfile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const awardTitle = `awardTitle${cardNum}`;
   const awardIssuer = `awardIssuer${cardNum}`;
   const awardDescription = `awardDescription${cardNum}`;
@@ -66,7 +72,10 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -74,6 +83,7 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Award Title"
+                name="AwardTitle"
                 variant="standard"
                 size="small"
                 value={profile.values[awardTitle]}
@@ -93,6 +103,7 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Award Issuer"
+                name="AwardIssuer"
                 variant="standard"
                 size="small"
                 value={profile.values[awardIssuer]}
@@ -139,6 +150,7 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
             <Grid item sx={{ mr: "auto" }}>
               <TextField
                 label="Award Description"
+                name="AwardDescription"
                 variant="standard"
                 size="small"
                 multiline
@@ -164,6 +176,7 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="awardDel"
                   />
                 )}
 
@@ -175,12 +188,19 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="awardPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.awardsNum + 1;
                     console.log(newCardNum);
@@ -191,6 +211,7 @@ const AwardsCard = ({ profile, setProfile, cardNum, isLast }) => {
                       },
                     });
                   }}
+                  name="awardAdd"
                 />
               </>
             )}
@@ -205,6 +226,7 @@ AwardsCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
+  visitingProfile: PropTypes.bool,
 };
 
 export default AwardsCard;

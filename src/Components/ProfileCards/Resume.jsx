@@ -27,7 +27,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
  *
  * @return Resume component
  */
-const Resume = ({ resumeUrl }) => {
+const Resume = ({ resumeUrl, visitingProfile }) => {
   // Current resume url created from file upload
   const [url, setUrl] = useState("");
   // Variable to hide submit button
@@ -134,7 +134,11 @@ const Resume = ({ resumeUrl }) => {
       <Grid
         container
         display="flex"
-        style={{ paddingLeft: 40, paddingBottom: 10 }}
+        style={{
+          paddingLeft: 40,
+          paddingBottom: 10,
+          display: visitingProfile ? "none" : "block",
+        }}
       >
         {/* Title, upload file button and file name display */}
         <Grid item xs={12} md={12}>
@@ -144,6 +148,7 @@ const Resume = ({ resumeUrl }) => {
             style={{ backgroundColor: "#eaeaea" }}
             color="primary"
             variant="outlined"
+            name="UploadBtn"
           >
             Upload a file
             <input
@@ -280,6 +285,7 @@ const Resume = ({ resumeUrl }) => {
 
 Resume.propTypes = {
   resumeUrl: PropTypes.string,
+  visitingProfile: PropTypes.bool,
 };
 
 export default Resume;

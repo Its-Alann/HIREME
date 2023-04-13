@@ -27,6 +27,7 @@ export const BrowseJobs = () => {
   const [lastJob, setLastJob] = React.useState(null);
   const [firstJob, setFirstJob] = React.useState(null);
   const [companiesName, setCompaniesName] = React.useState({});
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const jobsPerPage = 5;
 
@@ -39,7 +40,7 @@ export const BrowseJobs = () => {
   // these will be selected.
   // then shown in reverse order.
   const initialJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     limitToLast(jobsPerPage)
   );
@@ -63,7 +64,7 @@ export const BrowseJobs = () => {
   // L F
   // 1 & 2 become the new lastJob & firstJob
   const nextJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     endBefore(lastJob),
     limitToLast(jobsPerPage)
@@ -77,7 +78,7 @@ export const BrowseJobs = () => {
   //     L       F
   // 3 & 7 become the new lastJob & firstJob
   const previousJobsQuery = query(
-    collection(db, "jobs"),
+    collection(db, "jobs2"),
     orderBy("publishedAt"),
     startAfter(firstJob),
     limit(jobsPerPage)
@@ -112,14 +113,21 @@ export const BrowseJobs = () => {
   // If the companies' name has already been stored, skip
   function getCompaniesName() {
     const temp = companiesName;
+    const temp2 = companiesLogo;
+
     jobs.forEach(async (job) => {
+      const companyRef = doc(db, "companies2", job.companyID);
+      const companySnapshot = await getDoc(companyRef);
       if (!temp[job.companyID]) {
         temp[job.companyID] = "querying";
-        const companyRef = doc(db, "companies", job.companyID);
-        const companySnapshot = await getDoc(companyRef);
         temp[job.companyID] = companySnapshot.data().name;
         setCompaniesName({ ...temp });
       }
+      if (companySnapshot.data().logoPath === "") {
+        temp2[job.companyID] =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      setCompaniesLogo({ ...temp2 });
     });
   }
 
@@ -152,12 +160,23 @@ export const BrowseJobs = () => {
             <Box key={job.documentID} sx={{ py: 1 }}>
               <Card variant="outlined">
                 <Box sx={{ m: 3 }}>
-                  <Typography variant="h4">{job.title}</Typography>
-
-                  <Typography>{companiesName[job.companyID]}</Typography>
-
-                  {/* change to country and city */}
-                  <Typography>{job.location}</Typography>
+                  <Stack direction="row" alignItems="center">
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo[job.companyID]}
+                    />
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Typography>{`${job.city}, ${job.country}`}</Typography>
+                    </Box>
+                  </Stack>
 
                   {/* do we need to show company id? */}
                   {/* <Typography>Company ID: {job.companyID}</Typography> */}
@@ -182,24 +201,7 @@ export const BrowseJobs = () => {
                         style={{ textDecoration: "none" }}
                       >
                         {/* <Link to="/job/1"> */}
-                        View job (redirects to candidate&apos;s view)
-                      </Link>
-                    </Button>
-                    {/* button for recruiter's view */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      sx={{ my: 1 }}
-                      id={`Button-${job.documentID}`}
-                    >
-                      <Link
-                        to={`/viewJobPostingApplicants/${job.companyID}/${job.documentID}`}
-                        className="link"
-                        underline="none"
-                        style={{ textDecoration: "none" }}
-                      >
-                        {/* <Link to="/job/1"> */}
-                        View job (redirects to recruiter&apos;s view)
+                        View job
                       </Link>
                     </Button>
                     <Typography>

@@ -2,6 +2,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { Divider } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -11,11 +13,18 @@ import {
   collection,
   doc,
   getDoc,
+  addDoc,
   arrayUnion,
   writeBatch,
+  query,
+  where,
+  getDocs,
+  updateDoc,
 } from "firebase/firestore";
+import { useParams, Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import Checkbox from "@mui/material/Checkbox";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateJob = () => {
@@ -23,7 +32,6 @@ export const CreateJob = () => {
     companyID: "",
     deadline: new Date(),
     description: "",
-    location: "",
     country: "",
     city: "",
     owner: "",
@@ -31,6 +39,9 @@ export const CreateJob = () => {
     requirement: "",
     title: "",
     benefits: "",
+    resume: "",
+    coverLetter: "",
+    transcript: "",
   });
   const [companyName, setCompanyName] = React.useState({
     name: "",
@@ -39,32 +50,73 @@ export const CreateJob = () => {
   async function handleSubmit() {
     // Here we are updating different document
     // With batch, either all of the updates succeed or none.
-    const batch = writeBatch(db);
+    // const batch = writeBatch(db);
 
-    const jobDocumentRef = doc(collection(db, "jobs"));
-    batch.set(jobDocumentRef, jobInformation);
+    // const jobDocumentRef = doc(collection(db, "jobs2"));
+    // batch.set(jobDocumentRef, jobInformation);
 
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
-    batch.update(recruiterRef, {
-      jobs: arrayUnion({
-        jobID: jobDocumentRef.id,
-        publishedAt: jobInformation.publishedAt,
-      }),
+    // await batch.commit();
+    await addDoc(collection(db, "jobs2"), {
+      ...jobInformation,
     });
 
-    const companyRef = doc(db, "companies", jobInformation.companyID);
-    batch.update(companyRef, {
-      jobs: arrayUnion({
-        jobID: jobDocumentRef.id,
-        publishedAt: jobInformation.publishedAt,
-      }),
+    // Query the DB to get the job ID
+    const q1 = query(
+      collection(db, "jobs2"),
+      where("title", "==", jobInformation.title),
+      where("companyID", "==", jobInformation.companyID),
+      where("publishedAt", "==", jobInformation.publishedAt)
+    );
+    const jobIDSnapshots = await getDocs(q1);
+    let jobID = "";
+    // eslint-disable-next-line no-shadow
+    jobIDSnapshots.forEach((doc) => {
+      jobID = doc.id;
     });
-    await batch.commit();
+
+    // Retrieve user information in order to properly create job suggestion notifications
+    const titleArray = jobInformation.title.split(" ");
+    const userProfileRef = collection(db, "userProfiles");
+    const currentDate = new Date();
+
+    for (let i = 0; i < titleArray.length; i += 1) {
+      const q = query(
+        userProfileRef,
+        where("field", ">=", titleArray[i]),
+        where("field", "<=", `${titleArray[i]}\uf7ff`)
+      );
+      // eslint-disable-next-line no-await-in-loop
+      const userProfileSnapShot = await getDocs(q);
+      // eslint-disable-next-line no-loop-func
+      userProfileSnapShot.forEach(async (document) => {
+        try {
+          console.log(`Sending notification to ${document.id}`);
+          const notificationDocRef = doc(db, "notifications", document.id);
+          const notificationJobSnapshot = await getDoc(notificationDocRef);
+          if (notificationJobSnapshot.data().notificationForJobs === true) {
+            updateDoc(notificationDocRef, {
+              notifications: arrayUnion(
+                ...[
+                  {
+                    type: "jobs",
+                    content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
+                    timestamp: currentDate,
+                    link: `viewJobPosting/${jobInformation.companyID}/${jobID}`,
+                  },
+                ]
+              ),
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    }
   }
 
   // We need to include Recruiter ID & their company ID in the new Job
   async function getCompanyIDAndRecruiterID() {
-    const recruiterRef = doc(db, "recruiters", auth.currentUser.uid);
+    const recruiterRef = doc(db, "recruiters2", auth.currentUser.uid);
     const recruiterSnapshot = await getDoc(recruiterRef);
     if (recruiterSnapshot.exists()) {
       const companyID = recruiterSnapshot.data().workFor;
@@ -72,7 +124,7 @@ export const CreateJob = () => {
         console.log("current recruiter's company ID not exist");
         return;
       }
-      const companyRef = doc(db, "companies", companyID);
+      const companyRef = doc(db, "companies2", companyID);
       const companySnapshot = await getDoc(companyRef);
       if (companySnapshot.exists()) {
         setJobInformation({
@@ -193,24 +245,6 @@ export const CreateJob = () => {
             </Box>
           </Stack>
 
-          {/* <Box>
-            <Typography>Location</Typography>
-            <TextField
-              required
-              id="TextField-Location"
-              variant="standard"
-              placeholder="Location"
-              fullWidth
-              value={jobInformation.location}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  location: e.target.value,
-                })
-              }
-            />
-          </Box> */}
-
           <Box>
             <Typography>Job description</Typography>
             {/*<TextField
@@ -296,17 +330,82 @@ export const CreateJob = () => {
               />
             </LocalizationProvider>
           </Box>
+          <Divider />
+
+          <Box>
+            <Typography>
+              Please specify which documents are required by candidates among
+              the following. <br />
+              (By default, documents are not required.)
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography>Resume</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.resume}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      resume: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
+
+          <Box>
+            <Typography>Cover Letter</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.coverLetter}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      coverLetter: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
+
+          <Box>
+            <Typography>Transcript</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={jobInformation.transcript}
+                  onChange={(e) =>
+                    setJobInformation({
+                      ...jobInformation,
+                      transcript: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="required"
+            />
+          </Box>
         </Stack>
 
-        <Button
-          variant="contained"
-          size="medium"
-          id="Button-Save"
-          sx={{ mt: 2 }}
-          onClick={() => handleSubmit()}
-        >
-          Save
-        </Button>
+        <Link to="/myJobs">
+          <Button
+            variant="contained"
+            size="medium"
+            id="Button-Save"
+            sx={{ mt: 2 }}
+            onClick={() => handleSubmit()}
+          >
+            Save
+          </Button>
+        </Link>
       </Box>
     </Container>
   );

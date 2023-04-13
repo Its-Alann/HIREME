@@ -23,7 +23,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
+const ExperienceCard = ({
+  setProfile,
+  profile,
+  cardNum,
+  isLast,
+  visitingProfile,
+}) => {
   const expName = `expName${cardNum}`;
   const expPosition = `expPos${cardNum}`;
   const expLocation = `expLoc${cardNum}`;
@@ -97,7 +103,10 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <EditIcon
                 onClick={() => setEditButton(!editButton)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  display: visitingProfile ? "none" : "inline",
+                }}
               />
             </Grid>
           </Grid>
@@ -105,6 +114,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Company Name"
+                name="CompanyName"
                 variant="standard"
                 size="small"
                 value={profile.values[expName]}
@@ -148,6 +158,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="End Date"
+                    name="ExpEndDate"
                     value={tempEndDate}
                     readOnly={!editButton}
                     onChange={(newValue) => {
@@ -173,13 +184,14 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    name="workCheck"
+                    name="WorkCheck"
                     checked={isCurrentlyEmployed}
                     onChange={handleCheckbox}
                   />
                 }
                 label="I currently work here"
                 labelPlacement="end"
+                disabled={!editButton}
               />
             </Grid>
           </Grid>
@@ -187,6 +199,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Job Position"
+                name="JobPosition"
                 variant="standard"
                 size="small"
                 value={profile.values[expPosition]}
@@ -207,6 +220,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
             <Grid item>
               <TextField
                 label="Location"
+                name="JobLocation"
                 variant="standard"
                 size="small"
                 value={profile.values[expLocation]}
@@ -228,6 +242,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
           <Grid container>
             <TextField
               label="Job Description"
+              name="JobDescription"
               variant="standard"
               size="small"
               value={profile.values[expDescription]}
@@ -251,6 +266,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                   <DeleteIcon
                     sx={{ ml: "auto", mt: "auto", cursor: "pointer" }}
                     onClick={handleClickOpen}
+                    name="expDel"
                   />
                 )}
 
@@ -262,12 +278,19 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearCardInfo}>Delete</Button>
+                    <Button onClick={handleClearCardInfo} name="expPopupDel">
+                      Delete
+                    </Button>
                   </DialogActions>
                 </Dialog>
 
                 <AddIcon
-                  sx={{ ml: "1%", mt: "auto", cursor: "pointer" }}
+                  sx={{
+                    ml: "1%",
+                    mt: "auto",
+                    cursor: "pointer",
+                    display: visitingProfile ? "none" : "inline",
+                  }}
                   onClick={() => {
                     const newCardNum = profile.values.expNum + 1;
                     console.log(newCardNum);
@@ -278,6 +301,7 @@ const ExperienceCard = ({ setProfile, profile, cardNum, isLast }) => {
                       },
                     });
                   }}
+                  name="expAdd"
                 />
               </>
             )}
@@ -293,6 +317,7 @@ ExperienceCard.propTypes = {
   profile: PropTypes.objectOf(PropTypes.any),
   setProfile: PropTypes.func,
   currentUserEmail: PropTypes.string,
+  visitingProfile: PropTypes.bool,
 };
 
 export default ExperienceCard;

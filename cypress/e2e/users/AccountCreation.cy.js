@@ -9,6 +9,8 @@ describe("Login to test account", () => {
     cy.get("#password").type("test123");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
   });
 });
 
@@ -30,6 +32,10 @@ describe("Name Form", () => {
       ":nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > #standard-required"
     ).type("Account");
     // cy.get("#next").click();
+
+    cy.get(
+      ":nth-child(3) > .MuiFormControl-root > .MuiInputBase-root > #standard-required"
+    ).type("Software Developer");
   });
 });
 
@@ -55,7 +61,7 @@ describe("Filling Up Forms", () => {
       ).type("H1H 1H1");
       cy.get(".MuiInputAdornment-root > .MuiButtonBase-root").click();
       cy.get(
-        ".MuiDayPicker-monthContainer > :nth-child(1) > :nth-child(4)"
+        ".MuiDayPicker-monthContainer > :nth-child(3) > :nth-child(4)"
       ).click();
     });
   });
@@ -224,6 +230,8 @@ describe("Filling Up Forms", () => {
         cy.get("#next").click();
         cy.get("#next").click();
         cy.get("#next").click();
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
       });
     });
   });

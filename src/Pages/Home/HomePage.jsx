@@ -16,6 +16,8 @@ const HomePage = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
   const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const [firstName, setFirstName] = useState("");
   const { t, i18n } = useTranslation();
 
@@ -28,6 +30,17 @@ const HomePage = () => {
     }
   };
 
+  const checkAdmin = async (email) => {
+    const adminRef = doc(db, "admins", email);
+    const docSnap = await getDoc(adminRef);
+    console.log("aaaadmin", docSnap);
+    if (docSnap.exists()) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  };
+
   useEffect(() => {
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
@@ -36,6 +49,8 @@ const HomePage = () => {
         // console.log("email", email);
         setUser(uid);
         checkFormCompletion(email);
+        console.log("useEffect", email);
+        checkAdmin(email);
       } else {
         setUser(null);
       }
@@ -135,11 +150,27 @@ const HomePage = () => {
                       variant="contained"
                       sx={{ mt: 3, mb: 2, py: 1 }}
                       color="primary"
-                      inputProps={{ "aria-label": "signIn" }}
                       onClick={handleSignOut}
                     >
                       {t("SignOut")}
                     </Button>
+                    {isAdmin === true ? (
+                      <Button
+                        fullWidth
+                        id="signout"
+                        data-testid="homeLink"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2, py: 1 }}
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = "/admin/flaggedMessages";
+                        }}
+                      >
+                        Admin Page
+                      </Button>
+                    ) : (
+                      <Typography> </Typography>
+                    )}
                   </div>
                 </Grid>
                 <Grid
@@ -150,7 +181,9 @@ const HomePage = () => {
                   display="flex"
                   alignItems="center"
                 >
-                  {formCompleted === false ? (
+                  {isAdmin === true ? (
+                    <Typography> </Typography>
+                  ) : formCompleted === false ? (
                     <div>
                       <Typography variant="h6">
                         Looks like you&apos;re new!
@@ -181,7 +214,7 @@ const HomePage = () => {
                         sx={{ mt: 3, mb: 2, py: 1 }}
                         color="primary"
                         onClick={() => {
-                          window.location.href = "/editProfile";
+                          window.location.href = "/editProfile/myprofile";
                         }}
                       >
                         {t("EditProfile")}
@@ -190,13 +223,17 @@ const HomePage = () => {
                   )}
                 </Grid>
                 <div>
-                  <Link
-                    onClick={() => {
-                      window.location.href = "/createRecruiter";
-                    }}
-                  >
-                    {t("recruiter")}
-                  </Link>
+                  {isAdmin === true ? (
+                    <Typography> </Typography>
+                  ) : (
+                    <Link
+                      onClick={() => {
+                        window.location.href = "/createRecruiter";
+                      }}
+                    >
+                      {t("recruiter")}
+                    </Link>
+                  )}
                 </div>
               </Grid>
             </Grid>

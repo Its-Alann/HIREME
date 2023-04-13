@@ -27,8 +27,14 @@ import { EditJob } from "./Pages/Job/EditJob";
 import Navbar from "./Components/Navbar/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import NetworkPage from "./Pages/Network/NetworkPage";
+import FlaggedMessages from "./Pages/Admin/FlaggedMessages";
+import JobApplication from "./Pages/Job/JobApplication/JobApplication";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
+import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
+import ResetPassword from "./Pages/Login/ResetPassword";
+import NotificationsPage from "./Pages/Notifications/NotificationsPage";
+import SettingsPage from "./Pages/Setting/SettingsPage";
 
 const App = () => {
   const hello = "helloo";
@@ -61,7 +67,7 @@ const App = () => {
               element={<AccountCreationPage />}
             />
             <Route
-              path="/editProfile"
+              path="/editProfile/:connectionID"
               exact
               element={
                 <ProtectedRoute redirect="/">
@@ -74,6 +80,11 @@ const App = () => {
             {/* <Route path="/myNetwork" exact element={<ViewNetwork />} /> */}
             <Route path="/invitations" exact element={<ReceivedInvitation />} />
             <Route path="/sentRequests" exact element={<SentInvitation />} />
+            <Route
+              path="/admin/flaggedMessages"
+              exact
+              element={<FlaggedMessages />}
+            />
             <Route
               path="/possibleConnections"
               exact
@@ -88,6 +99,11 @@ const App = () => {
             <Route path="/createJob" exact element={<CreateJob />} />
             <Route path="/browseJobs" exact element={<BrowseJobs />} />
             <Route path="/myJobs" exact element={<MyJobs />} />
+            <Route
+              path="/jobApplication/:companyID/:jobID"
+              exact
+              element={<JobApplication />}
+            />
             <Route path="/editJob/:jobID" exact element={<EditJob />} />
             <Route
               path="/viewJobPostingApplicants/:companyID/:jobID"
@@ -99,6 +115,14 @@ const App = () => {
               exact
               element={<JobPosting />}
             />
+            <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
+            <Route
+              path="/notifications"
+              exact
+              element={<NotificationsPage />}
+            />
+            <Route path="/settings" exact element={<SettingsPage />} />
+            <Route path="/resetPassword" exact element={<ResetPassword />} />
           </Routes>
         </Router>
       </div>

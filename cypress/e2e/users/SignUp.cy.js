@@ -8,7 +8,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { auth } from "../../src/Firebase/firebase";
+import { auth } from "../../../src/Firebase/firebase";
 
 const deleteSignedUser = async (password) => {
   const credential = EmailAuthProvider.credential(
@@ -72,7 +72,7 @@ describe("Testing the login feature", () => {
       cy.visit("http://localhost:3000/SignUp");
       cy.get("#email").type("sam@sung.com");
       cy.get("#password").type("Email123!");
-      cy.wait(1000);
+      cy.wait(3000);
       //intercept API call
       cy.intercept({
         method: "POST",

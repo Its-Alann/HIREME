@@ -14,51 +14,63 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { db } from "../../Firebase/firebase";
 
 export const JobPosting = () => {
+  // declaring  the useStates and useParams
   const pageID = useParams();
   const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
 
   const [job, setJob] = React.useState([]);
   const [companyName, setCompanyName] = React.useState({});
+  const [companiesLogo, setCompaniesLogo] = React.useState({});
 
+  // makes a getDoc of the jobs collection based on the jobID
+  // sets the job to the JobData
   const getJobData = async () => {
     try {
       // Gets the job data using the jobID from the URL
-      const jobsSnapshot = await getDoc(doc(db, "jobs", pageJobID)); // hardcoded, implement navigation and pass in the prop
-      console.log(pageJobID);
+      const jobsSnapshot = await getDoc(doc(db, "jobs2", pageJobID));
+      //console.log(pageJobID);
       const jobData = jobsSnapshot.data();
       setJob(jobData);
 
-      console.log(jobData);
+      //console.log(jobData);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // gets the coompany name froom the coompanies collection based on the coompanyID
   const getCompanyName = async () => {
     try {
-      // Gets the name of the company from the companyID in job data
-      const companySnapshot = await getDoc(doc(db, "companies", pageCompanyID)); // hardcoded, implement navigation and pass in the prop
+      const companySnapshot = await getDoc(
+        doc(db, "companies2", pageCompanyID)
+      );
       const companyData = companySnapshot.data();
       setCompanyName(companyData);
+      if (companyData.logoPath === "") {
+        companyData.logoPath =
+          "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
+      }
+      setCompaniesLogo(companyData.logoPath);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // calling 2 methods
   useEffect(() => {
     getJobData();
-    getCompanyName(); // try to fix this
+    getCompanyName();
   }, []);
 
-  // For application statuses
-  // 1. Get the array of applications from jobs
-  // 2. Get the names of the applicants from userProfiles
-  // 3. If the job ID exists for the user in applications, then display the applicant status
-
-  // To change application status
-  // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
-
+  // returns the job posting with the apply button
+  // clicking on the apply button will take the user to the apply page
+  if (job === undefined)
+    return (
+      <h3 style={{ textAlign: "center" }}>
+        This job has been removed by the employer :/
+      </h3>
+    );
   return (
     <Stack direction="row" alignItems="flex-start" justifyContent="center">
       {/* Job information */}
@@ -72,7 +84,38 @@ export const JobPosting = () => {
                   flexDirection={{ xs: "column", sm: "row" }}
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
-                  <Typography variant="h4">{job.title}</Typography>
+                  <Stack direction="row" alignItems="center">
+                    <Box
+                      component="img"
+                      sx={{
+                        // objectFit: "cover",
+                        width: "6rem",
+                        height: "6rem",
+                        mr: 2,
+                      }}
+                      src={companiesLogo}
+                    />
+                    <Box>
+                      <Typography variant="h4">{job.title}</Typography>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {companyName.name}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: 18 }}
+                      >{`${job.city}, ${job.country}`}</Typography>
+                      {job.deadline && (
+                        <Typography sx={{ fontSize: 16 }}>
+                          Deadline:{" "}
+                          {new Date(
+                            job.deadline.seconds * 1000 +
+                              job.deadline.nanoseconds / 1000000
+                          ).toDateString()}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Stack>
+
+                  {/*  apply button which allowes a user to be sent to an apply page */}
                   <Button
                     variant="contained"
                     sx={{
@@ -82,34 +125,18 @@ export const JobPosting = () => {
                     }}
                   >
                     <Link
-                      to={`/applyJobs/${job.companyID}/${pageJobID}`}
+                      to={`/jobApplication/${job.companyID}/${pageJobID}`}
                       className="link"
                       underline="none"
                       style={{ textDecoration: "none" }}
                     >
-                      {console.log("thiws is the job:", job)} Apply
+                      {/* {console.log("thiws is the job:", job)}*/}
+                      Apply
                     </Link>
                   </Button>
                   <StarOutlineIcon />
                 </Box>
-                <Typography sx={{ fontSize: 18 }}>
-                  {companyName.name}
-                </Typography>
-                <Typography sx={{ fontSize: 18 }}>{job.location}</Typography>
               </Stack>
-              {job.deadline && (
-                <Typography sx={{ fontSize: 16 }}>
-                  {new Date(
-                    (job.deadline.seconds ?? 0) * 1000 +
-                      (job.deadline.nanoseconds ?? 0) / 1000000
-                  ).toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    timeZone: "UTC",
-                  })}
-                </Typography>
-              )}
             </Box>
 
             <Divider />
@@ -121,6 +148,10 @@ export const JobPosting = () => {
               <Box>
                 <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
                 <Typography>{job.requirement}</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                <Typography>{job.benefits}</Typography>
               </Box>
             </Stack>
           </Box>
