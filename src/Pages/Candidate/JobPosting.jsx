@@ -91,7 +91,7 @@ export const JobPosting = () => {
                     />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
-                      <Link to={`/viewCompany/${pageCompanyID}`}>
+                      <Link to={`/editCompany/${pageCompanyID}`}>
                         <Typography sx={{ fontSize: 18 }}>
                           {companyName.name}
                         </Typography>

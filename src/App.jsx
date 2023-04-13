@@ -20,7 +20,6 @@ import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitatio
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import { ViewProfile } from "./Pages/Network/ViewProfile";
 import { CreateCompany } from "./Pages/Company/CreateCompany";
-import { ViewCompany } from "./Pages/Company/ViewCompany";
 import { EditCompany } from "./Pages/Company/EditCompany";
 import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
 import { CreateJob } from "./Pages/Job/CreateJob";
@@ -118,11 +117,6 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
-            <Route
-              path="/viewCompany/:companyID"
-              exact
-              element={<ViewCompany />}
-            />
             <Route
               path="/editCompany/:companyID"
               exact

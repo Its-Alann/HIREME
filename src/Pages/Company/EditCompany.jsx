@@ -330,279 +330,257 @@ export const EditCompany = ({ props }) => {
 
   return (
     <>
-      {isNewJobAllowed ? (
-        <>
-          {/*<Typography variant="h4" sx={{ pb: 2 }}>
-            Edit Company
-          </Typography>
-          <Typography>Who can update?</Typography>
-          <Typography>
-            If there is at least 1 manager, then only managers can update
-          </Typography>
-          <Typography>
-            Else If there is at least 1 recruiter, then only recruiters can update
-          </Typography>
-          <Typography>
-            Else If there is no recruiter, then everyone can update
-          </Typography>
-      <Typography sx={{ marginLeft: "5%" }}>Company Name</Typography>*/}
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              fullWidth
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          fullWidth
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            minWidth: "500px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {isAdmin ? (
+            <TextField
+              required
+              id="TextField-Name"
+              variant="standard"
+              placeholder="Company name"
+              label="Company Name"
+              name="companyName"
+              margin="normal"
+              value={companyInformation.name}
+              onChange={(e) =>
+                setCompanyInformation({
+                  ...companyInformation,
+                  name: e.target.value,
+                })
+              }
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                minWidth: "500px",
-                alignItems: "center",
-                justifyContent: "center",
+                fontSize: "3em",
               }}
-            >
-              {isAdmin ? (
-                <TextField
-                  required
-                  id="TextField-Name"
-                  variant="standard"
-                  placeholder="Company name"
-                  label="Company Name"
-                  name="companyName"
-                  margin="normal"
-                  value={companyInformation.name}
-                  onChange={(e) =>
-                    setCompanyInformation({
-                      ...companyInformation,
-                      name: e.target.value,
-                    })
-                  }
-                  sx={{
-                    fontSize: "3em",
-                  }}
-                  disabled={!editMode}
-                  InputProps={{
-                    style: { fontSize: 30 },
-                    endAdornment: !editMode ? (
-                      <InputAdornment position="end">
-                        <IconButton onClick={handleClick}>
-                          <Edit />
-                        </IconButton>
-                      </InputAdornment>
-                    ) : (
-                      ""
-                    ),
-                  }}
-                />
-              ) : (
-                <TextField
-                  id="TextField-Name"
-                  variant="standard"
-                  label="Company Name"
-                  disabled
-                  value={companyInformation.name}
-                  margin="normal"
-                  sx={{
-                    fontSize: "3em",
-                  }}
-                  InputProps={{
-                    style: { fontSize: 30 },
-                  }}
-                />
-              )}
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: "5%",
-              }}
-            >
-              {isAdmin && (
-                <>
-                  <Typography>Modify company logo</Typography>
-                  <IconButton>
-                    <input
-                      accept="image/*"
-                      id="contained-button-file"
-                      type="file"
-                      onChange={(e) => {
-                        if (e.target.files.length < 1) {
-                          return;
-                        }
-                        uploadImage(e.target.files[0]);
-                      }}
-                    />
-                  </IconButton>
-                </>
-              )}
-            </Box>
-
-            <Avatar
-              alt="Upload Image"
-              src={companyInformation.logoPath}
-              sx={{
-                width: 200,
-                height: 200,
-              }}
-              style={{
-                backgroundColor: "white",
-                border: "solid",
-                borderColor: "#263aaf",
-                color: "#263aaf",
+              disabled={!editMode}
+              InputProps={{
+                style: { fontSize: 30 },
+                endAdornment: !editMode ? (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClick}>
+                      <Edit />
+                    </IconButton>
+                  </InputAdornment>
+                ) : (
+                  ""
+                ),
               }}
             />
-
-            {isAdmin && (
-              <Button
-                onClick={() => {
-                  saveCompanyInformation();
-                  setEditMode(false);
-                }}
-                data-cy="saveBtn"
-                variant="contained"
-                size="medium"
-                sx={{ my: 1 }}
-                id="ButtonSave"
-              >
-                Save
-              </Button>
-            )}
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              padding: "5%",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h2" sx={{ marginRight: "2%" }}>
-              Job List
-            </Typography>
-            {isNewJobAllowed && (
-              <Link to="/createJob">
-                <Button
-                  id="Button-NewJob"
-                  variant="contained"
-                  sx={{ height: "50px" }}
-                >
-                  New Job
-                </Button>
-              </Link>
-            )}
-          </Box>
-
-          {jobs.map((job) => (
-            <JobCard
-              key={`JobCard-${job.documentID}`}
-              companyID={job.companyID}
-              companyName={companyInformation.name}
-              jobID={job.documentID}
-              title={job.title}
-              city={job.city}
-              country={job.country}
-              deadlineSeconds={job.deadline.seconds}
-              deadlineNanoSeconds={job.deadline.nanoseconds}
-              logo={companyInformation.logoPath}
-              editable
+          ) : (
+            <TextField
+              id="TextField-Name"
+              variant="standard"
+              label="Company Name"
+              disabled
+              value={companyInformation.name}
+              margin="normal"
+              sx={{
+                fontSize: "3em",
+              }}
+              InputProps={{
+                style: { fontSize: 30 },
+              }}
             />
-          ))}
-          <Box sx={{ px: "5%" }}>
+          )}
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginLeft: "5%",
+          }}
+        >
+          {isAdmin && (
+            <>
+              <Typography>Modify company logo</Typography>
+              <IconButton>
+                <input
+                  accept="image/*"
+                  id="contained-button-file"
+                  type="file"
+                  onChange={(e) => {
+                    if (e.target.files.length < 1) {
+                      return;
+                    }
+                    uploadImage(e.target.files[0]);
+                  }}
+                />
+              </IconButton>
+            </>
+          )}
+        </Box>
+
+        <Avatar
+          alt="Upload Image"
+          src={companyInformation.logoPath}
+          sx={{
+            width: 200,
+            height: 200,
+          }}
+          style={{
+            backgroundColor: "white",
+            border: "solid",
+            borderColor: "#263aaf",
+            color: "#263aaf",
+          }}
+        />
+
+        {isAdmin && (
+          <Button
+            onClick={() => {
+              saveCompanyInformation();
+              setEditMode(false);
+            }}
+            data-cy="saveBtn"
+            variant="contained"
+            size="medium"
+            sx={{ my: 1 }}
+            id="ButtonSave"
+          >
+            Save
+          </Button>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          padding: "5%",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h2" sx={{ marginRight: "2%" }}>
+          Job List
+        </Typography>
+        {isNewJobAllowed && (
+          <Link to="/createJob">
             <Button
-              id="Button-Previous"
-              onClick={() => setCursorToPreviousPosition()}
+              id="Button-NewJob"
+              variant="contained"
+              sx={{ height: "50px" }}
             >
-              Previous
+              New Job
             </Button>
+          </Link>
+        )}
+      </Box>
 
-            <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
-              Next
-            </Button>
-          </Box>
+      {jobs.map((job) => (
+        <JobCard
+          key={`JobCard-${job.documentID}`}
+          companyID={job.companyID}
+          companyName={companyInformation.name}
+          jobID={job.documentID}
+          title={job.title}
+          city={job.city}
+          country={job.country}
+          deadlineSeconds={job.deadline.seconds}
+          deadlineNanoSeconds={job.deadline.nanoseconds}
+          logo={companyInformation.logoPath}
+          editable={isNewJobAllowed}
+        />
+      ))}
+      <Box sx={{ px: "5%" }}>
+        <Button
+          id="Button-Previous"
+          onClick={() => setCursorToPreviousPosition()}
+        >
+          Previous
+        </Button>
 
-          {/*<Typography>Promote recruiter to be a manager</Typography>
+        <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
+          Next
+        </Button>
+      </Box>
+
+      {/*<Typography>Promote recruiter to be a manager</Typography>
           <Typography>Demote a manager to be an recruiter</Typography>
           <Typography>Remove an recruiter</Typography>
           */}
 
-          <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
-            Recruiters List
-          </Typography>
-          {recruitersInformation.map((recruiter) => (
-            <Box
-              key={`recruiterCard-${recruiter.ID}`}
-              sx={{ justifyContent: "center", paddingLeft: "5%" }}
-            >
-              <EmployeeCard
-                employeeId={recruiter.ID}
-                employeeFirstName={recruiter.firstName}
-                employeeLastName={recruiter.lastName}
-                employeeImage={recruiter.description}
+      <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
+        Recruiters List
+      </Typography>
+      {recruitersInformation.map((recruiter) => (
+        <Box
+          key={`recruiterCard-${recruiter.ID}`}
+          sx={{ justifyContent: "center", paddingLeft: "5%" }}
+        >
+          <EmployeeCard
+            employeeId={recruiter.ID}
+            employeeFirstName={recruiter.firstName}
+            employeeLastName={recruiter.lastName}
+            employeeImage={recruiter.description}
+          >
+            {recruiter.email && (
+              <Link to={`/viewProfile/${recruiter.email}`}>
+                <Button>View Profile</Button>
+              </Link>
+            )}
+            {isAdmin && (
+              <>
+                <Button
+                  onClick={() => {
+                    removeRecruiter(recruiter.ID);
+                  }}
+                >
+                  Remove
+                </Button>
+                <Button
+                  onClick={() => {
+                    promoteToManager(recruiter.ID);
+                  }}
+                >
+                  Promote
+                </Button>
+              </>
+            )}
+          </EmployeeCard>
+        </Box>
+      ))}
+      <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
+        Manager List
+      </Typography>
+      {managersInformation.map((manager) => (
+        <Box
+          key={`managerCard-${manager.ID}`}
+          sx={{ justifyContent: "center", paddingLeft: "5%" }}
+        >
+          <EmployeeCard
+            employeeId={manager.ID}
+            employeeFirstName={manager.firstName}
+            employeeLastName={manager.lastName}
+          >
+            {isAdmin && (
+              <Button
+                onClick={() => {
+                  demoteManager(manager.ID);
+                }}
               >
-                {recruiter.email && (
-                  <Link to={`/viewProfile/${recruiter.email}`}>
-                    <Button>View Profile</Button>
-                  </Link>
-                )}
-                {isAdmin && (
-                  <>
-                    <Button
-                      onClick={() => {
-                        removeRecruiter(recruiter.ID);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        promoteToManager(recruiter.ID);
-                      }}
-                    >
-                      Promote
-                    </Button>
-                  </>
-                )}
-              </EmployeeCard>
-            </Box>
-          ))}
-          <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
-            Manager List
-          </Typography>
-          {managersInformation.map((manager) => (
-            <Box
-              key={`managerCard-${manager.ID}`}
-              sx={{ justifyContent: "center", paddingLeft: "5%" }}
-            >
-              <EmployeeCard
-                employeeId={manager.ID}
-                employeeFirstName={manager.firstName}
-                employeeLastName={manager.lastName}
-              >
-                {isAdmin && (
-                  <Button
-                    onClick={() => {
-                      demoteManager(manager.ID);
-                    }}
-                  >
-                    Demote
-                  </Button>
-                )}
-              </EmployeeCard>
-            </Box>
-          ))}
-        </>
-      ) : (
-        <>Not Allowed</>
-      )}
-      <p> </p>
+                Demote
+              </Button>
+            )}
+          </EmployeeCard>
+        </Box>
+      ))}
     </>
   );
 };
