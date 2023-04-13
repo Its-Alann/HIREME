@@ -581,12 +581,13 @@ const Navbar = () => {
               )}
             </Box>
           )}
-          <FormControl sx={{ minWidth: "215px", marginLeft: "15px" }}>
+          <FormControl sx={{ minWidth: "75px", marginLeft: "15px" }}>
             <InputLabel
               id="demo-simple-select-label"
               sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
             >
-              {t("changeLanguage")} <LanguageIcon />
+              {/* {t("changeLanguage")}  */}
+              <LanguageIcon />
             </InputLabel>
             <Select value={language} label="language" onChange={handleChange}>
               <MenuItem value="en">English</MenuItem>
