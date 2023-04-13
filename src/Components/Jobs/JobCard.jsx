@@ -44,20 +44,12 @@ const JobCard = ({
           )}
           <Box>
             <Typography variant="h4">{title}</Typography>
-            <Link to={`/viewCompany/${companyID}`}>
+            <Link to={`/editCompany/${companyID}`}>
               <Typography>{companyName}</Typography>
             </Link>
             <Typography>{`${city}, ${country}`}</Typography>
           </Box>
         </Stack>
-
-        {/* <Link
-              to={{
-                pathname: `/editJob/${job.documentID}`,
-              }}
-            >
-              <Button id={`Button-Edit-${job.documentID}`}>Edit</Button>
-            </Link> */}
         <Stack
           direction="row"
           justifyContent="space-between"
