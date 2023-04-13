@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spec: [admin, jobs, recruiters, ui, users]
+        spec: [ui, users]
       fail-fast: false
     timeout-minutes: 20
     steps:

@@ -18,6 +18,7 @@ describe("example to-do app", () => {
     it("Logins, goes to messaging feature, sends message, sends file, reports message", () => {
       //logout
       cy.logout();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(500);
       //login and reach messaging page
       //CONDITION: USER MUST HAVE A CONVERSATION

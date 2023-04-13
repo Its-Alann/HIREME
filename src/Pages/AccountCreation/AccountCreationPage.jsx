@@ -38,6 +38,7 @@ const steps = [
 const AccountCreationPage = () => {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
+  const [field, setField] = React.useState("");
 
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [address, setAddress] = React.useState("");
@@ -118,7 +119,9 @@ const AccountCreationPage = () => {
     <NameForm
       setFirstName={setFirstName}
       setLastName={setLastName}
+      setField={setField}
       values={values}
+      field={field}
     />,
     <ContactInfo
       setPhoneNumber={setPhoneNumber}
@@ -216,6 +219,7 @@ const AccountCreationPage = () => {
 
       // Set user profile data
       await setDoc(doc(db, "userProfiles", user.email), {
+        field,
         values,
       });
 
@@ -228,6 +232,13 @@ const AccountCreationPage = () => {
       await setDoc(doc(db, "invitations", user.email), {
         receivedInvitations: [],
         sentInvitations: [],
+      });
+
+      // Add user email to notifications collection
+      await setDoc(doc(db, "notifications", user.email), {
+        notifications: [],
+        notificationForJobs: true,
+        notificationForConnections: true,
       });
     } catch (error) {
       console.log(error);

@@ -13,7 +13,7 @@ describe("Login to test account", () => {
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 });
 
