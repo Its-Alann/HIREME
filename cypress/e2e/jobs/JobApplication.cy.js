@@ -38,7 +38,7 @@ describe("Goes to job application", () => {
 describe("Fills application", () => {
   it("enters invalid form entries", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
     cy.get("#mui-1").type("1234");
     cy.get('[data-testid="submit-button"]').click();
@@ -50,9 +50,9 @@ describe("Fills application", () => {
     cy.get('[data-testid="submit-button"]').click();
   });
 
-  it("enters valid form entries", () => {
+  it("enters invalid form entries", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
     cy.wait(500);
     cy.get("#mui-1").type("1234@test.com");
@@ -63,21 +63,76 @@ describe("Fills application", () => {
 
   it("uploads files", () => {
     cy.visit(
-      "http://localhost:3000/jobApplication/JpaQGBNwlTslSujkwX2C/8gVqMMMjexoq6zHAbrmf"
+      "http://localhost:3000/jobApplication/VtimBR90MAReVayXpEhl/0bjJWxYvMEVavadXDhBx"
     );
+    // upload file
     cy.get(".MuiList-root > :nth-child(1) > .MuiButtonBase-root").selectFile(
       "cypress/fixtures/IMG_0524.jpg"
     );
+    cy.wait(1000);
+
+    // click file to view
+    cy.get(
+      ":nth-child(1) > .css-dvxtzn > .css-w4z10b-MuiStack-root > .MuiButton-root"
+    ).click();
+
+    // click file to delete
+    cy.get(
+      ":nth-child(1) > .css-dvxtzn > .css-w4z10b-MuiStack-root > .MuiBox-root > .MuiButtonBase-root"
+    ).click();
+
+    // upload file
+    cy.get(".MuiList-root > :nth-child(1) > .MuiButtonBase-root").selectFile(
+      "cypress/fixtures/IMG_0524.jpg"
+    );
+    cy.wait(1000);
+
+    // upload file 2
     cy.get(".MuiList-root > :nth-child(2) > .MuiButtonBase-root").selectFile(
       "cypress/fixtures/IMG_0524.jpg"
     );
+    cy.wait(1000);
+
+    // click file 2 to view
+    cy.get(
+      ":nth-child(2) > .css-dvxtzn > .css-w4z10b-MuiStack-root > .MuiButton-root"
+    ).click();
+
+    // click file 2 to delete
+    cy.get(
+      ":nth-child(2) > .css-dvxtzn > .css-w4z10b-MuiStack-root > .MuiBox-root"
+    ).click();
+
+    // upload file 2
+    cy.get(".MuiList-root > :nth-child(2) > .MuiButtonBase-root").selectFile(
+      "cypress/fixtures/IMG_0524.jpg"
+    );
+    cy.wait(1000);
+
+    // upload file 3
     cy.get(".MuiList-root > :nth-child(3) > .MuiButtonBase-root").selectFile(
       "cypress/fixtures/IMG_0524.jpg"
     );
-    cy.get('[data-testid="submit-button"]').click();
+    cy.wait(1000);
+
+    // click file 3 to view
+    cy.get(
+      ":nth-child(3) > .css-dvxtzn > .css-w4z10b-MuiStack-root > .MuiButton-root > .MuiTypography-root"
+    ).click();
+    // click file 3 to delete
+    cy.get(
+      ":nth-child(3) > .css-dvxtzn > .css-w4z10b-MuiStack-root > .MuiBox-root"
+    ).click();
+    // upload file 3
+    cy.get(".MuiList-root > :nth-child(3) > .MuiButtonBase-root").selectFile(
+      "cypress/fixtures/IMG_0524.jpg"
+    );
+    cy.wait(1000);
+
     cy.get("#mui-1").type("1234@test.com");
     cy.get("#mui-2").type("1111111111");
     cy.get("#mui-3").type("something street");
     cy.get('[data-testid="submit-button"]').click();
+    cy.wait(3000);
   });
 });
