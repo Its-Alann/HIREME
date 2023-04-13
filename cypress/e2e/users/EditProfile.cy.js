@@ -32,13 +32,13 @@ describe("Edit Profile Page", () => {
 
   it("write in all input fields", () => {
     cy.visit("http://localhost:3000/editProfile/myprofile");
-    cy.wait(100);
+    cy.wait(500);
 
-    //set all cards to editable
-    cy.get('[data-testid="EditIcon"]').each((el) => {
-      cy.get(el).click();
-      cy.wait(1000);
-    });
+    // Clicks in edit pencil for contact info card
+    cy.get(
+      '#profile-container > :nth-child(1) > .css-13i4rnv-MuiGrid-root > [data-testid="EditIcon"] > path'
+    ).click();
+    cy.wait(100);
 
     //Try to change firstname, lastname, school and field
     cy.get('input[name="firstName"]').type("First name");
@@ -46,6 +46,11 @@ describe("Edit Profile Page", () => {
     cy.get('input[name="school"]').type("school name");
     cy.get('input[name="field"]').type("test");
 
+    //set all cards to editable
+    cy.get('[data-testid="EditIcon"]').each((el) => {
+      cy.get(el).click();
+      cy.wait(100);
+    });
     //try all calendars
     cy.get('[data-testid="CalendarIcon"]').each((el) => {
       cy.get(el).click();
