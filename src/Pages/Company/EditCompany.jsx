@@ -1,4 +1,4 @@
-import { Edit } from "@mui/icons-material";
+import { Edit, ElevatorSharp } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -10,17 +10,13 @@ import {
 } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import {
-  arrayRemove,
-  arrayUnion,
   collection,
   doc,
-  documentId,
   getDoc,
   getDocs,
   query,
   updateDoc,
   where,
-  writeBatch,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import PropTypes from "prop-types";
@@ -30,23 +26,20 @@ import EmployeeCard from "../../Components/EmployeeCard/EmployeeCard";
 import JobCard from "../../Components/Jobs/JobCard";
 import { auth, db, storage } from "../../Firebase/firebase";
 
-// eslint-disable-next-line react/prop-types
-export const EditCompany = ({ props }) => {
+export const EditCompany = ({ toggleNavbarUpdate }) => {
   const { companyID } = useParams();
   const [companyInformation, setCompanyInformation] = React.useState({
     name: "",
     logoPath: "", // new state for the uploaded logo file
-    jobs: [],
-    recruiters: [],
-    managers: [],
   });
-  const [isNewJobAllowed, setIsnewJobAllowed] = React.useState(false);
+  const [isNewJobAllowed, setIsNewJobAllowed] = React.useState(false);
   const [isAdmin, setIsAdmin] = React.useState(false);
-  const [recruitersInformation, setRecruitersInformation] = React.useState([]);
-  const [managersInformation, setManagersInformation] = React.useState([]);
+  const [employees, setEmployees] = React.useState([]);
+  const [managers, setManagers] = React.useState([]);
   const [currentUserID, setCurrentUserID] = React.useState("");
   const [cursorPosition, setCursorPosition] = React.useState(0);
   const [jobs, setJobs] = React.useState([]);
+  const [displayedJobs, setDisplayedJobs] = React.useState([]);
   const [mouseOver, setMouseOver] = React.useState(false);
   const [mouseOut, setMouseOut] = React.useState(false);
   const [editMode, setEditMode] = React.useState(false);
@@ -104,147 +97,96 @@ export const EditCompany = ({ props }) => {
     await updateDoc(companyRef, companyInformation);
   }
 
-  async function getRecruiters() {
-    if (companyInformation.recruiters.length > 0) {
-      const recruitersRef = collection(db, "recruiters2");
-      const recruitersQuery = query(
-        recruitersRef,
-        where(documentId(), "in", companyInformation.recruiters)
-      );
-      const querySnapshot = await getDocs(recruitersQuery);
-      const temp = [];
-      querySnapshot.forEach((document) => {
-        temp.push({
+  async function getEmployeesAndManagers() {
+    const recruitersRef = collection(db, "recruiters2");
+    const recruitersQuery = query(
+      recruitersRef,
+      where("workFor", "==", companyID)
+    );
+    const startTime = Date.now();
+    const querySnapshot = await getDocs(recruitersQuery);
+    console.log("recruiter query time: ", Date.now() - startTime);
+    const employeesList = [];
+    const managersList = [];
+    querySnapshot.forEach((document) => {
+      if (document.data().isManager) {
+        managersList.push({
           ID: document.id,
           firstName: document.data().firstName,
           lastName: document.data().lastName,
           email: document.data().email,
+          isManager: document.data().isManager,
         });
-      });
-      setRecruitersInformation(temp);
-    } else {
-      setRecruitersInformation([]);
-    }
-  }
-
-  async function getManagers() {
-    if (companyInformation.managers.length > 0) {
-      const recruitersRef = collection(db, "recruiters2");
-      const recuitersQuery = query(
-        recruitersRef,
-        where(documentId(), "in", companyInformation.managers)
-      );
-      const querySnapshot = await getDocs(recuitersQuery);
-      const temp = [];
-      querySnapshot.forEach((document) => {
-        temp.push({
+      } else {
+        employeesList.push({
           ID: document.id,
           firstName: document.data().firstName,
           lastName: document.data().lastName,
           email: document.data().email,
+          isManager: false,
         });
-      });
-      setManagersInformation(temp);
-    } else {
-      setManagersInformation([]);
-    }
+      }
+    });
+    setManagers(managersList);
+    setEmployees(employeesList);
   }
 
   async function removeRecruiter(recruiterID) {
-    const batch = writeBatch(db);
-    batch.update(doc(db, "companies2", companyID), {
-      recruiters: arrayRemove(recruiterID),
-    });
-    batch.update(doc(db, "recruiters2", recruiterID), { workFor: null });
-    await batch.commit();
-    const recruiters = [...companyInformation.recruiters];
-    recruiters.splice(recruiters.indexOf(recruiterID), 1);
-    setCompanyInformation({
-      ...companyInformation,
-      recruiters,
-    });
-    if (recruiterID === currentUserID) {
-      props.toggleNavbarUpdate();
-    }
+    await updateDoc(doc(db, "recruiters2", recruiterID), { workFor: null });
+    getEmployeesAndManagers();
+    toggleNavbarUpdate();
   }
 
   async function promoteToManager(recruiterID) {
-    const batch = writeBatch(db);
-    batch.update(doc(db, "companies2", companyID), {
-      recruiters: arrayRemove(recruiterID),
-    });
-    batch.update(doc(db, "companies2", companyID), {
-      managers: arrayUnion(recruiterID),
-    });
-    await batch.commit();
-    const recruiters = [...companyInformation.recruiters];
-    recruiters.splice(recruiters.indexOf(recruiterID), 1);
-    let managers;
-    if (companyInformation.managers) {
-      managers = [...companyInformation.managers, recruiterID];
-    } else {
-      managers = [recruiterID];
-    }
-    setCompanyInformation({
-      ...companyInformation,
-      recruiters,
-      managers,
-    });
+    await updateDoc(doc(db, "recruiters2", recruiterID), { isManager: true });
+    getEmployeesAndManagers();
   }
 
   async function demoteManager(recruiterID) {
-    const batch = writeBatch(db);
-    batch.update(doc(db, "companies2", companyID), {
-      managers: arrayRemove(recruiterID),
-    });
-    batch.update(doc(db, "companies2", companyID), {
-      recruiters: arrayUnion(recruiterID),
-    });
-    await batch.commit();
-    const managers = [...companyInformation.managers];
-    managers.splice(managers.indexOf(recruiterID), 1);
-    let recruiters;
-    if (companyInformation.recruiters) {
-      recruiters = [...companyInformation.recruiters, recruiterID];
-    } else {
-      recruiters = [recruiterID];
-    }
-    setCompanyInformation({
-      ...companyInformation,
-      recruiters,
-      managers,
-    });
+    await updateDoc(doc(db, "recruiters2", recruiterID), { isManager: false });
+    getEmployeesAndManagers();
   }
 
   // Using the list of jobsID & the cursor position
   // determine 5 jobID
   // Then query jobs whose ID within the 5 jobID
   async function getJobs() {
-    if (companyInformation.jobs == null) {
-      return;
-    }
-    if (cursorPosition >= companyInformation.jobs.length) {
-      return;
-    }
-    const tempJobIDList = [];
-    for (let i = cursorPosition; i < cursorPosition + jobsPerPage; i += 1) {
-      if (i >= companyInformation.jobs.length) {
-        break;
-      }
-      tempJobIDList.push(
-        companyInformation.jobs[companyInformation.jobs.length - i - 1].jobID
-      );
-    }
+    // timelapse : 306
+    // const jobsQuery = query(
+    //   collection(db, "jobs2"),
+    //   where(documentId(), "in", tempJobIDList)
+    // );
+    // let startTime = Date.now();
+    // const jobsSnapshot = await getDocs(jobsQuery);
+    // let endTime = Date.now();
+    // console.log("first method ", endTime - startTime);
+    // console.log(jobsSnapshot.docs);
 
-    const jobsQuery = query(
+    // timelapse : 179
+    // startTime = Date.now();
+    // const tempPromise = [];
+    // const temp = [];
+    // tempJobIDList.forEach(async (jobID) => {
+    //   tempPromise.push(getDoc(doc(db, "jobs2", jobID)));
+    // });
+    // await Promise.all(tempPromise).then((values) => {
+    //   console.log(values);
+    // });
+    // endTime = Date.now();
+    // console.log("second method ", endTime - startTime);
+
+    // timelapse : 97
+    const jQuery = query(
       collection(db, "jobs2"),
-      where(documentId(), "in", tempJobIDList)
+      where("companyID", "==", companyID)
     );
-
-    const jobsSnapshot = await getDocs(jobsQuery);
+    const startTime = Date.now();
+    const jSnapshot = await getDocs(jQuery);
+    const endTime = Date.now();
+    console.log("jobs query time: ", endTime - startTime);
 
     const temp = [];
-    jobsSnapshot.docs.forEach((document) => {
+    jSnapshot.docs.forEach((document) => {
       temp.push({ ...document.data(), documentID: document.id });
     });
 
@@ -260,7 +202,7 @@ export const EditCompany = ({ props }) => {
 
   function setCursorToNextPosition() {
     const nextPosition = cursorPosition + jobsPerPage;
-    if (nextPosition >= companyInformation.jobs.length) {
+    if (nextPosition >= jobs.length) {
       return;
     }
     setCursorPosition(nextPosition);
@@ -275,58 +217,51 @@ export const EditCompany = ({ props }) => {
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
+      console.log("onAuthStateChanged invoked");
       if (user) {
         setCurrentUserID(user.uid);
+      } else {
+        setCurrentUserID(null);
       }
     });
   }, []);
 
   React.useEffect(() => {
     getCompanyInformation();
+    getJobs();
+    getEmployeesAndManagers();
   }, []);
 
   React.useEffect(() => {
     // if a company has manager, then only the manager is allowed to edit company
     // if a copmany does not have manager, but has recruiter, then only recruiter is allowed to edit company
     let hasManager = false;
-    if (companyInformation.managers && companyInformation.managers.length > 0) {
+    if (managers && managers.length > 0) {
       hasManager = true;
-      if (companyInformation.managers.includes(currentUserID)) {
-        setIsnewJobAllowed(true);
+      if (managers.filter((item) => item.ID === currentUserID).length > 0) {
+        setIsNewJobAllowed(true);
         setIsAdmin(true);
         return;
       }
     }
-    if (
-      companyInformation.recruiters &&
-      companyInformation.recruiters.length > 0
-    ) {
-      if (companyInformation.recruiters.includes(currentUserID)) {
-        setIsnewJobAllowed(true);
+    if (employees && employees.length > 0) {
+      if (employees.filter((item) => item.ID === currentUserID).length > 0) {
+        setIsNewJobAllowed(true);
         setIsAdmin(!hasManager);
         return;
       }
     }
-    setIsnewJobAllowed(false);
+    setIsNewJobAllowed(false);
     setIsAdmin(false);
-  }, [companyInformation, currentUserID]);
+  }, [managers, employees]);
 
   React.useEffect(() => {
-    if (companyInformation.recruiters) {
-      getRecruiters();
+    if (cursorPosition < jobs.length) {
+      setDisplayedJobs(
+        jobs.slice(cursorPosition, jobsPerPage + cursorPosition)
+      );
     }
-    if (companyInformation.managers) {
-      getManagers();
-    }
-  }, [companyInformation]);
-
-  React.useEffect(() => {
-    getJobs();
-  }, [companyInformation, cursorPosition]);
-
-  React.useEffect(() => {
-    console.log(recruitersInformation);
-  }, [recruitersInformation]);
+  }, [jobs, cursorPosition]);
 
   return (
     <>
@@ -483,7 +418,7 @@ export const EditCompany = ({ props }) => {
         )}
       </Box>
 
-      {jobs.map((job) => (
+      {displayedJobs.map((job) => (
         <JobCard
           key={`JobCard-${job.documentID}`}
           companyID={job.companyID}
@@ -519,19 +454,19 @@ export const EditCompany = ({ props }) => {
       <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
         Recruiters List
       </Typography>
-      {recruitersInformation.map((recruiter) => (
+      {employees.map((employee) => (
         <Box
-          key={`recruiterCard-${recruiter.ID}`}
+          key={`recruiterCard-${employee.ID}`}
           sx={{ justifyContent: "center", paddingLeft: "5%" }}
         >
           <EmployeeCard
-            employeeId={recruiter.ID}
-            employeeFirstName={recruiter.firstName}
-            employeeLastName={recruiter.lastName}
-            employeeImage={recruiter.description}
+            employeeId={employee.ID}
+            employeeFirstName={employee.firstName}
+            employeeLastName={employee.lastName}
+            employeeImage={employee.description}
           >
-            {recruiter.email && (
-              <Link to={`/viewProfile/${recruiter.email}`}>
+            {employee.email && (
+              <Link to={`/viewProfile/${employee.email}`}>
                 <Button>View Profile</Button>
               </Link>
             )}
@@ -539,14 +474,14 @@ export const EditCompany = ({ props }) => {
               <>
                 <Button
                   onClick={() => {
-                    removeRecruiter(recruiter.ID);
+                    removeRecruiter(employee.ID);
                   }}
                 >
                   Remove
                 </Button>
                 <Button
                   onClick={() => {
-                    promoteToManager(recruiter.ID);
+                    promoteToManager(employee.ID);
                   }}
                 >
                   Promote
@@ -559,20 +494,25 @@ export const EditCompany = ({ props }) => {
       <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
         Manager List
       </Typography>
-      {managersInformation.map((manager) => (
+      {managers.map((employee) => (
         <Box
-          key={`managerCard-${manager.ID}`}
+          key={`managerCard-${employee.ID}`}
           sx={{ justifyContent: "center", paddingLeft: "5%" }}
         >
           <EmployeeCard
-            employeeId={manager.ID}
-            employeeFirstName={manager.firstName}
-            employeeLastName={manager.lastName}
+            employeeId={employee.ID}
+            employeeFirstName={employee.firstName}
+            employeeLastName={employee.lastName}
           >
+            {employee.email && (
+              <Link to={`/viewProfile/${employee.email}`}>
+                <Button>View Profile</Button>
+              </Link>
+            )}
             {isAdmin && (
               <Button
                 onClick={() => {
-                  demoteManager(manager.ID);
+                  demoteManager(employee.ID);
                 }}
               >
                 Demote
