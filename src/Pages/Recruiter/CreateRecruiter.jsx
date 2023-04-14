@@ -5,21 +5,9 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import * as React from "react";
 import PropTypes from "prop-types";
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
+import { Stack, Container } from "@mui/material/";
 import { Link } from "react-router-dom";
-import {
-  setDoc,
-  collection,
-  query,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  writeBatch,
-  arrayRemove,
-} from "firebase/firestore";
+import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
 
@@ -31,19 +19,11 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
     email: "",
   });
   const [companyList, setCompanyList] = React.useState([]);
-  const [previousCompany, setPreviousCompany] = React.useState(null);
   const [currentUserID, setCurrentUserID] = React.useState(null);
 
   async function handleSubmit() {
-    const batch = writeBatch(db);
-    batch.set(
-      doc(db, "recruiters2", auth.currentUser.uid),
-      recruiterInformation
-    );
-    batch.update(doc(db, "companies2", recruiterInformation.workFor), {
-      recruiters: arrayUnion(auth.currentUser.uid),
-    });
-    await batch.commit();
+    setDoc(doc(db, "recruiters2", currentUserID), recruiterInformation);
+    toggleNavbarUpdate();
   }
 
   async function getCompanies() {
@@ -55,19 +35,6 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
       tempCompanyList.push({ id: document.id, label: document.data().name });
     });
     setCompanyList(tempCompanyList);
-  }
-
-  async function getPreviousCompany() {
-    const recruiterSnapshot = await getDoc(
-      doc(db, "recruiters2", currentUserID)
-    );
-    if (recruiterSnapshot.exists()) {
-      if (recruiterSnapshot.data().workFor) {
-        setPreviousCompany(recruiterSnapshot.data().workFor);
-      } else {
-        setPreviousCompany(null);
-      }
-    }
   }
 
   React.useEffect(() => {
@@ -82,16 +49,6 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
       }
     });
   }, []);
-
-  React.useEffect(() => {
-    if (currentUserID) {
-      getPreviousCompany();
-    }
-  }, [currentUserID]);
-
-  React.useEffect(() => {
-    console.log(previousCompany);
-  }, [previousCompany]);
 
   return (
     <Container maxWidth="md">

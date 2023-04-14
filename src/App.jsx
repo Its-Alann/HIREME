@@ -47,6 +47,9 @@ const App = () => {
       fontFamily: ["Proxima Nova"],
     },
   });
+
+  // used to force navbar to update when an user become a recruter.
+  // or when a recruiter become an user.
   const [navbarUpdateToggle, setNavebarUpdateToggle] = React.useState(false);
   const toggleNavbarUpdate = () => {
     setNavebarUpdateToggle(!navbarUpdateToggle);

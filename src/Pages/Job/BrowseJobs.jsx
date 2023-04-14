@@ -19,7 +19,6 @@ import {
   Card,
   Stack,
 } from "@mui/material/";
-import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 import "./Job.css";
 import JobCard from "../../Components/Jobs/JobCard";
@@ -32,6 +31,10 @@ export const BrowseJobs = () => {
   const [companiesLogo, setCompaniesLogo] = React.useState({});
 
   const jobsPerPage = 5;
+
+  /// Remarks: the following code was written to avoid fetching the entire jobs2 collection to local
+  /// because collection of jobs willl grow rapidly. If someone only view first 3 pages, we don't need to fetch the rest.
+  /// but the reads of database is still high, so maybe something here is wrong.
 
   // The purpose of this query is to get jobs sorted descending by published date
   // Firebase does not have desc orderby
@@ -88,9 +91,7 @@ export const BrowseJobs = () => {
 
   // The alternative way is to fetch the entire collection
   // to the local machine, storing it in a list.
-  // But I don't want to do it that way.
-  // Because it can become heavy as the collection grows,
-  // and also may cause security issues.
+  // It can become heavy as the collection grows.
   async function getJobs(jobsQuery) {
     const jobsSnapshot = await getDocs(jobsQuery);
 
