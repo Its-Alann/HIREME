@@ -37,6 +37,7 @@ export const ViewMyApp = () => {
   // gets all the job information and creates an array of
   //objects containing all needed information
   const getJobInformation = async (jobId, statusApplicant) => {
+    console.log(jobId, statusApplicant);
     //creates jobInformation object and adds it to myApplications
     try {
       const jobInformationSnapshot = await getDoc(doc(db, "jobs2", jobId));
@@ -278,12 +279,12 @@ export const ViewMyApp = () => {
                           sx: 12,
                           backgroundColor:
                             job.status === "interview"
-                              ? "green"
+                              ? "#17A500"
                               : job.status === "viewed"
-                              ? "yellow"
+                              ? "#DE8B50"
                               : job.status === "rejected"
-                              ? "red"
-                              : "darkgray",
+                              ? "#8F0000"
+                              : "#A9A9A9",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
