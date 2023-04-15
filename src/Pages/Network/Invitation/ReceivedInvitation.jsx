@@ -131,7 +131,8 @@ export const ReceivedInvitation = ({
 };
 
 ReceivedInvitation.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  allUserProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   receivedInvitationIDs: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };

@@ -223,7 +223,8 @@ export const NetworkCards = ({
 };
 
 NetworkCards.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  allUserProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   connectedUserID: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
