@@ -113,34 +113,25 @@ const HomePage = () => {
                 xs={12}
                 sm={12}
                 md={6}
-                align="center"
                 justify="center"
                 alignItems="center"
-                display="flex"
                 direction="column"
+                rowSpacing={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 6 }}
+                container
               >
                 <Grid
                   item
-                  s={12}
-                  sm={12}
-                  md={12}
                   display="flex"
-                  alignItems="center"
                   data-cy="grid-test"
+                  alignItems="center"
+                  justify="center"
                 >
                   <Typography variant="h4" data-cy="message-test">
                     {" "}
                     Welcome Back {firstName}!{" "}
                   </Typography>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  display="flex"
-                  alignItems="center"
-                >
+                <Grid item display="flex" alignItems="center">
                   <div>
                     <Typography variant="h6"> Done for the day? </Typography>
                     <Button
@@ -173,14 +164,7 @@ const HomePage = () => {
                     )}
                   </div>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  display="flex"
-                  alignItems="center"
-                >
+                <Grid item display="flex" alignItems="center">
                   {isAdmin === true ? (
                     <Typography> </Typography>
                   ) : formCompleted === false ? (
@@ -222,7 +206,7 @@ const HomePage = () => {
                     </div>
                   )}
                 </Grid>
-                <div>
+                <Grid item display="flex" alignItems="center">
                   {isAdmin === true ? (
                     <Typography> </Typography>
                   ) : (
@@ -234,7 +218,7 @@ const HomePage = () => {
                       I&apos;m a recruiter
                     </Link>
                   )}
-                </div>
+                </Grid>
               </Grid>
             </Grid>
           ) : (
