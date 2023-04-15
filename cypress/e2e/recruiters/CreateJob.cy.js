@@ -17,7 +17,10 @@ describe("Login to test account", () => {
 
 describe("Creates a new job", () => {
   it("Creates a new job", () => {
-    cy.visit("http://localhost:3000/createJob");
+    cy.visit("http://localhost:3000");
+    cy.get('[data-cy="My Company-test"]').click();
+    cy.wait(500);
+    cy.get('[data-cy="Button-NewJob"]').click();
     // not a good fix
     // we are waiting for firebase to give the id of the company.
     // we can try cy.spy() on console log.
@@ -49,13 +52,14 @@ describe("Delete the new job", () => {
   it("deletes the new created job", () => {
     cy.visit("http://localhost:3000/");
     cy.wait(2000);
-    cy.get('[data-cy="My Jobs-test"]').click();
+    cy.get('[data-cy="My Company-test"]').click();
     cy.wait(2000);
-    cy.get(
-      ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
-    )
-      .first()
-      .click();
+    cy.get("button[id^=Button-ViewJob]:first").click();
+    // cy.get(
+    //   ':nth-child(3) > .MuiPaper-root > .css-yuob64 > .css-qvcdic-MuiStack-root > [data-cy="view"] > .link'
+    // )
+    //   .first()
+    //   .click();
     cy.get(".css-gmwslw-MuiStack-root > :nth-child(2) > :nth-child(2)").click();
     cy.get(".css-847nqu-MuiButtonBase-root-MuiButton-root").click();
     cy.wait(500);

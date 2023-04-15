@@ -15,12 +15,14 @@ describe("Login to test account", () => {
 describe("Creates a recruiter account", () => {
   it("Creates a recruiter account", () => {
     cy.visit("http://localhost:3000/createRecruiter");
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.get("#TextField-FirstName").type("Tester First Name");
     cy.get("#TextField-LastName").type("Tester Last Name");
     cy.get("#ComboBox-CompanyList").click();
     cy.get('li[data-option-index="0"]').click();
     cy.get("#Button-Save").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
   });
 });

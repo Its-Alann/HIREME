@@ -37,9 +37,13 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
   const [employees, setEmployees] = React.useState([]);
   const [managers, setManagers] = React.useState([]);
   const [currentUserID, setCurrentUserID] = React.useState("");
-  const [cursorPosition, setCursorPosition] = React.useState(0);
+  const [jobCursorPosition, setJobCursorPosition] = React.useState(0);
+  const [employeeCursorPosition, setEmployeeCursorPosition] = React.useState(0);
+  const [managerCursorPosition, setManagerCursorPosition] = React.useState(0);
   const [jobs, setJobs] = React.useState([]);
   const [displayedJobs, setDisplayedJobs] = React.useState([]);
+  const [displayedEmployees, setDisplayedEmployees] = React.useState([]);
+  const [displayedManagers, setDisplayedManagers] = React.useState([]);
   const [mouseOver, setMouseOver] = React.useState(false);
   const [mouseOut, setMouseOut] = React.useState(false);
   const [editMode, setEditMode] = React.useState(false);
@@ -60,6 +64,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
   };
 
   const jobsPerPage = 4;
+  const employeesPerPage = 4;
+  const managersPerPage = 4;
 
   const styles = {
     container: {
@@ -147,10 +153,9 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
     getEmployeesAndManagers();
   }
 
-  // Using the list of jobsID & the cursor position
-  // determine 5 jobID
-  // Then query jobs whose ID within the 5 jobID
   async function getJobs() {
+    // timelapse below means there is no need to store job id in company
+
     // timelapse : 306
     // const jobsQuery = query(
     //   collection(db, "jobs2"),
@@ -200,19 +205,25 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
     setJobs(temp);
   }
 
-  function setCursorToNextPosition() {
-    const nextPosition = cursorPosition + jobsPerPage;
-    if (nextPosition >= jobs.length) {
+  function setCursorToNextPosition(
+    cursor,
+    setCursor,
+    listOfObject,
+    numPerPage
+  ) {
+    const nextPosition = cursor + numPerPage;
+    if (nextPosition >= listOfObject.length) {
       return;
     }
-    setCursorPosition(nextPosition);
+    setCursor(nextPosition);
   }
-  function setCursorToPreviousPosition() {
-    let previousPosition = cursorPosition - jobsPerPage;
+
+  function setCursorToPreviousPosition(cursor, setCursor, numPerPage) {
+    let previousPosition = cursor - numPerPage;
     if (previousPosition < 0) {
       previousPosition = 0;
     }
-    setCursorPosition(previousPosition);
+    setCursor(previousPosition);
   }
 
   React.useEffect(() => {
@@ -230,7 +241,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
     getCompanyInformation();
     getJobs();
     getEmployeesAndManagers();
-  }, []);
+  }, [companyID]);
 
   React.useEffect(() => {
     // if a company has manager, then only the manager is allowed to edit company
@@ -256,12 +267,34 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
   }, [managers, employees]);
 
   React.useEffect(() => {
-    if (cursorPosition < jobs.length) {
+    if (jobCursorPosition < jobs.length) {
       setDisplayedJobs(
-        jobs.slice(cursorPosition, jobsPerPage + cursorPosition)
+        jobs.slice(jobCursorPosition, jobsPerPage + jobCursorPosition)
       );
     }
-  }, [jobs, cursorPosition]);
+  }, [jobs, jobCursorPosition]);
+
+  React.useEffect(() => {
+    if (employeeCursorPosition < employees.length) {
+      setDisplayedEmployees(
+        employees.slice(
+          employeeCursorPosition,
+          employeesPerPage + employeeCursorPosition
+        )
+      );
+    }
+  }, [employees, employeeCursorPosition]);
+
+  React.useEffect(() => {
+    if (managerCursorPosition < managers.length) {
+      setDisplayedManagers(
+        managers.slice(
+          managerCursorPosition,
+          managersPerPage + managerCursorPosition
+        )
+      );
+    }
+  }, [managers, managerCursorPosition]);
 
   return (
     <>
@@ -387,7 +420,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
             variant="contained"
             size="medium"
             sx={{ my: 1 }}
-            id="ButtonSave"
+            id="Button-Save"
           >
             Save
           </Button>
@@ -410,6 +443,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
             <Button
               id="Button-NewJob"
               variant="contained"
+              data-cy="Button-NewJob"
               sx={{ height: "50px" }}
             >
               New Job
@@ -435,26 +469,36 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       ))}
       <Box sx={{ px: "5%" }}>
         <Button
-          id="Button-Previous"
-          onClick={() => setCursorToPreviousPosition()}
+          id="Button-Previous-Job"
+          onClick={() =>
+            setCursorToPreviousPosition(
+              jobCursorPosition,
+              setJobCursorPosition,
+              jobsPerPage
+            )
+          }
         >
           Previous
         </Button>
-
-        <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
+        <Button
+          id="Button-Next-Job"
+          onClick={() =>
+            setCursorToNextPosition(
+              jobCursorPosition,
+              setJobCursorPosition,
+              jobs,
+              jobsPerPage
+            )
+          }
+        >
           Next
         </Button>
       </Box>
 
-      {/*<Typography>Promote recruiter to be a manager</Typography>
-          <Typography>Demote a manager to be an recruiter</Typography>
-          <Typography>Remove an recruiter</Typography>
-          */}
-
       <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
         Recruiters List
       </Typography>
-      {employees.map((employee) => (
+      {displayedEmployees.map((employee) => (
         <Box
           key={`recruiterCard-${employee.ID}`}
           sx={{ justifyContent: "center", paddingLeft: "5%" }}
@@ -491,10 +535,38 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           </EmployeeCard>
         </Box>
       ))}
+
+      <Box sx={{ px: "5%" }}>
+        <Button
+          id="Button-Previous-Employee"
+          onClick={() =>
+            setCursorToPreviousPosition(
+              employeeCursorPosition,
+              setEmployeeCursorPosition,
+              employeesPerPage
+            )
+          }
+        >
+          Previous
+        </Button>
+        <Button
+          id="Button-Next-Employee"
+          onClick={() =>
+            setCursorToNextPosition(
+              employeeCursorPosition,
+              setEmployeeCursorPosition,
+              employees,
+              employeesPerPage
+            )
+          }
+        >
+          Next
+        </Button>
+      </Box>
       <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
         Manager List
       </Typography>
-      {managers.map((employee) => (
+      {displayedManagers.map((employee) => (
         <Box
           key={`managerCard-${employee.ID}`}
           sx={{ justifyContent: "center", paddingLeft: "5%" }}
@@ -521,6 +593,34 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           </EmployeeCard>
         </Box>
       ))}
+
+      <Box sx={{ px: "5%" }}>
+        <Button
+          id="Button-Previous-Manager"
+          onClick={() =>
+            setCursorToPreviousPosition(
+              managerCursorPosition,
+              setManagerCursorPosition,
+              managersPerPage
+            )
+          }
+        >
+          Previous
+        </Button>
+        <Button
+          id="Button-Next-Manager"
+          onClick={() =>
+            setCursorToNextPosition(
+              managerCursorPosition,
+              setManagerCursorPosition,
+              managers,
+              managersPerPage
+            )
+          }
+        >
+          Next
+        </Button>
+      </Box>
     </>
   );
 };
