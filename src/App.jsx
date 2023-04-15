@@ -18,7 +18,6 @@ import { ViewNetwork } from "./Pages/Network/MyConnections/ViewNetwork";
 import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
-import { ViewProfile } from "./Pages/Network/ViewProfile";
 import { CreateCompany } from "./Pages/Company/CreateCompany";
 import { EditCompany } from "./Pages/Company/EditCompany";
 import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
@@ -124,11 +123,6 @@ const App = () => {
               path="/editCompany/:companyID"
               exact
               element={<EditCompany toggleNavbarUpdate={toggleNavbarUpdate} />}
-            />
-            <Route
-              path="/viewProfile/:userEmail"
-              exact
-              element={<ViewProfile />}
             />
             <Route path="/resetPassword" exact element={<ResetPassword />} />
           </Routes>
