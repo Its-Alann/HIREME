@@ -3,7 +3,7 @@ beforeEach(() => {
   cy.viewport(1920, 1080);
 });
 
-describe("Login to test account", () => {
+describe("Edit Company", () => {
   it("Logs into test account", () => {
     cy.logout();
     cy.visit("http://localhost:3000/login");
@@ -14,11 +14,17 @@ describe("Login to test account", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
   });
-});
-
-describe("Create a new job", () => {
-  it("View My Company", () => {
+  it("Edit Company Name", () => {
+    cy.visit("http://localhost:3000");
     cy.get('[data-cy="My Company-test"]').click();
-    cy.wait(500);
+    cy.get('[data-cy="Button-Edit-CompanyName"]').click();
+    cy.get('[data-cy="Textfield-CompanyName"]').find("input").clear();
+    cy.get('[data-cy="Textfield-CompanyName"]').type("GOOOGLE");
+    cy.get('[data-cy="saveBtn"]').click();
+
+    cy.get('[data-cy="Button-Edit-CompanyName"]').click();
+    cy.get('[data-cy="Textfield-CompanyName"]').find("input").clear();
+    cy.get('[data-cy="Textfield-CompanyName"]').type("Google");
+    cy.get('[data-cy="saveBtn"]').click();
   });
 });

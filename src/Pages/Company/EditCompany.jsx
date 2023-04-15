@@ -319,7 +319,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           {isAdmin ? (
             <TextField
               required
-              id="TextField-Name"
+              id="TextField-CompanyName"
               variant="standard"
               placeholder="Company name"
               label="Company Name"
@@ -335,12 +335,16 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
               sx={{
                 fontSize: "3em",
               }}
+              data-cy="Textfield-CompanyName"
               disabled={!editMode}
               InputProps={{
                 style: { fontSize: 30 },
                 endAdornment: !editMode ? (
                   <InputAdornment position="end">
-                    <IconButton onClick={handleClick}>
+                    <IconButton
+                      onClick={handleClick}
+                      data-cy="Button-Edit-CompanyName"
+                    >
                       <Edit />
                     </IconButton>
                   </InputAdornment>
