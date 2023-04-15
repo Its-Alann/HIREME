@@ -27,4 +27,22 @@ describe("Edit Company", () => {
     cy.get('[data-cy="Textfield-CompanyName"]').type("Google");
     cy.get('[data-cy="saveBtn"]').click();
   });
+  it("Navigate in job list", () => {
+    cy.visit("http://localhost:3000");
+    cy.get('[data-cy="My Company-test"]').click();
+    cy.get('[data-cy="Button-Next-Job"]').click();
+    cy.get('[data-cy="Button-Previous-Job"]').click();
+  });
+  it("Navigate in employee list", () => {
+    cy.visit("http://localhost:3000");
+    cy.get('[data-cy="My Company-test"]').click();
+    cy.get('[data-cy="Button-Next-Employee"]').click();
+    cy.get('[data-cy="Button-Previous-Employee"]').click();
+  });
+  it("Navigate in manager list", () => {
+    cy.visit("http://localhost:3000");
+    cy.get('[data-cy="My Company-test"]').click();
+    cy.get('[data-cy="Button-Next-Manager"]').click();
+    cy.get('[data-cy="Button-Previous-Manager"]').click();
+  });
 });

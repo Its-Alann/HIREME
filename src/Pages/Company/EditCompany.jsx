@@ -474,6 +474,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Box sx={{ px: "5%" }}>
         <Button
           id="Button-Previous-Job"
+          data-cy="Button-Previous-Job"
           onClick={() =>
             setCursorToPreviousPosition(
               jobCursorPosition,
@@ -486,6 +487,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         </Button>
         <Button
           id="Button-Next-Job"
+          data-cy="Button-Next-Job"
           onClick={() =>
             setCursorToNextPosition(
               jobCursorPosition,
@@ -543,6 +545,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Box sx={{ px: "5%" }}>
         <Button
           id="Button-Previous-Employee"
+          data-cy="Button-Previous-Employee"
           onClick={() =>
             setCursorToPreviousPosition(
               employeeCursorPosition,
@@ -555,6 +558,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         </Button>
         <Button
           id="Button-Next-Employee"
+          data-cy="Button-Next-Employee"
           onClick={() =>
             setCursorToNextPosition(
               employeeCursorPosition,
@@ -601,6 +605,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Box sx={{ px: "5%" }}>
         <Button
           id="Button-Previous-Manager"
+          data-cy="Button-Previous-Manager"
           onClick={() =>
             setCursorToPreviousPosition(
               managerCursorPosition,
@@ -613,6 +618,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         </Button>
         <Button
           id="Button-Next-Manager"
+          data-cy="Button-Next-Manager"
           onClick={() =>
             setCursorToNextPosition(
               managerCursorPosition,
