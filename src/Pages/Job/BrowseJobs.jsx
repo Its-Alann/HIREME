@@ -154,70 +154,9 @@ export const BrowseJobs = () => {
         </Typography>
 
         {jobs.map((job) => {
+          // Anti-eslint measure
           const hello = "hello";
-
-          // do this to show what is inside job
-          // console.log(job);
           return (
-            // Create cards instead
-            // <Box key={job.documentID} sx={{ py: 1 }}>
-            //   <Card variant="outlined">
-            //     <Box sx={{ m: 3 }}>
-            //       <Stack direction="row" alignItems="center">
-            //         <Box
-            //           component="img"
-            //           sx={{
-            //             // objectFit: "cover",
-            //             width: "6rem",
-            //             height: "6rem",
-            //             mr: 2,
-            //           }}
-            //           src={companiesLogo[job.companyID]}
-            //         />
-            //         <Box>
-            //           <Typography variant="h4">{job.title}</Typography>
-            //           <Typography>{companiesName[job.companyID]}</Typography>
-            //           <Typography>{`${job.city}, ${job.country}`}</Typography>
-            //         </Box>
-            //       </Stack>
-
-            //       {/* do we need to show company id? */}
-            //       {/* <Typography>Company ID: {job.companyID}</Typography> */}
-
-            //       <Stack
-            //         direction="row"
-            //         justifyContent="space-between"
-            //         alignItems="flex-end"
-            //         sx={{ pt: 2 }}
-            //       >
-            //         {/* Added this button for candidate's view */}
-            //         <Button
-            //           variant="contained"
-            //           size="medium"
-            //           sx={{ my: 1 }}
-            //           id={`Button-${job.documentID}`}
-            //         >
-            //           <Link
-            //             to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
-            //             className="link"
-            //             underline="none"
-            //             style={{ textDecoration: "none" }}
-            //           >
-            //             {/* <Link to="/job/1"> */}
-            //             View job
-            //           </Link>
-            //         </Button>
-            //         <Typography>
-            //           Deadline:{" "}
-            //           {new Date(
-            //             job.deadline.seconds * 1000 +
-            //               job.deadline.nanoseconds / 1000000
-            //           ).toDateString()}
-            //         </Typography>
-            //       </Stack>
-            //     </Box>
-            //   </Card>
-            // </Box>
             <JobCard
               key={`JobCard-${job.documentID}`}
               companyID={job.companyID}

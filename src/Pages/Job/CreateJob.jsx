@@ -13,10 +13,8 @@ import {
   collection,
   doc,
   getDoc,
-  addDoc,
   arrayUnion,
   writeBatch,
-  CollectionReference,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -109,14 +107,6 @@ export const CreateJob = () => {
         <Typography variant="h4" sx={{ pb: 2 }}>
           Job Creation
         </Typography>
-        {/* is this supposed to be a public comment? */}
-        {/* for developers only */}
-        <Typography gutterBottom>
-          This page has purpose of creating a new job posting. If you are logged
-          in, and you are a Recruiter. Then, after you click SAVE, there should
-          be a new document under jobs collection, and its id will be updated to
-          your recruiter profile & the company profile.
-        </Typography>
         <Stack spacing={2}>
           <Box>
             <Typography>Job Title</Typography>
@@ -202,21 +192,6 @@ export const CreateJob = () => {
 
           <Box>
             <Typography>Job description</Typography>
-            {/*<TextField
-              required
-              id="TextField-Description"
-              variant="standard"
-              placeholder="Job Description"
-              fullWidth
-              multiline
-              value={jobInformation.description}
-              onChange={(e) =>
-                setJobInformation({
-                  ...jobInformation,
-                  description: e.target.value,
-                })
-              }
-            /> */}
             <TextField
               required
               id="TextField-Description"
@@ -364,7 +339,10 @@ export const CreateJob = () => {
       </Box>
     </Container>
   ) : (
-    <p>not allowed</p>
+    <p>
+      You are not allowed to create new job, please check your recruiter
+      information
+    </p>
   );
 };
 export default CreateJob;
