@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   doc,
@@ -27,6 +28,8 @@ import { auth, db } from "../../Firebase/firebase";
 import "../Job/Job.css";
 
 export const ViewMyApp = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   const [jobs, setJobs] = useState([]);
   const [companiesName, setCompaniesName] = useState({});
   const [myApplications, setMyApplications] = useState([]);
@@ -159,7 +162,7 @@ export const ViewMyApp = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          My Application
+          {t("MyApplication")}
         </Typography>
         {/* {getJobTitle("4QwjqeYxPRuDw7fOnKBj")}; */}
         {console.log(myApplications)}
@@ -240,7 +243,7 @@ export const ViewMyApp = () => {
                             paddingBottom: 0.5,
                           }}
                         >
-                          Deadline:{" "}
+                          {t("Deadline:")}{" "}
                           {new Date(
                             job.deadline.seconds * 1000 +
                               job.deadline.nanoseconds / 1000000
@@ -271,7 +274,7 @@ export const ViewMyApp = () => {
                         }}
                         onClick={() => handleRemoveJob(job.jobID)}
                       >
-                        Remove
+                        {t("Remove")}
                       </Button>
                       <Grid
                         sx={{
@@ -321,7 +324,7 @@ export const ViewMyApp = () => {
           <Card variant="outlined">
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
-                <Typography>No applied jobs :/</Typography>
+                <Typography>{t("Noappliedjobs:/")}</Typography>
               </Box>
             </Box>
           </Card>
