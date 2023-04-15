@@ -516,7 +516,10 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
             employeeImage={employee.description}
           >
             {employee.email && (
-              <Link to={`/viewProfile/${employee.email}`}>
+              <Link
+                to={`/editProfile/${employee.firstName}${employee.lastName}`}
+                state={{ userID: currentUserID }}
+              >
                 <Button>View Profile</Button>
               </Link>
             )}
@@ -585,7 +588,10 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
             employeeLastName={employee.lastName}
           >
             {employee.email && (
-              <Link to={`/viewProfile/${employee.email}`}>
+              <Link
+                to={`/editProfile/${employee.firstName}${employee.lastName}`}
+                state={{ userID: currentUserID }}
+              >
                 <Button>View Profile</Button>
               </Link>
             )}
