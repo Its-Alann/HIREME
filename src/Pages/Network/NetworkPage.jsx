@@ -43,6 +43,7 @@ const theme = createTheme({
 
 const NetworkPage = () => {
   const [value, setValue] = React.useState(0);
+  // Set the strings based on the language defined by the user
   const { t, i18n } = useTranslation();
   const [networkConnections, setNetworkConnections] = useState([]);
   const [receivedInvitations, setReceivedInvitations] = useState([]);

@@ -6,6 +6,7 @@ import { ref, getDownloadURL } from "firebase/storage";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
 import ExperienceCard from "../../Components/ProfileCards/ExperienceCard";
@@ -20,6 +21,9 @@ import ProfilePicture from "../../Components/ProfileCards/ProfilePicture";
 import Resume from "../../Components/ProfileCards/Resume";
 
 const EditProfilePage = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const theme = createTheme({
     palette: {
       primary: { main: "#2B2F90" },
@@ -342,7 +346,7 @@ const EditProfilePage = () => {
                 <InputBase
                   id="standard-basic"
                   style={{ fontSize: "45px" }}
-                  placeholder="First Name"
+                  placeholder={t("FirstName")}
                   value={profile.values.firstName}
                   name="firstName"
                   readOnly={!editButton}
@@ -360,7 +364,7 @@ const EditProfilePage = () => {
                   id="standard-basic"
                   style={{ fontSize: "45px" }}
                   variant="standard"
-                  placeholder="Last Name"
+                  placeholder={t("LastName")}
                   value={profile.values.lastName}
                   name="lastName"
                   readOnly={!editButton}
@@ -378,7 +382,7 @@ const EditProfilePage = () => {
                 <InputBase
                   id="standard-basic"
                   style={{ fontSize: "25px", width: "100%" }}
-                  placeholder="School Name"
+                  placeholder={t("SchoolName")}
                   variant="standard"
                   value={profile.values.school}
                   name="school"
@@ -396,7 +400,7 @@ const EditProfilePage = () => {
 
                 <InputBase
                   id="standard-basic"
-                  placeholder="City"
+                  placeholder={t("City")}
                   variant="standard"
                   value={profile.values.city}
                   readOnly
@@ -404,7 +408,7 @@ const EditProfilePage = () => {
 
                 <InputBase
                   id="standard-basic"
-                  placeholder="Country"
+                  placeholder={t("Country")}
                   variant="standard"
                   value={profile.values.country}
                   readOnly
@@ -412,7 +416,7 @@ const EditProfilePage = () => {
                 <InputBase
                   id="standard-basic"
                   variant="standard"
-                  placeholder="Desired Job Title"
+                  placeholder={t("DesiredJobTitle")}
                   name="field"
                   value={field}
                   readOnly={!editButton}
@@ -474,11 +478,11 @@ const EditProfilePage = () => {
                   }}
                   data-cy="saveBtn"
                 >
-                  Save Changes
+                  {t("SaveChanges")}
                 </Button>
               </>
             )}
-            {!infoAvailable && <p>Loading</p>}
+            {!infoAvailable && <p>{t("Loading")}</p>}
           </Stack>
         </div>
       </Grid>

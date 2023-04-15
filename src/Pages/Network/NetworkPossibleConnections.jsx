@@ -22,6 +22,7 @@ export const NetworkPossibleConnections = ({
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  // Set the strings based on the language defined by the user
   const { t, i18n } = useTranslation();
   const [showingNonConnectedUsers, setShowingNonConnectedUsers] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -90,7 +91,7 @@ export const NetworkPossibleConnections = ({
                 ))}
               </Grid>
             ) : (
-              <Typography>{t("No connections yet :/")}</Typography>
+              <Typography>{t("NoConnection")}</Typography>
             )}
           </Box>
           {nonConnectedUsersArr?.length > pageSize ? (

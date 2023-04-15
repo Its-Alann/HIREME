@@ -15,6 +15,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -30,6 +31,9 @@ const ExperienceCard = ({
   isLast,
   visitingProfile,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const expName = `expName${cardNum}`;
   const expPosition = `expPos${cardNum}`;
   const expLocation = `expLoc${cardNum}`;
@@ -98,7 +102,7 @@ const ExperienceCard = ({
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Experience </Typography>
+              <Typography variant="h5"> {t("Experience")}</Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -132,7 +136,7 @@ const ExperienceCard = ({
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Start Date"
+                  label={t("StartDate")}
                   value={tempStartDate}
                   readOnly={!editButton}
                   onChange={(newValue) => {
@@ -157,7 +161,7 @@ const ExperienceCard = ({
               <Grid item>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="End Date"
+                    label={t("EndDate")}
                     name="ExpEndDate"
                     value={tempEndDate}
                     readOnly={!editButton}
@@ -189,7 +193,7 @@ const ExperienceCard = ({
                     onChange={handleCheckbox}
                   />
                 }
-                label="I currently work here"
+                label={t("Icurrentlyworkhere")}
                 labelPlacement="end"
                 disabled={!editButton}
               />
@@ -198,7 +202,7 @@ const ExperienceCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Job Position"
+                label={t("JobPosition")}
                 name="JobPosition"
                 variant="standard"
                 size="small"
@@ -219,7 +223,7 @@ const ExperienceCard = ({
             </Grid>
             <Grid item>
               <TextField
-                label="Location"
+                label={t("Location")}
                 name="JobLocation"
                 variant="standard"
                 size="small"
@@ -241,7 +245,7 @@ const ExperienceCard = ({
           </Grid>
           <Grid container>
             <TextField
-              label="Job Description"
+              label={t("JobDescription")}
               name="JobDescription"
               variant="standard"
               size="small"
@@ -273,13 +277,13 @@ const ExperienceCard = ({
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
                     <DialogContentText>
-                      Are you sure you want to delete this card?
+                      {t("Areyousureyouwanttodeletethiscard?")}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
                     <Button onClick={handleClearCardInfo} name="expPopupDel">
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </DialogActions>
                 </Dialog>

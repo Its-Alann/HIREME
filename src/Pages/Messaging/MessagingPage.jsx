@@ -94,6 +94,7 @@ const Messaging = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
 
+  // Set the strings based on the language defined by the user
   const { t, i18n } = useTranslation();
 
   // takes an object {otherAuthors, mostRecent}
