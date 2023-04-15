@@ -111,7 +111,7 @@ export const SentInvitation = ({
                   onClick={prevPage}
                   disabled={pageNumber === 1}
                 >
-                  Prev
+                  {t("Prev")}
                 </Button>
                 <Button
                   id="Button-Next"
@@ -121,7 +121,7 @@ export const SentInvitation = ({
                     Math.ceil(sentRequestsUserID.length / pageSize)
                   }
                 >
-                  Next
+                  {t("Next")}
                 </Button>
               </Box>
             ) : null}

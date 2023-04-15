@@ -90,7 +90,7 @@ export const NetworkPossibleConnections = ({
                 ))}
               </Grid>
             ) : (
-              <Typography>No connections yet :/</Typography>
+              <Typography>{t("No connections yet :/")}</Typography>
             )}
           </Box>
           {nonConnectedUsersArr?.length > pageSize ? (
@@ -100,7 +100,7 @@ export const NetworkPossibleConnections = ({
                 onClick={prevPage}
                 disabled={pageNumber === 1}
               >
-                Prev
+                {t("Prev")}
               </Button>
               <Button
                 id="Button-Next"
@@ -110,7 +110,7 @@ export const NetworkPossibleConnections = ({
                   Math.ceil(nonConnectedUsersArr.length / pageSize)
                 }
               >
-                Next
+                {t("Next")}
               </Button>
             </Box>
           ) : null}
