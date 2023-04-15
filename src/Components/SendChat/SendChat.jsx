@@ -160,7 +160,8 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             isUploading ? (
               <Grid container>
                 <Typography variant="caption" noWrap>
-                  Uploading {file.name} ...
+                  {t("Uploading")}
+                  {file.name} ...
                 </Typography>
                 <Typography variant="caption">{uploadProgress}%</Typography>
               </Grid>
