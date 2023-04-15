@@ -35,7 +35,7 @@ const pageNamesForRecruiter = [
   "Home",
   "Network",
   "Jobs",
-  "MyCompany",
+  "My Company",
   "Messaging",
 ];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
@@ -151,7 +151,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
       case "log in":
         navigate("/login");
         break;
-      case "mycompany":
+      case "my company":
         navigate(`/editCompany/${companyID}`);
         break;
       default:
@@ -406,6 +406,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                     </>
                   ) : (
                     <Button
+                      id={`Button-${page}`}
                       key={page}
                       data-cy={`${page}-test`}
                       onClick={() => {
@@ -423,7 +424,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                       {page === "Messaging" && <MessageOutlinedIcon />}
                       {page === "Network" && <GroupsOutlinedIcon />}
                       {page === "Jobs" && <WorkOutlineOutlinedIcon />}
-                      {page === "MyCompany" && <WorkOutlineOutlinedIcon />}
+                      {page === "My Company" && <WorkOutlineOutlinedIcon />}
                       {page}
                     </Button>
                   )

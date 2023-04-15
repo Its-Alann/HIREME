@@ -19,8 +19,8 @@ describe("Test the navbar component", () => {
       cy.url().should("eq", "http://localhost:3000/");
       cy.get('[data-cy="Messaging-test"]').click();
       cy.url().should("eq", "http://localhost:3000/messaging");
-      cy.get('[data-cy="My Jobs-test"]').click();
-      cy.url().should("eq", "http://localhost:3000/myJobs");
+      cy.get('[data-cy="My Company-test"]').click();
+      cy.url().should("include", "http://localhost:3000/editCompany/");
       // cy.get('[data-cy="Network-test"]').click();
       // cy.url().should("eq", "http://localhost:3000/network");
     });
@@ -52,9 +52,9 @@ describe("Test the navbar component", () => {
         cy.get("Button").click()
       );
       //click third option
-      cy.get('[data-cy="My Jobs-phone-test"]').should("be.visible").click();
+      cy.get('[data-cy="My Company-phone-test"]').should("be.visible").click();
       //verify link
-      cy.url().should("eq", "http://localhost:3000/myJobs");
+      cy.url().should("include", "http://localhost:3000/editCompany/");
 
       //open menu
       cy.get('[data-cy="phone-menu-test"]').within(() =>
@@ -218,12 +218,12 @@ describe("Test the navbar component", () => {
       cy.url().should("include", "/messaging");
     });
 
-    it("clicks on myJobs", () => {
+    it("clicks on my company", () => {
       cy.login();
       cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000");
-      cy.contains("My Jobs").click();
-      cy.url().should("include", "/myJobs");
+      cy.contains("My Company").click();
+      cy.url().should("include", "/editCompany/");
     });
 
     it("clicks on profile", () => {
@@ -337,7 +337,7 @@ describe("Test the navbar component", () => {
       cy.wait(500);
     });
 
-    it("clicks on myJobs", () => {
+    it("clicks on my company", () => {
       cy.wait(500);
       cy.login();
       cy.viewport(390, 844);
@@ -345,8 +345,8 @@ describe("Test the navbar component", () => {
       cy.get('[data-cy="phone-menu-test"]').within(() =>
         cy.get("Button").click()
       );
-      cy.get('[data-cy="My Jobs-phone-test"]').click();
-      cy.url().should("include", "/myJobs");
+      cy.get('[data-cy="My Company-phone-test"]').click();
+      cy.url().should("include", "/editCompany/");
       cy.wait(500);
     });
 

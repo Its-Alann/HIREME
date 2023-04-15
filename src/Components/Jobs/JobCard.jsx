@@ -61,7 +61,7 @@ const JobCard = ({
             variant="contained"
             size="medium"
             sx={{ my: 1 }}
-            id={`Button-${jobID}`}
+            id={`Button-ViewJob-${jobID}`}
             data-cy="view"
           >
             {editable ? (
