@@ -35,6 +35,7 @@ import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
 import ResetPassword from "./Pages/Login/ResetPassword";
 import NotificationsPage from "./Pages/Notifications/NotificationsPage";
 import SettingsPage from "./Pages/Setting/SettingsPage";
+import EventCard from "./Components/Events/EventCard";
 
 const App = () => {
   const hello = "helloo";
@@ -51,6 +52,14 @@ const App = () => {
       fontFamily: ["Proxima Nova"],
     },
   });
+
+  const eventInfo = {
+    name: "Event Name",
+    company: "Company Name",
+    address: "Address",
+    date: "01/01/2023",
+    logo: "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg_blueborder.png?alt=media&token=757a8696-8d95-41e7-837f-885bf400f450",
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -123,6 +132,12 @@ const App = () => {
             />
             <Route path="/settings" exact element={<SettingsPage />} />
             <Route path="/resetPassword" exact element={<ResetPassword />} />
+
+            <Route
+              path="/events"
+              exact
+              element={<EventCard eventInfo={eventInfo} />}
+            />
           </Routes>
         </Router>
       </div>
