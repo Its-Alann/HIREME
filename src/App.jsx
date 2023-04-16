@@ -26,6 +26,8 @@ import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConne
 import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
 import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import SignUpPage from "./Pages/SignUp/SignUpPage";
+import NotificationsPage from "./Pages/Notifications/NotificationsPage";
+import SettingsPage from "./Pages/Setting/SettingsPage";
 
 const App = () => {
   const hello = "helloo";
@@ -107,6 +109,12 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
+            <Route
+              path="/notifications"
+              exact
+              element={<NotificationsPage />}
+            />
+            <Route path="/settings" exact element={<SettingsPage />} />
             <Route path="/resetPassword" exact element={<ResetPassword />} />
           </Routes>
         </Router>

@@ -7,12 +7,18 @@ import {
   ListItemText,
   TextField,
   Button,
+  IconButton,
+  Divider,
+  Box,
+  Stack,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
 import { useNavigate, useParams } from "react-router-dom";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import FileUpload from "../../../Components/FileUpload/FileUpload";
 import { db } from "../../../Firebase/firebase";
 
@@ -40,6 +46,10 @@ const JobApplication = () => {
   const [jobTitle, setJobTitle] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const [resumeReq, setResumeReq] = useState(false);
+  const [coverLetterReq, setCoverLetterReq] = useState(false);
+  const [transcriptReq, setTranscriptReq] = useState(false);
+  const [fileUrls, setFileUrls] = useState({});
 
   // Patterns that the email, phone number and address must match in order for it to be an
   // eligible application
@@ -77,7 +87,7 @@ const JobApplication = () => {
   };
 
   // Function that uploads the documents that users have uploaded to firebase
-  const uploadDocuments = () => {
+  const uploadDocuments = async () => {
     const storage = getStorage();
 
     // Creates a location for a resume in Firebase storage with the company name under the /job-applications/ directory
@@ -107,34 +117,78 @@ const JobApplication = () => {
         .replace(/\s+/g, "-")}/${email}/transcript.jpg`
     );
 
+    const temp = fileUrls;
     // If the resume, cover letter or transcript are null, they will not send any data to the Firestore storage
     if (resume != null) {
-      uploadBytes(resumeRef, resume);
+      try {
+        await uploadBytes(resumeRef, resume);
+        const url = await getDownloadURL(resumeRef);
+        //console.log("url", url);
+        temp.resume = url;
+        setFileUrls({ ...temp });
+      } catch (error) {
+        console.log(error);
+      }
     }
     if (coverLetter != null) {
-      uploadBytes(coverLetterRef, coverLetter);
+      try {
+        await uploadBytes(coverLetterRef, coverLetter);
+        const url = await getDownloadURL(coverLetterRef);
+        //console.log("url", url);
+        temp.coverLetter = url;
+        setFileUrls({ ...temp });
+      } catch (error) {
+        console.log(error);
+      }
     }
+    // setFileUrls({ ...temp });
+    //console.log(fileUrls);
     if (transcript != null) {
-      uploadBytes(transcriptRef, transcript);
+      try {
+        await uploadBytes(transcriptRef, transcript);
+        const url = await getDownloadURL(transcriptRef);
+        //console.log("url", url);
+        temp.transcript = url;
+        setFileUrls({ ...temp });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   // Adds the job application information to the applications collection on Firestore. Appends to user's
   // job array with the job ID, status, email, phone number and address given by the user during application
   const addJobApplication = async () => {
-    addDoc(
-      collection(db, "applications2"),
-      // eslint-disable-next-line no-undef
-      {
-        jobID: URLjobID,
-        status: "pending",
-        email,
-        applicantEmail: currentUserEmail,
-        phoneNumber,
-        address,
-      },
-      { merge: true }
-    );
+    console.log("inJOB22", fileUrls);
+
+    if (
+      ((resumeReq && fileUrls.resume !== null) || !resumeReq) &&
+      ((coverLetterReq && fileUrls.coverLetter !== null) || !coverLetterReq) &&
+      ((transcriptReq && fileUrls.transcript !== null) || !transcriptReq)
+    ) {
+      const coverletterURL = fileUrls.coverLetter ? fileUrls.coverLetter : "";
+      const transcriptURL = fileUrls.transcript ? fileUrls.transcript : "";
+      const resumeURL = fileUrls.resume ? fileUrls.resume : "";
+
+      await addDoc(
+        collection(db, "applications2"),
+        // eslint-disable-next-line no-undef
+        {
+          jobID: URLjobID,
+          status: "pending",
+          email,
+          applicantEmail: currentUserEmail,
+          phoneNumber,
+          address,
+          urlCoverLetter: coverletterURL,
+          urlResume: resumeURL,
+          urlTranscript: transcriptURL,
+        },
+        { merge: true }
+      );
+    } else {
+      console.log("failed coverletter=undefinied");
+    }
   };
 
   // Handles the submit button and validates the form. If the inputs are incorrect, the application will not be submitted
@@ -142,7 +196,10 @@ const JobApplication = () => {
     if (
       (emailPattern.test(email) &&
         phonePattern.test(phoneNumber) &&
-        addressPattern.test(address)) === false
+        addressPattern.test(address)) === false ||
+      (resumeReq === true && resume === null) === true ||
+      (coverLetterReq === true && coverLetter === null) === true ||
+      (transcriptReq === true && transcript === null) === true
     ) {
       if (!emailPattern.test(email)) {
         console.log("enter a valid email format");
@@ -153,9 +210,19 @@ const JobApplication = () => {
       if (!addressPattern.test(address)) {
         console.log("enter a valid address");
       }
+      if (resumeReq === true && resume === null) {
+        console.log("upload a resume");
+      }
+      if (coverLetterReq === true && coverLetter === null) {
+        console.log("upload a cover letter");
+      }
+      if (transcriptReq === true && transcript === null) {
+        console.log("upload a transcript");
+      }
     } else {
-      uploadDocuments();
-      addJobApplication();
+      uploadDocuments().then(() => {
+        addJobApplication();
+      });
       console.log("completed");
       navigate(`/browseJobs`);
     }
@@ -167,6 +234,9 @@ const JobApplication = () => {
       const docSnap = await getDoc(doc(db, "jobs2", URLjobID));
       const jobData = docSnap.data();
       setJobTitle(jobData.title);
+      setResumeReq(jobData.resume);
+      setCoverLetterReq(jobData.coverLetter);
+      setTranscriptReq(jobData.transcript);
     } catch (error) {
       console.log(error);
     }
@@ -195,6 +265,52 @@ const JobApplication = () => {
     getJobTitle();
     getCompanyName();
   }, []);
+
+  const onDeleteFileResume = () => {
+    setResume(null);
+  };
+
+  const fileNameResume = resume ? resume.name : "";
+
+  const onDownloadResume = () => {
+    const url = window.URL.createObjectURL(new Blob([resume]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", resume.name);
+    document.body.appendChild(link);
+    link.click();
+  };
+
+  const onDeleteFileCoverLetter = () => {
+    setCoverLetter(null);
+  };
+
+  const fileNameCoverLetter = coverLetter ? coverLetter.name : "";
+
+  const onDownloadCoverLetter = () => {
+    const url = window.URL.createObjectURL(new Blob([coverLetter]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", coverLetter.name);
+    document.body.appendChild(link);
+    link.click();
+    console.log(url);
+  };
+
+  const onDeleteFileTranscript = () => {
+    setTranscript(null);
+  };
+
+  const fileNameTranscript = transcript ? transcript.name : "";
+
+  const onDownloadTranscript = () => {
+    const url = window.URL.createObjectURL(new Blob([transcript]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", transcript.name);
+    document.body.appendChild(link);
+    link.click();
+  };
 
   return (
     // Apply the MUI theme to the component using the ThemeProvider component
@@ -227,27 +343,337 @@ const JobApplication = () => {
         {/* List of files to upload */}
         <Grid item>
           <List>
-            <ListItem disableGutters>
-              <ListItemText sx={{ mr: 5 }}> Resume </ListItemText>
-              <FileUpload
-                onFileChange={(e) => onFileChange(e, "resume")}
-                data-testid="upload-resume"
-              />
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText sx={{ mr: 5 }}> Cover Letter </ListItemText>
-              <FileUpload
-                onFileChange={(e) => onFileChange(e, "coverLetter")}
-                data-testid="upload-coverLetter"
-              />
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText sx={{ mr: 5 }}> Transcript </ListItemText>
-              <FileUpload
-                onFileChange={(e) => onFileChange(e, "transcript")}
-                data-testid="upload-transcript"
-              />
-            </ListItem>
+            {/* Resume Section */}
+            {resumeReq === true ? (
+              <>
+                <ListItem disableGutters>
+                  <ListItemText sx={{ mr: 5 }}>
+                    <Box display="flex" flexDirection="column">
+                      <Typography color="#d32f2f">Resume*</Typography>
+                      <Typography variant="caption" color="#d32f2f">
+                        Required - Please upload a Resume
+                      </Typography>
+                    </Box>
+                  </ListItemText>
+                  {resume ? (
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                    >
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          onClick={onDownloadResume}
+                          sx={{
+                            marginLeft: 1,
+                            padding: 0,
+                            textTransform: "none",
+                            color: "blue",
+                            textDecoration: "underline",
+                            backgroundColor: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Typography>{fileNameResume}</Typography>
+                        </Button>
+
+                        <Box display="flex" mt={1}>
+                          <IconButton
+                            aria-label="delete"
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={onDeleteFileResume}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      </Stack>
+                    </Box>
+                  ) : (
+                    <FileUpload
+                      onFileChange={(e) => onFileChange(e, "resume")}
+                      data-testid="upload-resume"
+                      // fileUploadText={fileUploadText}
+                    />
+                  )}
+                </ListItem>
+                {/* <Divider /> */}
+              </>
+            ) : (
+              <ListItem disableGutters>
+                <ListItemText sx={{ mr: 5 }}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography>Resume</Typography>
+                    <Typography variant="caption">Optional</Typography>
+                  </Box>
+                </ListItemText>
+                {resume ? (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        onClick={onDownloadResume}
+                        sx={{
+                          marginLeft: 1,
+                          padding: 0,
+                          textTransform: "none",
+                          color: "blue",
+                          textDecoration: "underline",
+                          backgroundColor: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Typography>{fileNameResume}</Typography>
+                      </Button>
+
+                      <Box display="flex" mt={1}>
+                        <IconButton
+                          aria-label="delete"
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={onDeleteFileResume}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </Stack>
+                  </Box>
+                ) : (
+                  <FileUpload
+                    onFileChange={(e) => onFileChange(e, "resume")}
+                    data-testid="upload-resume"
+                    // fileUploadText={fileUploadText}
+                  />
+                )}
+              </ListItem>
+            )}
+
+            {/* Cover Letter Section */}
+            {coverLetterReq === true ? (
+              <>
+                <ListItem disableGutters>
+                  <ListItemText sx={{ mr: 5 }}>
+                    <Box display="flex" flexDirection="column">
+                      <Typography color="#d32f2f">Cover Letter*</Typography>
+                      <Typography variant="caption" color="#d32f2f">
+                        Required - Please upload a Cover Letter
+                      </Typography>
+                    </Box>
+                  </ListItemText>
+                  {coverLetter ? (
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                    >
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          onClick={onDownloadCoverLetter}
+                          sx={{
+                            marginLeft: 1,
+                            padding: 0,
+                            textTransform: "none",
+                            color: "blue",
+                            textDecoration: "underline",
+                            backgroundColor: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Typography>{fileNameCoverLetter}</Typography>
+                        </Button>
+
+                        <Box display="flex" mt={1}>
+                          <IconButton
+                            aria-label="delete"
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={onDeleteFileCoverLetter}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      </Stack>
+                    </Box>
+                  ) : (
+                    <FileUpload
+                      onFileChange={(e) => onFileChange(e, "coverLetter")}
+                      data-testid="upload-coverLetter"
+                    />
+                  )}
+                </ListItem>
+                {/* <Divider /> */}
+              </>
+            ) : (
+              <ListItem disableGutters>
+                <ListItemText sx={{ mr: 5 }}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography>Cover Letter</Typography>
+                    <Typography variant="caption">Optional</Typography>
+                  </Box>
+                </ListItemText>
+                {coverLetter ? (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        onClick={onDownloadCoverLetter}
+                        sx={{
+                          marginLeft: 1,
+                          padding: 0,
+                          textTransform: "none",
+                          color: "blue",
+                          textDecoration: "underline",
+                          backgroundColor: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Typography>{fileNameCoverLetter}</Typography>
+                      </Button>
+
+                      <Box display="flex" mt={1}>
+                        <IconButton
+                          aria-label="delete"
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={onDeleteFileCoverLetter}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </Stack>
+                  </Box>
+                ) : (
+                  <FileUpload
+                    onFileChange={(e) => onFileChange(e, "coverLetter")}
+                    data-testid="upload-coverLetter"
+                  />
+                )}
+              </ListItem>
+            )}
+
+            {/* Transcript Section */}
+            {transcriptReq === true ? (
+              <>
+                <ListItem disableGutters>
+                  <ListItemText sx={{ mr: 5 }}>
+                    <Box display="flex" flexDirection="column">
+                      <Typography color="#d32f2f">Transcript*</Typography>
+                      <Typography variant="caption" color="#d32f2f">
+                        Required - Please upload a Transcript
+                      </Typography>
+                    </Box>
+                  </ListItemText>
+                  {transcript ? (
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                    >
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          onClick={onDownloadTranscript}
+                          sx={{
+                            marginLeft: 1,
+                            padding: 0,
+                            textTransform: "none",
+                            color: "blue",
+                            textDecoration: "underline",
+                            backgroundColor: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Typography>{fileNameTranscript}</Typography>
+                        </Button>
+
+                        <Box display="flex" mt={1}>
+                          <IconButton
+                            aria-label="delete"
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={onDeleteFileTranscript}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      </Stack>
+                    </Box>
+                  ) : (
+                    <FileUpload
+                      onFileChange={(e) => onFileChange(e, "transcript")}
+                      data-testid="upload-transcript"
+                    />
+                  )}
+                </ListItem>
+                {/* <Divider /> */}
+              </>
+            ) : (
+              <ListItem disableGutters>
+                <ListItemText sx={{ mr: 5 }}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography>Transcript</Typography>
+                    <Typography variant="caption">Optional</Typography>
+                  </Box>
+                </ListItemText>
+                {transcript ? (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        onClick={onDownloadTranscript}
+                        sx={{
+                          marginLeft: 1,
+                          padding: 0,
+                          textTransform: "none",
+                          color: "blue",
+                          textDecoration: "underline",
+                          backgroundColor: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Typography>{fileNameTranscript}</Typography>
+                      </Button>
+
+                      <Box display="flex" mt={1}>
+                        <IconButton
+                          aria-label="delete"
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={onDeleteFileTranscript}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </Stack>
+                  </Box>
+                ) : (
+                  <FileUpload
+                    onFileChange={(e) => onFileChange(e, "transcript")}
+                    data-testid="upload-transcript"
+                  />
+                )}
+              </ListItem>
+            )}
           </List>
         </Grid>
         <Grid item md={12} sm={12} xs={12}>

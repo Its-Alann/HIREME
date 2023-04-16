@@ -5,15 +5,36 @@ beforeEach(() => {
 
 describe("Login to test account", () => {
   it("Logs into test account", () => {
-    cy.logout();
+    //cy.logout();
     cy.visit("http://localhost:3000/login");
-    cy.get("#email").type("billybob@gmail.com");
-    cy.get("#password").type("bob123@");
+    cy.get("#email").type("notificationtest@gmail.com");
+    cy.get("#password").type("notificationtest1");
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
+
+  it("Add and remove favourite", () => {
+    cy.visit("http://localhost:3000/browseJobs");
+    cy.wait(1000);
+    cy.get("body").then((body) => {
+      if (body.find('[data-testid="StarOutlineIcon"]').length > 0) {
+        cy.get('[data-testid="StarOutlineIcon"]').first().click();
+        cy.wait(1000);
+      }
+    });
+    cy.get("body").then((body) => {
+      if (body.find('[data-testid="StarIcon"]').length > 0) {
+        cy.get('[data-testid="StarIcon"]').first().click();
+        cy.wait(1000);
+      }
+    });
+  });
+
+  // it("Remove favourite", () => {
+  //   cy.visit("http://localhost:3000/browseJobs");
+  // });
 });
 
 describe("Browse Jobs", () => {

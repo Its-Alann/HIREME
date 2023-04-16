@@ -4,7 +4,7 @@ import AttachFileSharpIcon from "@mui/icons-material/AttachFileSharp";
 import { IconButton } from "@mui/material";
 
 const FileUpload = ({ onFileChange }) => (
-  <IconButton variant="contained" component="label">
+  <IconButton variant="contained" component="label" size="small">
     <AttachFileSharpIcon color="primary" />
     <input
       type="file"
