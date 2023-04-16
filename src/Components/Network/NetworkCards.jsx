@@ -111,7 +111,10 @@ export const NetworkCards = ({
     const messagesRef = collection(db, "messages");
 
     const querySnapshot = await getDocs(
-      query(messagesRef, where("authors", "==", [connectedUserID, currentUser]))
+      query(
+        messagesRef,
+        where("authors", "==", [connectedUserID, currentUser].sort())
+      )
     );
 
     const matchingDocs = [];
