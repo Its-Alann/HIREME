@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import {
   doc,
   getDoc,
@@ -30,6 +29,7 @@ import "../Job/Job.css";
 export const ViewMyApp = () => {
   // Set the strings based on the language defined by the user
   const { t, i18n } = useTranslation();
+
   const [jobs, setJobs] = useState([]);
   const [companiesName, setCompaniesName] = useState({});
   const [myApplications, setMyApplications] = useState([]);

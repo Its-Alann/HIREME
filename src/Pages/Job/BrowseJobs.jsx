@@ -14,6 +14,7 @@ import {
   getDoc,
   limit,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -23,6 +24,9 @@ import { db } from "../../Firebase/firebase";
 import "./Job.css";
 
 export const BrowseJobs = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [jobs, setJobs] = React.useState([]);
   const [lastJob, setLastJob] = React.useState(null);
   const [firstJob, setFirstJob] = React.useState(null);
@@ -143,11 +147,11 @@ export const BrowseJobs = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Browse Jobs
+          {t("BrowseJobs")}
         </Typography>
         <Typography>
-          This Page list all jobs, {jobsPerPage} per page. Everyone can access
-          this page.
+          {t("ThisPagelistalljobs,")} {jobsPerPage}
+          {t("perpage.Everyonecanaccessthispage.")}
         </Typography>
 
         {jobs.map((job) => {
@@ -201,11 +205,11 @@ export const BrowseJobs = () => {
                         style={{ textDecoration: "none" }}
                       >
                         {/* <Link to="/job/1"> */}
-                        View job
+                        {t("Viewjob")}
                       </Link>
                     </Button>
                     <Typography>
-                      Deadline:{" "}
+                      {t("Deadline:")}{" "}
                       {new Date(
                         job.deadline.seconds * 1000 +
                           job.deadline.nanoseconds / 1000000
@@ -218,10 +222,10 @@ export const BrowseJobs = () => {
           );
         })}
         <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
-          Previous
+          {t("Previous")}
         </Button>
         <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
-          Next
+          {t("Next")}
         </Button>
       </Box>
     </Container>
