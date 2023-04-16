@@ -50,7 +50,7 @@ const Events = ({ companyID, companyLogo, companyName }) => {
             alignSelf="center"
             justifyContent="space-between"
           >
-            Create Job &nbsp;&nbsp;
+            Create Event &nbsp;&nbsp;
             <PostAddIcon sx={{ fontSize: "25px" }} />
           </Stack>
         </Link>
