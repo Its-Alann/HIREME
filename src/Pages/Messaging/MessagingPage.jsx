@@ -104,7 +104,7 @@ const Messaging = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
 
-  // takes an object {otherAuthors, mostRecent, unRead, groupName}
+  // takes an object {otherAuthors, mostRecent, unRead, groupName, messageConvoID}
   const getOtherAuthors = async (chatInfo) => {
     const nameList = [];
     let imageUrl = "";
@@ -130,7 +130,7 @@ const Messaging = () => {
       emails: chatInfo.otherAuthors,
       mostRecent: chatInfo.mostRecent,
       unRead: chatInfo.unRead,
-      messageConvoID: list.messageConvoID,
+      messageConvoID: chatInfo.messageConvoID,
       groupName: chatInfo.groupName,
       imageUrl,
     };
