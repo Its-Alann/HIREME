@@ -37,6 +37,7 @@ import NotificationsPage from "./Pages/Notifications/NotificationsPage";
 import SettingsPage from "./Pages/Setting/SettingsPage";
 import EventCard from "./Components/Events/EventCard";
 import Events from "./Components/Events/Events";
+import CreateEvent from "./Pages/Events/CreateEvent";
 
 const App = () => {
   const hello = "helloo";
@@ -141,6 +142,11 @@ const App = () => {
                   companyName={companyName}
                 />
               }
+            />
+            <Route
+              path="/:companyID/createEvent"
+              exact
+              element={<CreateEvent />}
             />
           </Routes>
         </Router>
