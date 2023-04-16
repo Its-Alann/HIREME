@@ -23,6 +23,7 @@ export const EditJob = () => {
   // get it here
   const { jobID } = useParams();
 
+  const [thirdPartyLink, setThirdPartyLink] = React.useState(false);
   const [jobInformation, setJobInformation] = React.useState({
     companyID: "",
     deadline: new Date(),
@@ -37,6 +38,7 @@ export const EditJob = () => {
     resume: "",
     coverLetter: "",
     transcript: "",
+    link: "",
   });
   const [companyName, setCompanyName] = React.useState("");
 
@@ -82,6 +84,9 @@ export const EditJob = () => {
 
   React.useEffect(() => {
     getCompanyName();
+    if (jobInformation.link !== "") {
+      setThirdPartyLink(true);
+    }
   }, [jobInformation]);
 
   return (
@@ -247,6 +252,46 @@ export const EditJob = () => {
               />
             </LocalizationProvider>
           </Box>
+
+          <Box>
+            <Typography>Link to third party application</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="thirdPartyCheck"
+                  checked={thirdPartyLink}
+                  onChange={() => {
+                    if (thirdPartyLink) {
+                      setJobInformation({
+                        ...jobInformation,
+                        link: "",
+                      });
+                    }
+                    setThirdPartyLink(!thirdPartyLink);
+                  }}
+                />
+              }
+              label="This application requires a link to a third party website for application"
+              labelPlacement="end"
+            />
+            {thirdPartyLink && (
+              <TextField
+                required
+                id="TextField-thirdParty"
+                variant="standard"
+                placeholder="https://www.glassdoor.com"
+                fullWidth
+                value={jobInformation.link}
+                onChange={(e) =>
+                  setJobInformation({
+                    ...jobInformation,
+                    link: e.target.value,
+                  })
+                }
+              />
+            )}
+          </Box>
+
           <Divider />
 
           <Box>
@@ -262,6 +307,7 @@ export const EditJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="resumeCheck"
                   checked={jobInformation.resume}
                   onChange={(e) =>
                     setJobInformation({
@@ -280,6 +326,7 @@ export const EditJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="coverCheck"
                   checked={jobInformation.coverLetter}
                   onChange={(e) =>
                     setJobInformation({
@@ -298,6 +345,7 @@ export const EditJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="transcriptCheck"
                   checked={jobInformation.transcript}
                   onChange={(e) =>
                     setJobInformation({
