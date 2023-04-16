@@ -86,7 +86,7 @@ const EventCard = (props) => {
               I&apos;m interested
             </Button>
             <Typography>
-              Deadline:{" "}
+              Date:{" "}
               {new Date(
                 eventInfo.date.seconds * 1000 +
                   eventInfo.date.nanoseconds / 1000000
