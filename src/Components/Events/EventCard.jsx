@@ -8,17 +8,10 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 const EventCard = (props) => {
-  const { eventInfo } = props;
+  const { eventInfo, companyLogo, companyName } = props;
 
   return (
     <Box key="job.documentID" sx={{ py: 1 }}>
-      <div>
-        <div> {eventInfo.name} </div>
-        <div> {eventInfo.company} </div>
-        <div> {eventInfo.address} </div>
-        <div> {eventInfo.date} </div>
-        <div> {eventInfo.logo} </div>
-      </div>
       <Card variant="outlined">
         <Box sx={{ m: 3 }}>
           <Stack direction="row" alignItems="center">
@@ -30,12 +23,12 @@ const EventCard = (props) => {
                 height: "6rem",
                 mr: 2,
               }}
-              src={eventInfo.logo}
+              src={companyLogo}
             />
             <Box>
               <Typography variant="h4">{eventInfo.name}</Typography>
               <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Typography>{eventInfo.company}</Typography>
+                <Typography>{companyName}</Typography>
                 {/* {userEmail !== null &&
                   (isFavorite(job.companyID) ? (
                     <StarIcon
@@ -93,10 +86,11 @@ const EventCard = (props) => {
               I&apos;m interested
             </Button>
             <Typography>
-              Deadline: {eventInfo.date}
-              {/* {new Date(
-                job.deadline.seconds * 1000 + job.deadline.nanoseconds / 1000000
-              ).toDateString()} */}
+              Deadline:{" "}
+              {new Date(
+                eventInfo.date.seconds * 1000 +
+                  eventInfo.date.nanoseconds / 1000000
+              ).toDateString()}
             </Typography>
           </Stack>
         </Box>
@@ -108,11 +102,11 @@ const EventCard = (props) => {
 EventCard.propTypes = {
   eventInfo: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    company: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    logo: PropTypes.string.isRequired,
   }).isRequired,
+  companyName: PropTypes.string.isRequired,
+  companyLogo: PropTypes.string.isRequired,
 };
 
 export default EventCard;
