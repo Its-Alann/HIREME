@@ -5,15 +5,55 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteDoc, doc } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import { db } from "../../Firebase/firebase";
 
 const EventCard = (props) => {
-  const { eventInfo, companyLogo, companyName } = props;
+  const { eventInfo, companyLogo, companyName, companyID, isRecruiter } = props;
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
+  const removeEvent = async () => {
+    try {
+      const eventRef = doc(
+        db,
+        `companies2/${companyID}/events/${eventInfo.eventID}`
+      );
+      await deleteDoc(eventRef);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box key="job.documentID" sx={{ py: 1 }}>
       <Card variant="outlined">
-        <Box sx={{ m: 3 }}>
+        <Stack
+          sx={{
+            m: 3,
+            height: "30rem",
+            maxHeight: "30 rem",
+            width: "30rem",
+            maxWidth: "30rem",
+          }}
+        >
           <Stack direction="row" alignItems="center">
             <Box
               component="img"
@@ -42,19 +82,38 @@ const EventCard = (props) => {
                     />
                   ))} */}
               </Box>
+
               {/* <Typography>{`${job.city}, ${job.country}`}</Typography> */}
             </Box>
           </Stack>
+          <Box sx={{ my: 1 }}>
+            <Typography sx={{ fontSize: 14 }}>
+              {new Date(
+                eventInfo.date.seconds * 1000 +
+                  eventInfo.date.nanoseconds / 1000000
+              ).toDateString()}
+            </Typography>
+            <Typography sx={{ mb: 2 }}>{eventInfo.address}</Typography>
+            <Typography>{eventInfo.description}</Typography>
+          </Box>
 
           {/* do we need to show company id? */}
           {/* <Typography>Company ID: {job.companyID}</Typography> */}
 
           <Stack
             direction="row"
-            justifyContent="space-between"
+            justifyContent="flex-end"
             alignItems="flex-end"
             sx={{ pt: 2 }}
+            flex={1}
           >
+            {/* add condition if user is a recruiter */}
+            {isRecruiter ? (
+              <Button onClick={handleClickOpen}>
+                <DeleteIcon />
+              </Button>
+            ) : null}
+
             {/* Added this button for candidate's view */}
             <Button
               variant="contained"
@@ -85,15 +144,34 @@ const EventCard = (props) => {
               }
               I&apos;m interested
             </Button>
-            <Typography>
-              Date:{" "}
-              {new Date(
-                eventInfo.date.seconds * 1000 +
-                  eventInfo.date.nanoseconds / 1000000
-              ).toDateString()}
-            </Typography>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Are you sure you want to delete the {`${eventInfo.name}`} event?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  This action cannot be undone. The event will be deleted and
+                  cannot be retrieved.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button
+                  onClick={removeEvent}
+                  autoFocus
+                  style={{ color: "red" }}
+                >
+                  Delete event
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Stack>
-        </Box>
+        </Stack>
       </Card>
     </Box>
   );
@@ -101,12 +179,16 @@ const EventCard = (props) => {
 
 EventCard.propTypes = {
   eventInfo: PropTypes.shape({
+    eventID: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
   }).isRequired,
   companyName: PropTypes.string.isRequired,
   companyLogo: PropTypes.string.isRequired,
+  companyID: PropTypes.string.isRequired,
+  isRecruiter: PropTypes.bool.isRequired,
 };
 
 export default EventCard;

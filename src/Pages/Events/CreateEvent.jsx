@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { auth, db } from "../../Firebase/firebase";
 
 const CreateEvents = () => {
@@ -82,7 +83,8 @@ const CreateEvents = () => {
         {/* is this supposed to be a public comment? */}
 
         <Stack spacing={2}>
-          <Box>
+          {/* i think we can exclude the ids */}
+          {/* <Box>
             <Typography>Company ID</Typography>
             <TextField
               required
@@ -93,7 +95,7 @@ const CreateEvents = () => {
               value={eventInformation.companyID}
               InputProps={{ readOnly: true }}
             />
-          </Box>
+          </Box> */}
 
           <Box>
             <Typography>Company Name</Typography>

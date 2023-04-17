@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { collection, getDoc, getDocs } from "firebase/firestore";
-import { CircularProgress } from "@mui/material";
+import { collection, getDoc, getDocs, doc } from "firebase/firestore";
+import { CircularProgress, Typography } from "@mui/material";
+import { onAuthStateChanged } from "firebase/auth";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import PostAddIcon from "@mui/icons-material/PostAdd";
+import EventIcon from "@mui/icons-material/Event";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
 import EventCard from "./EventCard";
-import { db } from "../../Firebase/firebase";
+import { db, auth } from "../../Firebase/firebase";
 
 const Events = ({ companyID, companyLogo, companyName }) => {
   const [events, setEvents] = useState([]);
+  const [isRecruiter, setIsRecruiter] = useState(false);
 
   // takes company ID
   const getEvents = async (company) => {
@@ -18,56 +23,95 @@ const Events = ({ companyID, companyLogo, companyName }) => {
     const querySnapshot = await getDocs(
       collection(db, `companies2/${company}/events`)
     );
-    querySnapshot.forEach((doc) => {
-      eventsList.push(doc.data());
+    querySnapshot.forEach((document) => {
+      eventsList.push({ id: document.id, ...document.data() });
     });
     setEvents(eventsList);
   };
 
+  const checkIsRecruter = async () => {
+    const docRef = doc(db, "recruiters2", auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setIsRecruiter(true);
+    }
+  };
+
   useEffect(() => {
-    getEvents(companyID);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        Promise.all([getEvents(companyID), checkIsRecruter()]);
+      } else {
+        //take you back to the homepage
+        //console.log(user);
+      }
+    });
   }, []);
 
   return (
     <div>
-      <Button
-        variant="contained"
-        size="medium"
-        sx={{ my: 1 }}
-        id="create-job"
-        data-cy="view"
-      >
-        <Link
-          to="./createEvent"
-          className="link"
-          underline="none"
-          style={{ textDecoration: "none" }}
+      <Container sx={{ my: 2 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            alignContent="center"
-            alignSelf="center"
-            justifyContent="space-between"
-          >
-            Create Event &nbsp;&nbsp;
-            <PostAddIcon sx={{ fontSize: "25px" }} />
-          </Stack>
-        </Link>
-      </Button>
+          <Typography variant="h4">Events</Typography>
+          {isRecruiter ? (
+            <Button
+              variant="contained"
+              size="medium"
+              sx={{ my: 1 }}
+              id="create-job"
+              data-cy="view"
+            >
+              <Link
+                to="./createEvent"
+                className="link"
+                underline="none"
+                style={{ textDecoration: "none" }}
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  alignContent="center"
+                  alignSelf="center"
+                  justifyContent="space-between"
+                >
+                  Create Event &nbsp;&nbsp;
+                  <EventIcon sx={{ fontSize: "25px" }} />
+                </Stack>
+              </Link>
+            </Button>
+          ) : null}
+        </Stack>
 
-      {events.map((event) => (
-        <EventCard
-          key={event.id}
-          eventInfo={{
-            name: event.name,
-            address: event.address,
-            date: event.date,
-          }}
-          companyLogo={companyLogo}
-          companyName={companyName}
-        />
-      ))}
+        <Grid
+          container
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {events.map((event) => (
+            <Grid item sx={{ m: 2 }}>
+              <EventCard
+                key={event.id}
+                eventInfo={{
+                  eventID: event.id,
+                  name: event.name,
+                  address: event.address,
+                  date: event.date,
+                  description: event.description,
+                }}
+                companyLogo={companyLogo}
+                companyName={companyName}
+                companyID={companyID}
+                isRecruiter={isRecruiter}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </div>
   );
 };
