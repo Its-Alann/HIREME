@@ -54,9 +54,58 @@
   "RemoveAlert": "The user will not be notified that you have removed him from your connections",
   "RemoveUser": "Remove user",
   "Cancel": "Cancel",
-  // new internilizations added 2023/04/17
+
   "Interview": "Interview",
   "Viewed": "Viewed",
   "Rejected": "Rejected",
-  "Pending": "Pending"
+  "Pending": "Pending",
+
+  "JobCreation": "Job Creation",
+  "JobTitle": "Job Title",
+  "CompanyID": "Company ID",
+  "CompanyName": "Company Name",
+  "City": "City",
+  "Country": "Country",
+  "Jobdescription": "Job description",
+  "Jobrequirements": "Job requirements",
+  "Benefits": "Benefits",
+  "ApplicationDeadline": "Application Deadline",
+  "Pleasespecifywhichdocumentsarerequiredbycandidatesamongthefollowing.": "Please specify which documents are required by candidates among the following.",
+  "Bydefault,documentsarenotrequired.": "By default, documents are not required.",
+  "Resume": "Resume",
+  "required": "required",
+  "CoverLetter": "Cover Letter",
+  "Transcript": "Transcript",
+  "Save": "Save",
+
+  "BrowseJobs": "Browse Jobs",
+  "ThisPagelistalljobs,": "This Page list all jobs,",
+  "perpage.Everyonecanaccessthispage.": "per page. Everyone can access this page.",
+  "Viewjob": "View job",
+  "Deadline:": "Deadline:",
+  "Previous": "Previous",
+  "Next": "Next",
+
+  "MyJobs": "My Jobs",
+  "CreateJob": "Create Job",
+  "perpage.": "per page.",
+
+  "YourApplication": "Your Application",
+  "Youareapplyingfor:": "You are applying for:",
+  "Resume*": "Resume*",
+  "Required-PleaseuploadaResume": "Required - Please upload a Resume",
+  "Optional": "Optional",
+  "CoverLetter*": "Cover Letter*",
+  "Required-PleaseuploadaCoverLetter": "Required - Please upload a Cover Letter",
+  "Transcript*": "Transcript*",
+  "Required-PleaseuploadaTranscript": "Required - Please upload a Transcript",
+  "Email": "Email",
+  "Pleaseenteravalidemail": "Please enter a valid email",
+  "PhoneNumber": "Phone Number",
+  "Pleaseenteravalidnumber": "Please enter a valid number",
+  "Address": "Address",
+  "Pleaseenteravalidaddress": "Please enter a valid address",
+  "Submit": "Submit"
+
+  
 }

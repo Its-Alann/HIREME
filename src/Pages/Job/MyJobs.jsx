@@ -182,8 +182,7 @@ export const MyJobs = () => {
           </Button>
         </Stack>
         <Typography>
-          {t("ThisPagelistalljobsbelongtome,")} {jobsPerPage}
-          {t("perpage.OnlyIshouldbeabletoseethepage.")}
+          {t("ThisPagelistalljobs,")} {jobsPerPage} {t("perpage.")}
         </Typography>
         {jobs.map((job) => {
           // Anti eslint

@@ -150,7 +150,7 @@ export const BrowseJobs = () => {
           {t("BrowseJobs")}
         </Typography>
         <Typography>
-          {t("ThisPagelistalljobs,")} {jobsPerPage}
+          {t("ThisPagelistalljobs,")} {jobsPerPage}{" "}
           {t("perpage.Everyonecanaccessthispage.")}
         </Typography>
 

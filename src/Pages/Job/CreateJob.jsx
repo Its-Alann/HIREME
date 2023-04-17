@@ -343,7 +343,7 @@ export const CreateJob = () => {
           </Box>
 
           <Box>
-            <Typography>{t("Cover Letter")}</Typography>
+            <Typography>{t("CoverLetter")}</Typography>
             <FormControlLabel
               control={
                 <Checkbox
