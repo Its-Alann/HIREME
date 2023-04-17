@@ -110,8 +110,11 @@ export const NetworkCards = ({
   const findConversationId = async () => {
     const messagesRef = collection(db, "messages");
 
+    const authorList = [connectedUserID, currentUser].sort();
+    console.log(authorList);
+
     const querySnapshot = await getDocs(
-      query(messagesRef, where("authors", "==", [connectedUserID, currentUser]))
+      query(messagesRef, where("authors", "==", authorList))
     );
 
     const matchingDocs = [];
@@ -133,7 +136,7 @@ export const NetworkCards = ({
     //if the convo doesn't exist, create it
     if (matchingDocs?.[0]?.id === undefined) {
       const docRef = await addDoc(collection(db, "messages"), {
-        authors: [connectedUserID, currentUser],
+        authors: authorList,
         messages: [],
       });
       return docRef.id;
