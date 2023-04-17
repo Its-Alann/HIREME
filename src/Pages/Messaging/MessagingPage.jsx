@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
 import {
   Typography,
@@ -60,6 +61,10 @@ const findLastSeen = (arr, searchValue) => {
 };
 
 const Messaging = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const conversationIDParam = params.get("conversationID");
+
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
@@ -128,6 +133,7 @@ const Messaging = () => {
       unRead: chatInfo.unRead,
       groupName: chatInfo.groupName,
       imageUrl,
+      messageConvoID: chatInfo.messageConvoID,
     };
   };
 
@@ -150,6 +156,7 @@ const Messaging = () => {
       //each document is a convo
       querySnapshot.forEach((document) => {
         const data = document.data();
+        if (data.messages.length < 1) return;
         const mostRecent = data.messages?.at(-1).timestamp.toDate();
         const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
         const groupName = data.groupName ?? null;
@@ -158,6 +165,7 @@ const Messaging = () => {
           mostRecent,
           unRead,
           groupName,
+          messageConvoID: document.id,
         });
       });
 
@@ -225,6 +233,36 @@ const Messaging = () => {
     setAvatarImage(avatarUrl);
     scrollToBottom();
   };
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // State for the current conversation to display
+
+  useEffect(() => {
+    // Add this block to handle the conversationIDParam
+    if (conversationIDParam) {
+      const openConvo = async () => {
+        const convoIndex = chatProfiles.findIndex(
+          (chatProfile) => conversationIDParam === chatProfile.messageConvoID
+        );
+        if (convoIndex >= 0) {
+          const chatProfile = chatProfiles[convoIndex];
+          await selectConvo(
+            conversationIDParam,
+            chatProfile.names,
+            convoIndex,
+            [myUser, ...chatProfile.emails]
+          );
+        }
+      };
+      openConvo();
+    } else {
+      setSelectedIndex(-1);
+      setMessages([]);
+      setConvoId("");
+      setName("New Convo");
+    }
+  }, [chatProfiles]);
 
   const markMessagesAsRead = async () => {
     if (messages.length === 0 || messages.at(-1).seenBy.includes(myUser)) {
@@ -373,18 +411,16 @@ const Messaging = () => {
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
                       onClick={async () => {
-                        const conversationID = await getConversationId([
-                          ...chat.emails,
-                          myUser,
-                        ]);
+                        // const conversationID = chat.messageConvoID
                         await selectConvo(
-                          conversationID,
+                          chat.messageConvoID,
                           chat.names,
                           i,
                           [myUser, ...chat.emails],
                           chat.groupName,
                           chat.imageUrl
                         );
+                        setSearchParams(chat.messageConvoID);
                       }}
                     >
                       <ListItemAvatar>
