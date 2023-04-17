@@ -53,5 +53,10 @@
   "RemoveFrom2": " from your connections?",
   "RemoveAlert": "The user will not be notified that you have removed him from your connections",
   "RemoveUser": "Remove user",
-  "Cancel": "Cancel"
+  "Cancel": "Cancel",
+  // new internilizations added 2023/04/17
+  "Interview": "Interview",
+  "Viewed": "Viewed",
+  "Rejected": "Rejected",
+  "Pending": "Pending"
 }

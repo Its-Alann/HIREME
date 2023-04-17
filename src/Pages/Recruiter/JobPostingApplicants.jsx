@@ -506,7 +506,13 @@ export const JobPostingApplicants = () => {
                               }}
                             >
                               <Typography sx={{ textTransform: "uppercase" }}>
-                                {applicant.applicantStatus}
+                                {applicant.applicantStatus === "interview"
+                                  ? t("Interview")
+                                  : applicant.applicantStatus === "viewed"
+                                  ? t("Viewed")
+                                  : applicant.applicantStatus === "rejected"
+                                  ? t("Rejected")
+                                  : t("Pending")}
                               </Typography>
                             </CardContent>
                           </CardActionArea>

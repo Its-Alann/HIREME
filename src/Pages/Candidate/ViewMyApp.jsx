@@ -311,7 +311,13 @@ export const ViewMyApp = () => {
                             textTransform: "uppercase",
                           }}
                         >
-                          {job.status}
+                          {job.status === "interview"
+                            ? t("Interview")
+                            : job.status === "viewed"
+                            ? t("Viewed")
+                            : job.status === "rejected"
+                            ? t("Rejected")
+                            : t("Pending")}
                         </Typography>
                       </Grid>
                     </Stack>
