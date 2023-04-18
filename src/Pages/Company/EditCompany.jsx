@@ -111,7 +111,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
     const companyRef = doc(db, "companies2", companyID);
     await updateDoc(companyRef, companyInformation);
   }
-  
+
   async function getEmployees(employeesQuery) {
     const startTime = Date.now();
     const employeesSnapshot = await getDocs(employeesQuery);
@@ -609,14 +609,14 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           data-cy="Button-Previous-Job"
           onClick={() => getJobs(previousJobsQuery)}
         >
-          Previous
+          <Typography variant="h6">Previous</Typography>
         </Button>
         <Button
           id="Button-Next-Job"
           data-cy="Button-Next-Job"
           onClick={() => getJobs(nextJobsQuery)}
         >
-          Next
+          <Typography variant="h6">Next</Typography>
         </Button>
       </Box>
 
@@ -670,14 +670,14 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           data-cy="Button-Previous-Employee"
           onClick={() => getEmployees(previousEmployeesQuery)}
         >
-          Previous
+          <Typography variant="h6">Previous</Typography>
         </Button>
         <Button
           id="Button-Next-Employee"
           data-cy="Button-Next-Employee"
           onClick={() => getEmployees(nextEmployeesQuery)}
         >
-          Next
+          <Typography variant="h6">Next</Typography>
         </Button>
       </Box>
       <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
@@ -720,14 +720,14 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           data-cy="Button-Previous-Manager"
           onClick={() => getManagers(previousManagersQuery)}
         >
-          Previous
+          <Typography variant="h6">Previous</Typography>
         </Button>
         <Button
           id="Button-Next-Manager"
           data-cy="Button-Next-Manager"
           onClick={() => getManagers(nextManagersQuery)}
         >
-          Next
+          <Typography variant="h6">Next</Typography>
         </Button>
       </Box>
     </>

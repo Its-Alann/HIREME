@@ -1,7 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { Box, Card, Stack, Typography, Button } from "@mui/material";
+import { Box, Card, Stack, Typography, Button, Grid } from "@mui/material";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import StarIcon from "@mui/icons-material/Star";
 
@@ -57,7 +57,11 @@ const JobCard = ({
     <Box sx={{ py: 1, px: "5%" }}>
       <Card variant="outlined">
         <Box sx={{ m: 3 }}>
-          <Stack direction="row" alignItems="center">
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+            alignItems="right"
+          >
             {companyID === undefined ? (
               <Box
                 component="img"
@@ -74,8 +78,8 @@ const JobCard = ({
                 component="img"
                 sx={{
                   // objectFit: "cover",
-                  width: "6rem",
-                  height: "6rem",
+                  width: { xs: "4rem", sm: "5rem", md: "6rem" },
+                  height: { xs: "4rem", sm: "5rem", md: "6rem" },
                   mr: 2,
                 }}
                 src={logo}
@@ -102,7 +106,8 @@ const JobCard = ({
             </Box>
           </Stack>
           <Stack
-            direction="row"
+            direction={{ xs: "column", sm: "row" }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
             justifyContent="space-between"
             alignItems="flex-end"
             sx={{ pt: 2 }}
@@ -122,14 +127,14 @@ const JobCard = ({
                   underline="none"
                   style={{ textDecoration: "none", color: "white" }}
                 >
-                  View job
+                  <Typography variant="p">View job</Typography>
                 </Link>
               ) : link ? (
                 <a
                   href={link}
                   style={{ color: "white", textDecoration: "none" }}
                 >
-                  Apply On Other Site
+                  <Typography variant="p">Apply On Other Site</Typography>
                 </a>
               ) : (
                 <Link
@@ -138,11 +143,11 @@ const JobCard = ({
                   underline="none"
                   style={{ textDecoration: "none", color: "white" }}
                 >
-                  View job
+                  <Typography variant="p">View job</Typography>
                 </Link>
               )}
             </Button>
-            <Typography>
+            <Typography variant="p">
               Deadline:{" "}
               {new Date(
                 deadlineSeconds * 1000 + deadlineNanoSeconds / 1000000

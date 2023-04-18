@@ -7,7 +7,11 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  createTheme,
+  ThemeProvider,
+  responsiveFontSizes,
+} from "@mui/material/styles";
 import HomePage from "./Pages/Home/HomePage";
 import LoginPage from "./Pages/Login/LoginPage";
 import SignUpPage from "./Pages/SignUp/SignUpPage";
@@ -38,7 +42,7 @@ import NotificationsPage from "./Pages/Notifications/NotificationsPage";
 import SettingsPage from "./Pages/Setting/SettingsPage";
 
 const App = () => {
-  const theme = createTheme({
+  let theme = createTheme({
     palette: {
       primary: { main: "#2B2F90" },
       background: { main: "#EAEAEA" },
@@ -48,6 +52,8 @@ const App = () => {
       fontFamily: ["Proxima Nova"],
     },
   });
+  // Something to make font size responsive to screen size
+  theme = responsiveFontSizes(theme);
 
   // used to force navbar to update when an user become a recruter.
   // or when a recruiter become an user.
