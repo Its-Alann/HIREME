@@ -166,7 +166,7 @@ const HomePage = () => {
                           window.location.href = "/admin/flaggedMessages";
                         }}
                       >
-                        Admin Page
+                        ${t("AdminPage")}
                       </Button>
                     ) : (
                       <Typography> </Typography>
@@ -186,7 +186,7 @@ const HomePage = () => {
                   ) : formCompleted === false ? (
                     <div>
                       <Typography variant="h6">
-                        Looks like you&apos;re new!
+                        {t("Lookslikeyou&apos;renew!")}
                       </Typography>
                       <Button
                         fullWidth

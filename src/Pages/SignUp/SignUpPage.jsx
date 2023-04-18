@@ -98,7 +98,7 @@ const SignUpPage = () => {
                     );
                   }}
                   error={emailError}
-                  helperText={!emailError ? "" : "Please enter a valid email"}
+                  helperText={!emailError ? "" : t("Pleaseenteravalidemail")}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -124,7 +124,9 @@ const SignUpPage = () => {
                   helperText={
                     !passwordError
                       ? ""
-                      : "Please enter a password of six characters with, at least one letter, one number and one special character"
+                      : t(
+                          "Pleaseenterapasswordofsixcharacterswith,atleastoneletter,onenumberandonespecialcharacter"
+                        )
                   }
                 />
               </Grid>

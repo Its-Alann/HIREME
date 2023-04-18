@@ -127,7 +127,15 @@
   "Remove": "Remove",
   "Noappliedjobs:/": "No applied jobs :/",
 
-  "Prev": "Previous",
+  "Prev": "Prev",
+  "Pleaseenterapasswordofsixcharacterswith,atleastoneletter,onenumberandonespecialcharacter": "Please enter a password of six characters with, at least one letter, one number and one special character",
+  "Pleaseentervalidcredentials": "Please enter valid credentials",
+  "Youraccounthasbeenbanned": "Your account has been banned",
+  "AdminPage": "Admin Page",
+  "Lookslikeyou&apos;renew!": "Looks like you're new!",
+
+  "Apply": "Apply",
+  "Thisjobhasbeenremovedbytheemployer:/": "This job has been removed by the employer :/",
 
   "Awards": "Awards",
   "AwardIssuer": "Awards Issuer",

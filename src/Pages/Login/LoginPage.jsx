@@ -107,7 +107,7 @@ const LoginPage = () => {
                 );
               }}
               error={emailError}
-              helperText={!emailError ? "" : "Please enter valid credentials"}
+              helperText={!emailError ? "" : t("Pleaseentervalidcredentials")}
               variant="standard"
               color="primary"
               onChange={() => setBlockedUser(false)}
@@ -130,7 +130,7 @@ const LoginPage = () => {
 
             {blockedUser ? (
               <Typography color="error">
-                Your account has been banned
+                {t("Your account has been banned")}
               </Typography>
             ) : (
               ""
