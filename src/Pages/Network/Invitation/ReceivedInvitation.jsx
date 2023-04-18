@@ -74,7 +74,11 @@ export const ReceivedInvitation = ({
                   alignItems="center"
                 >
                   {showingReceivedInvites.map((requestedUserID) => (
-                    <Grid item sx={{ m: 2 }}>
+                    <Grid
+                      item
+                      sx={{ m: 2 }}
+                      key={`ReceivedInvitationCard-${requestedUserID}`}
+                    >
                       <ReceivedInvitationCard
                         allUserProfiles={allUsers}
                         receivedInvitationUserID={requestedUserID}
