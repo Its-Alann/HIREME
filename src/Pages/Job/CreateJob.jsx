@@ -15,14 +15,19 @@ import {
   getDoc,
   arrayUnion,
   writeBatch,
+  query,
+  where,
+  getDocs,
+  updateDoc,
 } from "firebase/firestore";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateJob = () => {
+  const [thirdPartyLink, setThirdPartyLink] = React.useState(false);
   const [jobInformation, setJobInformation] = React.useState({
     companyID: "",
     deadline: new Date(),
@@ -37,6 +42,7 @@ export const CreateJob = () => {
     resume: "",
     coverLetter: "",
     transcript: "",
+    link: "",
   });
   const [companyName, setCompanyName] = React.useState({
     name: "",
@@ -53,13 +59,59 @@ export const CreateJob = () => {
     batch.set(doc(db, "jobs2", newJobRef.id), {
       ...jobInformation,
     });
-    batch.update(doc(db, "companies2", jobInformation.companyID), {
-      jobs: arrayUnion({
-        jobID: newJobRef.id,
-        publishedAt: jobInformation.publishedAt,
-      }),
+
+    // Query the DB to get the job ID
+    const q1 = query(
+      collection(db, "jobs2"),
+      where("title", "==", jobInformation.title),
+      where("companyID", "==", jobInformation.companyID),
+      where("publishedAt", "==", jobInformation.publishedAt)
+    );
+    const jobIDSnapshots = await getDocs(q1);
+    let jobID = "";
+    // eslint-disable-next-line no-shadow
+    jobIDSnapshots.forEach((doc) => {
+      jobID = doc.id;
     });
-    await batch.commit();
+
+    // Retrieve user information in order to properly create job suggestion notifications
+    const titleArray = jobInformation.title.split(" ");
+    const userProfileRef = collection(db, "userProfiles");
+    const currentDate = new Date();
+
+    for (let i = 0; i < titleArray.length; i += 1) {
+      const q = query(
+        userProfileRef,
+        where("field", ">=", titleArray[i]),
+        where("field", "<=", `${titleArray[i]}\uf7ff`)
+      );
+      // eslint-disable-next-line no-await-in-loop
+      const userProfileSnapShot = await getDocs(q);
+      // eslint-disable-next-line no-loop-func
+      userProfileSnapShot.forEach(async (document) => {
+        try {
+          console.log(`Sending notification to ${document.id}`);
+          const notificationDocRef = doc(db, "notifications", document.id);
+          const notificationJobSnapshot = await getDoc(notificationDocRef);
+          if (notificationJobSnapshot.data().notificationForJobs === true) {
+            updateDoc(notificationDocRef, {
+              notifications: arrayUnion(
+                ...[
+                  {
+                    type: "jobs",
+                    content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
+                    timestamp: currentDate,
+                    link: `viewJobPosting/${jobInformation.companyID}/${jobID}`,
+                  },
+                ]
+              ),
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    }
   }
 
   // We need to include Recruiter ID & their company ID in the new Job
@@ -260,6 +312,46 @@ export const CreateJob = () => {
               />
             </LocalizationProvider>
           </Box>
+
+          <Box>
+            <Typography>Link to third party application</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="thirdPartyCheck"
+                  checked={thirdPartyLink}
+                  onChange={() => {
+                    if (thirdPartyLink) {
+                      setJobInformation({
+                        ...jobInformation,
+                        link: "",
+                      });
+                    }
+                    setThirdPartyLink(!thirdPartyLink);
+                  }}
+                />
+              }
+              label="This application requires a link to a third party website for application"
+              labelPlacement="end"
+            />
+            {thirdPartyLink && (
+              <TextField
+                required
+                id="TextField-thirdParty"
+                variant="standard"
+                placeholder="https://www.glassdoor.com"
+                fullWidth
+                value={jobInformation.link}
+                onChange={(e) =>
+                  setJobInformation({
+                    ...jobInformation,
+                    link: e.target.value,
+                  })
+                }
+              />
+            )}
+          </Box>
+
           <Divider />
 
           <Box>
@@ -275,6 +367,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="resumeCheck"
                   checked={jobInformation.resume}
                   onChange={(e) =>
                     setJobInformation({
@@ -293,6 +386,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="coverCheck"
                   checked={jobInformation.coverLetter}
                   onChange={(e) =>
                     setJobInformation({
@@ -311,6 +405,7 @@ export const CreateJob = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="transcriptCheck"
                   checked={jobInformation.transcript}
                   onChange={(e) =>
                     setJobInformation({

@@ -13,7 +13,7 @@ describe("Login to test account", () => {
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 });
 
@@ -58,15 +58,10 @@ describe("Change job posting back to original", () => {
     cy.get("#TextField-Description").clear();
     cy.get("#TextField-Requirement").clear();
     cy.get("#TextField-Benefits").clear();
-    cy.get(
-      ":nth-child(11) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(12) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(13) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
+    cy.get('[name="thirdPartyCheck"]').uncheck();
+    cy.get('[name="resumeCheck"]').uncheck();
+    cy.get('[name="coverCheck"]').uncheck();
+    cy.get('[name="transcriptCheck"]').uncheck();
 
     cy.get("#TextField-Title").type("Edit Jobs");
     cy.get("#TextField-City").type("Toronto");
@@ -74,15 +69,12 @@ describe("Change job posting back to original", () => {
     cy.get("#TextField-Description").type("Edit job postings in HIREME");
     cy.get("#TextField-Requirement").type("< 2.5 GPA");
     cy.get("#TextField-Benefits").type("Lots of fun");
-    cy.get(
-      ":nth-child(11) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(12) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(13) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
+    cy.get('[name="thirdPartyCheck"]').check();
+    cy.get("#TextField-thirdParty").type("https://www.glassdoor.com");
+    cy.get('[name="thirdPartyCheck"]').uncheck();
+    cy.get('[name="resumeCheck"]').check();
+    cy.get('[name="coverCheck"]').check();
+    cy.get('[name="transcriptCheck"]').check();
 
     cy.get("#Button-Save").click();
     cy.wait(1000);

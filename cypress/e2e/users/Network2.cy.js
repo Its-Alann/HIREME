@@ -14,13 +14,13 @@ describe("Login to test account", () => {
     cy.logout();
     cy.visit("http://localhost:3000/login");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get("#email").type("networkTest1@hireme.com");
     cy.get("#password").type("ilovetesting124?");
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 });
 
@@ -61,18 +61,18 @@ describe("Test sending an invitation to another user and receiving invitations",
     cy.logout();
     cy.visit("http://localhost:3000/login");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get("#email").type("networkTest2@hireme.com");
     cy.get("#password").type("ihatetesting123!");
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
   it("ignore the invitation", () => {
     cy.visit("http://localhost:3000/network");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get('[data-cy="ReceivedInvitationTab"]').click();
     cy.get('[data-cy="IgnoreInvitationBtnNetwork Test"]').click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -82,18 +82,18 @@ describe("Test sending an invitation to another user and receiving invitations",
     cy.logout();
     cy.visit("http://localhost:3000/login");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get("#email").type("networkTest1@hireme.com");
     cy.get("#password").type("ilovetesting124?");
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
   it("send invitation again", () => {
     cy.visit("http://localhost:3000/network");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get('[data-cy="PossibleConnectionsTab"]').click();
     cy.get("#Button-Next").click();
     cy.get('[data-cy="invitationButtonNetwork Test"]').click();
@@ -125,7 +125,7 @@ describe("Create a connection with another user", () => {
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
   it("send invitation", () => {
     cy.visit("http://localhost:3000/network");
@@ -150,13 +150,13 @@ describe("Create a connection with another user", () => {
     cy.logout();
     cy.visit("http://localhost:3000/login");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get("#email").type("networkTest2@hireme.com");
     cy.get("#password").type("ihatetesting123!");
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
   it("ignore the invitation", () => {
     cy.visit("http://localhost:3000/network");
@@ -177,13 +177,13 @@ describe("Create a connection with another user", () => {
     cy.logout();
     cy.visit("http://localhost:3000/login");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
     cy.get("#email").type("networkTest2@hireme.com");
     cy.get("#password").type("ihatetesting123!");
     cy.get("#email").focus();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
   it("connection should exist", () => {
     cy.visit("http://localhost:3000/network");

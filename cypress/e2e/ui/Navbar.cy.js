@@ -64,6 +64,15 @@ describe("Test the navbar component", () => {
       // cy.get('[data-cy="Network-phone-test"]').click();
       //verify link
       // cy.url().should("eq", "http://localhost:3000/network");
+
+      // //open menu
+      // cy.get('[data-cy="phone-menu-test"]').within(() =>
+      //  cy.get("Button").click()
+      // );
+      // //click fifth option
+      // cy.get('[data-cy="Notifications-phone-test"]').should("be visible").click();
+      // //verify link
+      // cy.url().should("eq", "http://localhost:3000/notifications");
     });
 
     it("open user menu on mobile resolution and select Profile", () => {
@@ -158,7 +167,7 @@ describe("Test the navbar component", () => {
       cy.get("input").tab();
       cy.get(".MuiButton-contained").click();
       // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(1000);
+      cy.wait(3000);
     });
 
     it("clicks on home", () => {
@@ -175,6 +184,14 @@ describe("Test the navbar component", () => {
       cy.visit("http://localhost:3000");
       // cy.contains("Network").click();
       // cy.url().should("include", "/network");
+    });
+
+    it("clicks on notifications", () => {
+      cy.login();
+      cy.viewport(1920, 1080);
+      cy.visit("http://localhost:3000");
+      cy.contains("Notifications").click();
+      cy.url().should("include", "/notifications");
     });
 
     it("clicks on jobs/view applied jobs", () => {
@@ -321,6 +338,19 @@ describe("Test the navbar component", () => {
       cy.wait(500);
       cy.url().should("eq", "http://localhost:3000/viewMyApplications");
       cy.url().should("include", "/viewMyApplications");
+      cy.wait(500);
+    });
+
+    it("clicks on notifications", () => {
+      cy.wait(500);
+      cy.login();
+      cy.viewport(390, 844);
+      cy.visit("http://localhost:3000");
+      cy.get('[data-cy="phone-menu-test"]').within(() =>
+        cy.get("Button").click()
+      );
+      cy.get('[data-cy="Notifications-phone-test"]').click();
+      cy.url().should("include", "/notifications");
       cy.wait(500);
     });
 

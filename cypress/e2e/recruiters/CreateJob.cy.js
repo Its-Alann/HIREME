@@ -11,7 +11,7 @@ describe("Login to test account", () => {
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(3000);
   });
 });
 
@@ -32,17 +32,14 @@ describe("Creates a new job", () => {
     cy.get("#TextField-Description").type("Tester Job Description");
     cy.get("#TextField-Requirement").type("Tester Job Requirement");
     cy.get("#TextField-Benefits").type("Tester Job Benefits");
-    // somehow cannot get date picker by id
-    // cy.get("#DatePicker-Deadline").click();
-    cy.get(
-      ":nth-child(11) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(12) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
-    cy.get(
-      ":nth-child(13) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    ).click();
+    cy.get('[data-testid="CalendarIcon"]').click();
+    cy.get("button").contains("28").click();
+    cy.get('[name="thirdPartyCheck"]').check();
+    cy.get("#TextField-thirdParty").type("https://www.glassdoor.com");
+    cy.get('[name="thirdPartyCheck"]').uncheck();
+    cy.get('[name="resumeCheck"]').check();
+    cy.get('[name="coverCheck"]').check();
+    cy.get('[name="transcriptCheck"]').check();
     cy.get("#Button-Save").click();
     cy.wait(1000);
   });

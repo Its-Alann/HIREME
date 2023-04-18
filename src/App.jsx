@@ -34,6 +34,8 @@ import { JobPostingApplicants } from "./Pages/Recruiter/JobPostingApplicants";
 import { JobPosting } from "./Pages/Candidate/JobPosting";
 import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
 import ResetPassword from "./Pages/Login/ResetPassword";
+import NotificationsPage from "./Pages/Notifications/NotificationsPage";
+import SettingsPage from "./Pages/Setting/SettingsPage";
 
 const App = () => {
   const theme = createTheme({
@@ -119,6 +121,12 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
+            <Route
+              path="/notifications"
+              exact
+              element={<NotificationsPage />}
+            />
+            <Route path="/settings" exact element={<SettingsPage />} />
             <Route
               path="/editCompany/:companyID"
               exact
