@@ -17,6 +17,7 @@ export const CreateRecruiter = ({ toggleNavbarUpdate }) => {
     lastName: "",
     workFor: "",
     email: "",
+    isManager: false,
   });
   const [companyList, setCompanyList] = React.useState([]);
   const [currentUserID, setCurrentUserID] = React.useState(null);
