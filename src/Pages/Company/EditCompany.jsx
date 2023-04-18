@@ -25,8 +25,6 @@ import {
   endBefore,
   startAfter,
   limit,
-  or,
-  and,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import PropTypes from "prop-types";
@@ -487,20 +485,9 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
               }}
             />
           ) : (
-            <TextField
-              id="TextField-Name"
-              variant="standard"
-              label="Company Name"
-              disabled
-              value={companyInformation.name}
-              margin="normal"
-              sx={{
-                fontSize: "3em",
-              }}
-              InputProps={{
-                style: { fontSize: 30 },
-              }}
-            />
+            <Typography id="TextField-Name" variant="h2" margin="normal">
+              {companyInformation.name}
+            </Typography>
           )}
         </Box>
 
@@ -536,8 +523,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           alt="Upload Image"
           src={companyInformation.logoPath}
           sx={{
-            width: 200,
-            height: 200,
+            width: { xs: 100, sm: 150, md: 200 },
+            height: { xs: 100, sm: 150, md: 200 },
           }}
           style={{
             backgroundColor: "white",
@@ -567,12 +554,12 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: { xs: "column", sm: "column", md: "row" },
           padding: "5%",
-          alignItems: "center",
+          alignItems: "left",
         }}
       >
-        <Typography variant="h2" sx={{ marginRight: "2%" }}>
+        <Typography variant="h3" sx={{ marginRight: "2%" }}>
           Job List
         </Typography>
         {isNewJobAllowed && (
@@ -581,9 +568,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
               id="Button-NewJob"
               variant="contained"
               data-cy="Button-NewJob"
-              sx={{ height: "50px" }}
             >
-              New Job
+              <Typography variant="h5">New Job</Typography>
             </Button>
           </Link>
         )}
@@ -644,7 +630,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
               employeeId={employee.ID}
               employeeFirstName={employee.firstName}
               employeeLastName={employee.lastName}
-              employeeImage={employee.description}
+              employeeImage={employee.image}
+              employeeDescription={employee.description}
             >
               {employee.email && (
                 <Link
@@ -695,7 +682,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           <Typography variant="h6">Next</Typography>
         </Button>
       </Box>
-      <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
+      <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
         Manager List
       </Typography>
       <Grid
@@ -716,6 +703,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
               employeeId={employee.ID}
               employeeFirstName={employee.firstName}
               employeeLastName={employee.lastName}
+              employeeImage={employee.image}
+              employeeDescription={employee.description}
             >
               {employee.email && (
                 <Link
