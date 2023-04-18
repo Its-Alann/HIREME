@@ -47,6 +47,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
   const [mouseOver, setMouseOver] = React.useState(false);
   const [mouseOut, setMouseOut] = React.useState(false);
   const [editMode, setEditMode] = React.useState(false);
+  const [favoriteCompaniesID, setFavoriteCompaniesID] = React.useState([]);
+  const [userEmail, setUserEmail] = React.useState(null);
 
   const handleMouseOver = (event) => {
     setMouseOut(true);
@@ -231,8 +233,10 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       console.log("onAuthStateChanged invoked");
       if (user) {
         setCurrentUserID(user.uid);
+        setUserEmail(user.email);
       } else {
         setCurrentUserID(null);
+        setUserEmail(null);
       }
     });
   }, []);
@@ -295,6 +299,37 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       );
     }
   }, [managers, managerCursorPosition]);
+
+  React.useEffect(() => {
+    async function getFavoriteCompaniesID() {
+      if (userEmail !== null) {
+        const notificationsDocRef = doc(db, "notifications", userEmail);
+        // Get notifications data and set it to local array
+        const notificationsSnapShot = await getDoc(notificationsDocRef);
+        if (notificationsSnapShot.exists()) {
+          console.log("Notifications for user Exist");
+          if (notificationsSnapShot.data().favCompanies) {
+            setFavoriteCompaniesID(notificationsSnapShot.data().favCompanies);
+          } else {
+            setFavoriteCompaniesID([]);
+          }
+        } else {
+          console.log("Notifications for user does not Exist");
+        }
+      }
+    }
+    console.log("get fav companies");
+    getFavoriteCompaniesID();
+  }, [userEmail]);
+
+  React.useEffect(() => {
+    try {
+      const notificationsDocRef = doc(db, "notifications", userEmail);
+      updateDoc(notificationsDocRef, { favCompanies: favoriteCompaniesID });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [favoriteCompaniesID]);
 
   return (
     <>
@@ -469,6 +504,8 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
           deadlineNanoSeconds={job.deadline.nanoseconds}
           logo={companyInformation.logoPath}
           editable={isNewJobAllowed}
+          favoriteCompaniesID={favoriteCompaniesID}
+          setFavoriteCompaniesID={setFavoriteCompaniesID}
         />
       ))}
       <Box sx={{ px: "5%" }}>

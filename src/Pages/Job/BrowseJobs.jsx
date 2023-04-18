@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { StarOutlineIcon, StarIcon } from "@mui/icons-material/";
 import * as React from "react";
 import {
   collection,
@@ -13,19 +12,10 @@ import {
   doc,
   getDoc,
   limit,
-  getFirestore,
   updateDoc,
 } from "firebase/firestore";
-import {
-  Box,
-  Container,
-  Button,
-  Typography,
-  Card,
-  Stack,
-} from "@mui/material/";
-import { Link } from "react-router-dom";
-import { auth, db, app } from "../../Firebase/firebase";
+import { Box, Container, Button, Typography } from "@mui/material";
+import { auth, db } from "../../Firebase/firebase";
 import "./Job.css";
 import JobCard from "../../Components/Jobs/JobCard";
 
@@ -36,19 +26,15 @@ export const BrowseJobs = () => {
   const [firstJob, setFirstJob] = useState(null);
   const [companiesName, setCompaniesName] = useState({});
   const [companiesLogo, setCompaniesLogo] = useState({});
-  const [favCompanyStrIn, setFavCompanyStrIn] = useState("");
-  const [favCompanyStrOut, setFavCompanyStrOut] = useState("");
-  const [favCompanyArr, setFavCompanyArr] = useState([]);
-  const [hasFavorite, setHasFavorite] = useState(false);
-  const database = getFirestore(app);
+  const [favoriteCompaniesID, setFavoriteCompaniesID] = useState([]);
 
   // Only once, attach listener to onAuthStateChanged
   useEffect(() => {
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { uid, email } = authUser;
-        console.log("uid", uid);
-        console.log("useEffect: ", email);
+        console.log("uid ", uid);
+        console.log("email ", email);
         setUserEmail(email);
       } else {
         setUserEmail(null);
@@ -57,17 +43,17 @@ export const BrowseJobs = () => {
   }, []);
 
   useEffect(() => {
-    async function fetchData() {
+    async function getFavoriteCompaniesID() {
       if (userEmail !== null) {
-        const notificationsDocRef = doc(database, "notifications", userEmail);
+        const notificationsDocRef = doc(db, "notifications", userEmail);
         // Get notifications data and set it to local array
         const notificationsSnapShot = await getDoc(notificationsDocRef);
         if (notificationsSnapShot.exists()) {
           console.log("Notifications for user Exist");
-          if (notificationsSnapShot.data().favCompanies !== undefined) {
-            setFavCompanyStrIn(notificationsSnapShot.data().favCompanies);
+          if (notificationsSnapShot.data().favCompanies) {
+            setFavoriteCompaniesID(notificationsSnapShot.data().favCompanies);
           } else {
-            setFavCompanyStrIn("");
+            setFavoriteCompaniesID([]);
           }
         } else {
           console.log("Notifications for user does not Exist");
@@ -75,68 +61,17 @@ export const BrowseJobs = () => {
       }
     }
     console.log("get fav companies");
-    fetchData();
+    getFavoriteCompaniesID();
   }, [userEmail]);
 
   useEffect(() => {
-    if (favCompanyStrIn !== "") {
-      setFavCompanyArr(favCompanyStrIn.split(","));
-      setHasFavorite(true);
-    } else {
-      console.log("empty favs");
-    }
-  }, [favCompanyStrIn]);
-
-  const isFavorite = (companyID) => {
-    //console.log("isFav called");
-    if (hasFavorite) {
-      for (let i = 0; i < favCompanyArr.length; i += 1) {
-        //console.log(favCompanyArr[i]);
-        if (favCompanyArr[i] === companyID) {
-          // console.log(
-          //   "companyID: ",
-          //   companyID,
-          //   " matches company: ",
-          //   favCompanyArr[i]
-          // );
-          return true;
-        }
-        // console.log(
-        //   "companyID: ",
-        //   typeof companyID,
-        //   " not company: ",
-        //   typeof company
-        // );
-      }
-    }
-    //console.log("here");
-    return false;
-  };
-
-  const handleMakeFavorite = (companyId) => {
-    if (!favCompanyArr.includes(companyId)) {
-      setFavCompanyArr((prevList) => [...prevList, companyId]);
-    }
-  };
-
-  const handleRemoveFavorite = (companyId) => {
-    setFavCompanyArr((prev) => prev.filter((temp) => temp !== companyId));
-  };
-
-  useEffect(() => {
-    console.log(favCompanyArr);
-    setFavCompanyStrOut(favCompanyArr.join());
-  }, [favCompanyArr]);
-
-  useEffect(() => {
     try {
-      const notificationsDocRef = doc(database, "notifications", userEmail);
-      updateDoc(notificationsDocRef, { favCompanies: favCompanyStrOut });
+      const notificationsDocRef = doc(db, "notifications", userEmail);
+      updateDoc(notificationsDocRef, { favCompanies: favoriteCompaniesID });
     } catch (err) {
       console.log(err);
     }
-    setFavCompanyStrIn(favCompanyStrOut);
-  }, [favCompanyStrOut]);
+  }, [favoriteCompaniesID]);
 
   const jobsPerPage = 5;
 
@@ -278,9 +213,8 @@ export const BrowseJobs = () => {
               logo={companiesLogo[job.companyID]}
               link={job.link}
               email={userEmail}
-              isFavorite={isFavorite}
-              handleMakeFavorite={handleMakeFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
+              favoriteCompaniesID={favoriteCompaniesID}
+              setFavoriteCompaniesID={setFavoriteCompaniesID}
             />
           );
         })}
