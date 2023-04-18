@@ -369,7 +369,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                   and redirect to their respective page */}
                 {pageNames.map((page) =>
                   page === "Jobs" ? (
-                    <>
+                    <div key={page}>
                       <Button
                         data-cy={`${page}-test`}
                         onClick={handleOpenUserMenu2}
@@ -415,7 +415,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                           View Applied Jobs
                         </MenuItem>
                       </Menu>
-                    </>
+                    </div>
                   ) : (
                     <Button
                       id={`Button-${page}`}
@@ -457,16 +457,18 @@ const Navbar = ({ navbarUpdateToggle }) => {
                       style={{ border: "2px solid #2B2F90" }}
                       alt={
                         //making sure info is defined
-                        userData !== undefined &&
-                        userData.values !== undefined &&
-                        userData.values.firstName !== undefined &&
-                        userData.values.firstName
+                        (userData !== undefined &&
+                          userData.values !== undefined &&
+                          userData.values.firstName !== undefined &&
+                          userData.values.firstName) ||
+                        "User has no first name"
                       }
                       src={
-                        userData !== undefined &&
-                        userData.values !== undefined &&
-                        userData.values.image !== undefined &&
-                        userData.values.image
+                        (userData !== undefined &&
+                          userData.values !== undefined &&
+                          userData.values.image !== undefined &&
+                          userData.values.image) ||
+                        " "
                       }
                     />
                   </IconButton>
@@ -520,7 +522,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
             >
               {loggedOutPages.map((page) =>
                 page === "Jobs" ? (
-                  <>
+                  <div key={page}>
                     <Button
                       data-cy={`${page}-test`}
                       onClick={handleOpenUserMenu2}
@@ -556,7 +558,7 @@ const Navbar = ({ navbarUpdateToggle }) => {
                         View Jobs
                       </MenuItem>
                     </Menu>
-                  </>
+                  </div>
                 ) : (
                   <Button
                     key={page}

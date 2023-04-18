@@ -74,14 +74,18 @@ export const NetworkPossibleConnections = ({
                 alignItems="center"
                 data-cy="connectionGrid"
               >
-                {showingNonConnectedUsers.map((possibleConnectionUserID) => (
-                  <Grid item sx={{ m: 2 }}>
+                {showingNonConnectedUsers.map((possibleConnectionUser) => (
+                  <Grid
+                    item
+                    sx={{ m: 2 }}
+                    key={`possibleConnectionCard-${possibleConnectionUser.id}`}
+                  >
                     <PossibleConnectionCard
                       allUserProfiles={allUsers}
-                      possibleConnectionUserId={possibleConnectionUserID.id}
+                      possibleConnectionUserId={possibleConnectionUser.id}
                       currentUser={currentUser}
-                      data-cy={`gridItem${possibleConnectionUserID}`}
-                      id={`gridItem${possibleConnectionUserID}`}
+                      data-cy={`gridItem${possibleConnectionUser}`}
+                      id={`gridItem${possibleConnectionUser}`}
                     />
                   </Grid>
                 ))}
@@ -118,8 +122,10 @@ export const NetworkPossibleConnections = ({
 };
 
 NetworkPossibleConnections.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
-  nonConnectedUsersID: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  allUserProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  nonConnectedUsersID: PropTypes.arrayOf(PropTypes.object).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };
 
