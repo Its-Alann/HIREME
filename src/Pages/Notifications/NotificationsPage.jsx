@@ -1,13 +1,17 @@
 import { React, useState, useEffect } from "react";
 import { doc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { Grid, Stack,} from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { app, auth } from "../../Firebase/firebase";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
-import NotificationCards from "../../Components/Notifications/NotificationCards"
+import { app, auth } from "../../Firebase/firebase";
+import NotificationCards from "../../Components/Notifications/NotificationCards";
 
 const NotificationsPage = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // Theme for the page
   const theme = createTheme({
     palette: {
@@ -68,7 +72,7 @@ const NotificationsPage = () => {
   //wait until info is retrieved from db before loading cards
   useEffect(() => {
     if (notifications !== []) {
-      console.log("wait for information before loading")
+      console.log("wait for information before loading");
       setInfoAvailable(true);
       //Set length of current notifications array
       setNumOfNotifications(notifications.length);
@@ -80,12 +84,18 @@ const NotificationsPage = () => {
     const cards = [];
     // If notifications is empty
     if (notifications === []) {
-      cards.push(<h4>No notifications to display :/</h4>);
+      cards.push(<h4>{t("Nonotificationstodisplay:/")}</h4>);
     } else {
       // Add notification cards
       for (let i = numOfNotifications - 1; i >= 0; i -= 1) {
         cards.push(
-          <NotificationCards notifications={notifications} setNotifications={setNotifications} setNumOfNotifications={setNumOfNotifications} cardNum={i} currentUserEmail={currentUserEmail}/>
+          <NotificationCards
+            notifications={notifications}
+            setNotifications={setNotifications}
+            setNumOfNotifications={setNumOfNotifications}
+            cardNum={i}
+            currentUserEmail={currentUserEmail}
+          />
         );
       }
     }
@@ -95,7 +105,11 @@ const NotificationsPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <Grid container direction="row">
-        <Grid item xs={12} sm={12} md={12}
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
           style={{
             backgroundColor: "white",
             padding: "35px",
@@ -106,9 +120,11 @@ const NotificationsPage = () => {
             maxHeight: 150,
           }}
         >
-          Manage your notifications
-          <br></br>
-          <NavLink id="visitSettings" to="/settings">View Settings</NavLink>
+          {t("Manageyournotifications")}
+          <br />
+          <NavLink id="visitSettings" to="/settings">
+            {t("ViewSettings")}
+          </NavLink>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <Stack
@@ -124,8 +140,8 @@ const NotificationsPage = () => {
               marginTop: "20px",
             }}
           >
-              {infoAvailable && <>{displayNotifications()}</>}
-              {!infoAvailable && <p>Loading</p>}
+            {infoAvailable && <>{displayNotifications()}</>}
+            {!infoAvailable && <p>{t("Loading")}</p>}
           </Stack>
         </Grid>
       </Grid>

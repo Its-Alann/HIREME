@@ -7,11 +7,15 @@ import { useState } from "react";
 import Container from "@mui/material/Container";
 import { addDoc, collection } from "firebase/firestore";
 import Stack from "@mui/material/Stack";
+import { useTranslation } from "react-i18next";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { db, storage } from "../../Firebase/firebase";
 
 export const CreateCompany = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const [companyInformation, setCompanyInformation] = React.useState({
@@ -53,11 +57,11 @@ export const CreateCompany = () => {
     <Container maxWidth="md">
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Company Creation
+          {t("CompanyCreation")}
         </Typography>
         <Stack spacing={2}>
           <Box>
-            <Typography>Company Name</Typography>
+            <Typography>{t("CompanyName")}</Typography>
             <TextField
               required
               id="TextField-CompanyName"
@@ -74,7 +78,7 @@ export const CreateCompany = () => {
             />
           </Box>
           <Box>
-            <Typography>Company Logo</Typography>
+            <Typography>{t("Company Logo")}</Typography>
             <input type="file" accept="image/*" onChange={handleLogoChange} />
           </Box>
         </Stack>
@@ -85,7 +89,7 @@ export const CreateCompany = () => {
           sx={{ mt: 2 }}
           onClick={() => handleSubmit()}
         >
-          Save
+          {t("Save")}
         </Button>
       </Box>
     </Container>

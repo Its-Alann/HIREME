@@ -127,7 +127,7 @@
   "Remove": "Remove",
   "Noappliedjobs:/": "No applied jobs :/",
 
-  "Prev": "Prev",
+  "Prev": "Preview",
   "Pleaseenterapasswordofsixcharacterswith,atleastoneletter,onenumberandonespecialcharacter": "Please enter a password of six characters with, at least one letter, one number and one special character",
   "Pleaseentervalidcredentials": "Please enter valid credentials",
   "Youraccounthasbeenbanned": "Your account has been banned",
@@ -194,5 +194,30 @@
   "Noapplicants:/": "No Applicants :/",
   "Changeapplicationstatusfor": "Change application status for",
   "Thecurrentstatusis": "The current status is",
-  "Changeapplicationstatusto:": "Change application status to:"
+  "Changeapplicationstatusto:": "Change application status to:",
+   
+  "RecruiterAccountCreation": "Recruiter Account Creation",
+  "RecruiterFirstName": "Recruiter First Name",
+  "RecruiterLastName": "Recruiter Last Name",
+  "Company": "Company",
+  "Companydoesnotexistyet?": "Company does not exist yet?",
+
+  "CompanyCreation": "Company Creation",
+  "CompanyLogo": "Company Logo",
+
+  "Forgotpassword?": "Forgot password?",
+  "Youwillreceiveanemailtoresetyourpassword": "You will receive an email to reset your password",
+  "Usernotfound": "User not found",
+  "Resetpassword": "Reset password",
+  "Don&apos;thaveanaccount?": "Don't have an account?",
+
+  "Notificationsyoureceive": "Notifications you receive",
+  "Connections": "Connections",
+  "JobSuggestions": "Job Suggestions",
+  "On": "On",
+  "Off": "Off",
+
+  "Nonotificationstodisplay:/": "No notifications to display :/",
+  "Manageyournotifications": "Manage your notifications",
+  "ViewSettings": "View Settings"
 }
