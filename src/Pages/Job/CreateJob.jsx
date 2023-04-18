@@ -19,6 +19,7 @@ import {
   where,
   getDocs,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 import { useParams, Link } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -39,9 +40,9 @@ export const CreateJob = () => {
     requirement: "",
     title: "",
     benefits: "",
-    resume: "",
-    coverLetter: "",
-    transcript: "",
+    resume: false,
+    coverLetter: false,
+    transcript: false,
     link: "",
   });
   const [companyName, setCompanyName] = React.useState({
@@ -55,26 +56,32 @@ export const CreateJob = () => {
     // First add a new document in the collection jobs
     // Then update the document in companies
     const newJobRef = doc(collection(db, "jobs2"));
-    const batch = writeBatch(db);
-    batch.set(doc(db, "jobs2", newJobRef.id), {
-      ...jobInformation,
-    });
+    // const batch = writeBatch(db);
+    // batch.set(doc(db, "jobs2", newJobRef.id), {
+    //   ...jobInformation,
+    // });
+    await setDoc(newJobRef, { ...jobInformation });
 
-    // Query the DB to get the job ID
-    const q1 = query(
-      collection(db, "jobs2"),
-      where("title", "==", jobInformation.title),
-      where("companyID", "==", jobInformation.companyID),
-      where("publishedAt", "==", jobInformation.publishedAt)
-    );
-    const jobIDSnapshots = await getDocs(q1);
-    let jobID = "";
-    // eslint-disable-next-line no-shadow
-    jobIDSnapshots.forEach((doc) => {
-      jobID = doc.id;
-    });
+    // // Query the DB to get the job ID
+    // const q1 = query(
+    //   collection(db, "jobs2"),
+    //   where("title", "==", jobInformation.title),
+    //   where("companyID", "==", jobInformation.companyID),
+    //   where("publishedAt", "==", jobInformation.publishedAt)
+    // );
+    // const jobIDSnapshots = await getDocs(q1);
+    // let jobID = "";
+    // // eslint-disable-next-line no-shadow
+    // jobIDSnapshots.forEach((doc) => {
+    //   jobID = doc.id;
+    // });
 
     // Retrieve user information in order to properly create job suggestion notifications
+    // For example: job title is Senior Software Developper
+    // Then it will send notifications to all users, whose field begin with "Senior" or "Software" or "Developper"
+    // That means, field of userProfiles should be a string with no space
+    // (because doesn't matter he put "Software Tester" or "Software Manager" or "Senior Gamer", we are only checking if it starts with "Software" or "Senior" or "Developer")
+    // (because titleArray is an array of single words)
     const titleArray = jobInformation.title.split(" ");
     const userProfileRef = collection(db, "userProfiles");
     const currentDate = new Date();
@@ -83,7 +90,7 @@ export const CreateJob = () => {
       const q = query(
         userProfileRef,
         where("field", ">=", titleArray[i]),
-        where("field", "<=", `${titleArray[i]}\uf7ff`)
+        where("field", "<", `${titleArray[i]}\uf7ff`)
       );
       // eslint-disable-next-line no-await-in-loop
       const userProfileSnapShot = await getDocs(q);
@@ -95,16 +102,12 @@ export const CreateJob = () => {
           const notificationJobSnapshot = await getDoc(notificationDocRef);
           if (notificationJobSnapshot.data().notificationForJobs === true) {
             updateDoc(notificationDocRef, {
-              notifications: arrayUnion(
-                ...[
-                  {
-                    type: "jobs",
-                    content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
-                    timestamp: currentDate,
-                    link: `viewJobPosting/${jobInformation.companyID}/${jobID}`,
-                  },
-                ]
-              ),
+              notifications: arrayUnion({
+                type: "jobs",
+                content: `New job suggestion: ${jobInformation.title} posted by ${companyName.name} in ${jobInformation.city}, ${jobInformation.country}`,
+                timestamp: currentDate,
+                link: `viewJobPosting/${jobInformation.companyID}/${newJobRef.id}`,
+              }),
             });
           }
         } catch (error) {

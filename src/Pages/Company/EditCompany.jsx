@@ -229,7 +229,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
   }
 
   React.useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log("onAuthStateChanged invoked");
       if (user) {
         setCurrentUserID(user.uid);
@@ -239,6 +239,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         setUserEmail(null);
       }
     });
+    return () => unsubscribe();
   }, []);
 
   React.useEffect(() => {
@@ -324,8 +325,10 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
 
   React.useEffect(() => {
     try {
-      const notificationsDocRef = doc(db, "notifications", userEmail);
-      updateDoc(notificationsDocRef, { favCompanies: favoriteCompaniesID });
+      if (userEmail) {
+        const notificationsDocRef = doc(db, "notifications", userEmail);
+        updateDoc(notificationsDocRef, { favCompanies: favoriteCompaniesID });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -342,7 +345,6 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         }}
       >
         <Box
-          fullWidth
           sx={{
             display: "flex",
             flexDirection: "row",

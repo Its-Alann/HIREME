@@ -8,17 +8,16 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import { Box, Typography, Button } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { auth, app } from "../../Firebase/firebase";
+import { auth, db } from "../../Firebase/firebase";
 import HomepagePic from "../../Assets/images/homepage1.png";
 import LoginPage from "../Login/LoginPage";
 
 const HomePage = () => {
   const [user, setUser] = useState(null); //setting to uid cause idk what else to put for now
-  const db = getFirestore(app);
   const [formCompleted, setFormCompleted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-
   const [firstName, setFirstName] = useState("");
+  const [currentUserEmail, setCurrentUserEmail] = useState(null);
 
   const checkFormCompletion = async (email) => {
     const docRef = doc(db, "userProfiles", email);
@@ -41,20 +40,28 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (authUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { uid, email } = authUser;
         // console.log("uid", uid);
         // console.log("email", email);
         setUser(uid);
-        checkFormCompletion(email);
+        setCurrentUserEmail(email);
         console.log("useEffect", email);
-        checkAdmin(email);
       } else {
         setUser(null);
+        setCurrentUserEmail(null);
       }
     });
+    return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (currentUserEmail) {
+      checkFormCompletion(currentUserEmail);
+      checkAdmin(currentUserEmail);
+    }
+  }, [currentUserEmail]);
 
   const handleSignOut = async () => {
     signOut(auth)
