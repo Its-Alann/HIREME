@@ -17,6 +17,13 @@ import {
   query,
   updateDoc,
   where,
+  orderBy,
+  limitToLast,
+  endBefore,
+  startAfter,
+  limit,
+  or,
+  and,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import PropTypes from "prop-types";
@@ -35,15 +42,15 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
   const [isNewJobAllowed, setIsNewJobAllowed] = React.useState(false);
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [employees, setEmployees] = React.useState([]);
+  const [lastEmployee, setLastEmployee] = React.useState(null);
+  const [firstEmployee, setFirstEmployee] = React.useState(null);
   const [managers, setManagers] = React.useState([]);
+  const [lastManager, setLastManager] = React.useState(null);
+  const [firstManager, setFirstManager] = React.useState(null);
   const [currentUserID, setCurrentUserID] = React.useState("");
-  const [jobCursorPosition, setJobCursorPosition] = React.useState(0);
-  const [employeeCursorPosition, setEmployeeCursorPosition] = React.useState(0);
-  const [managerCursorPosition, setManagerCursorPosition] = React.useState(0);
   const [jobs, setJobs] = React.useState([]);
-  const [displayedJobs, setDisplayedJobs] = React.useState([]);
-  const [displayedEmployees, setDisplayedEmployees] = React.useState([]);
-  const [displayedManagers, setDisplayedManagers] = React.useState([]);
+  const [lastJob, setLastJob] = React.useState(null);
+  const [firstJob, setFirstJob] = React.useState(null);
   const [mouseOver, setMouseOver] = React.useState(false);
   const [mouseOut, setMouseOut] = React.useState(false);
   const [editMode, setEditMode] = React.useState(false);
@@ -104,58 +111,49 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
     const companyRef = doc(db, "companies2", companyID);
     await updateDoc(companyRef, companyInformation);
   }
-
-  async function getEmployeesAndManagers() {
-    const recruitersRef = collection(db, "recruiters2");
-    const recruitersQuery = query(
-      recruitersRef,
-      where("workFor", "==", companyID)
-    );
+  
+  async function getEmployees(employeesQuery) {
     const startTime = Date.now();
-    const querySnapshot = await getDocs(recruitersQuery);
-    console.log("recruiter query time: ", Date.now() - startTime);
-    const employeesList = [];
-    const managersList = [];
-    querySnapshot.forEach((document) => {
-      if (document.data().isManager) {
-        managersList.push({
-          ID: document.id,
-          firstName: document.data().firstName,
-          lastName: document.data().lastName,
-          email: document.data().email,
-          isManager: document.data().isManager,
-        });
-      } else {
-        employeesList.push({
-          ID: document.id,
-          firstName: document.data().firstName,
-          lastName: document.data().lastName,
-          email: document.data().email,
-          isManager: false,
-        });
-      }
+    const employeesSnapshot = await getDocs(employeesQuery);
+    const endTime = Date.now();
+    console.log("employees query time: ", endTime - startTime);
+
+    const temp = [];
+    // if none document returned, skip
+    if (employeesSnapshot.docs.length < 1) {
+      return;
+    }
+
+    setFirstEmployee(employeesSnapshot.docs[0]);
+    setLastEmployee(employeesSnapshot.docs[employeesSnapshot.docs.length - 1]);
+
+    employeesSnapshot.docs.forEach((document) => {
+      temp.push({ ...document.data(), ID: document.id });
     });
-    setManagers(managersList);
-    setEmployees(employeesList);
+    setEmployees(temp);
+  }
+  async function getManagers(managersQuery) {
+    const startTime = Date.now();
+    const managersSnapshot = await getDocs(managersQuery);
+    const endTime = Date.now();
+    console.log("managers query time: ", endTime - startTime);
+
+    const temp = [];
+    // if none document returned, skip
+    if (managersSnapshot.docs.length < 1) {
+      return;
+    }
+
+    setFirstManager(managersSnapshot.docs[0]);
+    setLastManager(managersSnapshot.docs[managersSnapshot.docs.length - 1]);
+
+    managersSnapshot.docs.forEach((document) => {
+      temp.push({ ...document.data(), ID: document.id });
+    });
+    setManagers(temp);
   }
 
-  async function removeRecruiter(recruiterID) {
-    await updateDoc(doc(db, "recruiters2", recruiterID), { workFor: null });
-    getEmployeesAndManagers();
-    toggleNavbarUpdate();
-  }
-
-  async function promoteToManager(recruiterID) {
-    await updateDoc(doc(db, "recruiters2", recruiterID), { isManager: true });
-    getEmployeesAndManagers();
-  }
-
-  async function demoteManager(recruiterID) {
-    await updateDoc(doc(db, "recruiters2", recruiterID), { isManager: false });
-    getEmployeesAndManagers();
-  }
-
-  async function getJobs() {
+  async function getJobs(jobsQuery) {
     // timelapse below means there is no need to store job id in company
 
     // timelapse : 306
@@ -183,49 +181,180 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
     // console.log("second method ", endTime - startTime);
 
     // timelapse : 97
-    const jQuery = query(
-      collection(db, "jobs2"),
-      where("companyID", "==", companyID)
-    );
+    // const jQuery = query(
+    //   collection(db, "jobs2"),
+    //   where("companyID", "==", companyID)
+    // );
+    // const startTime = Date.now();
+    // const jSnapshot = await getDocs(jQuery);
+    // const endTime = Date.now();
+    // console.log("jobs query time: ", endTime - startTime);
+
+    // const temp = [];
+    // jSnapshot.docs.forEach((document) => {
+    //   temp.push({ ...document.data(), documentID: document.id });
+    // });
+
+    // // Sort the list of jobs based on the publishedAt, newest first
+    // temp.sort((a, b) => {
+    //   if (a.publishedAt.seconds === b.publishedAt.seconds) {
+    //     return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? -1 : 1;
+    //   }
+    //   return a.publishedAt.seconds > b.publishedAt.seconds ? -1 : 1;
+    // });
     const startTime = Date.now();
-    const jSnapshot = await getDocs(jQuery);
+    const jobsSnapshot = await getDocs(jobsQuery);
     const endTime = Date.now();
     console.log("jobs query time: ", endTime - startTime);
 
+    // if none document returned, skip
+    if (jobsSnapshot.docs.length < 1) {
+      return;
+    }
+
+    setLastJob(jobsSnapshot.docs[0]);
+    setFirstJob(jobsSnapshot.docs[jobsSnapshot.docs.length - 1]);
+
     const temp = [];
-    jSnapshot.docs.forEach((document) => {
+    jobsSnapshot.docs.forEach((document) => {
       temp.push({ ...document.data(), documentID: document.id });
     });
-
-    // Sort the list of jobs based on the publishedAt, newest first
-    temp.sort((a, b) => {
-      if (a.publishedAt.seconds === b.publishedAt.seconds) {
-        return a.publishedAt.nanoseconds > b.publishedAt.nanoseconds ? -1 : 1;
-      }
-      return a.publishedAt.seconds > b.publishedAt.seconds ? -1 : 1;
-    });
+    temp.reverse();
     setJobs(temp);
   }
 
-  function setCursorToNextPosition(
-    cursor,
-    setCursor,
-    listOfObject,
-    numPerPage
-  ) {
-    const nextPosition = cursor + numPerPage;
-    if (nextPosition >= listOfObject.length) {
-      return;
+  // Job  Query
+  const initialJobsQuery = query(
+    collection(db, "jobs2"),
+    where("companyID", "==", companyID),
+    orderBy("publishedAt"),
+    limitToLast(jobsPerPage)
+  );
+  const nextJobsQuery = query(
+    collection(db, "jobs2"),
+    where("companyID", "==", companyID),
+    orderBy("publishedAt"),
+    endBefore(lastJob),
+    limitToLast(jobsPerPage)
+  );
+  const previousJobsQuery = query(
+    collection(db, "jobs2"),
+    where("companyID", "==", companyID),
+    orderBy("publishedAt"),
+    startAfter(firstJob),
+    limit(jobsPerPage)
+  );
+
+  // Employee Query
+  const initialEmployeesQuery = query(
+    collection(db, "recruiters2"),
+    where("workFor", "==", companyID),
+    where("isManager", "==", false),
+    orderBy("lastName"),
+    limit(employeesPerPage)
+  );
+  const nextEmployeesQuery = query(
+    collection(db, "recruiters2"),
+    where("workFor", "==", companyID),
+    where("isManager", "==", false),
+    orderBy("lastName"),
+    startAfter(lastEmployee),
+    limit(employeesPerPage)
+  );
+  const previousEmployeesQuery = query(
+    collection(db, "recruiters2"),
+    where("workFor", "==", companyID),
+    where("isManager", "==", false),
+    orderBy("lastName"),
+    endBefore(firstEmployee),
+    limitToLast(employeesPerPage)
+  );
+
+  // Manager Query
+  const initialManagersQuery = query(
+    collection(db, "recruiters2"),
+    where("workFor", "==", companyID),
+    where("isManager", "==", true),
+    orderBy("lastName"),
+    limit(managersPerPage)
+  );
+  const nextManagersQuery = query(
+    collection(db, "recruiters2"),
+    where("workFor", "==", companyID),
+    where("isManager", "==", true),
+    orderBy("lastName"),
+    startAfter(lastManager),
+    limit(managersPerPage)
+  );
+  const previousManagersQuery = query(
+    collection(db, "recruiters2"),
+    where("workFor", "==", companyID),
+    where("isManager", "==", true),
+    orderBy("lastName"),
+    endBefore(firstManager),
+    limitToLast(managersPerPage)
+  );
+
+  async function getPermissions() {
+    if (currentUserID) {
+      const selfRecruiterSnapshot = await getDoc(
+        doc(db, "recruiters2", currentUserID)
+      );
+      console.log("passed");
+      if (selfRecruiterSnapshot.data().isManager) {
+        setIsAdmin(true);
+        setIsNewJobAllowed(true);
+      } else if (selfRecruiterSnapshot.data().workFor !== companyID) {
+        setIsAdmin(false);
+        setIsNewJobAllowed(false);
+      } else {
+        const managersSnapshot = await getDocs(
+          query(
+            collection(db, "recruiters2"),
+            where("workFor", "==", companyID),
+            where("isManager", "==", true),
+            limit(1)
+          )
+        );
+        if (managersSnapshot.empty) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+        setIsNewJobAllowed(true);
+      }
+    } else {
+      setIsAdmin(false);
+      setIsNewJobAllowed(false);
     }
-    setCursor(nextPosition);
   }
 
-  function setCursorToPreviousPosition(cursor, setCursor, numPerPage) {
-    let previousPosition = cursor - numPerPage;
-    if (previousPosition < 0) {
-      previousPosition = 0;
-    }
-    setCursor(previousPosition);
+  async function removeRecruiter(recruiterID) {
+    await updateDoc(doc(db, "recruiters2", recruiterID), { workFor: null });
+    setEmployees([]);
+    setManagers([]);
+    getEmployees(initialEmployeesQuery);
+    getManagers(initialManagersQuery);
+    getPermissions();
+    toggleNavbarUpdate();
+  }
+
+  async function promoteToManager(recruiterID) {
+    await updateDoc(doc(db, "recruiters2", recruiterID), { isManager: true });
+    setEmployees([]);
+    setManagers([]);
+    getEmployees(initialEmployeesQuery);
+    getManagers(initialManagersQuery);
+    getPermissions();
+  }
+
+  async function demoteManager(recruiterID) {
+    await updateDoc(doc(db, "recruiters2", recruiterID), { isManager: false });
+    setEmployees([]);
+    setManagers([]);
+    getEmployees(initialEmployeesQuery);
+    getManagers(initialManagersQuery);
+    getPermissions();
   }
 
   React.useEffect(() => {
@@ -244,62 +373,26 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
 
   React.useEffect(() => {
     getCompanyInformation();
-    getJobs();
-    getEmployeesAndManagers();
+    getJobs(initialJobsQuery);
+    getEmployees(initialEmployeesQuery);
+    getManagers(initialManagersQuery);
   }, [companyID]);
+
+  React.useEffect(() => {
+    console.log("jobs ", jobs);
+  }, [jobs]);
+  React.useEffect(() => {
+    console.log("employees ", employees);
+  }, [employees]);
+  React.useEffect(() => {
+    console.log("managers ", managers);
+  }, [managers]);
 
   React.useEffect(() => {
     // if a company has manager, then only the manager is allowed to edit company
     // if a copmany does not have manager, but has recruiter, then only recruiter is allowed to edit company
-    let hasManager = false;
-    if (managers && managers.length > 0) {
-      hasManager = true;
-      if (managers.filter((item) => item.ID === currentUserID).length > 0) {
-        setIsNewJobAllowed(true);
-        setIsAdmin(true);
-        return;
-      }
-    }
-    if (employees && employees.length > 0) {
-      if (employees.filter((item) => item.ID === currentUserID).length > 0) {
-        setIsNewJobAllowed(true);
-        setIsAdmin(!hasManager);
-        return;
-      }
-    }
-    setIsNewJobAllowed(false);
-    setIsAdmin(false);
-  }, [managers, employees]);
-
-  React.useEffect(() => {
-    if (jobCursorPosition < jobs.length) {
-      setDisplayedJobs(
-        jobs.slice(jobCursorPosition, jobsPerPage + jobCursorPosition)
-      );
-    }
-  }, [jobs, jobCursorPosition]);
-
-  React.useEffect(() => {
-    if (employeeCursorPosition < employees.length) {
-      setDisplayedEmployees(
-        employees.slice(
-          employeeCursorPosition,
-          employeesPerPage + employeeCursorPosition
-        )
-      );
-    }
-  }, [employees, employeeCursorPosition]);
-
-  React.useEffect(() => {
-    if (managerCursorPosition < managers.length) {
-      setDisplayedManagers(
-        managers.slice(
-          managerCursorPosition,
-          managersPerPage + managerCursorPosition
-        )
-      );
-    }
-  }, [managers, managerCursorPosition]);
+    getPermissions();
+  }, [currentUserID]);
 
   React.useEffect(() => {
     async function getFavoriteCompaniesID() {
@@ -493,7 +586,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         )}
       </Box>
 
-      {displayedJobs.map((job) => (
+      {jobs.map((job) => (
         <JobCard
           key={`JobCard-${job.documentID}`}
           companyID={job.companyID}
@@ -514,27 +607,14 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         <Button
           id="Button-Previous-Job"
           data-cy="Button-Previous-Job"
-          onClick={() =>
-            setCursorToPreviousPosition(
-              jobCursorPosition,
-              setJobCursorPosition,
-              jobsPerPage
-            )
-          }
+          onClick={() => getJobs(previousJobsQuery)}
         >
           Previous
         </Button>
         <Button
           id="Button-Next-Job"
           data-cy="Button-Next-Job"
-          onClick={() =>
-            setCursorToNextPosition(
-              jobCursorPosition,
-              setJobCursorPosition,
-              jobs,
-              jobsPerPage
-            )
-          }
+          onClick={() => getJobs(nextJobsQuery)}
         >
           Next
         </Button>
@@ -543,7 +623,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
         Recruiters List
       </Typography>
-      {displayedEmployees.map((employee) => (
+      {employees.map((employee) => (
         <Box
           key={`recruiterCard-${employee.ID}`}
           sx={{ justifyContent: "center", paddingLeft: "5%" }}
@@ -588,27 +668,14 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         <Button
           id="Button-Previous-Employee"
           data-cy="Button-Previous-Employee"
-          onClick={() =>
-            setCursorToPreviousPosition(
-              employeeCursorPosition,
-              setEmployeeCursorPosition,
-              employeesPerPage
-            )
-          }
+          onClick={() => getEmployees(previousEmployeesQuery)}
         >
           Previous
         </Button>
         <Button
           id="Button-Next-Employee"
           data-cy="Button-Next-Employee"
-          onClick={() =>
-            setCursorToNextPosition(
-              employeeCursorPosition,
-              setEmployeeCursorPosition,
-              employees,
-              employeesPerPage
-            )
-          }
+          onClick={() => getEmployees(nextEmployeesQuery)}
         >
           Next
         </Button>
@@ -616,7 +683,7 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
         Manager List
       </Typography>
-      {displayedManagers.map((employee) => (
+      {managers.map((employee) => (
         <Box
           key={`managerCard-${employee.ID}`}
           sx={{ justifyContent: "center", paddingLeft: "5%" }}
@@ -651,27 +718,14 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
         <Button
           id="Button-Previous-Manager"
           data-cy="Button-Previous-Manager"
-          onClick={() =>
-            setCursorToPreviousPosition(
-              managerCursorPosition,
-              setManagerCursorPosition,
-              managersPerPage
-            )
-          }
+          onClick={() => getManagers(previousManagersQuery)}
         >
           Previous
         </Button>
         <Button
           id="Button-Next-Manager"
           data-cy="Button-Next-Manager"
-          onClick={() =>
-            setCursorToNextPosition(
-              managerCursorPosition,
-              setManagerCursorPosition,
-              managers,
-              managersPerPage
-            )
-          }
+          onClick={() => getManagers(nextManagersQuery)}
         >
           Next
         </Button>

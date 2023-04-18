@@ -18,39 +18,37 @@ function EmployeeCard({
   const [employeeDescription, setEmployeeDescription] = useState("");
 
   return (
-    <div>
-      <Box
-        sx={{
-          width: 400,
-          minWidth: 150,
-        }}
-      >
-        <Card variant="outlined" sx={{ p: 1 }}>
-          <CardHeader
-            avatar={
-              <Avatar
-                aria-label="user"
-                sx={{ width: 56, height: 56 }}
-                src={employeeImage}
-              />
-            }
-            title={
-              employeeFirstName !== "" && employeeLastName !== ""
-                ? `${employeeFirstName} ${employeeLastName}`
-                : "No name"
-            }
-            subheader={employeeId}
-          />
-          <Typography sx={{ marginLeft: "25%" }}>
-            {description !== "" && description != null
-              ? `${description}`
-              : "No bio"}
-          </Typography>
-          <br />
-          {children}
-        </Card>
-      </Box>
-    </div>
+    <Box
+      sx={{
+        width: 400,
+        minWidth: 150,
+      }}
+    >
+      <Card variant="outlined" sx={{ p: 1 }}>
+        <CardHeader
+          avatar={
+            <Avatar
+              aria-label="user"
+              sx={{ width: 56, height: 56 }}
+              src={employeeImage}
+            />
+          }
+          title={
+            employeeFirstName !== "" && employeeLastName !== ""
+              ? `${employeeFirstName} ${employeeLastName}`
+              : "No name"
+          }
+          subheader={employeeId}
+        />
+        <Typography sx={{ marginLeft: "25%" }}>
+          {description !== "" && description != null
+            ? `${description}`
+            : "No bio"}
+        </Typography>
+        <br />
+        {children}
+      </Card>
+    </Box>
   );
 }
 

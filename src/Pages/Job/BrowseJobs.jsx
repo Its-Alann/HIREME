@@ -65,11 +65,13 @@ export const BrowseJobs = () => {
   }, [userEmail]);
 
   useEffect(() => {
-    try {
-      const notificationsDocRef = doc(db, "notifications", userEmail);
-      updateDoc(notificationsDocRef, { favCompanies: favoriteCompaniesID });
-    } catch (err) {
-      console.log(err);
+    if (userEmail) {
+      try {
+        const notificationsDocRef = doc(db, "notifications", userEmail);
+        updateDoc(notificationsDocRef, { favCompanies: favoriteCompaniesID });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }, [favoriteCompaniesID]);
 
