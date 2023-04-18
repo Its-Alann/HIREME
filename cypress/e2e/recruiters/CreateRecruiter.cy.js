@@ -9,6 +9,7 @@ describe("Login to test account", () => {
     cy.get("#password").type("care123");
     cy.get("input").tab();
     cy.get(".MuiButton-contained").click();
+    cy.wait(3000);
   });
 });
 

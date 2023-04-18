@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Stack, Button, InputBase } from "@mui/material";
 import { ref, getDownloadURL } from "firebase/storage";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import EditIcon from "@mui/icons-material/Edit";
 import { useLocation } from "react-router-dom";
 import ContactInfoCard from "../../Components/ProfileCards/ContactInfoCard";
 import EducationCard from "../../Components/ProfileCards/EducationCard";
@@ -67,6 +68,7 @@ const EditProfilePage = () => {
       awardDesc: "",
     },
   });
+  const [field, setField] = useState("");
   const [currentUserEmail, setCurrentUserEmail] = useState();
   const database = getFirestore(app);
   const [imageUrl, setImageUrl] = useState();
@@ -74,6 +76,7 @@ const EditProfilePage = () => {
   const [infoAvailable, setInfoAvailable] = useState(false);
   const location = useLocation();
   const [visitedProfile, setVisitedProfile] = useState(false);
+  const [editButton, setEditButton] = useState(false);
 
   //callback function to make sure setState updates state before its next use (i think)
   // function outputProfile() {
@@ -109,6 +112,7 @@ const EditProfilePage = () => {
         if (userProfileSnapShot.exists()) {
           console.log("User profile Exist");
           setProfile(userProfileSnapShot.data());
+          setField(userProfileSnapShot.data().field);
         } else {
           console.log("User Profile Not Exist");
         }
@@ -149,6 +153,9 @@ const EditProfilePage = () => {
     if (currentUserEmail != null) {
       const userProfileDocRef = doc(database, "userProfiles", currentUserEmail);
       await updateDoc(userProfileDocRef, profile);
+      await updateDoc(userProfileDocRef, {
+        field,
+      });
       console.log("Update finished");
     }
   }
@@ -321,65 +328,112 @@ const EditProfilePage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid display="flex" style={{ minWidth: "100vh" }}>
+      <Grid container display="flex" style={{ minWidth: "100vh" }}>
         <div id="profile-container">
-          <Grid
-            container
-            columnSpacing={3}
-            sx={{ marginBottom: "1.5%", marginLeft: 0 }}
-          >
+          <Grid container justifyContent="space-between">
             <Grid
               item
-              justifyContent="center"
-              alignItems="center"
-              display="flex"
+              xs={10}
+              container
+              columnSpacing={3}
+              sx={{ marginBottom: "1.5%", marginLeft: 0 }}
             >
-              <ProfilePicture
-                urlProfilePicture={imageUrl}
-                visitingProfile={visitedProfile}
-              />
+              <Grid item alignItems="center" display="flex">
+                <ProfilePicture
+                  urlProfilePicture={imageUrl}
+                  visitingProfile={visitedProfile}
+                />
+              </Grid>
+              <Grid item xs={5} container>
+                <InputBase
+                  id="standard-basic"
+                  style={{ fontSize: "45px" }}
+                  placeholder="First Name"
+                  value={profile.values.firstName}
+                  name="firstName"
+                  readOnly={!editButton}
+                  error={editButton}
+                  onChange={(e) =>
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        firstName: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <InputBase
+                  id="standard-basic"
+                  style={{ fontSize: "45px" }}
+                  variant="standard"
+                  placeholder="Last Name"
+                  value={profile.values.lastName}
+                  name="lastName"
+                  readOnly={!editButton}
+                  error={editButton}
+                  onChange={(e) =>
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        lastName: e.target.value,
+                      },
+                    })
+                  }
+                />
+
+                <InputBase
+                  id="standard-basic"
+                  style={{ fontSize: "25px", width: "100%" }}
+                  placeholder="School Name"
+                  variant="standard"
+                  value={profile.values.school}
+                  name="school"
+                  readOnly={!editButton}
+                  error={editButton}
+                  onChange={(e) =>
+                    setProfile({
+                      values: {
+                        ...profile.values,
+                        school: e.target.value,
+                      },
+                    })
+                  }
+                />
+
+                <InputBase
+                  id="standard-basic"
+                  placeholder="City"
+                  variant="standard"
+                  value={profile.values.city}
+                  readOnly
+                />
+
+                <InputBase
+                  id="standard-basic"
+                  placeholder="Country"
+                  variant="standard"
+                  value={profile.values.country}
+                  readOnly
+                />
+                <InputBase
+                  id="standard-basic"
+                  variant="standard"
+                  placeholder="Desired Job Title"
+                  name="field"
+                  value={field}
+                  readOnly={!editButton}
+                  error={editButton}
+                  onChange={(e) => setField(e.target.value)}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={5} container>
-              <InputBase
-                id="standard-basic"
-                style={{ fontSize: "45px" }}
-                placeholder="First Name"
-                value={profile.values.firstName}
-                readOnly
-                data-cy="firstName-test"
-              />
-              <InputBase
-                id="standard-basic"
-                style={{ fontSize: "45px" }}
-                variant="standard"
-                placeholder="Last Name"
-                value={profile.values.lastName}
-                readOnly
-              />
-
-              <InputBase
-                id="standard-basic"
-                style={{ fontSize: "25px", width: "100%" }}
-                placeholder="School Name"
-                variant="standard"
-                value={profile.values.school}
-                readOnly
-              />
-
-              <InputBase
-                id="standard-basic"
-                placeholder="City"
-                variant="standard"
-                value={profile.values.city}
-                readOnly
-              />
-
-              <InputBase
-                id="standard-basic"
-                placeholder="Country"
-                variant="standard"
-                value={profile.values.country}
-                readOnly
+            <Grid item>
+              <EditIcon
+                onClick={() => setEditButton(!editButton)}
+                style={{
+                  cursor: "pointer",
+                  color: "white",
+                }}
               />
             </Grid>
           </Grid>

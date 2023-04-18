@@ -65,6 +65,12 @@ export const JobPosting = () => {
 
   // returns the job posting with the apply button
   // clicking on the apply button will take the user to the apply page
+  if (job === undefined)
+    return (
+      <h3 style={{ textAlign: "center" }}>
+        This job has been removed by the employer :/
+      </h3>
+    );
   return (
     <Stack direction="row" alignItems="flex-start" justifyContent="center">
       {/* Job information */}
