@@ -3,10 +3,13 @@ import {
   Avatar,
   Box,
   Button,
+  Container,
   IconButton,
   InputAdornment,
   TextField,
   Typography,
+  Grid,
+  Stack,
 } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import {
@@ -623,46 +626,58 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
         Recruiters List
       </Typography>
-      {employees.map((employee) => (
-        <Box
-          key={`recruiterCard-${employee.ID}`}
-          sx={{ justifyContent: "center", paddingLeft: "5%" }}
-        >
-          <EmployeeCard
-            employeeId={employee.ID}
-            employeeFirstName={employee.firstName}
-            employeeLastName={employee.lastName}
-            employeeImage={employee.description}
+      <Grid
+        container
+        sx={{ px: "5%" }}
+        spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+      >
+        {employees.map((employee) => (
+          <Grid
+            item
+            key={`recruiterCard-${employee.ID}`}
+            xs={12}
+            sm={12}
+            md={6}
+            lg={6}
           >
-            {employee.email && (
-              <Link
-                to={`/editProfile/${employee.firstName}${employee.lastName}`}
-                state={{ userID: currentUserID }}
-              >
-                <Button>View Profile</Button>
-              </Link>
-            )}
-            {isAdmin && (
-              <>
-                <Button
-                  onClick={() => {
-                    removeRecruiter(employee.ID);
-                  }}
+            <EmployeeCard
+              employeeId={employee.ID}
+              employeeFirstName={employee.firstName}
+              employeeLastName={employee.lastName}
+              employeeImage={employee.description}
+            >
+              {employee.email && (
+                <Link
+                  to={`/editProfile/${employee.firstName}${employee.lastName}`}
+                  state={{ userID: currentUserID }}
                 >
-                  Remove
-                </Button>
-                <Button
-                  onClick={() => {
-                    promoteToManager(employee.ID);
-                  }}
-                >
-                  Promote
-                </Button>
-              </>
-            )}
-          </EmployeeCard>
-        </Box>
-      ))}
+                  <Button>
+                    <Typography variant="h6">View Profile </Typography>
+                  </Button>
+                </Link>
+              )}
+              {isAdmin && (
+                <>
+                  <Button
+                    onClick={() => {
+                      removeRecruiter(employee.ID);
+                    }}
+                  >
+                    <Typography variant="h6">Remove</Typography>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      promoteToManager(employee.ID);
+                    }}
+                  >
+                    <Typography variant="h6">Promote</Typography>
+                  </Button>
+                </>
+              )}
+            </EmployeeCard>
+          </Grid>
+        ))}
+      </Grid>
 
       <Box sx={{ px: "5%" }}>
         <Button
@@ -683,36 +698,48 @@ export const EditCompany = ({ toggleNavbarUpdate }) => {
       <Typography variant="h2" sx={{ padding: "5%", alignItems: "center" }}>
         Manager List
       </Typography>
-      {managers.map((employee) => (
-        <Box
-          key={`managerCard-${employee.ID}`}
-          sx={{ justifyContent: "center", paddingLeft: "5%" }}
-        >
-          <EmployeeCard
-            employeeId={employee.ID}
-            employeeFirstName={employee.firstName}
-            employeeLastName={employee.lastName}
+      <Grid
+        container
+        sx={{ px: "5%", height: "100%" }}
+        spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+      >
+        {managers.map((employee) => (
+          <Grid
+            item
+            key={`managerCard-${employee.ID}`}
+            xs={12}
+            sm={12}
+            md={6}
+            lg={6}
           >
-            {employee.email && (
-              <Link
-                to={`/editProfile/${employee.firstName}${employee.lastName}`}
-                state={{ userID: currentUserID }}
-              >
-                <Button>View Profile</Button>
-              </Link>
-            )}
-            {isAdmin && (
-              <Button
-                onClick={() => {
-                  demoteManager(employee.ID);
-                }}
-              >
-                Demote
-              </Button>
-            )}
-          </EmployeeCard>
-        </Box>
-      ))}
+            <EmployeeCard
+              employeeId={employee.ID}
+              employeeFirstName={employee.firstName}
+              employeeLastName={employee.lastName}
+            >
+              {employee.email && (
+                <Link
+                  to={`/editProfile/${employee.firstName}${employee.lastName}`}
+                  state={{ userID: currentUserID }}
+                >
+                  <Button>
+                    <Typography variant="h6">View Profile</Typography>
+                  </Button>
+                </Link>
+              )}
+              {isAdmin && (
+                <Button
+                  onClick={() => {
+                    demoteManager(employee.ID);
+                  }}
+                >
+                  <Typography variant="h6">Demote</Typography>
+                </Button>
+              )}
+            </EmployeeCard>
+          </Grid>
+        ))}
+      </Grid>
 
       <Box sx={{ px: "5%" }}>
         <Button
