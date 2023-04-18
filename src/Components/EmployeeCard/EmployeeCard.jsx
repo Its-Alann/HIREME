@@ -18,12 +18,7 @@ function EmployeeCard({
   const [employeeDescription, setEmployeeDescription] = useState("");
 
   return (
-    <Box
-      sx={{
-        width: 400,
-        minWidth: 150,
-      }}
-    >
+    <Box sx={{ height: "100%" }}>
       <Card variant="outlined" sx={{ p: 1 }}>
         <CardHeader
           avatar={
