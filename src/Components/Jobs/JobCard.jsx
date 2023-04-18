@@ -2,6 +2,7 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Box, Card, Stack, Typography, Button } from "@mui/material";
+import { StarOutlineIcon, StarIcon } from "@mui/icons-material/";
 
 const JobCard = ({
   companyID,
@@ -14,6 +15,11 @@ const JobCard = ({
   deadlineNanoSeconds,
   logo,
   editable,
+  link,
+  email,
+  isFavorite,
+  handleMakeFavorite,
+  handleRemoveFavorite,
 }) => (
   <Box sx={{ py: 1, px: "5%" }}>
     <Card variant="outlined">
@@ -44,6 +50,18 @@ const JobCard = ({
           )}
           <Box>
             <Typography variant="h4">{title}</Typography>
+            {email !== null &&
+              (isFavorite(companyID) ? (
+                <StarIcon
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => handleRemoveFavorite(companyID)}
+                />
+              ) : (
+                <StarOutlineIcon
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => handleMakeFavorite(companyID)}
+                />
+              ))}
             <Link to={`/editCompany/${companyID}`}>
               <Typography>{companyName}</Typography>
             </Link>
@@ -73,6 +91,10 @@ const JobCard = ({
               >
                 View job
               </Link>
+            ) : link ? (
+              <a href={link} style={{ color: "white", textDecoration: "none" }}>
+                Apply On Other Site
+              </a>
             ) : (
               <Link
                 to={`/viewJobPosting/${companyID}/${jobID}`}
@@ -106,5 +128,10 @@ JobCard.propTypes = {
   deadlineNanoSeconds: PropTypes.number,
   logo: PropTypes.string,
   editable: PropTypes.bool,
+  link: PropTypes.string,
+  email: PropTypes.string,
+  isFavorite: PropTypes.func,
+  handleMakeFavorite: PropTypes.func,
+  handleRemoveFavorite: PropTypes.func,
 };
 export default JobCard;
