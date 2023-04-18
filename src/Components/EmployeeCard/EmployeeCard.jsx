@@ -12,19 +12,24 @@ function EmployeeCard({
   employeeFirstName,
   employeeLastName,
   employeeImage,
-  description,
+  employeeDescription,
   children,
 }) {
-  const [employeeDescription, setEmployeeDescription] = useState("");
-
   return (
-    <Box sx={{ height: "100%" }}>
+    <Box>
       <Card variant="outlined" sx={{ p: 1 }}>
         <CardHeader
+          sx={{
+            display: "flex",
+            overflow: "hidden",
+            "& .MuiCardHeader-content": {
+              overflow: "hidden",
+            },
+          }}
           avatar={
             <Avatar
               aria-label="user"
-              sx={{ width: 56, height: 56 }}
+              sx={{ width: { xs: 32, sm: 56 }, height: { xs: 32, sm: 56 } }}
               src={employeeImage}
             />
           }
@@ -33,11 +38,13 @@ function EmployeeCard({
               ? `${employeeFirstName} ${employeeLastName}`
               : "No name"
           }
+          titleTypographyProps={{ noWrap: true }}
           subheader={employeeId}
+          subheaderTypographyProps={{ noWrap: true }}
         />
         <Typography sx={{ marginLeft: "25%" }}>
-          {description !== "" && description != null
-            ? `${description}`
+          {employeeDescription !== "" && employeeDescription != null
+            ? `${employeeDescription}`
             : "No bio"}
         </Typography>
         <br />
@@ -46,13 +53,12 @@ function EmployeeCard({
     </Box>
   );
 }
-
 EmployeeCard.propTypes = {
   employeeId: PropTypes.string.isRequired,
   employeeFirstName: PropTypes.string.isRequired,
   employeeLastName: PropTypes.string.isRequired,
   employeeImage: PropTypes.string,
-  description: PropTypes.string,
+  employeeDescription: PropTypes.string,
   children: PropTypes.node,
 };
 
