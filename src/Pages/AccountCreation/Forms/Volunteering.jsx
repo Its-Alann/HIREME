@@ -27,7 +27,7 @@ const Volunteering = ({
       <Grid item xs={12}>
         <TextField
           id="standard-required"
-          placeholder={t("Organization")}
+          placeholder={t("OrganizationName")}
           variant="standard"
           value={values.organization}
           onChange={(e) => setOrganization(e.target.value)}
