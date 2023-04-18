@@ -71,7 +71,12 @@ export const SentInvitation = ({
                   alignItems="center"
                 >
                   {showingSentInvites.map((userID) => (
-                    <Grid item data-cy="invitationsGrid" sx={{ m: 2 }}>
+                    <Grid
+                      item
+                      data-cy="invitationsGrid"
+                      sx={{ m: 2 }}
+                      key={`SentInvitationCard-${userID}`}
+                    >
                       <SentInvitationCard
                         allUserProfiles={allUsers}
                         userID={userID}
@@ -129,7 +134,8 @@ export const SentInvitation = ({
 };
 
 SentInvitation.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  allUserProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   sentInvitationsID: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };

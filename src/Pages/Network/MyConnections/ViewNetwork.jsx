@@ -54,16 +54,12 @@ export const ViewNetwork = ({
 
   useEffect(() => {
     setAllUsers(allUserProfiles);
+    console.log(allUserProfiles);
   }, [allUserProfiles]);
 
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        component="main"
-        maxWidth="xxl"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Container component="main" maxWidth="xxl">
         <CssBaseline />
         <Stack>
           <Box justifyContent="center" alignItems="center" display="flex">
@@ -76,7 +72,11 @@ export const ViewNetwork = ({
                   alignItems="center"
                 >
                   {showingConnections.map((connectedUserID) => (
-                    <Grid item sx={{ m: 2 }}>
+                    <Grid
+                      item
+                      sx={{ m: 2 }}
+                      key={`NetworkCards-${connectedUserID}`}
+                    >
                       <NetworkCards
                         allUserProfiles={allUsers}
                         connectedUserID={connectedUserID}
@@ -131,7 +131,8 @@ export const ViewNetwork = ({
 };
 
 ViewNetwork.propTypes = {
-  allUserProfiles: PropTypes.arrayOf(PropTypes.Object).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  allUserProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   networkConnections: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentUserEmail: PropTypes.string.isRequired,
 };

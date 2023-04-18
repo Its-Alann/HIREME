@@ -82,18 +82,18 @@ const App = () => {
             <Route path="/network" exact element={<NetworkPage />} />
             <Route path="/messaging" export element={<MessagingPage />} />
             {/* <Route path="/myNetwork" exact element={<ViewNetwork />} /> */}
-            <Route path="/invitations" exact element={<ReceivedInvitation />} />
-            <Route path="/sentRequests" exact element={<SentInvitation />} />
+            {/* <Route path="/invitations" exact element={<ReceivedInvitation />} /> */}
+            {/* <Route path="/sentRequests" exact element={<SentInvitation />} />*/}
             <Route
               path="/admin/flaggedMessages"
               exact
               element={<FlaggedMessages />}
             />
-            <Route
+            {/* <Route
               path="/possibleConnections"
               exact
               element={<NetworkPossibleConnections />}
-            />
+            />*/}
             <Route path="/createCompany" exact element={<CreateCompany />} />
             <Route
               path="/createRecruiter"
