@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Grid, Menu, MenuItem, Button, Card } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 import "./Notifications.css";
@@ -15,6 +16,9 @@ const NotificationCards = ({
   cardNum,
   currentUserEmail,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // Consts for menu
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -68,7 +72,7 @@ const NotificationCards = ({
           </Grid>
           <Grid item xs={10} style={{ marginLeft: 15 }}>
             <h4>
-              Timestamp:{" "}
+              {t("Timestamp")}{" "}
               {new Date(
                 notifications[cardNum].timestamp.seconds * 1000 +
                   notifications[cardNum].timestamp.nanoseconds / 1000000
@@ -92,7 +96,7 @@ const NotificationCards = ({
             MenuListProps={{ "aria-labelledby": "basic-button" }}
           >
             <MenuItem onClick={deleteIndexNotification}>
-              <DeleteOutlineIcon /> Delete this notification
+              <DeleteOutlineIcon /> {t("Deletethisnotification")}
             </MenuItem>
           </Menu>
         </Grid>

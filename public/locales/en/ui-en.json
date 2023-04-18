@@ -219,5 +219,8 @@
 
   "Nonotificationstodisplay:/": "No notifications to display :/",
   "Manageyournotifications": "Manage your notifications",
-  "ViewSettings": "View Settings"
+  "ViewSettings": "View Settings",
+
+  "Timestamp": "Timestamp:",
+  "Deletethisnotification": "Delete this notification"
 }
