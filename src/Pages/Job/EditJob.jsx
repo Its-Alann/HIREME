@@ -94,11 +94,6 @@ export const EditJob = () => {
         <Typography variant="h4" sx={{ pb: 2 }}>
           {t("EditJob")}
         </Typography>
-        <Typography>
-          {t(
-            "ThisPageshowsasingleJob&apos;sinformation&allowtheownertoeditthem"
-          )}
-        </Typography>
 
         <Stack spacing={2}>
           <Box>

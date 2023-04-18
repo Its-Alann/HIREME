@@ -105,7 +105,9 @@
   "Pleaseenteravalidnumber": "Please enter a valid number",
   "Address": "Address",
   "Pleaseenteravalidaddress": "Please enter a valid address",
-  "Submit": "Submit"
+  "Submit": "Submit",
 
-  
+  "EditJob": "Edit Job",
+  "Title": "Title",
+  "Jobbenefits": "Job benefits"
 }
