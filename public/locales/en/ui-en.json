@@ -109,5 +109,21 @@
 
   "EditJob": "Edit Job",
   "Title": "Title",
-  "Jobbenefits": "Job benefits"
+  "Jobbenefits": "Job benefits",
+
+  "Uploading": "Uploading",
+  "User": "User",
+  "FlaggedMessage🚩": "Flagged Message🚩",
+  "Type": "Type",
+  "Date": "Date",
+  "Unflag": "Unflag",
+  "Warn": "Warn",
+  "Ban": "Ban",
+  "Unban": "Unban",
+  "Flagged": "Flagged",
+  "Banned": "Banned",
+
+  "MyApplication": "My Application",
+  "Remove": "Remove",
+  "Noappliedjobs:/": "No applied jobs :/"
 }
