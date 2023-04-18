@@ -14,7 +14,7 @@ import {
   limit,
   updateDoc,
 } from "firebase/firestore";
-import { Box, Container, Button, Typography } from "@mui/material";
+import { Box, Container, Button, Typography, Stack } from "@mui/material";
 import { auth, db } from "../../Firebase/firebase";
 import "./Job.css";
 import JobCard from "../../Components/Jobs/JobCard";
@@ -193,10 +193,6 @@ export const BrowseJobs = () => {
         <Typography variant="h4" sx={{ pb: 2 }}>
           Browse Jobs
         </Typography>
-        <Typography>
-          This Page list all jobs, {jobsPerPage} per page. Everyone can access
-          this page.
-        </Typography>
 
         {jobs.map((job) => {
           // Anti-eslint measure
@@ -220,12 +216,17 @@ export const BrowseJobs = () => {
             />
           );
         })}
-        <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
-          Previous
-        </Button>
-        <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
-          Next
-        </Button>
+        <Box sx={{ px: "5%" }}>
+          <Button
+            id="Button-Previous"
+            onClick={() => getJobs(previousJobsQuery)}
+          >
+            <Typography variant="h6">Previous</Typography>
+          </Button>
+          <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
+            <Typography variant="h6">Next</Typography>
+          </Button>
+        </Box>
       </Box>
     </Container>
   );
