@@ -445,6 +445,46 @@ const Navbar = () => {
                 )}
               </Box>
 
+              <FormControl
+                variant="outlined"
+                sx={{
+                  minWidth: "75px",
+                  marginLeft: "15px",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#2B2F90",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#2B2F90",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#2B2F90",
+                  },
+                }}
+              >
+                <InputLabel
+                  id="demo-simple-select-label"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    color: "#2B2F90",
+                    focused: { color: "#2B2F90" },
+                  }}
+                >
+                  {/* {t("changeLanguage")}  */}
+                  <LanguageIcon />
+                </InputLabel>
+                <Select
+                  value={language}
+                  label="language"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="en">English</MenuItem>
+                  <MenuItem value="es">Español</MenuItem>
+                  <MenuItem value="fr">French</MenuItem>
+                </Select>
+              </FormControl>
+
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
                 <Tooltip title={openSettings}>
                   <IconButton
@@ -580,41 +620,6 @@ const Navbar = () => {
               )}
             </Box>
           )}
-          <FormControl
-            variant="outlined"
-            sx={{
-              minWidth: "75px",
-              marginLeft: "15px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2B2F90",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2B2F90",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2B2F90",
-              },
-            }}
-          >
-            <InputLabel
-              id="demo-simple-select-label"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                color: "#2B2F90",
-                focused: { color: "#2B2F90" },
-              }}
-            >
-              {/* {t("changeLanguage")}  */}
-              <LanguageIcon />
-            </InputLabel>
-            <Select value={language} label="language" onChange={handleChange}>
-              <MenuItem value="en">English</MenuItem>
-              <MenuItem value="es">Español</MenuItem>
-              <MenuItem value="fr">French</MenuItem>
-            </Select>
-          </FormControl>
         </Toolbar>
       </Container>
     </AppBar>
