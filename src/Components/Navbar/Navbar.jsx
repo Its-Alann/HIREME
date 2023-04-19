@@ -448,10 +448,14 @@ const Navbar = () => {
               <FormControl
                 variant="outlined"
                 sx={{
-                  minWidth: "75px",
+                  minWidth: "70px",
                   marginLeft: "15px",
+                  marginRight: "5px",
+                  marginTop: "15px",
+                  marginBottom: "15px",
                   "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "#2B2F90",
+                    // height: "55px",
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
                     borderColor: "#2B2F90",
