@@ -8,6 +8,7 @@
   "ViewJobs": "Ver Trabajos",
   "ViewAppliedJobs": "Ver Trabajos Aplicados",
   "Messaging": "Mensajería",
+  "Notifications": "Notificaciones",
   "WelcomeBack": "Bienvenido de nuevo",
   "Done": "¿Listo por hoy?",
   "SignOut": "Cerrar sesión",
@@ -225,7 +226,7 @@
   "Off": "Apagado",
 
   "Nonotificationstodisplay": "No hay notificaciones para mostrar :/",
-  "Manageyournotifications": "Manage your notifications",
+  "Manageyournotifications": "Administra tus notificaciones",
   "ViewSettings": "Administra tus notificaciones",
 
   "Timestamp": "Marca de tiempo:",
