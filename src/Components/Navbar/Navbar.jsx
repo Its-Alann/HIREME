@@ -241,7 +241,7 @@ const Navbar = () => {
                       key={page}
                       data-cy={`${page}-phone-test`}
                     >
-                      Jobs
+                      {t("Jobs")}
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorElUser2}
@@ -258,7 +258,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -266,7 +266,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-applied-job-test"
                         >
-                          View Applied Jobs
+                          {t("ViewAppliedJobs")}
                         </MenuItem>
                       </Menu>
                     </MenuItem>
@@ -291,7 +291,7 @@ const Navbar = () => {
                       key={page}
                       data-cy={`${page}-logged-out-test`}
                     >
-                      Jobs
+                      {t("Jobs")}
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorElUser2}
@@ -308,7 +308,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                       </Menu>
                     </MenuItem>
@@ -382,7 +382,7 @@ const Navbar = () => {
                       >
                         <Stack justifyContent="center" alignItems="center">
                           <WorkOutlineOutlinedIcon justifyContent="center" />
-                          JOBS
+                          {t("JOBS")}
                         </Stack>
                       </Button>
                       <Menu
@@ -402,7 +402,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -412,7 +412,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-applied-job-test"
                         >
-                          View Applied Jobs
+                          {t("ViewAppliedJobs")}
                         </MenuItem>
                       </Menu>
                     </>
@@ -532,7 +532,7 @@ const Navbar = () => {
                     >
                       <Stack justifyContent="center" alignItems="center">
                         <WorkOutlineOutlinedIcon justifyContent="center" />
-                        JOBS
+                        {t("JOBS")}
                       </Stack>
                     </Button>
                     <Menu
@@ -552,7 +552,7 @@ const Navbar = () => {
                         }}
                         data-cy="view-job-test"
                       >
-                        View Jobs
+                        {t("ViewJobs")}
                       </MenuItem>
                     </Menu>
                   </>
@@ -580,10 +580,31 @@ const Navbar = () => {
               )}
             </Box>
           )}
-          <FormControl sx={{ minWidth: "75px", marginLeft: "15px" }}>
+          <FormControl
+            variant="outlined"
+            sx={{
+              minWidth: "75px",
+              marginLeft: "15px",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#2B2F90",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#2B2F90",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#2B2F90",
+              },
+            }}
+          >
             <InputLabel
               id="demo-simple-select-label"
-              sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                color: "#2B2F90",
+                focused: { color: "#2B2F90" },
+              }}
             >
               {/* {t("changeLanguage")}  */}
               <LanguageIcon />

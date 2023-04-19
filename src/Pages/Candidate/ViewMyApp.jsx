@@ -243,7 +243,7 @@ export const ViewMyApp = () => {
                             paddingBottom: 0.5,
                           }}
                         >
-                          {t("Deadline:")}{" "}
+                          {t("Deadline")}{" "}
                           {new Date(
                             job.deadline.seconds * 1000 +
                               job.deadline.nanoseconds / 1000000
@@ -330,7 +330,7 @@ export const ViewMyApp = () => {
           <Card variant="outlined">
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
-                <Typography>{t("Noappliedjobs:/")}</Typography>
+                <Typography>{t("Noappliedjobs")}</Typography>
               </Box>
             </Box>
           </Card>

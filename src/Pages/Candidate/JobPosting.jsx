@@ -71,7 +71,7 @@ export const JobPosting = () => {
   if (job === undefined)
     return (
       <h3 style={{ textAlign: "center" }}>
-        {t("Thisjobhasbeenremovedbytheemployer:/")}
+        {t("Thisjobhasbeenremovedbytheemployer")}
       </h3>
     );
   return (

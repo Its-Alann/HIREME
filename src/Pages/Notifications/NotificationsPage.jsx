@@ -84,7 +84,7 @@ const NotificationsPage = () => {
     const cards = [];
     // If notifications is empty
     if (notifications === []) {
-      cards.push(<h4>{t("Nonotificationstodisplay:/")}</h4>);
+      cards.push(<h4>{t("Nonotificationstodisplay")}</h4>);
     } else {
       // Add notification cards
       for (let i = numOfNotifications - 1; i >= 0; i -= 1) {

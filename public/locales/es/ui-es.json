@@ -4,6 +4,9 @@
   "Home": "Portada",
   "Network": "Personas",
   "Jobs": "Trabajos",
+  "JOBS": "Trabajos",
+  "ViewJobs": "Ver Trabajos",
+  "ViewAppliedJobs": "Ver Trabajos Aplicados",
   "Messaging": "Mensajería",
   "WelcomeBack": "Bienvenido de nuevo",
   "Done": "¿Listo por hoy?",
@@ -80,13 +83,14 @@
 
   "BrowseJobs": "Buscar empleos",
   "ThisPagelistalljobs,": "Este página enumera todos los trabajos,",
-  "perpage.Everyonecanaccessthispage.": "por página. Todo el mundo puede acceder a esta página.",
+  "perpage.Everyonecanaccessthispage.": "por página.",
   "Viewjob": "Ver trabajo",
-  "Deadline:": "Fecha límite:",
+  "Deadline": "Fecha límite:",
   "Previous": "Previo",
   "Next": "Próximo",
 
   "MyJobs": "Mis trabajos",
+  "My Jobs": "Mis trabajos",
   "CreateJob": "Crear trabajo",
   "perpage.": "por página.",
 
@@ -125,7 +129,7 @@
 
   "MyApplication": "Mi aplicación",
   "Remove": "Eliminar",
-  "Noappliedjobs:/": "Sin trabajos solicitados :/",
+  "Noappliedjobs": "Sin trabajos solicitados :/",
 
   "Prev": "Previo",
   "Pleaseenterapasswordofsixcharacterswith,atleastoneletter,onenumberandonespecialcharacter": "Ingrese una contraseña de seis caracteres con, al menos, una letra, un número y un carácter especial.",
@@ -135,12 +139,13 @@
   "Lookslikeyou&apos;renew!": "Parece que eres nuevo!",
 
   "Apply": "Aplicar",
-  "Thisjobhasbeenremovedbytheemployer:/": "Este trabajo ha sido eliminado por el empleador :/",
+  "Thisjobhasbeenremovedbytheemployer": "Este trabajo ha sido eliminado por el empleador :/",
 
   "Awards": "Premios",
   "AwardIssuer": "Emisor de premios",
   "newdate": "Nueva fecha",
   "AwardDescription": "Descripción del premio",
+  "AwardTitle": "Título del premio",
   "Areyousureyouwanttodeletethiscard?": "¿Estás seguro de que quieres eliminar esta tarjeta?",
   "Delete": "Borrar",
   "ContactInformation": "Información del contacto",
@@ -166,7 +171,9 @@
   "Project": "Proyecto",
   "ProjectTitle": "Título del Proyecto",
   "ProjectDescription": "Descripción del Proyecto",
-  "Uploadaresume": "Subir un currículum",
+  "Uploadaresume!": "Subir un currículum!",
+  "FileChosennone": "Archivo elegido: ninguno",
+  "FileChosen": "Archivo elegido:",
   "Uploadafile": "Cargar un archivo",
   "ViewResume": "Ver currículum",
   "ResumeUploadSucessful": "Reanudar carga exitosa",
@@ -191,10 +198,10 @@
   "Aboutthejob": "Acerca del trabajo",
   "Requirements": "Requisitos",
   "Applicants": "Solicitantes",
-  "Noapplicants:/": "Sin solicitantes :/",
-  "Changeapplicationstatusfor": "Cambiar el estado de la solicitud de",
+  "Noapplicants": "Sin solicitantes :/",
+  "Changeapplicationstatusfor": "Cambiar el estado de la solicitud de ",
   "Thecurrentstatusis": "El estado actual es",
-  "Changeapplicationstatusto:": "Cambiar el estado de la solicitud a:",
+  "Changeapplicationstatusto": "Cambiar el estado de la solicitud a:",
 
   "RecruiterAccountCreation": "Creación de cuenta de reclutador",
   "RecruiterFirstName": "Nombre del reclutador",
@@ -217,7 +224,7 @@
   "On": "En",
   "Off": "Apagado",
 
-  "Nonotificationstodisplay:/": "No hay notificaciones para mostrar :/",
+  "Nonotificationstodisplay": "No hay notificaciones para mostrar :/",
   "Manageyournotifications": "Manage your notifications",
   "ViewSettings": "Administra tus notificaciones",
 

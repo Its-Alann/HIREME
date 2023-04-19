@@ -159,7 +159,7 @@ export const JobPostingApplicants = () => {
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
   const handleOpen = (status, fName, lName, email, docID) => {
     setSelectedApplicantStatus(status);
-    setSelectedApplicantName(fName + lName);
+    setSelectedApplicantName(`${fName} ${lName}`);
     setSelectedApplicantEmail(email);
     setSelectedApplicantDocID(docID);
     setOpen(true);
@@ -413,7 +413,7 @@ export const JobPostingApplicants = () => {
                     </Typography>
                     <Typography>{job.requirement}</Typography>
                   </Box>
-                  <Box>
+                  <Box sx={{ pb: 2 }}>
                     <Typography sx={{ fontSize: 20 }}>
                       {t("Benefits")}
                     </Typography>
@@ -521,7 +521,7 @@ export const JobPostingApplicants = () => {
                     );
                   })
                 ) : (
-                  <Typography>{t("Noapplicants:/")}</Typography>
+                  <Typography>{t("Noapplicants")}</Typography>
                 )}
               </Box>
             </Box>
@@ -549,7 +549,7 @@ export const JobPostingApplicants = () => {
             </Typography>
             <Stack direction="row" display="flex" alignItems="center">
               <Typography sx={{ mr: 2 }}>
-                {t("Changeapplicationstatusto:")}
+                {t("Changeapplicationstatusto")}
               </Typography>
               <Select
                 value={changedApplicationStatus}
