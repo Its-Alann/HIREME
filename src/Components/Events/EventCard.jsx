@@ -117,7 +117,7 @@ const EventCard = (props) => {
                 </IconButton>
                 <IconButton
                   aria-label="Edit Event"
-                  href={`editEvent/${eventInfo.eventID}`}
+                  href={`/${companyID}/editEvent/${eventInfo.eventID}`}
                 >
                   <EditIcon />
                 </IconButton>

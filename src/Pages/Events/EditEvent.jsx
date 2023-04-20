@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -13,7 +13,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Divider } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { doc, getDoc, addDoc, collection } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { auth, db } from "../../Firebase/firebase";
@@ -30,8 +30,17 @@ const EditEvent = () => {
 
   const { companyID, eventID } = useParams();
 
+  const [saved, setSaved] = useState(false);
+
   async function handleSubmit() {
     // update event
+    await updateDoc(doc(db, `companies2/${companyID}/events`, eventID), {
+      address,
+      date,
+      description,
+      name,
+    });
+    setSaved(true);
   }
 
   async function getEventInfo() {
@@ -39,7 +48,6 @@ const EditEvent = () => {
     const docSnap = await getDoc(eventDocRef);
     if (docSnap.exists()) {
       const res = docSnap.data();
-      console.log("event", res);
       setAddress(res.address);
       setDate(res.date.toDate());
       setDescription(res.description);
@@ -53,13 +61,12 @@ const EditEvent = () => {
     const docSnap = await getDoc(companyDocRef);
     if (docSnap.exists()) {
       const res = docSnap.data();
-      console.log("company", res);
       setLogoPath(res.logoPath);
       setCompanyName(res.name);
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         getEventInfo();
@@ -68,9 +75,26 @@ const EditEvent = () => {
     });
   }, []);
 
+  useEffect(() => {
+    let timeout;
+    if (saved) {
+      timeout = setTimeout(() => setSaved(false), 3000);
+    }
+    return () => clearTimeout(timeout);
+  }, [saved]);
+
   return (
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
+        <Button
+          variant="contained"
+          size="medium"
+          id="Button-Back"
+          sx={{ my: 2 }}
+          href={`/${companyID}`}
+        >
+          Back
+        </Button>
         <Typography variant="h4" sx={{ pb: 2 }}>
           Edit Event: {name}
         </Typography>
@@ -149,11 +173,12 @@ const EditEvent = () => {
           variant="contained"
           size="medium"
           id="Button-Save"
-          sx={{ mt: 2 }}
+          sx={{ my: 2 }}
           onClick={() => handleSubmit()}
         >
           Save
         </Button>
+        {saved && <Typography>Saved! ✔</Typography>}
         {/* </Link> */}
       </Box>
     </Container>
