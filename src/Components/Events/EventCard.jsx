@@ -1,11 +1,12 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
 import {
+  Box,
+  Card,
+  Stack,
+  Typography,
+  Button,
+  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,6 +14,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { deleteDoc, doc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
@@ -108,11 +110,19 @@ const EventCard = (props) => {
             flex={1}
           >
             {/* add condition if user is a recruiter */}
-            {isRecruiter ? (
-              <Button onClick={handleClickOpen}>
-                <DeleteIcon />
-              </Button>
-            ) : null}
+            {isRecruiter && (
+              <>
+                <IconButton aria-label="Delete Event" onClick={handleClickOpen}>
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="Edit Event"
+                  href={`editEvent/${eventInfo.eventID}`}
+                >
+                  <EditIcon />
+                </IconButton>
+              </>
+            )}
 
             {/* Added this button for candidate's view */}
             <Button

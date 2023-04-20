@@ -36,6 +36,7 @@ import ResetPassword from "./Pages/Login/ResetPassword";
 import NotificationsPage from "./Pages/Notifications/NotificationsPage";
 import SettingsPage from "./Pages/Setting/SettingsPage";
 import EventCard from "./Components/Events/EventCard";
+import EditEvent from "./Pages/Events/EditEvent";
 import Events from "./Components/Events/Events";
 import CreateEvent from "./Pages/Events/CreateEvent";
 
@@ -147,6 +148,11 @@ const App = () => {
               path="/:companyID/createEvent"
               exact
               element={<CreateEvent />}
+            />
+            <Route
+              path="/:companyID/editEvent/:eventID"
+              exact
+              element={<EditEvent />}
             />
           </Routes>
         </Router>
