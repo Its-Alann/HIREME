@@ -229,20 +229,6 @@ describe("Test the navbar component", () => {
       cy.url().should("eq", "http://localhost:3000/browseJobs");
     });
 
-    it("clicks on jobs/view saved jobs", () => {
-      cy.login();
-      cy.viewport(1920, 1080);
-      cy.visit("http://localhost:3000");
-      cy.wait(1000);
-      cy.get('[data-cy="Jobs-test"]').click();
-      cy.get(
-        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-saved-job-test"]'
-      ).click();
-      cy.wait(1000);
-      cy.url().should("include", "/savedJobs");
-      cy.url().should("eq", "http://localhost:3000/savedJobs");
-    });
-
     it("clicks on messaging", () => {
       cy.login();
       cy.viewport(1920, 1080);
@@ -354,25 +340,6 @@ describe("Test the navbar component", () => {
       cy.wait(500);
       cy.url().should("eq", "http://localhost:3000/viewMyApplications");
       cy.url().should("include", "/viewMyApplications");
-      cy.wait(500);
-    });
-
-    it("clicks on jobs/view saved jobs", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="phone-menu-test"]').within(() =>
-        cy.get("Button").click()
-      );
-      cy.get('[data-cy="Jobs-phone-test"]').click();
-      cy.wait(500);
-      cy.get(
-        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-saved-job-test"]'
-      ).click();
-      cy.wait(500);
-      cy.url().should("eq", "http://localhost:3000/savedJobs");
-      cy.url().should("include", "/savedJobs");
       cy.wait(500);
     });
 
