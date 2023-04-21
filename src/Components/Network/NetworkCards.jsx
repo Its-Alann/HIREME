@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+// import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 // import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
