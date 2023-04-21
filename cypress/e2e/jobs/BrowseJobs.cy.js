@@ -32,9 +32,14 @@ describe("Login to test account", () => {
     });
   });
 
-  // it("Remove favourite", () => {
-  //   cy.visit("http://localhost:3000/browseJobs");
-  // });
+  it("Save and unsave job", () => {
+    cy.visit("http://localhost:3000/browseJobs");
+    cy.wait(1000);
+    cy.get('[data-cy="save-button"]').first().click();
+    cy.wait(100);
+    cy.get('[data-cy="unsave-button"]').first().click();
+    cy.wait(100);
+  });
 });
 
 describe("Browse Jobs", () => {

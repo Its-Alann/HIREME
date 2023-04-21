@@ -141,6 +141,9 @@ const Navbar = () => {
       case "view jobs":
         navigate("/browseJobs");
         break;
+      case "saved jobs":
+        navigate("/savedJobs");
+        break;
       case "view applied jobs":
         navigate("/viewMyApplications");
         break;
@@ -390,6 +393,16 @@ const Navbar = () => {
                           data-cy="view-job-test"
                         >
                           View Jobs
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            redirectToPage2 = "saved jobs";
+                            handleCloseUserMenu2();
+                            handleCloseNavMenu();
+                          }}
+                          data-cy="view-saved-job-test"
+                        >
+                          View Saved Jobs
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
