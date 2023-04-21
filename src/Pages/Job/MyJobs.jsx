@@ -244,7 +244,7 @@ export const MyJobs = () => {
                       </Link>
                     </Button>
                     <Typography>
-                      {t("Deadline:")}{" "}
+                      {t("Deadline")}{" "}
                       {new Date(
                         job.deadline.seconds * 1000 +
                           job.deadline.nanoseconds / 1000000
