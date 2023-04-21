@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -9,6 +9,8 @@ import {
   Grid,
   InputAdornment,
   IconButton,
+  Edit,
+  Stack,
 } from "@mui/material";
 import {
   collection,
@@ -21,15 +23,22 @@ import {
   doc,
   getDoc,
   limit,
-  getFirestore,
   updateDoc,
   where,
+  uploadBytes,
+  ref,
+  getDownloadURL,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db, app } from "../../Firebase/firebase";
+import { auth, db, app, storage } from "../../Firebase/firebase";
 
 const Company = () => {
   // Constants and functions
+  const [companyInformation, setCompanyInformation] = React.useState({
+    name: "",
+    logoPath: "", // new state for the uploaded logo file
+  });
+  const [isNewJobAllowed, setIsNewJobAllowed] = React.useState(false);
   const [currentUserID, setCurrentUserID] = React.useState("");
   const [jobs, setJobs] = useState([]);
   const [lastJob, setLastJob] = useState(null);
@@ -37,20 +46,43 @@ const Company = () => {
   const [companiesName, setCompaniesName] = useState({});
   const [companiesLogo, setCompaniesLogo] = useState({});
   const [isAdmin, setIsAdmin] = React.useState(false);
-  const database = getFirestore(app);
+  const [editMode, setEditMode] = React.useState(false);
 
   // Get the companyID fromt the url
   const URLcompanyID = useParams().companyID;
+
+  const handleClick = () => {
+    setEditMode(true);
+  };
+
+  async function getCompanyInformation() {
+    const companyRef = doc(db, "companies2", URLcompanyID);
+    const companySnapshot = await getDoc(companyRef);
+    if (companySnapshot.exists()) {
+      setCompanyInformation(companySnapshot.data());
+    }
+  }
+
+  async function uploadImage(image) {
+    const imageName = `${URLcompanyID}-${Date.now()}`;
+    const imageRef = ref(storage, `/company-logo/${imageName}`);
+    await uploadBytes(imageRef, image);
+    const downloadURL = await getDownloadURL(imageRef);
+    setCompanyInformation({ ...companyInformation, logoPath: downloadURL });
+  }
+
+  async function saveCompanyInformation() {
+    const companyRef = doc(db, "companies2", URLcompanyID);
+    await updateDoc(companyRef, companyInformation);
+  }
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log("onAuthStateChanged invoked");
       if (user) {
         setCurrentUserID(user.uid);
-        setUserEmail(user.email);
       } else {
         setCurrentUserID(null);
-        setUserEmail(null);
       }
     });
     return () => unsubscribe();
@@ -59,53 +91,23 @@ const Company = () => {
   // Number of jobs per page
   const jobsPerPage = 5;
 
-  // The purpose of this query is to get jobs sorted descending by published date
-  // Firebase does not have desc orderby
-  // hence, use the ascending order & limit to last
-  // For example I have 7 jobs.
-  // 1 2 3 4 5 6 7
-  //     x x x x x
-  // these will be selected.
-  // then shown in reverse order.
+  // Job  Query
   const initialJobsQuery = query(
     collection(db, "jobs2"),
-    where("companyID", "=", URLcompanyID)
+    where("companyID", "==", URLcompanyID),
+    orderBy("publishedAt"),
+    limitToLast(jobsPerPage)
   );
-
-  // The matter with firstJob & lastJob.
-  // After a query executed
-  // For example I have 7 jobs.
-  // 1 2 3 4 5 6 7
-  //     x x x x x
-  //     L       F
-  // x  is selected jobs.
-  // L is last job.
-  // F is first job.
-
-  // nextJobsQuery end the query before the lastJob
-  // For example, now I have 3 as lastJob
-  // 1 2 3 4 5 6 7
-  // x x
-  // these will be selected
-  // then
-  // L F
-  // 1 & 2 become the new lastJob & firstJob
   const nextJobsQuery = query(
     collection(db, "jobs2"),
+    where("companyID", "==", URLcompanyID),
     orderBy("publishedAt"),
     endBefore(lastJob),
     limitToLast(jobsPerPage)
   );
-
-  // previousJobsQuery start the query after the firstJob
-  // For example, now I have 2 as firstJob
-  // 1 2 3 4 5 6 7
-  //     x x x x x
-  // these will be selected// then
-  //     L       F
-  // 3 & 7 become the new lastJob & firstJob
   const previousJobsQuery = query(
     collection(db, "jobs2"),
+    where("companyID", "==", URLcompanyID),
     orderBy("publishedAt"),
     startAfter(firstJob),
     limit(jobsPerPage)
@@ -144,14 +146,14 @@ const Company = () => {
       if (selfRecruiterSnapshot.data().isManager) {
         setIsAdmin(true);
         setIsNewJobAllowed(true);
-      } else if (selfRecruiterSnapshot.data().workFor !== companyID) {
+      } else if (selfRecruiterSnapshot.data().workFor !== URLcompanyID) {
         setIsAdmin(false);
         setIsNewJobAllowed(false);
       } else {
         const managersSnapshot = await getDocs(
           query(
             collection(db, "recruiters2"),
-            where("workFor", "==", companyID),
+            where("workFor", "==", URLcompanyID),
             where("isManager", "==", true),
             limit(1)
           )
@@ -193,12 +195,13 @@ const Company = () => {
   }
 
   React.useEffect(() => {
-    getCompaniesName();
-  }, [jobs]);
+    getCompanyInformation();
+    getJobs(initialJobsQuery);
+  }, [URLcompanyID]);
 
   React.useEffect(() => {
-    getJobs(initialJobsQuery);
-  }, []);
+    console.log("jobs ", jobs);
+  }, [jobs]);
 
   return (
     <>
@@ -347,23 +350,124 @@ const Company = () => {
         )}
       </Box>
 
-      {jobs.map((job) => (
-        <JobCard
-          key={`JobCard-${job.documentID}`}
-          companyID={job.companyID}
-          companyName={companyInformation.name}
-          jobID={job.documentID}
-          title={job.title}
-          city={job.city}
-          country={job.country}
-          deadlineSeconds={job.deadline.seconds}
-          deadlineNanoSeconds={job.deadline.nanoseconds}
-          logo={companyInformation.logoPath}
-          editable={isNewJobAllowed}
-          favoriteCompaniesID={favoriteCompaniesID}
-          setFavoriteCompaniesID={setFavoriteCompaniesID}
-        />
-      ))}
+      <Container sx={{ mb: 10 }}>
+        <Box sx={{ pt: 5 }}>
+          <Typography variant="h4" sx={{ pb: 2 }}>
+            Browse Jobs
+          </Typography>
+          <Typography>
+            This Page list all jobs, {jobsPerPage} per page. Everyone can access
+            this page.
+          </Typography>
+
+          {jobs.map((job) => {
+            const hello = "hello";
+
+            // do this to show what is inside job
+            // console.log(job);
+            return (
+              // Create cards instead
+              <Box key={job.documentID} sx={{ py: 1 }}>
+                <Card variant="outlined">
+                  <Box sx={{ m: 3 }}>
+                    <Stack direction="row" alignItems="center">
+                      <Box
+                        component="img"
+                        sx={{
+                          // objectFit: "cover",
+                          width: "6rem",
+                          height: "6rem",
+                          mr: 2,
+                        }}
+                        src={companiesLogo[job.companyID]}
+                      />
+                      <Box>
+                        <Typography variant="h4">{job.title}</Typography>
+                        <Box sx={{ display: "flex", flexDirection: "row" }}>
+                          <Typography>
+                            {companiesName[job.companyID]}
+                          </Typography>
+                          {userEmail !== null &&
+                            (isFavorite(job.companyID) ? (
+                              <StarIcon
+                                sx={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  handleRemoveFavorite(job.companyID)
+                                }
+                              />
+                            ) : (
+                              <StarOutlineIcon
+                                sx={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  handleMakeFavorite(job.companyID)
+                                }
+                              />
+                            ))}
+                        </Box>
+                        <Typography>{`${job.city}, ${job.country}`}</Typography>
+                      </Box>
+                    </Stack>
+
+                    {/* do we need to show company id? */}
+                    {/* <Typography>Company ID: {job.companyID}</Typography> */}
+
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="flex-end"
+                      sx={{ pt: 2 }}
+                    >
+                      {/* Added this button for candidate's view */}
+                      <Button
+                        variant="contained"
+                        size="medium"
+                        sx={{ my: 1 }}
+                        id={`Button-${job.documentID}`}
+                      >
+                        {/* if there's no link field in db, button links to viewJobPosting, otherwise external link */}
+                        {job.link === undefined || job.link === "" ? (
+                          <Link
+                            to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+                            className="link"
+                            underline="none"
+                            style={{ textDecoration: "none" }}
+                          >
+                            {/* <Link to="/job/1"> */}
+                            View job
+                          </Link>
+                        ) : (
+                          <a
+                            href={job.link}
+                            style={{ color: "white", textDecoration: "none" }}
+                          >
+                            Apply On Other Site
+                          </a>
+                        )}
+                      </Button>
+                      <Typography>
+                        Deadline:{" "}
+                        {new Date(
+                          job.deadline.seconds * 1000 +
+                            job.deadline.nanoseconds / 1000000
+                        ).toDateString()}
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Card>
+              </Box>
+            );
+          })}
+          <Button
+            id="Button-Previous"
+            onClick={() => getJobs(previousJobsQuery)}
+          >
+            Previous
+          </Button>
+          <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
+            Next
+          </Button>
+        </Box>
+      </Container>
       <Box sx={{ px: "5%" }}>
         <Button
           id="Button-Previous-Job"
@@ -376,144 +480,6 @@ const Company = () => {
           id="Button-Next-Job"
           data-cy="Button-Next-Job"
           onClick={() => getJobs(nextJobsQuery)}
-        >
-          <Typography variant="h6">Next</Typography>
-        </Button>
-      </Box>
-
-      <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
-        Recruiters List
-      </Typography>
-      <Grid
-        container
-        sx={{ px: "5%" }}
-        spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-      >
-        {employees.map((employee) => (
-          <Grid
-            item
-            key={`recruiterCard-${employee.ID}`}
-            xs={12}
-            sm={12}
-            md={6}
-            lg={6}
-          >
-            <EmployeeCard
-              employeeId={employee.ID}
-              employeeFirstName={employee.firstName}
-              employeeLastName={employee.lastName}
-              employeeImage={employee.image}
-              employeeDescription={employee.description}
-            >
-              {employee.email && (
-                <Link
-                  to={`/editProfile/${employee.firstName}${employee.lastName}`}
-                  state={{ userID: currentUserID }}
-                >
-                  <Button>
-                    <Typography variant="h6">View Profile </Typography>
-                  </Button>
-                </Link>
-              )}
-              {isAdmin && (
-                <>
-                  <Button
-                    onClick={() => {
-                      removeRecruiter(employee.ID);
-                    }}
-                  >
-                    <Typography variant="h6">Remove</Typography>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      promoteToManager(employee.ID);
-                    }}
-                  >
-                    <Typography variant="h6">Promote</Typography>
-                  </Button>
-                </>
-              )}
-            </EmployeeCard>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Box sx={{ px: "5%" }}>
-        <Button
-          id="Button-Previous-Employee"
-          data-cy="Button-Previous-Employee"
-          onClick={() => getEmployees(previousEmployeesQuery)}
-        >
-          <Typography variant="h6">Previous</Typography>
-        </Button>
-        <Button
-          id="Button-Next-Employee"
-          data-cy="Button-Next-Employee"
-          onClick={() => getEmployees(nextEmployeesQuery)}
-        >
-          <Typography variant="h6">Next</Typography>
-        </Button>
-      </Box>
-      <Typography variant="h3" sx={{ padding: "5%", alignItems: "center" }}>
-        Manager List
-      </Typography>
-      <Grid
-        container
-        sx={{ px: "5%", height: "100%" }}
-        spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-      >
-        {managers.map((employee) => (
-          <Grid
-            item
-            key={`managerCard-${employee.ID}`}
-            xs={12}
-            sm={12}
-            md={6}
-            lg={6}
-          >
-            <EmployeeCard
-              employeeId={employee.ID}
-              employeeFirstName={employee.firstName}
-              employeeLastName={employee.lastName}
-              employeeImage={employee.image}
-              employeeDescription={employee.description}
-            >
-              {employee.email && (
-                <Link
-                  to={`/editProfile/${employee.firstName}${employee.lastName}`}
-                  state={{ userID: currentUserID }}
-                >
-                  <Button>
-                    <Typography variant="h6">View Profile</Typography>
-                  </Button>
-                </Link>
-              )}
-              {isAdmin && (
-                <Button
-                  onClick={() => {
-                    demoteManager(employee.ID);
-                  }}
-                >
-                  <Typography variant="h6">Demote</Typography>
-                </Button>
-              )}
-            </EmployeeCard>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Box sx={{ px: "5%" }}>
-        <Button
-          id="Button-Previous-Manager"
-          data-cy="Button-Previous-Manager"
-          onClick={() => getManagers(previousManagersQuery)}
-        >
-          <Typography variant="h6">Previous</Typography>
-        </Button>
-        <Button
-          id="Button-Next-Manager"
-          data-cy="Button-Next-Manager"
-          onClick={() => getManagers(nextManagersQuery)}
         >
           <Typography variant="h6">Next</Typography>
         </Button>
