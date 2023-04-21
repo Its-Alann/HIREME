@@ -56,7 +56,7 @@ const App = () => {
     },
   });
 
-  const companyID = "npx38jzGfcSJNhpN5LJx";
+  const companyID = "VtimBR90MAReVayXpEhl";
   const companyName = "Microsoft";
   const companyLogo =
     "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FMicrosftLogo.png?alt=media&token=effc3862-bd6e-4a70-965c-816cad7bcc19";
