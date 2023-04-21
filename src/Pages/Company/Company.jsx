@@ -13,6 +13,8 @@ import {
   Card,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import StarIcon from "@mui/icons-material/Star";
 import {
   collection,
   query,
@@ -26,6 +28,7 @@ import {
   limit,
   updateDoc,
   where,
+  getFirestore,
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
@@ -47,6 +50,11 @@ export const Company = () => {
   const [companiesLogo, setCompaniesLogo] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [favoriteCompanies, setFavoriteCompanies] = useState(null);
+  const [savedJobs, setSavedJobs] = useState(null);
+  const [updateSavedDB, setUpdateSavedDB] = useState(false);
+  const [updateFavoriteDB, setUpdateFavoriteDB] = useState(false);
+  const database = getFirestore(app);
 
   // Get the companyID fromt the url
   const URLcompanyID = useParams().companyID;
@@ -54,6 +62,88 @@ export const Company = () => {
   const handleClick = () => {
     setEditMode(true);
   };
+
+  // Only once, attach listener to onAuthStateChanged
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const { uid, email } = authUser;
+        console.log("uid", uid);
+        console.log("useEffect: ", email);
+        setUserEmail(email);
+      } else {
+        setUserEmail(null);
+      }
+    });
+  }, []);
+
+  //update db function for saved jobs if it exists in db, otherwise create field
+  async function updateDbSaved() {
+    if (updateSavedDB) {
+      console.log("start update");
+      if (userEmail !== null) {
+        if (savedJobs !== null) {
+          const userProfileDocRef = doc(database, "notifications", userEmail);
+          await updateDoc(userProfileDocRef, { savedJobs });
+        } else {
+          const userProfileDocRef = doc(database, "notifications", userEmail);
+          await updateDoc(userProfileDocRef, { savedJobs: [] });
+          setSavedJobs([]);
+        }
+      }
+      console.log("Update finished");
+    }
+  }
+
+  //update db function for favorite companies if it exists in db, otherwise create field
+  async function updateDbFavorites() {
+    if (updateFavoriteDB) {
+      console.log("start update");
+      console.log(favoriteCompanies);
+      if (userEmail !== null) {
+        if (favoriteCompanies !== null) {
+          const userProfileDocRef = doc(database, "notifications", userEmail);
+          await updateDoc(userProfileDocRef, { favoriteCompanies });
+        } else {
+          const userProfileDocRef = doc(database, "notifications", userEmail);
+          await updateDoc(userProfileDocRef, { favoriteCompanies: [] });
+          setFavoriteCompanies([]);
+        }
+      }
+      console.log("Update finished");
+    }
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      if (userEmail !== null) {
+        const notificationsDocRef = doc(database, "notifications", userEmail);
+        // Get notifications data and set it to local array
+        const notificationsSnapShot = await getDoc(notificationsDocRef);
+        if (notificationsSnapShot.exists()) {
+          console.log("Notifications for user Exist");
+          //set favorite companies
+          if (notificationsSnapShot.data().favoriteCompanies !== undefined) {
+            setFavoriteCompanies(
+              notificationsSnapShot.data().favoriteCompanies
+            );
+          } else {
+            setUpdateFavoriteDB(true);
+          }
+          //set saved jobs
+          if (notificationsSnapShot.data().savedJobs !== undefined) {
+            setSavedJobs(notificationsSnapShot.data().savedJobs);
+          } else {
+            setUpdateSavedDB(true);
+          }
+        } else {
+          console.log("Notifications for user does not Exist");
+        }
+      }
+    }
+    console.log("get info from notifications collection");
+    fetchData();
+  }, [userEmail]);
 
   async function getCompanyInformation() {
     const companyRef = doc(db, "companies2", URLcompanyID);
@@ -203,6 +293,39 @@ export const Company = () => {
     console.log("jobs ", jobs);
   }, [jobs]);
 
+  const handleRemoveSaved = (jobId) => {
+    setSavedJobs((prev) => prev.filter((temp) => temp !== jobId));
+    setUpdateSavedDB(true);
+  };
+
+  const handleAddSaved = (jobId) => {
+    setSavedJobs((prev) => [...prev, jobId]);
+    setUpdateSavedDB(true);
+  };
+
+  //this is used as a buffer to make sure the savedJobs state is updated before updating the db
+  useEffect(() => {
+    updateDbSaved();
+    setUpdateSavedDB(false);
+  }, [updateSavedDB]);
+
+  const handleRemoveFavorite = (companyId) => {
+    setFavoriteCompanies((prev) => prev.filter((temp) => temp !== companyId));
+    setUpdateFavoriteDB(true);
+  };
+
+  const handleAddFavorite = (companyId) => {
+    console.log(companyId);
+    setFavoriteCompanies((prev) => [...prev, companyId]);
+    setUpdateFavoriteDB(true);
+  };
+
+  //this is used as a buffer to make sure the savedJobs state is updated before updating the db
+  useEffect(() => {
+    updateDbFavorites();
+    setUpdateFavoriteDB(false);
+  }, [updateFavoriteDB]);
+
   return (
     <>
       <Box
@@ -348,6 +471,36 @@ export const Company = () => {
             </Button>
           </Link>
         )}
+        {!isNewJobAllowed &&
+        userEmail !== null &&
+        favoriteCompanies != null &&
+        favoriteCompanies.includes(URLcompanyID) ? (
+          <>
+            <StarIcon
+              sx={{ cursor: "pointer", my: "auto", ml: "auto" }}
+              onClick={() => handleRemoveFavorite(URLcompanyID)}
+            />
+            <Typography
+              sx={{ cursor: "pointer", my: "auto" }}
+              onClick={() => handleRemoveFavorite(URLcompanyID)}
+            >
+              Unfavorite Company
+            </Typography>
+          </>
+        ) : (
+          <>
+            <StarOutlineIcon
+              sx={{ cursor: "pointer", my: "auto", ml: "auto" }}
+              onClick={() => handleAddFavorite(URLcompanyID)}
+            />
+            <Typography
+              sx={{ cursor: "pointer", my: "auto" }}
+              onClick={() => handleAddFavorite(URLcompanyID)}
+            >
+              Favorite Company
+            </Typography>
+          </>
+        )}
       </Box>
 
       <Container sx={{ mb: 10 }}>
@@ -389,6 +542,42 @@ export const Company = () => {
                           </Typography>
                         </Box>
                         <Typography>{`${job.city}, ${job.country}`}</Typography>
+                      </Box>
+                      <Box sx={{ ml: "auto", mb: "auto" }}>
+                        {savedJobs != null &&
+                        savedJobs.includes(job.documentID) ? (
+                          <Button
+                            id="save-btn"
+                            variant="contained"
+                            data-cy="unsave-button"
+                            sx={{
+                              backgroundColor: "black",
+                              m: 2,
+                              height: 30,
+                              width: 100,
+                              textTransform: "none",
+                            }}
+                            onClick={() => handleRemoveSaved(job.documentID)}
+                          >
+                            Unsave
+                          </Button>
+                        ) : (
+                          <Button
+                            id="save-btn"
+                            variant="contained"
+                            data-cy="save-button"
+                            sx={{
+                              backgroundColor: "black",
+                              m: 2,
+                              height: 30,
+                              width: 100,
+                              textTransform: "none",
+                            }}
+                            onClick={() => handleAddSaved(job.documentID)}
+                          >
+                            Save
+                          </Button>
+                        )}
                       </Box>
                     </Stack>
 
