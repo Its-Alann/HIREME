@@ -48,7 +48,7 @@ describe("example to-do app", () => {
       //send image
       const fileName = "src/Assets/fonts/Images/IMG_0524.png";
       cy.wait(1000);
-      cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
+      cy.get('[data-cy="fileUpload"]')
         .find("input")
         .selectFile(fileName, { force: true });
 
@@ -56,7 +56,7 @@ describe("example to-do app", () => {
 
       //send image
       cy.wait(1000);
-      cy.get(".css-qgqs2f-MuiGrid2-root > .MuiButtonBase-root")
+      cy.get('[data-cy="fileUpload"]')
         .find("input")
         .selectFile(fileName, { force: true });
 
