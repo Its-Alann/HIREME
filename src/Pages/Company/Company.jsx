@@ -9,10 +9,10 @@ import {
   Container,
   InputAdornment,
   IconButton,
-  Edit,
   Stack,
   Card,
 } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 import {
   collection,
   query,
@@ -26,10 +26,8 @@ import {
   limit,
   updateDoc,
   where,
-  uploadBytes,
-  ref,
-  getDownloadURL,
 } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db, app, storage } from "../../Firebase/firebase";
 
@@ -47,8 +45,8 @@ export const Company = () => {
   const [firstJob, setFirstJob] = useState(null);
   const [companiesName, setCompaniesName] = useState({});
   const [companiesLogo, setCompaniesLogo] = useState({});
-  const [isAdmin, setIsAdmin] = React.useState(false);
-  const [editMode, setEditMode] = React.useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   // Get the companyID fromt the url
   const URLcompanyID = useParams().companyID;
@@ -78,7 +76,7 @@ export const Company = () => {
     await updateDoc(companyRef, companyInformation);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log("onAuthStateChanged invoked");
       if (user) {
@@ -196,12 +194,12 @@ export const Company = () => {
     });
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     getCompanyInformation();
     getJobs(initialJobsQuery);
   }, [URLcompanyID]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("jobs ", jobs);
   }, [jobs]);
 
