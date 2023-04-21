@@ -6,11 +6,12 @@ import {
   TextField,
   Avatar,
   Button,
-  Grid,
+  Container,
   InputAdornment,
   IconButton,
   Edit,
   Stack,
+  Card,
 } from "@mui/material";
 import {
   collection,
@@ -32,14 +33,15 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db, app, storage } from "../../Firebase/firebase";
 
-const Company = () => {
+export const Company = () => {
   // Constants and functions
-  const [companyInformation, setCompanyInformation] = React.useState({
+  const [companyInformation, setCompanyInformation] = useState({
     name: "",
     logoPath: "", // new state for the uploaded logo file
   });
-  const [isNewJobAllowed, setIsNewJobAllowed] = React.useState(false);
-  const [currentUserID, setCurrentUserID] = React.useState("");
+  const [isNewJobAllowed, setIsNewJobAllowed] = useState(false);
+  const [currentUserID, setCurrentUserID] = useState("");
+  const [userEmail, setUserEmail] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [lastJob, setLastJob] = useState(null);
   const [firstJob, setFirstJob] = useState(null);
@@ -387,22 +389,6 @@ const Company = () => {
                           <Typography>
                             {companiesName[job.companyID]}
                           </Typography>
-                          {userEmail !== null &&
-                            (isFavorite(job.companyID) ? (
-                              <StarIcon
-                                sx={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  handleRemoveFavorite(job.companyID)
-                                }
-                              />
-                            ) : (
-                              <StarOutlineIcon
-                                sx={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  handleMakeFavorite(job.companyID)
-                                }
-                              />
-                            ))}
                         </Box>
                         <Typography>{`${job.city}, ${job.country}`}</Typography>
                       </Box>
@@ -468,22 +454,6 @@ const Company = () => {
           </Button>
         </Box>
       </Container>
-      <Box sx={{ px: "5%" }}>
-        <Button
-          id="Button-Previous-Job"
-          data-cy="Button-Previous-Job"
-          onClick={() => getJobs(previousJobsQuery)}
-        >
-          <Typography variant="h6">Previous</Typography>
-        </Button>
-        <Button
-          id="Button-Next-Job"
-          data-cy="Button-Next-Job"
-          onClick={() => getJobs(nextJobsQuery)}
-        >
-          <Typography variant="h6">Next</Typography>
-        </Button>
-      </Box>
     </>
   );
 };
