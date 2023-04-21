@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { SentInvitationCard } from "../../../Components/Network/SentInvitationCard";
 import image2 from "../../../Assets/images/390image2.svg";
 
@@ -21,6 +22,7 @@ export const SentInvitation = ({
   const [sentRequestsUserID, setSentRequestsUserID] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  const { t, i18n } = useTranslation();
   const [showingSentInvites, setShowingSentInvites] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -93,8 +95,10 @@ export const SentInvitation = ({
                     // alt="Trees"
                   />
                   <Stack alignItems="center" sx={{ ml: 1 }}>
-                    <Typography variant="h5">You have not sent</Typography>
-                    <Typography variant="h5">any invitations</Typography>
+                    <Typography variant="h5">
+                      {t("NoSentInvitations")}
+                    </Typography>
+                    {/* <Typography variant="h5">any invitations</Typography> */}
                   </Stack>
                 </>
               )}
@@ -107,7 +111,7 @@ export const SentInvitation = ({
                   onClick={prevPage}
                   disabled={pageNumber === 1}
                 >
-                  Prev
+                  {t("Prev")}
                 </Button>
                 <Button
                   id="Button-Next"
@@ -117,7 +121,7 @@ export const SentInvitation = ({
                     Math.ceil(sentRequestsUserID.length / pageSize)
                   }
                 >
-                  Next
+                  {t("Next")}
                 </Button>
               </Box>
             ) : null}

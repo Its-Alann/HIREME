@@ -17,6 +17,7 @@ import * as EmailValidator from "email-validator";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Navigate, useNavigate, redirect } from "react-router-dom";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useTranslation } from "react-i18next";
 import Navbar from "../../Components/Navbar/Navbar";
 import { auth } from "../../Firebase/firebase";
 
@@ -39,6 +40,7 @@ const SignUpPage = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -69,7 +71,7 @@ const SignUpPage = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            {t("SignUp")}
           </Typography>
           <Box
             component="form"
@@ -84,7 +86,7 @@ const SignUpPage = () => {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label={t("EmailAddress")}
                   name="email"
                   data-cy="emailTest"
                   autoComplete="email"
@@ -96,7 +98,7 @@ const SignUpPage = () => {
                     );
                   }}
                   error={emailError}
-                  helperText={!emailError ? "" : "Please enter a valid email"}
+                  helperText={!emailError ? "" : t("Pleaseenteravalidemail")}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -104,7 +106,7 @@ const SignUpPage = () => {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label={t("Password")}
                   type="password"
                   id="password"
                   data-cy="passwordTest"
@@ -122,7 +124,9 @@ const SignUpPage = () => {
                   helperText={
                     !passwordError
                       ? ""
-                      : "Please enter a password of six characters with, at least one letter, one number and one special character"
+                      : t(
+                          "Pleaseenterapasswordofsixcharacterswith,atleastoneletter,onenumberandonespecialcharacter"
+                        )
                   }
                 />
               </Grid>
@@ -131,7 +135,7 @@ const SignUpPage = () => {
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label={t("Newsletter")}
                   name="updates"
                 />
               </Grid>
@@ -147,7 +151,7 @@ const SignUpPage = () => {
                 id="submitBtn"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign Up
+                {t("SignUp")}
               </Button>
             )}
             {error && <Typography color="red">{error}</Typography>}
@@ -155,7 +159,7 @@ const SignUpPage = () => {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
-                  Already have an account? Sign in
+                  {t("AlreadySignedUp")}
                 </Link>
               </Grid>
             </Grid>

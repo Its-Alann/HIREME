@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,6 +29,9 @@ const VolunteeringCard = ({
   isLast,
   visitingProfile,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const volunteerOrg = `volunteer${cardNum}org`;
   const volunteerDesc = `volunteer${cardNum}desc`;
   const volunteerDate = `volunteer${cardNum}date`;
@@ -66,7 +70,7 @@ const VolunteeringCard = ({
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Volunteering </Typography>
+              <Typography variant="h5">{t("Volunteering")}</Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -81,7 +85,7 @@ const VolunteeringCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Organization Name"
+                label={t("OrganizationName")}
                 name="OrgName"
                 variant="standard"
                 size="small"
@@ -103,7 +107,7 @@ const VolunteeringCard = ({
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Volunteering Date"
+                  label={t("VolunteeringDate")}
                   value={tempVolDate}
                   onChange={(newValue) => {
                     setTempVolDate(newValue.$d.toISOString());
@@ -127,7 +131,7 @@ const VolunteeringCard = ({
           <Grid container spacing={3}>
             <Grid item sx={{ mr: "auto" }}>
               <TextField
-                label="Volunteering Description"
+                label={t("Volunteering Description")}
                 name="VolDesc"
                 variant="standard"
                 size="small"
@@ -161,13 +165,13 @@ const VolunteeringCard = ({
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
                     <DialogContentText>
-                      Are you sure you want to delete this card?
+                      {t("Areyousureyouwanttodeletethiscard?")}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
                     <Button onClick={handleClearCardInfo} name="volPopupDel">
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </DialogActions>
                 </Dialog>

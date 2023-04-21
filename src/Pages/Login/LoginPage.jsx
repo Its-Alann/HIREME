@@ -14,6 +14,7 @@ import {
   useAuthState,
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
+import { useTranslation } from "react-i18next";
 import SignInGoogleButton from "../../Components/SignInGoogleButton/SignInGoogleButton";
 import { auth, provider, db } from "../../Firebase/firebase";
 
@@ -35,6 +36,7 @@ const LoginPage = () => {
 
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -73,7 +75,7 @@ const LoginPage = () => {
           }}
         >
           <Typography component="h1" variant="h5" color="primary">
-            HIRE<em>ME</em> account Sign In
+            HIRE<em>ME</em> {t("accountSignIn")}
           </Typography>
           <Box
             component="form"
@@ -89,7 +91,7 @@ const LoginPage = () => {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label={t("EmailAddress")}
               name="email"
               autoComplete="email"
               autoFocus
@@ -105,7 +107,7 @@ const LoginPage = () => {
                 );
               }}
               error={emailError}
-              helperText={!emailError ? "" : "Please enter valid credentials"}
+              helperText={!emailError ? "" : t("Pleaseentervalidcredentials")}
               variant="standard"
               color="primary"
               onChange={() => setBlockedUser(false)}
@@ -116,7 +118,7 @@ const LoginPage = () => {
               required
               fullWidth
               name="password"
-              label="Password"
+              label={t("Password")}
               type="password"
               id="password"
               autoComplete="current-password"
@@ -128,7 +130,7 @@ const LoginPage = () => {
 
             {blockedUser ? (
               <Typography color="error">
-                Your account has been banned
+                {t("Your account has been banned")}
               </Typography>
             ) : (
               ""
@@ -149,7 +151,7 @@ const LoginPage = () => {
                 color="primary"
                 name="signIn"
               >
-                Sign In
+                {t("SignIn")}
               </Button>
             )}
 
@@ -160,7 +162,7 @@ const LoginPage = () => {
                 variant="subtitle2"
                 data-testid="forgotPassword"
               >
-                Forgot password?
+                {t("ForgotPassword")}?
               </Link>
             </Stack>
             <Stack justifyContent="center" spacing={0} sx={{ mt: 3 }}>
@@ -170,7 +172,7 @@ const LoginPage = () => {
                 color="gray"
                 sx={{ fontSize: ".9rem" }}
               >
-                or you can sign in with
+                {t("AlternativeSignIn")}
               </Typography>
               {/* eslint-disable-next-line*/}
               <div align="center">
@@ -183,9 +185,7 @@ const LoginPage = () => {
               justifyContent="center"
               alignItems="center"
             >
-              <Typography color="primary">
-                Don&apos;t have an account?
-              </Typography>
+              <Typography color="primary">{t("NoAccount")}</Typography>
               <Button
                 href="/SignUp"
                 variant="outlined"
@@ -193,7 +193,7 @@ const LoginPage = () => {
                 color="primary"
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
-                Sign Up
+                {t("SignUp")}
               </Button>
             </Stack>
           </Box>

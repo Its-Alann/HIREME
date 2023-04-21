@@ -8,6 +8,8 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
 const theme = createTheme();
@@ -20,6 +22,8 @@ export const NetworkPossibleConnections = ({
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   const [showingNonConnectedUsers, setShowingNonConnectedUsers] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -87,7 +91,7 @@ export const NetworkPossibleConnections = ({
                 ))}
               </Grid>
             ) : (
-              <Typography>No connections yet :/</Typography>
+              <Typography>{t("NoConnection")}</Typography>
             )}
           </Box>
           {nonConnectedUsersArr?.length > pageSize ? (
@@ -97,7 +101,7 @@ export const NetworkPossibleConnections = ({
                 onClick={prevPage}
                 disabled={pageNumber === 1}
               >
-                Prev
+                {t("Prev")}
               </Button>
               <Button
                 id="Button-Next"
@@ -107,7 +111,7 @@ export const NetworkPossibleConnections = ({
                   Math.ceil(nonConnectedUsersArr.length / pageSize)
                 }
               >
-                Next
+                {t("Next")}
               </Button>
             </Box>
           ) : null}

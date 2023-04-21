@@ -8,12 +8,16 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [editButton, setEditButton] = useState(false);
   const [tempDob, setTempDob] = useState("");
 
@@ -29,7 +33,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Contact Information </Typography>{" "}
+              <Typography variant="h5"> {t("ContactInformation")}</Typography>{" "}
             </Grid>
             <Grid item>
               <EditIcon
@@ -44,7 +48,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Phone number"
+                label={t("PhoneNumber")}
                 variant="standard"
                 size="small"
                 value={profile.values.phoneNumber}
@@ -62,7 +66,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
             </Grid>
             <Grid item>
               <TextField
-                label="Address"
+                label={t("Address")}
                 variant="standard"
                 size="small"
                 value={profile.values.address}
@@ -82,7 +86,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
           <Grid container spacing={3} sx={{ marginBottom: "1%" }}>
             <Grid item>
               <TextField
-                label="City"
+                label={t("City")}
                 variant="standard"
                 size="small"
                 value={profile.values.city}
@@ -100,7 +104,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
             </Grid>
             <Grid item>
               <TextField
-                label="Country"
+                label={t("Country")}
                 variant="standard"
                 size="small"
                 value={profile.values.country}
@@ -118,7 +122,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
             </Grid>
             <Grid item>
               <TextField
-                label="Postal Code"
+                label={t("PostalCode")}
                 variant="standard"
                 size="small"
                 value={profile.values.postalCode}
@@ -137,7 +141,7 @@ const ContactInfoCard = ({ setProfile, profile, visitingProfile }) => {
           </Grid>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label="Date of Birth"
+              label={t("DateofBirth")}
               value={tempDob}
               onChange={(newValue) => {
                 setTempDob(newValue.$d.toISOString());

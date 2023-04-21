@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { IconButton, Stack } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import * as EmailValidator from "email-validator";
 import { auth } from "../../Firebase/firebase";
@@ -23,6 +24,9 @@ const theme = createTheme({
 });
 
 const ResetPassword = (props) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [emailError, setEmailError] = useState(false);
 
   const [sendPasswordResetEmail, sending, error] =
@@ -50,10 +54,10 @@ const ResetPassword = (props) => {
           }}
         >
           <Typography component="h1" variant="h4" color="primary">
-            Forgot password?
+            {t("Forgotpassword?")}
           </Typography>
           <Typography variant="caption">
-            You will receive an email to reset your password
+            {t("You will receive an email to reset your password")}
           </Typography>
           <Box
             component="form"
@@ -85,11 +89,13 @@ const ResetPassword = (props) => {
                 );
               }}
               error={emailError}
-              helperText={!emailError ? "" : "Please enter valid credentials"}
+              helperText={!emailError ? "" : t("Pleaseentervalidcredentials")}
               variant="standard"
               color="primary"
             />
-            {error && <Typography color="error">User not found</Typography>}
+            {error && (
+              <Typography color="error">{t("Usernotfound")}</Typography>
+            )}
 
             <Button
               type="submit"
@@ -102,7 +108,7 @@ const ResetPassword = (props) => {
               disabled={emailError}
               data-cy="resetSubmit"
             >
-              Reset password
+              {t("Resetpassword")}
             </Button>
 
             <Stack justifyContent="center" spacing={1}>
@@ -117,7 +123,7 @@ const ResetPassword = (props) => {
               alignItems="center"
             >
               <Typography color="primary">
-                Don&apos;t have an account?
+                {t("Don&apos;thaveanaccount?")}
               </Typography>
               <Button
                 href="/SignUp"
@@ -126,7 +132,7 @@ const ResetPassword = (props) => {
                 color="primary"
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
-                Sign Up
+                {t("Sign Up")}
               </Button>
             </Stack>
           </Box>

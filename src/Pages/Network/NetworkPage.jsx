@@ -8,8 +8,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import { Route, Link, Routes } from "react-router-dom";
 import { PropTypes } from "prop-types";
+import { useTranslation } from "react-i18next";
 import { getDoc, doc, collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import Navbar from "../../Components/Navbar/Navbar";
 import { ViewNetwork } from "./MyConnections/ViewNetwork";
 import { SentInvitation } from "./Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Invitation/ReceivedInvitation";
@@ -41,6 +43,8 @@ const theme = createTheme({
 
 const NetworkPage = () => {
   const [value, setValue] = React.useState(0);
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   const [networkConnections, setNetworkConnections] = useState([]);
   const [receivedInvitations, setReceivedInvitations] = useState([]);
   const [sentInvitations, setSentInvitations] = useState([]);
@@ -149,19 +153,19 @@ const NetworkPage = () => {
               scrollButtons
               allowScrollButtonsMobile
             >
-              <Tab label="My Network" value={0} data-cy="NetworkTab" />
+              <Tab label={t("MyNetwork")} value={0} data-cy="NetworkTab" />
               <Tab
-                label="Received Invitations"
+                label={t("ReceivedInvitations")}
                 value={1}
                 data-cy="ReceivedInvitationTab"
               />
               <Tab
-                label="Sent Invitation"
+                label={t("SentInvitations")}
                 value={2}
                 data-cy="SentInvitationTab"
               />
               <Tab
-                label="Possible Connections"
+                label={t("PossibleConnections")}
                 value={3}
                 data-cy="PossibleConnectionsTab"
               />

@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,6 +29,9 @@ const AwardsCard = ({
   isLast,
   visitingProfile,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const awardTitle = `awardTitle${cardNum}`;
   const awardIssuer = `awardIssuer${cardNum}`;
   const awardDescription = `awardDescription${cardNum}`;
@@ -67,7 +71,7 @@ const AwardsCard = ({
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Awards </Typography>
+              <Typography variant="h5"> {t("Awards")}</Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -82,7 +86,7 @@ const AwardsCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Award Title"
+                label={t("AwardTitle")}
                 name="AwardTitle"
                 variant="standard"
                 size="small"
@@ -102,7 +106,7 @@ const AwardsCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Award Issuer"
+                label={t("AwardIssuer")}
                 name="AwardIssuer"
                 variant="standard"
                 size="small"
@@ -124,7 +128,7 @@ const AwardsCard = ({
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="new date"
+                  label={t("newdate")}
                   value={tempAwardDate}
                   readOnly={!editButton}
                   onChange={(newVal) => {
@@ -149,7 +153,7 @@ const AwardsCard = ({
           <Grid container spacing={3}>
             <Grid item sx={{ mr: "auto" }}>
               <TextField
-                label="Award Description"
+                label={t("AwardDescription")}
                 name="AwardDescription"
                 variant="standard"
                 size="small"
@@ -183,13 +187,13 @@ const AwardsCard = ({
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
                     <DialogContentText>
-                      Are you sure you want to delete this card?
+                      {t("Areyousureyouwanttodeletethiscard?")}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
                     <Button onClick={handleClearCardInfo} name="awardPopupDel">
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </DialogActions>
                 </Dialog>

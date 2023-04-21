@@ -25,9 +25,8 @@ import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { changeLanguage } from "i18next";
 import { useTranslation } from "react-i18next";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { FormControl, InputLabel, Select, Link } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
-import { Link } from "@mui/material";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import { db, auth } from "../../Firebase/firebase";
 

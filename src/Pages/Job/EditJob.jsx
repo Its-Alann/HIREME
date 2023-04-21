@@ -7,6 +7,7 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -19,6 +20,9 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../../Firebase/firebase";
 
 export const EditJob = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // We are passing the jobID in url
   // get it here
   const { jobID } = useParams();
@@ -88,21 +92,17 @@ export const EditJob = () => {
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Edit Job
-        </Typography>
-        <Typography>
-          This Page shows a single Job&apos;s information & allow the owner to
-          edit them
+          {t("EditJob")}
         </Typography>
 
         <Stack spacing={2}>
           <Box>
-            <Typography>Title</Typography>
+            <Typography>{t("Title")}</Typography>
             <TextField
               required
               id="TextField-Title"
               variant="standard"
-              placeholder="Job Title"
+              placeholder={t("JobTitle")}
               fullWidth
               value={jobInformation.title}
               onChange={(e) =>
@@ -115,12 +115,12 @@ export const EditJob = () => {
           </Box>
 
           <Box>
-            <Typography>Company ID</Typography>
+            <Typography>{t("CompanyID")}</Typography>
             <TextField
               required
               id="TextField-CompanyID"
               variant="standard"
-              placeholder="Company ID"
+              placeholder={t("CompanyID")}
               fullWidth
               value={jobInformation.companyID}
               InputProps={{ readOnly: true }}
@@ -128,12 +128,12 @@ export const EditJob = () => {
           </Box>
 
           <Box>
-            <Typography>Company Name</Typography>
+            <Typography>{t("CompanyName")}</Typography>
             <TextField
               required
               id="TextField-CompanyName"
               variant="standard"
-              placeholder="Company ID"
+              placeholder={t("CompanyName")}
               fullWidth
               value={companyName}
               InputProps={{ readOnly: true }}
@@ -142,12 +142,12 @@ export const EditJob = () => {
 
           <Stack direction="row" justifyContent="flex-start">
             <Box sx={{ pr: 2 }}>
-              <Typography>City</Typography>
+              <Typography>{t("City")}</Typography>
               <TextField
                 required
                 id="TextField-City"
                 variant="standard"
-                placeholder="City"
+                placeholder={t("City")}
                 fullWidth
                 value={jobInformation.city}
                 onChange={(e) =>
@@ -160,12 +160,12 @@ export const EditJob = () => {
             </Box>
 
             <Box>
-              <Typography>Country</Typography>
+              <Typography>{t("Country")}</Typography>
               <TextField
                 required
                 id="TextField-Country"
                 variant="standard"
-                placeholder="Country"
+                placeholder={t("Country")}
                 fullWidth
                 value={jobInformation.country}
                 onChange={(e) =>
@@ -179,7 +179,7 @@ export const EditJob = () => {
           </Stack>
 
           <Box>
-            <Typography>Job description</Typography>
+            <Typography>{t("Jobdescription")}</Typography>
             <TextField
               required
               id="TextField-Description"
@@ -197,7 +197,7 @@ export const EditJob = () => {
           </Box>
 
           <Box>
-            <Typography>Job requirements</Typography>
+            <Typography>{t("Jobrequirements")}</Typography>
             <TextField
               required
               id="TextField-Requirement"
@@ -214,7 +214,7 @@ export const EditJob = () => {
             />
           </Box>
           <Box>
-            <Typography>Job benefits</Typography>
+            <Typography>{t("Jobbenefits")}</Typography>
             <TextField
               required
               id="TextField-Benefits"
@@ -234,7 +234,7 @@ export const EditJob = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 id="DatePicker-Deadline"
-                label="Application Deadline"
+                label={t("ApplicationDeadline")}
                 value={jobInformation.deadline}
                 onChange={(newValue) => {
                   setJobInformation({
@@ -251,14 +251,16 @@ export const EditJob = () => {
 
           <Box>
             <Typography>
-              Please specify which documents are required by candidates among
-              the following. <br />
-              (By default, documents are not required.)
+              {t(
+                "Pleasespecifywhichdocumentsarerequiredbycandidatesamongthefollowing."
+              )}{" "}
+              <br />
+              {t("Bydefault,documentsarenotrequired.")}
             </Typography>
           </Box>
 
           <Box>
-            <Typography>Resume</Typography>
+            <Typography>{t("Resume")}</Typography>
             <FormControlLabel
               control={
                 <Checkbox
@@ -271,12 +273,12 @@ export const EditJob = () => {
                   }
                 />
               }
-              label="required"
+              label={t("required")}
             />
           </Box>
 
           <Box>
-            <Typography>Cover Letter</Typography>
+            <Typography>{t("CoverLetter")}</Typography>
             <FormControlLabel
               control={
                 <Checkbox
@@ -289,12 +291,12 @@ export const EditJob = () => {
                   }
                 />
               }
-              label="required"
+              label={t("required")}
             />
           </Box>
 
           <Box>
-            <Typography>Transcript</Typography>
+            <Typography>{t("Transcript")}</Typography>
             <FormControlLabel
               control={
                 <Checkbox
@@ -307,7 +309,7 @@ export const EditJob = () => {
                   }
                 />
               }
-              label="required"
+              label={t("required")}
             />
           </Box>
         </Stack>
@@ -321,7 +323,7 @@ export const EditJob = () => {
             sx={{ mt: 2 }}
             onClick={() => handleSubmit()}
           >
-            Save
+            {t("Save")}
           </Button>
         </Link>
       </Box>
