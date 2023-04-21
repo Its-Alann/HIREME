@@ -295,6 +295,7 @@ export const BrowseJobs = () => {
                 <Box sx={{ m: 3 }}>
                   <Stack direction="row" alignItems="center">
                     <Box
+                      id="companyLogo"
                       component="img"
                       sx={{
                         // objectFit: "cover",
@@ -328,6 +329,7 @@ export const BrowseJobs = () => {
                       {savedJobs != null &&
                       savedJobs.includes(job.documentID) ? (
                         <Button
+                          id="save-btn"
                           variant="contained"
                           data-cy="unsave-button"
                           sx={{
@@ -343,6 +345,7 @@ export const BrowseJobs = () => {
                         </Button>
                       ) : (
                         <Button
+                          id="save-btn"
                           variant="contained"
                           data-cy="save-button"
                           sx={{

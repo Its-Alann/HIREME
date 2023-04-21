@@ -191,6 +191,7 @@ export const SavedJobs = () => {
                       justifyContent="space-between"
                     >
                       <Box
+                        id="companyLogo"
                         component="img"
                         sx={{
                           // objectFit: "cover",
@@ -211,6 +212,7 @@ export const SavedJobs = () => {
                       </Box>
                       <Box sx={{ ml: "auto", mb: "auto" }}>
                         <Button
+                          id="save-btn"
                           variant="contained"
                           data-cy="unsave-button"
                           sx={{
