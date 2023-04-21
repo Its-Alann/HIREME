@@ -282,7 +282,14 @@ export const BrowseJobs = () => {
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography>{companiesName[job.companyID]}</Typography>
+                        <Typography>
+                          <Link
+                            to={`/companyPage/${job.companyID}`}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            {companiesName[job.companyID]}
+                          </Link>
+                        </Typography>
                         {userEmail !== null &&
                           (isFavorite(job.companyID) ? (
                             <StarIcon
