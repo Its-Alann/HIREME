@@ -221,7 +221,6 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               onFileChange={onFileChange}
               id="fileUpload"
               name="fileUpload"
-              data-cy="fileUpload"
             />
           </Grid>
         )}

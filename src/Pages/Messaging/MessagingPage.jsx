@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
 import {
   Typography,
@@ -12,7 +13,7 @@ import {
   useMediaQuery,
   ListItemButton,
   ListItemText,
-  Badge,
+  TextField,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -29,6 +30,7 @@ import {
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import { useTranslation } from "react-i18next";
+import GroupIcon from "@mui/icons-material/Group";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { onAuthStateChanged } from "firebase/auth";
 import SendChat from "../../Components/SendChat/SendChat";
@@ -60,6 +62,10 @@ const findLastSeen = (arr, searchValue) => {
 };
 
 const Messaging = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const conversationIDParam = params.get("conversationID");
+
   // State for writing messages
   const [messages, setMessages] = useState([]);
 
@@ -88,6 +94,12 @@ const Messaging = () => {
   //all the authors in the selected conversation
   const [authors, setAuthors] = useState([]);
 
+  //the name of the editable group name (only gorup chats)
+  const [groupNameEdit, setGroupNameEdit] = useState("");
+
+  // the current avatar image for the selectedConvo
+  const [avatarImage, setAvatarImage] = useState("");
+
   //to autoscroll
   const messageViewRef = useRef();
   const scrollToBottom = () => {
@@ -97,25 +109,36 @@ const Messaging = () => {
   // Set the strings based on the language defined by the user
   const { t, i18n } = useTranslation();
 
-  // takes an object {otherAuthors, mostRecent}
-  const getOtherAuthors = async (list) => {
-    const nameList = await Promise.all(
-      list.otherAuthors.map(async (author) => {
+
+  // takes an object {otherAuthors, mostRecent, unRead, groupName}
+  const getOtherAuthors = async (chatInfo) => {
+    const nameList = [];
+    let imageUrl = "";
+    await Promise.all(
+      chatInfo.otherAuthors.map(async (author) => {
         const docSnap = await getDoc(doc(db, "userProfiles", author));
         if (docSnap.exists()) {
-          return `${docSnap.data().values.firstName} ${
-            docSnap.data().values.lastName
-          }`;
+          nameList.push(
+            `${docSnap.data().values.firstName} ${
+              docSnap.data().values.lastName
+            }`
+          );
+          if (chatInfo.otherAuthors.length < 2) {
+            imageUrl = docSnap.data().values.image;
+          }
         }
-        return null;
       })
     );
+    // format the names
     const names = nameList.filter(Boolean).join(", ");
     return {
       names,
-      emails: list.otherAuthors,
-      mostRecent: list.mostRecent,
-      unRead: list.unRead,
+      emails: chatInfo.otherAuthors,
+      mostRecent: chatInfo.mostRecent,
+      unRead: chatInfo.unRead,
+      groupName: chatInfo.groupName,
+      imageUrl,
+      messageConvoID: chatInfo.messageConvoID,
     };
   };
 
@@ -138,12 +161,16 @@ const Messaging = () => {
       //each document is a convo
       querySnapshot.forEach((document) => {
         const data = document.data();
+        if (data.messages.length < 1) return;
         const mostRecent = data.messages?.at(-1).timestamp.toDate();
         const unRead = !data.messages?.at(-1).seenBy.includes(myUser);
+        const groupName = data.groupName ?? null;
         allAuthorsList.push({
           otherAuthors: data.authors.filter((author) => author !== myUser),
           mostRecent,
           unRead,
+          groupName,
+          messageConvoID: document.id,
         });
       });
 
@@ -193,15 +220,54 @@ const Messaging = () => {
     return querySnapshot.docs[0].id;
   };
 
-  const selectConvo = async (conversationId, names, index, emails) => {
+  const selectConvo = async (
+    conversationId,
+    names,
+    index,
+    emails,
+    groupName,
+    avatarUrl
+  ) => {
     // !there may be sync issues related to the read receipts
     // !simply putting setAuthors before setConvoId may not be sufficient
     setAuthors(emails);
-    setName(names);
+    if (groupName) setName(groupName);
+    else setName(names);
     setSelectedIndex(index);
     setConvoId(conversationId);
+    setAvatarImage(avatarUrl);
     scrollToBottom();
   };
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // State for the current conversation to display
+
+  useEffect(() => {
+    // Add this block to handle the conversationIDParam
+    if (conversationIDParam) {
+      const openConvo = async () => {
+        const convoIndex = chatProfiles.findIndex(
+          (chatProfile) => conversationIDParam === chatProfile.messageConvoID
+        );
+        if (convoIndex >= 0) {
+          const chatProfile = chatProfiles[convoIndex];
+          await selectConvo(
+            conversationIDParam,
+            chatProfile.names,
+            convoIndex,
+            [myUser, ...chatProfile.emails]
+          );
+        }
+      };
+      openConvo();
+    } else {
+      setSelectedIndex(-1);
+      setMessages([]);
+      setConvoId("");
+      setName("New Convo");
+    }
+  }, [chatProfiles]);
 
   const markMessagesAsRead = async () => {
     if (messages.length === 0 || messages.at(-1).seenBy.includes(myUser)) {
@@ -220,6 +286,15 @@ const Messaging = () => {
     await updateDoc(convoRef, {
       messages: updatedMessages,
     });
+  };
+
+  // changes the groupname in the convo documentn
+  const changeGroupName = async (docId, newName) => {
+    const convoRef = doc(db, "messages", docId);
+    await updateDoc(convoRef, {
+      groupName: newName,
+    });
+    setGroupNameEdit("");
   };
 
   // auth listener on load
@@ -265,6 +340,8 @@ const Messaging = () => {
         });
         // console.log("tempMsgs", tempMsgs);
         setMessages(tempMsgs);
+        if (document.data().authors.length > 2 && document.data().groupName)
+          setName(document.data().groupName);
       });
     }
   }, [convoId]);
@@ -294,20 +371,16 @@ const Messaging = () => {
               m: "auto",
               mt: 2,
               maxWidth: 1000,
-              // bgcolor: "red",
               height: `calc(95vh - ${theme.mixins.toolbar.minHeight}px - 16px)`,
-              // overflow: "hidden",
             }}
           >
             <Grid
               className="message-sidebar"
               xs
               sx={{
-                // border: "black solid 1px",
                 bgcolor: "white",
                 borderRadius: 2,
                 maxHeight: "100%",
-                // overflow: "auto",
                 p: 0,
                 display:
                   mediaMobile && selectedIndex > -1 ? "none" : "inline-block",
@@ -331,7 +404,6 @@ const Messaging = () => {
                 className="convo-list"
                 sx={{
                   overflow: "auto",
-                  // maxHeight: "calc(100% - 100px)",
                   height: "auto",
                   bgcolor: "white",
                   p: 0,
@@ -339,31 +411,33 @@ const Messaging = () => {
               >
                 <List>
                   {chatProfiles.map((chat, i) => (
-                    // <Badge badgeContent="hi">
                     <ListItemButton
                       className="sidebar-item"
                       // eslint-disable-next-line react/no-array-index-key
                       key={i}
-                      // selected={selectedIndex === i}
                       onClick={async () => {
-                        const conversationID = await getConversationId([
-                          ...chat.emails,
-                          myUser,
-                        ]);
-                        await selectConvo(conversationID, chat.names, i, [
-                          myUser,
-                          ...chat.emails,
-                        ]);
+                        // const conversationID = chat.messageConvoID
+                        await selectConvo(
+                          chat.messageConvoID,
+                          chat.names,
+                          i,
+                          [myUser, ...chat.emails],
+                          chat.groupName,
+                          chat.imageUrl
+                        );
+                        setSearchParams(chat.messageConvoID);
                       }}
                     >
                       <ListItemAvatar>
-                        <Avatar
-                          alt="sumn random"
-                          src="https://picsum.photos/200/300"
-                        />
+                        {chat.emails.length > 1 ? (
+                          <GroupIcon fontSize="large" />
+                        ) : (
+                          <Avatar alt="profilePic" src={chat.imageUrl} />
+                        )}
                       </ListItemAvatar>
                       <ListItemText
-                        primary={chat.names}
+                        primary={chat.groupName || chat.names}
+                        primaryTypographyProps={{ noWrap: true }}
                         secondary={chat.mostRecent.toDateString()}
                       />
                       {chat.unRead && (
@@ -373,7 +447,6 @@ const Messaging = () => {
                         />
                       )}
                     </ListItemButton>
-                    // </Badge>
                   ))}
                 </List>
               </Grid>
@@ -390,8 +463,6 @@ const Messaging = () => {
                 p: 0,
                 maxHeight: "100%",
                 display: mediaMobile && selectedIndex < 0 ? "none" : null,
-                // scroll: "auto",
-                // scrollX: "hidden",
               }}
             >
               <Stack sx={{ height: "100%" }}>
@@ -406,7 +477,6 @@ const Messaging = () => {
                     borderRadius: "8px 8px 0 0",
                     padding: "12px",
                   }}
-                  // sx={{ backgroundColor }}
                 >
                   {mediaMobile && (
                     <IconButton
@@ -420,13 +490,41 @@ const Messaging = () => {
                     </IconButton>
                   )}
 
-                  <Typography variant="h4" noWrap>
-                    {name}
-                  </Typography>
-                  <Avatar
-                    alt="sumn random"
-                    src="https://picsum.photos/200/300"
-                  />
+                  {authors.length > 2 ? (
+                    <TextField
+                      placeholder={name}
+                      variant="standard"
+                      color="secondary"
+                      fullWidth
+                      value={groupNameEdit}
+                      onChange={(e) => {
+                        setGroupNameEdit(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          changeGroupName(convoId, groupNameEdit);
+                        }
+                      }}
+                      inputProps={{
+                        sx: {
+                          color: "white",
+                          fontSize: "2.125rem",
+                          "&::placeholder": {
+                            opacity: 1,
+                          },
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Typography variant="h4" noWrap>
+                      {name}
+                    </Typography>
+                  )}
+                  {authors.length > 2 ? (
+                    <GroupIcon fontSize="large" />
+                  ) : (
+                    <Avatar alt="profilePic" src={avatarImage} />
+                  )}
                 </div>
                 {newConvo && (
                   <NewConvo
@@ -438,7 +536,6 @@ const Messaging = () => {
                 <Box
                   id="message-chats"
                   sx={{
-                    // border: "black solid 1px",
                     bgcolor: "white",
                     height: "100%",
                     overflow: "auto",
@@ -456,7 +553,6 @@ const Messaging = () => {
                       bgcolor: "gray.main",
                       alignItems: "center",
                       justifyItems: "center",
-                      // height: 56,
                       p: 0,
                       borderRadius: "0 0 8px 8px",
                       borderTop: "1px solid gray",

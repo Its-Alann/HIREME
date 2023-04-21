@@ -231,8 +231,9 @@ export const MyJobs = () => {
                       size="medium"
                       sx={{ my: 1 }}
                       id={`Button-${job.documentID}`}
-                      data-cy="view"
+                      data-cy="viewJob"
                     >
+                      {/* even if its an external link, recruiter that made the application needs to be able to see application */}
                       <Link
                         to={`/viewJobPostingApplicants/${job.companyID}/${job.id}`}
                         className="link"
