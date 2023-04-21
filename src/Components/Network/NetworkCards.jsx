@@ -18,6 +18,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
@@ -67,6 +68,7 @@ export const NetworkCards = ({
 }) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const { t, i18n } = useTranslation();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -162,12 +164,12 @@ export const NetworkCards = ({
                         state={{ userID: connectedUserID }}
                       >
                         <ColorButtonBlue size="medium" sx={{ mx: 1 }}>
-                          View Profile
+                          {t("ViewProfile")}
                         </ColorButtonBlue>
                       </Link>
                       {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
                       <ColorButtonLightBlue variant="outlined">
-                        Message
+                        {t("Message")}
                       </ColorButtonLightBlue>
                       {/* </Link> */}
 

@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
+import { useTranslation } from "react-i18next";
 import { db } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
@@ -27,6 +28,7 @@ export const PossibleConnectionCard = ({
   currentUser,
 }) => {
   const [possibleConnectionUser, setPossibleConnectionUser] = useState([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     // console.log(connectedUserID);
@@ -164,7 +166,7 @@ export const PossibleConnectionCard = ({
                     }`}
                     sx={{ mb: 1 }}
                   >
-                    Send Invitation
+                    {t("SendInvitation")}
                   </ColorButtonBlue>
                   {
                     //</CardActions>
