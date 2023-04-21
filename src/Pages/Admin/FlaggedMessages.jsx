@@ -18,10 +18,13 @@ import {
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import { useTranslation } from "react-i18next";
 import { getAuth, getUserByEmail } from "firebase/auth";
 import { auth, db } from "../../Firebase/firebase";
 
 const FlaggedMessages = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   // array of reported message objects
   const [reportedMessages, setReportedMessages] = useState([]);
   // array of blocked users
@@ -135,30 +138,30 @@ const FlaggedMessages = () => {
       field: "user",
       numeric: false,
       width: 240,
-      headerName: "User",
+      headerName: `${t("User")}`,
     },
     {
       field: "message",
       numeric: false,
       width: 360,
-      headerName: "Flagged Message 🚩",
+      headerName: `${t("FlaggedMessage🚩")}`,
     },
     {
       field: "type",
       numeric: false,
       width: 90,
-      headerName: "Type",
+      headerName: `${t("Type")}`,
     },
     {
       field: "date",
       numeric: false,
       width: 180,
-      headerName: "Date",
+      headerName: `${t("Date")}`,
     },
     {
       field: "unflag",
       width: 180,
-      headerName: "Unflag",
+      headerName: `${t("Unflag")}`,
       headerAlign: "center",
       sortable: false,
       filterable: false,
@@ -180,7 +183,7 @@ const FlaggedMessages = () => {
     {
       field: "warn",
       width: 180,
-      headerName: "Warn",
+      headerName: `${t("Warn")}`,
       headerAlign: "center",
       sortable: false,
       filterable: false,
@@ -205,7 +208,7 @@ const FlaggedMessages = () => {
     {
       field: "ban",
       width: 180,
-      headerName: "Ban",
+      headerName: `${t("Ban")}`,
       headerAlign: "center",
       sortable: false,
       filterable: false,
@@ -231,12 +234,12 @@ const FlaggedMessages = () => {
       field: "user",
       numeric: false,
       width: 240,
-      headerName: "User",
+      headerName: `${t("User")}`,
     },
     {
       field: "unbanned",
       width: 180,
-      headerName: "Unban",
+      headerName: `${t("Unban")}`,
       headerAlign: "center",
       sortable: false,
       filterable: false,
@@ -325,8 +328,8 @@ const FlaggedMessages = () => {
         onChange={handleChange}
         aria-label="basic tabs example"
       >
-        <Tab label="Flagged" value={0} />
-        <Tab label="Banned" value={1} />
+        <Tab label={t("Flagged")} value={0} />
+        <Tab label={t("Banned")} value={1} />
       </Tabs>
       <Box sx={{ height: 700, width: "100%" }}>
         <DataGrid
