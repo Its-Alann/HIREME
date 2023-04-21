@@ -49,26 +49,33 @@ const EventCard = (props) => {
       <Card variant="outlined">
         <Stack
           sx={{
-            m: 3,
-            height: "30rem",
-            maxHeight: "30 rem",
-            width: "30rem",
-            maxWidth: "30rem",
+            m: [2, 3],
+            height: ["auto", "30rem"],
+            maxHeight: "30rem",
+            width: ["100%", "30rem"],
+            maxWidth: "100%",
           }}
         >
-          <Stack direction="row" alignItems="center">
+          <Stack direction="row" alignItems="center" sx={{ maxWidth: "95%" }}>
             <Box
               component="img"
               sx={{
-                // objectFit: "cover",
-                width: "6rem",
-                height: "6rem",
-                mr: 2,
+                width: ["4rem", "6rem"],
+                height: ["4rem", "6rem"],
+                mr: [1, 2],
               }}
               src={companyLogo}
             />
             <Box>
-              <Typography variant="h4">{eventInfo.name}</Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  maxWidth: "100%",
+                  overflowWrap: "break-word",
+                }}
+              >
+                {eventInfo.name}
+              </Typography>
               <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Typography>{companyName}</Typography>
                 {/* {userEmail !== null &&
@@ -96,16 +103,23 @@ const EventCard = (props) => {
               ).toDateString()}
             </Typography>
             <Typography sx={{ mb: 2 }}>{eventInfo.address}</Typography>
-            <Typography>{eventInfo.description}</Typography>
+            <Typography
+              sx={{
+                maxWidth: "90%",
+                overflowWrap: "break-word",
+              }}
+            >
+              {eventInfo.description}
+            </Typography>
           </Box>
 
           {/* do we need to show company id? */}
           {/* <Typography>Company ID: {job.companyID}</Typography> */}
 
           <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            direction={["column", "row"]}
+            justifyContent={["flex-start", "flex-end"]}
+            alignItems={["flex-start", "flex-end"]}
             sx={{ pt: 2 }}
             flex={1}
           >
