@@ -241,7 +241,7 @@ const Navbar = () => {
                       key={page}
                       data-cy={`${page}-phone-test`}
                     >
-                      Jobs
+                      {t("Jobs")}
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorElUser2}
@@ -258,7 +258,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -266,7 +266,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-applied-job-test"
                         >
-                          View Applied Jobs
+                          {t("ViewAppliedJobs")}
                         </MenuItem>
                       </Menu>
                     </MenuItem>
@@ -291,7 +291,7 @@ const Navbar = () => {
                       key={page}
                       data-cy={`${page}-logged-out-test`}
                     >
-                      Jobs
+                      {t("Jobs")}
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorElUser2}
@@ -308,7 +308,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                       </Menu>
                     </MenuItem>
@@ -382,7 +382,7 @@ const Navbar = () => {
                       >
                         <Stack justifyContent="center" alignItems="center">
                           <WorkOutlineOutlinedIcon justifyContent="center" />
-                          JOBS
+                          {t("JOBS")}
                         </Stack>
                       </Button>
                       <Menu
@@ -402,7 +402,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -412,7 +412,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-applied-job-test"
                         >
-                          View Applied Jobs
+                          {t("ViewAppliedJobs")}
                         </MenuItem>
                       </Menu>
                     </>
@@ -444,6 +444,50 @@ const Navbar = () => {
                   )
                 )}
               </Box>
+
+              <FormControl
+                variant="outlined"
+                sx={{
+                  minWidth: "70px",
+                  marginLeft: "15px",
+                  marginRight: "5px",
+                  marginTop: "15px",
+                  marginBottom: "15px",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#2B2F90",
+                    // height: "55px",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#2B2F90",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#2B2F90",
+                  },
+                }}
+              >
+                <InputLabel
+                  id="demo-simple-select-label"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    color: "#2B2F90",
+                    focused: { color: "#2B2F90" },
+                  }}
+                >
+                  {/* {t("changeLanguage")}  */}
+                  <LanguageIcon />
+                </InputLabel>
+                <Select
+                  value={language}
+                  label="language"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="en">English</MenuItem>
+                  <MenuItem value="es">Español</MenuItem>
+                  <MenuItem value="fr">French</MenuItem>
+                </Select>
+              </FormControl>
 
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
                 <Tooltip title={openSettings}>
@@ -532,7 +576,7 @@ const Navbar = () => {
                     >
                       <Stack justifyContent="center" alignItems="center">
                         <WorkOutlineOutlinedIcon justifyContent="center" />
-                        JOBS
+                        {t("JOBS")}
                       </Stack>
                     </Button>
                     <Menu
@@ -552,7 +596,7 @@ const Navbar = () => {
                         }}
                         data-cy="view-job-test"
                       >
-                        View Jobs
+                        {t("ViewJobs")}
                       </MenuItem>
                     </Menu>
                   </>
@@ -580,20 +624,6 @@ const Navbar = () => {
               )}
             </Box>
           )}
-          <FormControl sx={{ minWidth: "75px", marginLeft: "15px" }}>
-            <InputLabel
-              id="demo-simple-select-label"
-              sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
-            >
-              {/* {t("changeLanguage")}  */}
-              <LanguageIcon />
-            </InputLabel>
-            <Select value={language} label="language" onChange={handleChange}>
-              <MenuItem value="en">English</MenuItem>
-              <MenuItem value="es">Español</MenuItem>
-              <MenuItem value="fr">French</MenuItem>
-            </Select>
-          </FormControl>
         </Toolbar>
       </Container>
     </AppBar>
