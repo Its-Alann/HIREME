@@ -1,16 +1,5 @@
 /* eslint-disable react/function-component-definition */
-import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import Button from "@mui/material/Button";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import { PropTypes } from "prop-types";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { blue } from "@mui/material/colors";
-import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
-import Stack from "@mui/material/Stack";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import {
   Dialog,
   DialogActions,
@@ -18,9 +7,29 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import { Link } from "react-router-dom";
-import { db } from "../../Firebase/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardHeader from "@mui/material/CardHeader";
+import Stack from "@mui/material/Stack";
+import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import {
+  addDoc,
+  arrayRemove,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { PropTypes } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { db, storage } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
   palette: {
@@ -67,6 +76,27 @@ export const NetworkCards = ({
 }) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [imageUrl, setImageUrl] = useState({});
+  const navigate = useNavigate();
+
+  // console.log("currentUser", currentUser);
+  // console.log("connectedUserID", connectedUserID);
+
+  const getProfilePicture = async () => {
+    //Get profile picture
+    console.log(connectedUserID);
+    const profilePictureLink = `${connectedUserID}-profilePicture`;
+    const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
+    getDownloadURL(imageRef)
+      // eslint-disable-next-line no-shadow
+      .then((imageUrl) => {
+        setImageUrl(imageUrl);
+      })
+      .catch((error) => {
+        setImageUrl(null);
+        console.log(error.message, "error getting the image url");
+      });
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -95,6 +125,44 @@ export const NetworkCards = ({
     }
   };
 
+  const findConversationId = async () => {
+    const messagesRef = collection(db, "messages");
+
+    const authorList = [connectedUserID, currentUser].sort();
+    console.log(authorList);
+
+    const querySnapshot = await getDocs(
+      query(messagesRef, where("authors", "==", authorList))
+    );
+
+    const matchingDocs = [];
+
+    querySnapshot.forEach((document) => {
+      if (
+        document.data().authors.includes(currentUser) &&
+        document.data().authors.includes(connectedUserID)
+      ) {
+        matchingDocs.push({ id: document.id });
+      }
+    });
+
+    if (matchingDocs.length > 1) {
+      console.log("more than one convo matched ERROR");
+      return undefined;
+    }
+
+    //if the convo doesn't exist, create it
+    if (matchingDocs?.[0]?.id === undefined) {
+      const docRef = await addDoc(collection(db, "messages"), {
+        authors: authorList,
+        messages: [],
+      });
+      return docRef.id;
+    }
+
+    return matchingDocs?.[0]?.id;
+  };
+
   useEffect(() => {
     // console.log(connectedUserID);
     // console.log(allUserProfiles);
@@ -103,6 +171,8 @@ export const NetworkCards = ({
     );
     // console.log(findConnectUserProfile);
     setConnectedUser(findConnectUserProfile);
+    getProfilePicture();
+    console.log(5);
   }, [allUserProfiles, connectedUserID]);
 
   return (
@@ -125,7 +195,7 @@ export const NetworkCards = ({
                         <Avatar
                           aria-label="user"
                           sx={{ width: 56, height: 56 }}
-                          src={connectedUser.values.image}
+                          src={imageUrl}
                         />
                       }
                       //title will be the user's name and subheader is their bio
@@ -166,7 +236,15 @@ export const NetworkCards = ({
                         </ColorButtonBlue>
                       </Link>
                       {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
-                      <ColorButtonLightBlue variant="outlined">
+                      <ColorButtonLightBlue
+                        variant="outlined"
+                        onClick={async () => {
+                          const convoId = await findConversationId();
+                          if (convoId !== undefined) {
+                            navigate(`/messaging?conversationID=${convoId}`);
+                          }
+                        }}
+                      >
                         Message
                       </ColorButtonLightBlue>
                       {/* </Link> */}

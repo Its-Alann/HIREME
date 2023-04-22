@@ -39,6 +39,7 @@ import EventCard from "./Components/Events/EventCard";
 import EditEvent from "./Pages/Events/EditEvent";
 import Events from "./Components/Events/Events";
 import CreateEvent from "./Pages/Events/CreateEvent";
+import { SavedJobs } from "./Pages/Job/SavedJobs";
 
 const App = () => {
   const hello = "helloo";
@@ -125,6 +126,7 @@ const App = () => {
               element={<JobPosting />}
             />
             <Route path="/viewMyApplications" exact element={<ViewMyApp />} />
+            <Route path="/savedJobs" exact element={<SavedJobs />} />
             <Route
               path="/notifications"
               exact
