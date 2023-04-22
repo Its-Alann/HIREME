@@ -230,5 +230,7 @@
   "ViewSettings": "Ver configuraciones",
 
   "Timestamp": "Marca de tiempo:",
-  "Deletethisnotification": "Eliminar esta notificación"
+  "Deletethisnotification": "Eliminar esta notificación",
+
+  "ApplyOnOtherSite": "Aplicar en otro sitio web"
 }

@@ -203,7 +203,7 @@
   "Changeapplicationstatusfor": "Change application status for ",
   "Thecurrentstatusis": "The current status is",
   "Changeapplicationstatusto": "Change application status to:",
-   
+
   "RecruiterAccountCreation": "Recruiter Account Creation",
   "RecruiterFirstName": "Recruiter First Name",
   "RecruiterLastName": "Recruiter Last Name",
@@ -230,5 +230,7 @@
   "ViewSettings": "View Settings",
 
   "Timestamp": "Timestamp:",
-  "Deletethisnotification": "Delete this notification"
+  "Deletethisnotification": "Delete this notification",
+
+  "ApplyOnOtherSite": "Apply On Other Site"
 }

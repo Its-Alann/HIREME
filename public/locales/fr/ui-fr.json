@@ -203,7 +203,7 @@
   "Changeapplicationstatusfor": "Changer le statut de l'application de ",
   "Thecurrentstatusis": "L'état actuel est",
   "Changeapplicationstatusto": "Changer le statut de l'application pour:",
-   
+
   "RecruiterAccountCreation": "Création de Compte du Recruteur",
   "RecruiterFirstName": "Prénom du Recruteur",
   "RecruiterLastName": "Nom de Famille du Recruteur",
@@ -230,5 +230,7 @@
   "ViewSettings": "Paramètres d'affichage",
 
   "Timestamp": "Horodatage:",
-  "Deletethisnotification": "Supprimer cette notification"
+  "Deletethisnotification": "Supprimer cette notification",
+
+  "ApplyOnOtherSite": "Appliquez sur un autre site"
 }
