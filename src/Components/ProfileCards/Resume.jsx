@@ -168,8 +168,8 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
             style={{ color: "white", paddingLeft: "10px" }}
           >
             {resumeName === ""
-              ? t("FileChosennone")
-              : t("FileChosen")`${resumeName}`}
+              ? `${t("FileChosennone")}`
+              : `${t("FileChosen")} ${resumeName}`}
           </Typography>
         </Grid>
         {/* View resume and submit button */}
