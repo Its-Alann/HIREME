@@ -39,7 +39,6 @@ export const Company = () => {
   });
   const [isNewJobAllowed, setIsNewJobAllowed] = useState(false);
   const [currentUserID, setCurrentUserID] = useState("");
-  const [userEmail, setUserEmail] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [lastJob, setLastJob] = useState(null);
   const [firstJob, setFirstJob] = useState(null);
@@ -143,12 +142,9 @@ export const Company = () => {
         doc(db, "recruiters2", currentUserID)
       );
       console.log("passed");
-      if (selfRecruiterSnapshot.data().isManager) {
+      if (selfRecruiterSnapshot.data().workFor === URLcompanyID) {
         setIsAdmin(true);
         setIsNewJobAllowed(true);
-      } else if (selfRecruiterSnapshot.data().workFor !== URLcompanyID) {
-        setIsAdmin(false);
-        setIsNewJobAllowed(false);
       } else {
         const managersSnapshot = await getDocs(
           query(
@@ -179,17 +175,17 @@ export const Company = () => {
     const temp2 = companiesLogo;
 
     jobs.forEach(async (job) => {
-      const companyRef = doc(db, "companies2", job.companyID);
+      const companyRef = doc(db, "companies2", URLcompanyID);
       const companySnapshot = await getDoc(companyRef);
-      if (!temp[job.companyID]) {
-        temp[job.companyID] = "querying";
-        temp[job.companyID] = companySnapshot.data().name;
+      if (!temp[URLcompanyID]) {
+        temp[URLcompanyID] = "querying";
+        temp[URLcompanyID] = companySnapshot.data().name;
         setCompaniesName({ ...temp });
       }
       if (companySnapshot.data().logoPath === "") {
-        temp2[job.companyID] =
+        temp2[URLcompanyID] =
           "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg.png?alt=media&token=c621d215-a3db-4557-8c06-1618905b5ab0";
-      } else temp2[job.companyID] = companySnapshot.data().logoPath;
+      } else temp2[URLcompanyID] = companySnapshot.data().logoPath;
       setCompaniesLogo({ ...temp2 });
     });
   }
@@ -201,7 +197,12 @@ export const Company = () => {
 
   useEffect(() => {
     console.log("jobs ", jobs);
+    getCompaniesName();
   }, [jobs]);
+
+  useEffect(() => {
+    getPermissions();
+  }, [currentUserID]);
 
   return (
     <>
@@ -334,9 +335,6 @@ export const Company = () => {
           alignItems: "left",
         }}
       >
-        <Typography variant="h3" sx={{ marginRight: "2%" }}>
-          Job List
-        </Typography>
         {isNewJobAllowed && (
           <Link to="/createJob">
             <Button
@@ -354,10 +352,6 @@ export const Company = () => {
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" sx={{ pb: 2 }}>
             Browse Jobs
-          </Typography>
-          <Typography>
-            This Page list all jobs, {jobsPerPage} per page. Everyone can access
-            this page.
           </Typography>
 
           {jobs.map((job) => {
