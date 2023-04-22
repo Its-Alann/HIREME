@@ -108,7 +108,7 @@ export const JobPosting = () => {
                       >{`${job.city}, ${job.country}`}</Typography>
                       {job.deadline && (
                         <Typography sx={{ fontSize: 16 }}>
-                          {t("Deadline:")}{" "}
+                          {t("Deadline")}{" "}
                           {new Date(
                             job.deadline.seconds * 1000 +
                               job.deadline.nanoseconds / 1000000
