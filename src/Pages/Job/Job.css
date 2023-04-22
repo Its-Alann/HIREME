@@ -1,5 +1,17 @@
 /* todo - add more css */
 
 .link {
-    color: #ffffff
+  color: #ffffff;
+}
+
+@media (max-width: 500px) {
+  #companyLogo {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  #save-btn {
+    width: auto;
+    margin: 0;
+  }
 }
