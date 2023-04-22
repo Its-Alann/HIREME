@@ -65,10 +65,20 @@ const Navbar = () => {
   const { t, i18n } = useTranslation();
   const openSettings = t("OpenSettings");
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleChange = (event) => {
-    setLanguage(event.target.value);
-    changeLanguage(event.target.value);
-    window.location.reload();
+    setLanguage(event);
+    changeLanguage(event);
+    // window.location.reload();
+    handleClose();
   };
 
   //getting user information
@@ -445,50 +455,6 @@ const Navbar = () => {
                 )}
               </Box>
 
-              <FormControl
-                variant="outlined"
-                sx={{
-                  minWidth: "70px",
-                  marginLeft: "15px",
-                  marginRight: "5px",
-                  marginTop: "15px",
-                  marginBottom: "15px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#2B2F90",
-                    // height: "55px",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#2B2F90",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#2B2F90",
-                  },
-                }}
-              >
-                <InputLabel
-                  id="demo-simple-select-label"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    color: "#2B2F90",
-                    focused: { color: "#2B2F90" },
-                  }}
-                >
-                  {/* {t("changeLanguage")}  */}
-                  <LanguageIcon />
-                </InputLabel>
-                <Select
-                  value={language}
-                  label="language"
-                  onChange={handleChange}
-                >
-                  <MenuItem value="en">English</MenuItem>
-                  <MenuItem value="es">Español</MenuItem>
-                  <MenuItem value="fr">French</MenuItem>
-                </Select>
-              </FormControl>
-
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
                 <Tooltip title={openSettings}>
                   <IconButton
@@ -497,7 +463,10 @@ const Navbar = () => {
                     data-cy="userMenu"
                   >
                     <Avatar
-                      style={{ border: "2px solid #2B2F90" }}
+                      style={{
+                        border: "2px solid #2B2F90",
+                        marginBottom: "8px",
+                      }}
                       alt={
                         //making sure info is defined
                         userData !== undefined &&
@@ -624,6 +593,44 @@ const Navbar = () => {
               )}
             </Box>
           )}
+
+          <FormControl variant="outlined">
+            <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? "long-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+              sx={{
+                marginLeft: "15px",
+                marginBottom: "15px",
+                color: "#2B2F90",
+              }}
+            >
+              <LanguageIcon />
+            </IconButton>
+
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                "aria-labelledby": "long-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem value="en" onClick={() => handleChange("en")}>
+                English
+              </MenuItem>
+              <MenuItem value="es" onClick={() => handleChange("es")}>
+                Español
+              </MenuItem>
+              <MenuItem value="fr" onClick={() => handleChange("fr")}>
+                French
+              </MenuItem>
+            </Menu>
+          </FormControl>
         </Toolbar>
       </Container>
     </AppBar>
