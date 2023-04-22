@@ -41,6 +41,8 @@ const JobApplication = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [resume, setResume] = useState(null);
+  const [resumeUrlfromDB, setResumeUrlfromDB] = useState(null);
+  const [resumeChanged, setResumeChanged] = useState(false);
   const [coverLetter, setCoverLetter] = useState(null);
   const [transcript, setTranscript] = useState(null);
   const [jobTitle, setJobTitle] = useState("");
@@ -68,6 +70,7 @@ const JobApplication = () => {
     e.preventDefault();
     switch (fileType) {
       case "resume":
+        setResumeChanged(true);
         setResume(e.target.files[0]);
         console.log(fileType, e.target.files[0]);
         break;
@@ -162,13 +165,17 @@ const JobApplication = () => {
     console.log("inJOB22", fileUrls);
 
     if (
-      ((resumeReq && fileUrls.resume !== null) || !resumeReq) &&
-      ((coverLetterReq && fileUrls.coverLetter !== null) || !coverLetterReq) &&
-      ((transcriptReq && fileUrls.transcript !== null) || !transcriptReq)
+      (resumeReq && resumeChanged && fileUrls.resume !== null) ||
+      !resumeReq ||
+      (((resumeReq && !resumeChanged && resumeUrlfromDB !== null) ||
+        !resumeReq) &&
+        ((coverLetterReq && fileUrls.coverLetter !== null) ||
+          !coverLetterReq) &&
+        ((transcriptReq && fileUrls.transcript !== null) || !transcriptReq))
     ) {
       const coverletterURL = fileUrls.coverLetter ? fileUrls.coverLetter : "";
       const transcriptURL = fileUrls.transcript ? fileUrls.transcript : "";
-      const resumeURL = fileUrls.resume ? fileUrls.resume : "";
+      const resumeURL = fileUrls.resume ? fileUrls.resume : resumeUrlfromDB;
 
       await addDoc(
         collection(db, "applications2"),
@@ -197,7 +204,11 @@ const JobApplication = () => {
       (emailPattern.test(email) &&
         phonePattern.test(phoneNumber) &&
         addressPattern.test(address)) === false ||
-      (resumeReq === true && resume === null) === true ||
+      (resumeReq === true && resume === null && resumeChanged === true) ===
+        true ||
+      (resumeReq === true &&
+        resumeUrlfromDB === null &&
+        resumeChanged === false) === true ||
       (coverLetterReq === true && coverLetter === null) === true ||
       (transcriptReq === true && transcript === null) === true
     ) {
@@ -210,7 +221,12 @@ const JobApplication = () => {
       if (!addressPattern.test(address)) {
         console.log("enter a valid address");
       }
-      if (resumeReq === true && resume === null) {
+      if (
+        (resumeReq === true && resume === null && resumeChanged === true) ||
+        (resumeReq === true &&
+          resumeUrlfromDB === null &&
+          resumeChanged === false)
+      ) {
         console.log("upload a resume");
       }
       if (coverLetterReq === true && coverLetter === null) {
@@ -266,27 +282,38 @@ const JobApplication = () => {
     getCompanyName();
   }, []);
 
+  // Remove resume when user select delete-icon
   const onDeleteFileResume = () => {
     setResume(null);
+    setResumeUrlfromDB(null);
   };
 
-  const fileNameResume = resume ? resume.name : "";
+  // Display resume file name accordingly
+  const fileNameResume = resume ? resume.name : "Resume";
 
+  // Get url from resume file
   const onDownloadResume = () => {
-    const url = window.URL.createObjectURL(new Blob([resume]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", resume.name);
-    document.body.appendChild(link);
-    link.click();
+    if (resumeChanged) {
+      const url = window.URL.createObjectURL(new Blob([resume]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", resume.name);
+      document.body.appendChild(link);
+      link.click();
+    } else {
+      window.open(resumeUrlfromDB);
+    }
   };
 
+  // Remove coverLetter when user select delete-icon
   const onDeleteFileCoverLetter = () => {
     setCoverLetter(null);
   };
 
+  // Display coverLetter file name accordingly
   const fileNameCoverLetter = coverLetter ? coverLetter.name : "";
 
+  // Get url from coverLetter file
   const onDownloadCoverLetter = () => {
     const url = window.URL.createObjectURL(new Blob([coverLetter]));
     const link = document.createElement("a");
@@ -297,12 +324,15 @@ const JobApplication = () => {
     console.log(url);
   };
 
+  // Remove transcript when user select delete-icon
   const onDeleteFileTranscript = () => {
     setTranscript(null);
   };
 
+  // Display transcript file name accordingly
   const fileNameTranscript = transcript ? transcript.name : "";
 
+  // Get url from transcript file
   const onDownloadTranscript = () => {
     const url = window.URL.createObjectURL(new Blob([transcript]));
     const link = document.createElement("a");
@@ -311,6 +341,26 @@ const JobApplication = () => {
     document.body.appendChild(link);
     link.click();
   };
+
+  // get existing resume from db (if exists)
+  useEffect(() => {
+    const storage = getStorage();
+    //Get user resume from firebase
+    const resumeLink = `${currentUserEmail}-resume`;
+    const resumeRef = ref(storage, `resumes/${resumeLink}`);
+    getDownloadURL(resumeRef)
+      // eslint-disable-next-line no-shadow
+      .then((resumeUrl) => {
+        setResumeUrlfromDB(resumeUrl);
+      })
+      .catch((error) => {
+        if (error.code === "storage/object-not-found") {
+          console.log("Resume does not exist");
+        } else {
+          console.error("Error checking if resume exists:", error);
+        }
+      });
+  }, [currentUserEmail]);
 
   return (
     // Apply the MUI theme to the component using the ThemeProvider component
@@ -355,7 +405,7 @@ const JobApplication = () => {
                       </Typography>
                     </Box>
                   </ListItemText>
-                  {resume ? (
+                  {resume || resumeUrlfromDB ? (
                     <Box
                       display="flex"
                       flexDirection="column"
@@ -409,7 +459,7 @@ const JobApplication = () => {
                     <Typography variant="caption">Optional</Typography>
                   </Box>
                 </ListItemText>
-                {resume ? (
+                {resume || resumeUrlfromDB ? (
                   <Box
                     display="flex"
                     flexDirection="column"
