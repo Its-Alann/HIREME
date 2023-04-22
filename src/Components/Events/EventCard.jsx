@@ -139,35 +139,35 @@ const EventCard = (props) => {
             )}
 
             {/* Added this button for candidate's view */}
-            <Button
+            {/* <Button
               variant="contained"
               size="medium"
               sx={{ my: 1 }}
               //   id={`Button-${job.documentID}`}
-            >
-              {/* if there's no link field in db, button links to viewJobPosting, otherwise external link */}
-              {
-                //   job.link === undefined || job.link === "" ? (
-                //     <Link
-                //       to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
-                //       className="link"
-                //       underline="none"
-                //       style={{ textDecoration: "none" }}
-                //     >
-                //       {/* <Link to="/job/1"> */}
-                //       View job
-                //     </Link>
-                //   ) : (
-                //     <a
-                //       href="job.link"
-                //       style={{ color: "white", textDecoration: "none" }}
-                //     >
-                //       Apply On Other Site
-                //     </a>
-                //   )
-              }
-              I&apos;m interested
-            </Button>
+            > */}
+            {/* if there's no link field in db, button links to viewJobPosting, otherwise external link */}
+            {
+              //   job.link === undefined || job.link === "" ? (
+              //     <Link
+              //       to={`/viewJobPosting/${job.companyID}/${job.documentID}`}
+              //       className="link"
+              //       underline="none"
+              //       style={{ textDecoration: "none" }}
+              //     >
+              //       {/* <Link to="/job/1"> */}
+              //       View job
+              //     </Link>
+              //   ) : (
+              //     <a
+              //       href="job.link"
+              //       style={{ color: "white", textDecoration: "none" }}
+              //     >
+              //       Apply On Other Site
+              //     </a>
+              //   )
+            }
+            {/* I&apos;m interested
+            </Button> */}
             <Dialog
               open={open}
               onClose={handleClose}
