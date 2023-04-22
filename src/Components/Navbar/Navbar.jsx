@@ -25,7 +25,8 @@ import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Link } from "@mui/material";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
-import { db, auth } from "../../Firebase/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+import { db, auth, storage } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
 const pageNamesForApplicant = [
@@ -58,6 +59,8 @@ const Navbar = () => {
   ]);
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  const [imageUrl, setImageUrl] = React.useState({});
+
   //getting user information
   React.useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -75,6 +78,21 @@ const Navbar = () => {
           } else {
             setPageNames(pageNamesForApplicant);
           }
+
+          const profilePictureLink = `${user.email}-profilePicture`;
+          const imageRef = ref(
+            storage,
+            `profile-pictures/${profilePictureLink}`
+          );
+          getDownloadURL(imageRef)
+            // eslint-disable-next-line no-shadow
+            .then((imageUrl) => {
+              setImageUrl(imageUrl);
+            })
+            .catch((error) => {
+              setImageUrl(null);
+              console.log(error.message, "error getting the image url");
+            });
         } catch (err) {
           console.log(err);
         }
@@ -461,12 +479,7 @@ const Navbar = () => {
                         userData.values.firstName !== undefined &&
                         userData.values.firstName
                       }
-                      src={
-                        userData !== undefined &&
-                        userData.values !== undefined &&
-                        userData.values.image !== undefined &&
-                        userData.values.image
-                      }
+                      src={imageUrl !== undefined && imageUrl}
                     />
                   </IconButton>
                 </Tooltip>
