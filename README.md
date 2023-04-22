@@ -24,4 +24,4 @@ This will also generate a Clover coverage report.
 ### `npm cypress open`
 
 Launches the cypress tests in the Cypress console.\
-This will generate individual coverage reports based on the E2E test that runs.
+This will generate individual coverage reports based on the E2E test that runs. 
