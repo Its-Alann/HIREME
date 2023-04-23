@@ -171,7 +171,7 @@ const CreateEvents = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 id="DatePicker-Date"
-                label="Event Date"
+                label={t("Event Date")}
                 value={eventInformation.date}
                 onChange={(newValue) => {
                   setEventInformation({
