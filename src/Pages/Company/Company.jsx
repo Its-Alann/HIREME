@@ -32,10 +32,14 @@ import {
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
+import { useTranslation } from "react-i18next";
+
 import { auth, db, app, storage } from "../../Firebase/firebase";
 import Events from "../../Components/Events/Events";
 
 export const Company = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   // Constants and functions
   const [companyInformation, setCompanyInformation] = useState({
     name: "",
@@ -388,7 +392,9 @@ export const Company = () => {
         >
           {isAdmin && (
             <>
-              <Typography sx={{ mx: 1, my: 3 }}>Modify company logo</Typography>
+              <Typography sx={{ mx: 1, my: 3 }}>
+                {t("ModifyCompanylogo")}
+              </Typography>
               {/* <IconButton> */}
               <input
                 accept="image/*"
@@ -408,7 +414,7 @@ export const Company = () => {
         </Box>
 
         <Avatar
-          alt="Upload Image"
+          alt={t("UploadImage")}
           src={companyInformation.logoPath}
           sx={{
             width: { xs: 100, sm: 150, md: 200 },
@@ -434,7 +440,7 @@ export const Company = () => {
             sx={{ my: 1 }}
             id="Button-Save"
           >
-            Save
+            {t("Save")}
           </Button>
         )}
       </Box>
@@ -454,7 +460,7 @@ export const Company = () => {
               variant="contained"
               data-cy="Button-NewJob"
             >
-              <Typography variant="h5">New Job</Typography>
+              <Typography variant="h5">{t("NewJob")}</Typography>
             </Button>
           </Link>
         )}
@@ -471,7 +477,7 @@ export const Company = () => {
               sx={{ cursor: "pointer", my: "auto" }}
               onClick={() => handleRemoveFavorite(URLcompanyID)}
             >
-              Unfavorite Company
+              {t("UnfavoriteCompany")}
             </Typography>
           </>
         ) : (
@@ -484,7 +490,7 @@ export const Company = () => {
               sx={{ cursor: "pointer", my: "auto" }}
               onClick={() => handleAddFavorite(URLcompanyID)}
             >
-              Favorite Company
+              {t("FavoriteCompany")}
             </Typography>
           </>
         )}
@@ -493,7 +499,7 @@ export const Company = () => {
       <Container maxWidth sx={{ mb: 10 }}>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" sx={{ pb: 2 }}>
-            Browse Jobs
+            {t("BrowseJobs")}
           </Typography>
 
           {jobs.map((job) => {
@@ -542,7 +548,7 @@ export const Company = () => {
                             }}
                             onClick={() => handleRemoveSaved(job.documentID)}
                           >
-                            Unsave
+                            {t("Unsave")}
                           </Button>
                         ) : (
                           <Button
@@ -558,7 +564,7 @@ export const Company = () => {
                             }}
                             onClick={() => handleAddSaved(job.documentID)}
                           >
-                            Save
+                            {t("Save")}
                           </Button>
                         )}
                       </Box>
@@ -589,19 +595,19 @@ export const Company = () => {
                             style={{ textDecoration: "none" }}
                           >
                             {/* <Link to="/job/1"> */}
-                            View job
+                            {t("ViewJob")}
                           </Link>
                         ) : (
                           <a
                             href={job.link}
                             style={{ color: "white", textDecoration: "none" }}
                           >
-                            Apply On Other Site
+                            {t("ApplyOnOtherSite")}
                           </a>
                         )}
                       </Button>
                       <Typography>
-                        Deadline:{" "}
+                        {t("Deadline")}{" "}
                         {new Date(
                           job.deadline.seconds * 1000 +
                             job.deadline.nanoseconds / 1000000
@@ -617,10 +623,10 @@ export const Company = () => {
             id="Button-Previous"
             onClick={() => getJobs(previousJobsQuery)}
           >
-            Previous
+            {t("Previous")}
           </Button>
           <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
-            Next
+            {t("Next")}
           </Button>
         </Box>
       </Container>

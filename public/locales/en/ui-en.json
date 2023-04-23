@@ -234,5 +234,25 @@
 
   "ApplyOnOtherSite": "Apply On Other Site",
   "setting": "Settings",
-  "ViewSavedJobs": "View Saved Jobs"
+  "ViewSavedJobs": "View Saved Jobs",
+
+  "ApplyOnWebsite": "Apply On Website",
+  "ViewJob": "View Job",
+  "NewJob": "New Job",
+  "UnfavoriteCompany": "Unfavorite Company",
+  "FavoriteCompany": "Favorite Company",
+  "UploadImage": "Upload Image",
+  "ModifyCompanylogo": "Modify Company logo",
+
+  "Back": "Back",
+  "Edit Event:": "Edit Event:",
+  "EventName": "Event Name",
+  "Saved!": "Saved! ✔",
+
+  "Events": "Events",
+  "CreateEvent": "Create Event",
+  "Areyousureyouwanttodeletethe": "Are you sure you want to delete the",
+  "event?": "event?",
+  "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "This action cannot be undone. The event will be deleted and cannot be retrieved.",
+  "Deleteevent": "Delete event"
 }
