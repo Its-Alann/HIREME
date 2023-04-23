@@ -35,6 +35,10 @@ import { ViewMyApp } from "./Pages/Candidate/ViewMyApp";
 import ResetPassword from "./Pages/Login/ResetPassword";
 import NotificationsPage from "./Pages/Notifications/NotificationsPage";
 import SettingsPage from "./Pages/Setting/SettingsPage";
+import EventCard from "./Components/Events/EventCard";
+import EditEvent from "./Pages/Events/EditEvent";
+import Events from "./Components/Events/Events";
+import CreateEvent from "./Pages/Events/CreateEvent";
 import { SavedJobs } from "./Pages/Job/SavedJobs";
 
 const App = () => {
@@ -52,6 +56,11 @@ const App = () => {
       fontFamily: ["Proxima Nova"],
     },
   });
+
+  const companyID = "VtimBR90MAReVayXpEhl";
+  const companyName = "Microsoft";
+  const companyLogo =
+    "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FMicrosftLogo.png?alt=media&token=effc3862-bd6e-4a70-965c-816cad7bcc19";
 
   return (
     <ThemeProvider theme={theme}>
@@ -125,6 +134,28 @@ const App = () => {
             />
             <Route path="/settings" exact element={<SettingsPage />} />
             <Route path="/resetPassword" exact element={<ResetPassword />} />
+
+            <Route
+              path="/:companyID"
+              exact
+              element={
+                <Events
+                  companyID={companyID}
+                  companyLogo={companyLogo}
+                  companyName={companyName}
+                />
+              }
+            />
+            <Route
+              path="/:companyID/createEvent"
+              exact
+              element={<CreateEvent />}
+            />
+            <Route
+              path="/:companyID/editEvent/:eventID"
+              exact
+              element={<EditEvent />}
+            />
           </Routes>
         </Router>
       </div>
