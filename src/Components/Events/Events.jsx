@@ -50,7 +50,7 @@ const Events = ({ companyID, companyLogo, companyName }) => {
 
   return (
     <div>
-      <Container sx={{ my: 2 }}>
+      <Box sx={{ my: 2, mx: 4 }}>
         <Stack
           direction="row"
           alignItems="center"
@@ -111,7 +111,7 @@ const Events = ({ companyID, companyLogo, companyName }) => {
             </Grid>
           ))}
         </Grid>
-      </Container>
+      </Box>
     </div>
   );
 };

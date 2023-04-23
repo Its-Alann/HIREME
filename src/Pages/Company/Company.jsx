@@ -33,6 +33,7 @@ import {
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db, app, storage } from "../../Firebase/firebase";
+import Events from "../../Components/Events/Events";
 
 export const Company = () => {
   // Constants and functions
@@ -329,7 +330,7 @@ export const Company = () => {
           sx={{
             display: "flex",
             flexDirection: "row",
-            minWidth: "500px",
+            minWidth: "100%",
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -387,21 +388,21 @@ export const Company = () => {
         >
           {isAdmin && (
             <>
-              <Typography>Modify company logo</Typography>
-              <IconButton>
-                <input
-                  accept="image/*"
-                  id="contained-button-file"
-                  type="file"
-                  data-cy="pictureBtn"
-                  onChange={(e) => {
-                    if (e.target.files.length < 1) {
-                      return;
-                    }
-                    uploadImage(e.target.files[0]);
-                  }}
-                />
-              </IconButton>
+              <Typography sx={{ mx: 1, my: 3 }}>Modify company logo</Typography>
+              {/* <IconButton> */}
+              <input
+                accept="image/*"
+                id="contained-button-file"
+                type="file"
+                data-cy="pictureBtn"
+                onChange={(e) => {
+                  if (e.target.files.length < 1) {
+                    return;
+                  }
+                  uploadImage(e.target.files[0]);
+                }}
+              />
+              {/* </IconButton> */}
             </>
           )}
         </Box>
@@ -623,6 +624,11 @@ export const Company = () => {
           </Button>
         </Box>
       </Container>
+      <Events
+        companyID={URLcompanyID}
+        companyLogo={companiesLogo[URLcompanyID]}
+        companyName={companiesName[URLcompanyID]}
+      />
     </>
   );
 };

@@ -138,18 +138,7 @@ const App = () => {
             <Route path="/resetPassword" exact element={<ResetPassword />} />
 
             <Route
-              path="/:companyID"
-              exact
-              element={
-                <Events
-                  companyID={companyID}
-                  companyLogo={companyLogo}
-                  companyName={companyName}
-                />
-              }
-            />
-            <Route
-              path="/:companyID/createEvent"
+              path="/companyPage/:companyID/createEvent"
               exact
               element={<CreateEvent />}
             />

@@ -285,7 +285,7 @@ export const BrowseJobs = () => {
                         <Typography>
                           <Link
                             to={`/companyPage/${job.companyID}`}
-                            style={{ textDecoration: "none", color: "black" }}
+                            style={{ textDecoration: "none", color: "purple" }}
                           >
                             {companiesName[job.companyID]}
                           </Link>
