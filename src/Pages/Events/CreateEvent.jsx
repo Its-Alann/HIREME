@@ -183,7 +183,7 @@ const CreateEvents = () => {
           </Box>
         </Stack>
 
-        <Link to={`/${eventInformation.companyID}`}>
+        <Link to={`/companyPage/${eventInformation.companyID}`}>
           <Button
             variant="contained"
             size="medium"

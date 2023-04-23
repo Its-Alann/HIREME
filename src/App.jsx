@@ -19,6 +19,7 @@ import { SentInvitation } from "./Pages/Network/Invitation/SentInvitation";
 import { ReceivedInvitation } from "./Pages/Network/Invitation/ReceivedInvitation";
 import { NetworkPossibleConnections } from "./Pages/Network/NetworkPossibleConnections";
 import { CreateCompany } from "./Pages/Company/CreateCompany";
+import { Company } from "./Pages/Company/Company";
 import { CreateRecruiter } from "./Pages/Recruiter/CreateRecruiter";
 import { CreateJob } from "./Pages/Job/CreateJob";
 import { BrowseJobs } from "./Pages/Job/BrowseJobs";
@@ -101,6 +102,7 @@ const App = () => {
               element={<NetworkPossibleConnections />}
             />
             <Route path="/createCompany" exact element={<CreateCompany />} />
+            <Route path="/companyPage/:companyID" exact element={<Company />} />
             <Route
               path="/createRecruiter"
               exact
@@ -136,18 +138,7 @@ const App = () => {
             <Route path="/resetPassword" exact element={<ResetPassword />} />
 
             <Route
-              path="/:companyID"
-              exact
-              element={
-                <Events
-                  companyID={companyID}
-                  companyLogo={companyLogo}
-                  companyName={companyName}
-                />
-              }
-            />
-            <Route
-              path="/:companyID/createEvent"
+              path="/companyPage/:companyID/createEvent"
               exact
               element={<CreateEvent />}
             />

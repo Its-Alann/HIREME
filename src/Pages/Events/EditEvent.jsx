@@ -11,7 +11,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Checkbox from "@mui/material/Checkbox";
 import { Divider } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { doc, getDoc, addDoc, collection, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -83,6 +83,8 @@ const EditEvent = () => {
     return () => clearTimeout(timeout);
   }, [saved]);
 
+  const navigate = useNavigate();
+
   return (
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
@@ -91,7 +93,8 @@ const EditEvent = () => {
           size="medium"
           id="Button-Back"
           sx={{ my: 2 }}
-          href={`/${companyID}`}
+          // href={`companyPage/${companyID}`}
+          onClick={() => navigate(`/companyPage/${companyID}`)}
         >
           Back
         </Button>
