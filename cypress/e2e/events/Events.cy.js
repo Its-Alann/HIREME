@@ -59,12 +59,12 @@ describe("Edits an event", () => {
 describe("Deletes an event", () => {
   it("Clicks on delete event icon", () => {
     cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
-    cy.get(".css-1h83icj-MuiStack-root > button.MuiIconButton-root").click();
+    cy.get(".css-2vgggj-MuiStack-root > button.MuiButtonBase-root").click();
   });
 
   it("Clicks on delete event confirmation", () => {
     cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
-    cy.get(".css-1h83icj-MuiStack-root > button.MuiIconButton-root").click();
+    cy.get(".css-2vgggj-MuiStack-root > button.MuiButtonBase-root").click();
     cy.get('[style="color: red;"]').click();
     cy.wait(500);
   });
