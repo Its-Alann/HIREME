@@ -62,7 +62,7 @@ const VolunteeringCard = ({
 
   return (
     <Box>
-      <Card variant="outlined" sx={{ mx: 5 }}>
+      <Card variant="outlined" sx={{ mx: 0 }}>
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
