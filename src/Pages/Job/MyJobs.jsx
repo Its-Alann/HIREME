@@ -207,7 +207,12 @@ export const MyJobs = () => {
                     />
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
-                      <Typography>{companiesName[job.companyID]}</Typography>
+                      <Link
+                        to={`/companyPage/${job.companyID}`}
+                        style={{ textDecoration: "none", color: "purple" }}
+                      >
+                        {companiesName[job.companyID]}
+                      </Link>
                       <Typography>{`${job.city}, ${job.country}`}</Typography>
                     </Box>
                   </Stack>

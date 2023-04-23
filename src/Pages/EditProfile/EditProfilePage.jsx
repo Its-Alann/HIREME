@@ -431,6 +431,7 @@ const EditProfilePage = () => {
                 style={{
                   cursor: "pointer",
                   color: "white",
+                  display: visitedProfile ? "none" : "inline",
                 }}
               />
             </Grid>
@@ -475,6 +476,7 @@ const EditProfilePage = () => {
                   }}
                   style={{
                     color: "white",
+                    display: visitedProfile ? "none" : "inline",
                   }}
                   data-cy="saveBtn"
                 >

@@ -242,12 +242,7 @@ export const NetworkCards = ({
                       {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
                       <ColorButtonLightBlue
                         variant="outlined"
-                        onClick={async () => {
-                          const convoId = await findConversationId();
-                          if (convoId !== undefined) {
-                            navigate(`/messaging?conversationID=${convoId}`);
-                          }
-                        }}
+                        onClick={() => navigate("/messaging")}
                       >
                         {t("Message")}
                       </ColorButtonLightBlue>
