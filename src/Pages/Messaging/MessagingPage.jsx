@@ -13,6 +13,8 @@ import {
   ListItemButton,
   ListItemText,
   TextField,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -93,6 +95,9 @@ const Messaging = () => {
 
   // the current avatar image for the selectedConvo
   const [avatarImage, setAvatarImage] = useState("");
+
+  const [groupMenuAnchorEl, setGroupMenuAnchorEl] = useState(null);
+  const groupMenuOpen = Boolean(groupMenuAnchorEl);
 
   //to autoscroll
   const messageViewRef = useRef();
@@ -253,6 +258,14 @@ const Messaging = () => {
       groupName: newName,
     });
     setGroupNameEdit("");
+  };
+
+  const handleGroupMenuOpen = (e) => {
+    setGroupMenuAnchorEl(e.currentTarget);
+  };
+
+  const handleGroupMenuClose = () => {
+    setGroupMenuAnchorEl(null);
   };
 
   // auth listener on load
@@ -481,7 +494,31 @@ const Messaging = () => {
                     </Typography>
                   )}
                   {authors.length > 2 ? (
-                    <GroupIcon fontSize="large" />
+                    <>
+                      <GroupIcon
+                        fontSize="large"
+                        onClick={handleGroupMenuOpen}
+                        sx={{ cursor: "pointer" }}
+                      />
+                      <Menu
+                        anchorEl={groupMenuAnchorEl}
+                        open={groupMenuOpen}
+                        onClose={handleGroupMenuClose}
+                      >
+                        {authors.map((author) => (
+                          <MenuItem
+                            sx={{
+                              "&:hover": { backgroundColor: "transparent" },
+                              cursor: "default",
+                            }}
+                            key={author}
+                            disableRipple
+                          >
+                            {author}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </>
                   ) : (
                     <Avatar alt="profilePic" src={avatarImage} />
                   )}
