@@ -543,7 +543,7 @@ const Navbar = () => {
                       handleCloseUserMenu();
                       handleCloseNavMenu();
                     }}
-                    data-cy="logout-test"
+                    data-cy="profile-test"
                   >
                     {t("Profile")}
                   </MenuItem>
@@ -553,7 +553,7 @@ const Navbar = () => {
                       handleCloseUserMenu();
                       handleCloseNavMenu();
                     }}
-                    data-cy="logout-test"
+                    data-cy="setting-test"
                   >
                     {t("setting")}
                   </MenuItem>
