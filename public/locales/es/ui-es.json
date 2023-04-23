@@ -254,5 +254,8 @@
   "Areyousureyouwanttodeletethe": "¿Estás seguro de que quieres eliminar el",
   "event?": "evento?",
   "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "Esta acción no se puede deshacer. El evento se eliminará y no se podrá recuperar.",
-  "Deleteevent": "Eliminar evento"
+  "Deleteevent": "Eliminar evento",
+
+  "EventCreation": "Creación de eventos",
+  "EventDescription": "descripción del evento"
 }

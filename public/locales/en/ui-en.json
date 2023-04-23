@@ -256,6 +256,6 @@
   "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "This action cannot be undone. The event will be deleted and cannot be retrieved.",
   "Deleteevent": "Delete event",
 
-  "EventCreation": "EventCreation",
-  "EventDescription": "EventDescription"
+  "EventCreation": "Event Creation",
+  "EventDescription": "Event Description"
 }
