@@ -322,7 +322,7 @@ const EditProfilePage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container display="flex" style={{ minWidth: "100vh" }}>
+      <Grid container display="flex" style={{ maxWidth: "100%" }}>
         <div id="profile-container">
           <Grid container justifyContent="space-between">
             <Grid
