@@ -254,5 +254,8 @@
   "Areyousureyouwanttodeletethe": "Are you sure you want to delete the",
   "event?": "event?",
   "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "This action cannot be undone. The event will be deleted and cannot be retrieved.",
-  "Deleteevent": "Delete event"
+  "Deleteevent": "Delete event",
+
+  "EventCreation": "EventCreation",
+  "EventDescription": "EventDescription"
 }
