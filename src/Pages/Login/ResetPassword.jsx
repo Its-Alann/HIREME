@@ -57,7 +57,7 @@ const ResetPassword = (props) => {
             {t("Forgotpassword?")}
           </Typography>
           <Typography variant="caption">
-            {t("You will receive an email to reset your password")}
+            {t("Youwillreceiveanemailtoresetyourpassword")}
           </Typography>
           <Box
             component="form"

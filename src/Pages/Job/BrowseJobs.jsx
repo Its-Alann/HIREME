@@ -350,7 +350,7 @@ export const BrowseJobs = () => {
                           }}
                           onClick={() => handleRemoveSaved(job.documentID)}
                         >
-                          Unsave
+                          {t("Unsave")}
                         </Button>
                       ) : (
                         <Button
@@ -366,7 +366,7 @@ export const BrowseJobs = () => {
                           }}
                           onClick={() => handleAddSaved(job.documentID)}
                         >
-                          Save
+                          {t("Save")}
                         </Button>
                       )}
                     </Box>

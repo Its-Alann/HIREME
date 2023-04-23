@@ -226,7 +226,7 @@
   "Off": "Inactif",
 
   "Nonotificationstodisplay": "Aucune notification à afficher :/",
-  "Manageyournotifications": "Gérer vos notifications",
+  "Manageyournotifications": "Gérer vos notifications ",
   "ViewSettings": "Paramètres d'affichage",
 
   "Timestamp": "Horodatage:",
@@ -259,5 +259,10 @@
   "EventCreation": "Création de l'évènement",
   "EventDescription": "Description de l'évènement",
   
-  "Event Date": "Date de l'évènement"
+  "Event Date": "Date de l'évènement",
+
+  "Unsave": "Annuler l'enregistrement",
+  "My Saved Jobs": "Mes Emplois Sauvegardés",
+  "No saved jobs": "Aucun Emploi Sauvegardé :/"
+
 }

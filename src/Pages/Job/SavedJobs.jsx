@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
@@ -13,6 +14,9 @@ import { auth, db, app } from "../../Firebase/firebase";
 import "./Job.css";
 
 export const SavedJobs = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [userEmail, setUserEmail] = useState("");
   const [savedJobIds, setSavedJobIds] = useState(null);
   const [jobInfo, setJobInfo] = useState([]);
@@ -173,7 +177,7 @@ export const SavedJobs = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          My Saved Jobs
+          {t("My Saved Jobs")}
         </Typography>
         {/* console.log(jobInfo) */}
         {jobInfo.length > 0 && jobInfo !== null ? (
@@ -224,7 +228,7 @@ export const SavedJobs = () => {
                           }}
                           onClick={() => handleRemoveSaved(job.jobID)}
                         >
-                          Unsave
+                          {t("Unsave")}
                         </Button>
                       </Box>
                     </Stack>
@@ -254,19 +258,19 @@ export const SavedJobs = () => {
                             style={{ textDecoration: "none" }}
                           >
                             {/* <Link to="/job/1"> */}
-                            View job
+                            {t("Viewjob")}
                           </Link>
                         ) : (
                           <a
                             href={job.link}
                             style={{ color: "white", textDecoration: "none" }}
                           >
-                            Apply On Other Site
+                            {t("ApplyOnOtherSite")}
                           </a>
                         )}
                       </Button>
                       <Typography>
-                        Deadline:{" "}
+                        {t("Deadline")}{" "}
                         {new Date(
                           job.deadline.seconds * 1000 +
                             job.deadline.nanoseconds / 1000000
@@ -282,7 +286,7 @@ export const SavedJobs = () => {
           <Card variant="outlined">
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
-                <Typography>No saved jobs :/</Typography>
+                <Typography>{t("No saved jobs")}</Typography>
               </Box>
             </Box>
           </Card>

@@ -117,7 +117,7 @@ const ExperienceCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Company Name"
+                label={t("CompanyName")}
                 name="CompanyName"
                 variant="standard"
                 size="small"

@@ -120,8 +120,7 @@ const NotificationsPage = () => {
             maxHeight: 150,
           }}
         >
-          {t("Manageyournotifications")}
-          {/* <br></br> */}
+          {t("Manageyournotifications")} {/* <br></br> */}
           <NavLink id="visitSettings" to="/settings">
             {t("ViewSettings")}
           </NavLink>

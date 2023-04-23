@@ -226,7 +226,7 @@
   "Off": "Apagado",
 
   "Nonotificationstodisplay": "No hay notificaciones para mostrar :/",
-  "Manageyournotifications": "Administra tus notificaciones",
+  "Manageyournotifications": "Administra tus notificaciones ",
   "ViewSettings": "Ver configuraciones",
 
   "Timestamp": "Marca de tiempo:",
@@ -259,5 +259,10 @@
   "EventCreation": "Creación de eventos",
   "EventDescription": "descripción del evento",
 
-  "Event Date": "Fecha del Evento"
+  "Event Date": "Fecha del Evento",
+
+  "Unsave": "No guardar",
+  "My Saved Jobs": "Mis Trabajos Guardados",
+  "No saved jobs": "No Hay Trabajos Guardados :/"
+
 }
