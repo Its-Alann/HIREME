@@ -310,6 +310,7 @@ export const BrowseJobs = () => {
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
                         <Typography>
                           <Link
+                            id="visitCompany"
                             to={`/companyPage/${job.companyID}`}
                             style={{ textDecoration: "none", color: "black" }}
                           >

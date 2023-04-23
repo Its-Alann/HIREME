@@ -232,14 +232,16 @@ export const Company = () => {
       const selfRecruiterSnapshot = await getDoc(
         doc(db, "recruiters2", currentUserID)
       );
-      console.log("passed");
-      if (selfRecruiterSnapshot.data().workFor === URLcompanyID) {
-        setIsAdmin(true);
-        setIsNewJobAllowed(true);
+      if (selfRecruiterSnapshot.exists()) {
+        console.log("Recruiter does not exist");
+        if (selfRecruiterSnapshot.data().workFor === URLcompanyID) {
+          setIsAdmin(true);
+          setIsNewJobAllowed(true);
+        } else {
+          setIsAdmin(false);
+          setIsNewJobAllowed(false);
+        }
       }
-    } else {
-      setIsAdmin(false);
-      setIsNewJobAllowed(false);
     }
   }
 
@@ -352,7 +354,6 @@ export const Company = () => {
                 fontSize: "3em",
               }}
               data-cy="Textfield-CompanyName"
-              disabled={!editMode}
               InputProps={{
                 style: { fontSize: 30 },
                 endAdornment: !editMode ? (
@@ -440,7 +441,7 @@ export const Company = () => {
         sx={{
           display: "flex",
           flexDirection: { xs: "column", sm: "column", md: "row" },
-          padding: "5%",
+          padding: "25px",
           alignItems: "left",
         }}
       >
@@ -487,7 +488,7 @@ export const Company = () => {
         )}
       </Box>
 
-      <Container sx={{ mb: 10 }}>
+      <Container maxWidth sx={{ mb: 10 }}>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" sx={{ pb: 2 }}>
             Browse Jobs
