@@ -102,7 +102,7 @@ const EditEvent = () => {
           {t("Back")}
         </Button>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          {t("Edit Event:")}
+          {t("Edit Event")}
           {name}
         </Typography>
 

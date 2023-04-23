@@ -234,5 +234,25 @@
 
   "ApplyOnOtherSite": "Aplicar en otro sitio web",
   "setting": "Configuraciones",
-  "ViewSavedJobs": "ver trabajos guardados"
+  "ViewSavedJobs": "ver trabajos guardados",
+
+  "ApplyOnWebsite": "Aplicar en el sitio web",
+  "ViewJob": "Ver trabajo",
+  "NewJob": "Nuevo trabajo",
+  "UnfavoriteCompany": "desfavorecido Compañía",
+  "FavoriteCompany": "favorecido Compañía",
+  "UploadImage": "Cargar imagen",
+  "ModifyCompanylogo": "Modificar el logotipo de la Compañía",
+
+  "Back": "Atrás",
+  "Edit Event": "Editar evento:",
+  "EventName": "Nombre del evento",
+  "Saved!": "Salvado! ✔",
+
+  "Events": "Eventos",
+  "CreateEvent": "Crear evento",
+  "Areyousureyouwanttodeletethe": "¿Estás seguro de que quieres eliminar el",
+  "event?": "evento?",
+  "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "Esta acción no se puede deshacer. El evento se eliminará y no se podrá recuperar.",
+  "Deleteevent": "Eliminar evento"
 }
