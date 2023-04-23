@@ -35,10 +35,10 @@ export const BrowseJobs = () => {
   const [firstJob, setFirstJob] = useState(null);
   const [companiesName, setCompaniesName] = useState({});
   const [companiesLogo, setCompaniesLogo] = useState({});
-  const [favoriteCompanies, setFavoriteCompanies] = useState(null);
-  const [savedJobs, setSavedJobs] = useState(null);
-  const [updateSavedDB, setUpdateSavedDB] = useState(false);
-  const [updateFavoriteDB, setUpdateFavoriteDB] = useState(false);
+  const [favCompanyStrIn, setFavCompanyStrIn] = useState("");
+  const [favCompanyStrOut, setFavCompanyStrOut] = useState("");
+  const [favCompanyArr, setFavCompanyArr] = useState([]);
+  const [hasFavorite, setHasFavorite] = useState(false);
   const database = getFirestore(app);
 
   // Only once, attach listener to onAuthStateChanged
@@ -55,43 +55,6 @@ export const BrowseJobs = () => {
     });
   }, []);
 
-  //update db function for saved jobs if it exists in db, otherwise create field
-  async function updateDbSaved() {
-    if (updateSavedDB) {
-      console.log("start update");
-      if (userEmail !== null) {
-        if (savedJobs !== null) {
-          const userProfileDocRef = doc(database, "notifications", userEmail);
-          await updateDoc(userProfileDocRef, { savedJobs });
-        } else {
-          const userProfileDocRef = doc(database, "notifications", userEmail);
-          await updateDoc(userProfileDocRef, { savedJobs: [] });
-          setSavedJobs([]);
-        }
-      }
-      console.log("Update finished");
-    }
-  }
-
-  //update db function for favorite companies if it exists in db, otherwise create field
-  async function updateDbFavorites() {
-    if (updateFavoriteDB) {
-      console.log("start update");
-      console.log(favoriteCompanies);
-      if (userEmail !== null) {
-        if (favoriteCompanies !== null) {
-          const userProfileDocRef = doc(database, "notifications", userEmail);
-          await updateDoc(userProfileDocRef, { favoriteCompanies });
-        } else {
-          const userProfileDocRef = doc(database, "notifications", userEmail);
-          await updateDoc(userProfileDocRef, { favoriteCompanies: [] });
-          setFavoriteCompanies([]);
-        }
-      }
-      console.log("Update finished");
-    }
-  }
-
   useEffect(() => {
     async function fetchData() {
       if (userEmail !== null) {
@@ -100,28 +63,79 @@ export const BrowseJobs = () => {
         const notificationsSnapShot = await getDoc(notificationsDocRef);
         if (notificationsSnapShot.exists()) {
           console.log("Notifications for user Exist");
-          //set favorite companies
-          if (notificationsSnapShot.data().favoriteCompanies !== undefined) {
-            setFavoriteCompanies(
-              notificationsSnapShot.data().favoriteCompanies
-            );
+          if (notificationsSnapShot.data().favCompanies !== undefined) {
+            setFavCompanyStrIn(notificationsSnapShot.data().favCompanies);
           } else {
-            setUpdateFavoriteDB(true);
-          }
-          //set saved jobs
-          if (notificationsSnapShot.data().savedJobs !== undefined) {
-            setSavedJobs(notificationsSnapShot.data().savedJobs);
-          } else {
-            setUpdateSavedDB(true);
+            setFavCompanyStrIn("");
           }
         } else {
           console.log("Notifications for user does not Exist");
         }
       }
     }
-    console.log("get info from notifications collection");
+    console.log("get fav companies");
     fetchData();
   }, [userEmail]);
+
+  useEffect(() => {
+    if (favCompanyStrIn !== "") {
+      setFavCompanyArr(favCompanyStrIn.split(","));
+      setHasFavorite(true);
+    } else {
+      console.log("empty favs");
+    }
+  }, [favCompanyStrIn]);
+
+  const isFavorite = (companyID) => {
+    //console.log("isFav called");
+    if (hasFavorite) {
+      for (let i = 0; i < favCompanyArr.length; i += 1) {
+        //console.log(favCompanyArr[i]);
+        if (favCompanyArr[i] === companyID) {
+          // console.log(
+          //   "companyID: ",
+          //   companyID,
+          //   " matches company: ",
+          //   favCompanyArr[i]
+          // );
+          return true;
+        }
+        // console.log(
+        //   "companyID: ",
+        //   typeof companyID,
+        //   " not company: ",
+        //   typeof company
+        // );
+      }
+    }
+    //console.log("here");
+    return false;
+  };
+
+  const handleMakeFavorite = (companyId) => {
+    if (!favCompanyArr.includes(companyId)) {
+      setFavCompanyArr((prevList) => [...prevList, companyId]);
+    }
+  };
+
+  const handleRemoveFavorite = (companyId) => {
+    setFavCompanyArr((prev) => prev.filter((temp) => temp !== companyId));
+  };
+
+  useEffect(() => {
+    console.log(favCompanyArr);
+    setFavCompanyStrOut(favCompanyArr.join());
+  }, [favCompanyArr]);
+
+  useEffect(() => {
+    try {
+      const notificationsDocRef = doc(database, "notifications", userEmail);
+      updateDoc(notificationsDocRef, { favCompanies: favCompanyStrOut });
+    } catch (err) {
+      console.log(err);
+    }
+    setFavCompanyStrIn(favCompanyStrOut);
+  }, [favCompanyStrOut]);
 
   const jobsPerPage = 5;
 
@@ -233,39 +247,6 @@ export const BrowseJobs = () => {
     getJobs(initialJobsQuery);
   }, []);
 
-  const handleRemoveSaved = (jobId) => {
-    setSavedJobs((prev) => prev.filter((temp) => temp !== jobId));
-    setUpdateSavedDB(true);
-  };
-
-  const handleAddSaved = (jobId) => {
-    setSavedJobs((prev) => [...prev, jobId]);
-    setUpdateSavedDB(true);
-  };
-
-  //this is used as a buffer to make sure the savedJobs state is updated before updating the db
-  useEffect(() => {
-    updateDbSaved();
-    setUpdateSavedDB(false);
-  }, [updateSavedDB]);
-
-  const handleRemoveFavorite = (companyId) => {
-    setFavoriteCompanies((prev) => prev.filter((temp) => temp !== companyId));
-    setUpdateFavoriteDB(true);
-  };
-
-  const handleAddFavorite = (companyId) => {
-    console.log(companyId);
-    setFavoriteCompanies((prev) => [...prev, companyId]);
-    setUpdateFavoriteDB(true);
-  };
-
-  //this is used as a buffer to make sure the savedJobs state is updated before updating the db
-  useEffect(() => {
-    updateDbFavorites();
-    setUpdateFavoriteDB(false);
-  }, [updateFavoriteDB]);
-
   return (
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
@@ -280,12 +261,6 @@ export const BrowseJobs = () => {
         {jobs.map((job) => {
           const hello = "hello";
 
-          // if (savedJobs != null) {
-          //   console.log(savedJobs);
-          //   console.log(job.documentID);
-          //   console.log(savedJobs.includes(job.documentID));
-          // }
-
           // do this to show what is inside job
           // console.log(job);
           return (
@@ -295,7 +270,6 @@ export const BrowseJobs = () => {
                 <Box sx={{ m: 3 }}>
                   <Stack direction="row" alignItems="center">
                     <Box
-                      id="companyLogo"
                       component="img"
                       sx={{
                         // objectFit: "cover",
@@ -308,58 +282,30 @@ export const BrowseJobs = () => {
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography>{companiesName[job.companyID]}</Typography>
+                        <Typography>
+                          <Link
+                            to={`/companyPage/${job.companyID}`}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            {companiesName[job.companyID]}
+                          </Link>
+                        </Typography>
                         {userEmail !== null &&
-                        favoriteCompanies != null &&
-                        favoriteCompanies.includes(job.companyID) ? (
-                          <StarIcon
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => handleRemoveFavorite(job.companyID)}
-                          />
-                        ) : (
-                          <StarOutlineIcon
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => handleAddFavorite(job.companyID)}
-                          />
-                        )}
+                          (isFavorite(job.companyID) ? (
+                            <StarIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                handleRemoveFavorite(job.companyID)
+                              }
+                            />
+                          ) : (
+                            <StarOutlineIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => handleMakeFavorite(job.companyID)}
+                            />
+                          ))}
                       </Box>
                       <Typography>{`${job.city}, ${job.country}`}</Typography>
-                    </Box>
-                    <Box sx={{ ml: "auto", mb: "auto" }}>
-                      {savedJobs != null &&
-                      savedJobs.includes(job.documentID) ? (
-                        <Button
-                          id="save-btn"
-                          variant="contained"
-                          data-cy="unsave-button"
-                          sx={{
-                            backgroundColor: "black",
-                            m: 2,
-                            height: 30,
-                            width: 100,
-                            textTransform: "none",
-                          }}
-                          onClick={() => handleRemoveSaved(job.documentID)}
-                        >
-                          Unsave
-                        </Button>
-                      ) : (
-                        <Button
-                          id="save-btn"
-                          variant="contained"
-                          data-cy="save-button"
-                          sx={{
-                            backgroundColor: "black",
-                            m: 2,
-                            height: 30,
-                            width: 100,
-                            textTransform: "none",
-                          }}
-                          onClick={() => handleAddSaved(job.documentID)}
-                        >
-                          Save
-                        </Button>
-                      )}
                     </Box>
                   </Stack>
 
