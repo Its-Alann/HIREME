@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 // import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 // import { Link } from "react-router-dom";
+import { ref, getDownloadURL } from "firebase/storage";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -31,7 +32,7 @@ import {
 import { PropTypes } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { db } from "../../Firebase/firebase";
+import { db, storage } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
   palette: {
@@ -79,10 +80,27 @@ export const NetworkCards = ({
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
   const { t, i18n } = useTranslation();
+  const [imageUrl, setImageUrl] = useState({});
   const navigate = useNavigate();
 
-  console.log("currentUser", currentUser);
-  console.log("connectedUserID", connectedUserID);
+  // console.log("currentUser", currentUser);
+  // console.log("connectedUserID", connectedUserID);
+
+  const getProfilePicture = async () => {
+    //Get profile picture
+    console.log(connectedUserID);
+    const profilePictureLink = `${connectedUserID}-profilePicture`;
+    const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
+    getDownloadURL(imageRef)
+      // eslint-disable-next-line no-shadow
+      .then((imageUrl) => {
+        setImageUrl(imageUrl);
+      })
+      .catch((error) => {
+        setImageUrl(null);
+        console.log(error.message, "error getting the image url");
+      });
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -157,6 +175,8 @@ export const NetworkCards = ({
     );
     // console.log(findConnectUserProfile);
     setConnectedUser(findConnectUserProfile);
+    getProfilePicture();
+    console.log(5);
   }, [allUserProfiles, connectedUserID]);
 
   return (
@@ -179,7 +199,7 @@ export const NetworkCards = ({
                         <Avatar
                           aria-label="user"
                           sx={{ width: 56, height: 56 }}
-                          src={connectedUser.values.image}
+                          src={imageUrl}
                         />
                       }
                       //title will be the user's name and subheader is their bio

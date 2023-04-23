@@ -28,7 +28,8 @@ import { useTranslation } from "react-i18next";
 import { FormControl, InputLabel, Select, Link } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
-import { db, auth } from "../../Firebase/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+import { db, auth, storage } from "../../Firebase/firebase";
 
 //lists of pages accesible from the navbar
 const pageNamesForApplicant = [
@@ -80,6 +81,7 @@ const Navbar = () => {
     // window.location.reload();
     handleClose();
   };
+  const [imageUrl, setImageUrl] = React.useState({});
 
   //getting user information
   React.useEffect(() => {
@@ -98,6 +100,21 @@ const Navbar = () => {
           } else {
             setPageNames(pageNamesForApplicant);
           }
+
+          const profilePictureLink = `${user.email}-profilePicture`;
+          const imageRef = ref(
+            storage,
+            `profile-pictures/${profilePictureLink}`
+          );
+          getDownloadURL(imageRef)
+            // eslint-disable-next-line no-shadow
+            .then((imageUrl) => {
+              setImageUrl(imageUrl);
+            })
+            .catch((error) => {
+              setImageUrl(null);
+              console.log(error.message, "error getting the image url");
+            });
         } catch (err) {
           console.log(err);
         }
@@ -163,6 +180,9 @@ const Navbar = () => {
         break;
       case "view jobs":
         navigate("/browseJobs");
+        break;
+      case "saved jobs":
+        navigate("/savedJobs");
         break;
       case "view applied jobs":
         navigate("/viewMyApplications");
@@ -416,6 +436,16 @@ const Navbar = () => {
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
+                            redirectToPage2 = "saved jobs";
+                            handleCloseUserMenu2();
+                            handleCloseNavMenu();
+                          }}
+                          data-cy="view-saved-job-test"
+                        >
+                          View Saved Jobs
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
                             redirectToPage2 = "view applied jobs";
                             handleCloseUserMenu2();
                             handleCloseNavMenu();
@@ -474,12 +504,7 @@ const Navbar = () => {
                         userData.values.firstName !== undefined &&
                         userData.values.firstName
                       }
-                      src={
-                        userData !== undefined &&
-                        userData.values !== undefined &&
-                        userData.values.image !== undefined &&
-                        userData.values.image
-                      }
+                      src={imageUrl !== undefined && imageUrl}
                     />
                   </IconButton>
                 </Tooltip>

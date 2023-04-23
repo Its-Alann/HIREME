@@ -7,11 +7,12 @@ import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
+import { ref, getDownloadURL } from "firebase/storage";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
-import { db } from "../../Firebase/firebase";
+import { db, storage } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
   palette: {
@@ -40,6 +41,23 @@ export const SentInvitationCard = ({
 }) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
   const { t, i18n } = useTranslation();
+  const [imageUrl, setImageUrl] = useState({});
+
+  const getProfilePicture = async () => {
+    //Get profile picture
+    console.log(userID);
+    const profilePictureLink = `${userID}-profilePicture`;
+    const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
+    getDownloadURL(imageRef)
+      // eslint-disable-next-line no-shadow
+      .then((imageUrl) => {
+        setImageUrl(imageUrl);
+      })
+      .catch((error) => {
+        setImageUrl(null);
+        console.log(error.message, "error getting the image url");
+      });
+  };
 
   useEffect(() => {
     // console.log(connectedUserID);
@@ -49,6 +67,7 @@ export const SentInvitationCard = ({
     );
     // console.log(findConnectUserProfile);
     setSentRequestedUser(findSentInviteUserProfile);
+    getProfilePicture();
   }, [allUserProfiles, userID]);
 
   const withdrawInvitation = async () => {
@@ -91,7 +110,7 @@ export const SentInvitationCard = ({
                       <Avatar
                         aria-label="user"
                         sx={{ width: 56, height: 56 }}
-                        src={sentRequestedUser.values.image}
+                        src={imageUrl}
                       />
                     }
                     //title will be the user's name and subheader is their bio

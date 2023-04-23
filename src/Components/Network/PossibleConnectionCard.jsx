@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
+import { ref, getDownloadURL } from "firebase/storage";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
@@ -12,7 +13,7 @@ import { blue } from "@mui/material/colors";
 import { getDoc, doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
 import { useTranslation } from "react-i18next";
-import { db } from "../../Firebase/firebase";
+import { db, storage } from "../../Firebase/firebase";
 
 const ColorButtonBlue = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(blue[800]),
@@ -29,6 +30,23 @@ export const PossibleConnectionCard = ({
 }) => {
   const [possibleConnectionUser, setPossibleConnectionUser] = useState([]);
   const { t, i18n } = useTranslation();
+  const [imageUrl, setImageUrl] = useState({});
+
+  const getProfilePicture = async () => {
+    //Get profile picture
+    console.log(possibleConnectionUserId);
+    const profilePictureLink = `${possibleConnectionUserId}-profilePicture`;
+    const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
+    getDownloadURL(imageRef)
+      // eslint-disable-next-line no-shadow
+      .then((imageUrl) => {
+        setImageUrl(imageUrl);
+      })
+      .catch((error) => {
+        setImageUrl(null);
+        console.log(error.message, "error getting the image url");
+      });
+  };
 
   useEffect(() => {
     // console.log(connectedUserID);
@@ -38,6 +56,7 @@ export const PossibleConnectionCard = ({
     );
     // console.log(findConnectUserProfile);
     setPossibleConnectionUser(findPossibleConnectionUserProfile);
+    getProfilePicture();
   }, [allUserProfiles, possibleConnectionUserId]);
 
   const sendInvitation = async () => {
@@ -126,7 +145,7 @@ export const PossibleConnectionCard = ({
                     <Avatar
                       aria-label="user"
                       sx={{ width: 56, height: 56 }}
-                      src={possibleConnectionUser.values.image}
+                      src={imageUrl}
                     />
                   }
                   //title will be the user's name and subheader is their bio

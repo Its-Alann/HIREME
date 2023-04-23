@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
+import { ref, getDownloadURL } from "firebase/storage";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
@@ -18,7 +19,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
-import { db } from "../../Firebase/firebase";
+import { db, storage } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
   palette: {
@@ -51,6 +52,23 @@ export const ReceivedInvitationCard = ({
 }) => {
   const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
   const { t, i18n } = useTranslation();
+  const [imageUrl, setImageUrl] = useState({});
+
+  const getProfilePicture = async () => {
+    //Get profile picture
+    console.log(receivedInvitationUserID);
+    const profilePictureLink = `${receivedInvitationUserID}-profilePicture`;
+    const imageRef = ref(storage, `profile-pictures/${profilePictureLink}`);
+    getDownloadURL(imageRef)
+      // eslint-disable-next-line no-shadow
+      .then((imageUrl) => {
+        setImageUrl(imageUrl);
+      })
+      .catch((error) => {
+        setImageUrl(null);
+        console.log(error.message, "error getting the image url");
+      });
+  };
 
   useEffect(() => {
     const findReceivedInviteUserProfile = allUserProfiles.find(
@@ -58,6 +76,7 @@ export const ReceivedInvitationCard = ({
     );
     // console.log(findConnectUserProfile);
     setReceivedInvitationUser(findReceivedInviteUserProfile);
+    getProfilePicture();
   }, [allUserProfiles, receivedInvitationUserID]);
 
   const ignoreInvite = async () => {
@@ -194,7 +213,7 @@ export const ReceivedInvitationCard = ({
                       <Avatar
                         aria-label="user"
                         sx={{ width: 56, height: 56 }}
-                        src={receivedInvitationUser.values.image}
+                        src={imageUrl}
                       />
                     }
                     //title will be the user's name and subheader is their bio

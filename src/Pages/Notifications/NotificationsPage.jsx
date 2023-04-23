@@ -121,7 +121,7 @@ const NotificationsPage = () => {
           }}
         >
           {t("Manageyournotifications")}
-          <br />
+          {/* <br></br> */}
           <NavLink id="visitSettings" to="/settings">
             {t("ViewSettings")}
           </NavLink>
