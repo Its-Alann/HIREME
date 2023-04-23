@@ -257,5 +257,7 @@
   "Deleteevent": "Eliminar evento",
 
   "EventCreation": "Creación de eventos",
-  "EventDescription": "descripción del evento"
+  "EventDescription": "descripción del evento",
+
+  "Event Date": "Fecha del Evento"
 }
