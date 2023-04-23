@@ -13,6 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteDoc, doc } from "firebase/firestore";
@@ -20,6 +21,9 @@ import { Link } from "react-router-dom";
 import { db } from "../../Firebase/firebase";
 
 const EventCard = (props) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const { eventInfo, companyLogo, companyName, companyID, isRecruiter } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -175,22 +179,24 @@ const EventCard = (props) => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                Are you sure you want to delete the {`${eventInfo.name}`} event?
+                {`${t("Areyousureyouwanttodeletethe")}`} {`${eventInfo.name}`}{" "}
+                {t("event?")}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  This action cannot be undone. The event will be deleted and
-                  cannot be retrieved.
+                  {t(
+                    "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved"
+                  )}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>{t("Cancel")}</Button>
                 <Button
                   onClick={removeEvent}
                   autoFocus
                   style={{ color: "red" }}
                 >
-                  Delete event
+                  {t("Deleteevent")}
                 </Button>
               </DialogActions>
             </Dialog>
