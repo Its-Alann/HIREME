@@ -234,5 +234,25 @@
 
   "ApplyOnOtherSite": "Appliquez sur un autre site",
   "setting": "Réglages",
-  "ViewSavedJobs": "Voir les Emplois Sauvegardés"
+  "ViewSavedJobs": "Voir les Emplois Sauvegardés",
+
+  "ApplyOnWebsite": "Appliquer sur le site d'Internet",
+  "ViewJob": "Voir l'emploi",
+  "NewJob": "Nouveau Emploi",
+  "UnfavoriteCompany": "Enlever Entreprise aux Favoris",
+  "FavoriteCompany": "Ajouter Entreprise aux Favoris",
+  "UploadImage": "Téléverser une Image",
+  "ModifyCompanylogo": "Modifier logo de l'Entreprise",
+
+  "Back": "Retour",
+  "Edit Event": "Modifier l'Évènement",
+  "EventName": "Nom de l'Évènement",
+  "Saved!": "Enregistré! ✔",
+
+  "Events": "Évènements",
+  "CreateEvent": "Crée un Évènement",
+  "Areyousureyouwanttodeletethe": "Êtes-vous sûr de vouloir supprimer le",
+  "event?": "évènement?",
+  "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "Cette action ne peut pas être annulée. L'événement sera supprimé et ne pourra pas être récupéré.",
+  "Deleteevent": "Supprimer l'évènement"
 }
