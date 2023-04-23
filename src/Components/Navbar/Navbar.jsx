@@ -50,7 +50,7 @@ const pageNamesForRecruiter = [
   "Notifications",
 ];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
-const settings = ["Profile", "Account", "Dashboard"];
+// const settings = ["Profile", "Account", "Dashboard"];
 
 const Navbar = () => {
   const [pageNames, setPageNames] = React.useState([
@@ -166,13 +166,17 @@ const Navbar = () => {
       case "notifications":
         navigate("/notifications");
         break;
-      /*
+
       case "profile":
+        navigate("/editProfile/myprofile");
         break;
-      case "account":
+      case "settings":
+        navigate("/settings");
         break;
-      case "dashboard":
-        break;*/
+      // case "account":
+      //   break;
+      // case "dashboard":
+      //   break;
       case "logout":
         setUserIsConnected(false);
         signOut(auth);
@@ -442,7 +446,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-saved-job-test"
                         >
-                          View Saved Jobs
+                          {t("ViewSavedJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -524,7 +528,7 @@ const Navbar = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
+                  {/* {settings.map((setting) => (
                     <MenuItem
                       key={setting}
                       data-cy={`${setting}-phone-test`}
@@ -532,7 +536,27 @@ const Navbar = () => {
                     >
                       <Typography textAlign="center">{t(setting)}</Typography>
                     </MenuItem>
-                  ))}
+                  ))} */}
+                  <MenuItem
+                    onClick={() => {
+                      redirectToPage2 = "profile";
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                    data-cy="logout-test"
+                  >
+                    {t("Profile")}
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      redirectToPage2 = "settings";
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                    data-cy="logout-test"
+                  >
+                    {t("setting")}
+                  </MenuItem>
                   <MenuItem
                     onClick={() => {
                       redirectToPage2 = "logout";
