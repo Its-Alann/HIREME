@@ -25,7 +25,8 @@ describe("Edit company page", () => {
     const fileName = "src/Assets/fonts/Images/IMG_0524.png";
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
-    cy.get(".MuiAvatar-img").selectFile(fileName, { force: true });
+    cy.get(`[data-cy="pictureBtn"]`).selectFile(fileName, { force: true });
+    cy.get(`[data-cy="saveBtn"]`).click();
   });
 });
 

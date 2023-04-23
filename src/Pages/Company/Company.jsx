@@ -42,7 +42,7 @@ export const Company = () => {
   });
   const [isNewJobAllowed, setIsNewJobAllowed] = useState(false);
   const [currentUserID, setCurrentUserID] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [lastJob, setLastJob] = useState(null);
   const [firstJob, setFirstJob] = useState(null);
@@ -393,6 +393,7 @@ export const Company = () => {
                   accept="image/*"
                   id="contained-button-file"
                   type="file"
+                  data-cy="pictureBtn"
                   onChange={(e) => {
                     if (e.target.files.length < 1) {
                       return;
