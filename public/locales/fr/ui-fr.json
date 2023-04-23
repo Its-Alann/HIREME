@@ -254,5 +254,10 @@
   "Areyousureyouwanttodeletethe": "Êtes-vous sûr de vouloir supprimer le",
   "event?": "évènement?",
   "ThisactioncannotbeundoneTheeventwillbedeletedandcannotberetrieved": "Cette action ne peut pas être annulée. L'événement sera supprimé et ne pourra pas être récupéré.",
-  "Deleteevent": "Supprimer l'évènement"
+  "Deleteevent": "Supprimer l'évènement",
+
+  "EventCreation": "Création de l'évènement",
+  "EventDescription": "Description de l'évènement",
+  
+  "Event Date": "Event Date"
 }

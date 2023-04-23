@@ -183,7 +183,7 @@ const EditEvent = () => {
           sx={{ my: 2 }}
           onClick={() => handleSubmit()}
         >
-          Save
+          {t("Save")}
         </Button>
         {saved && <Typography>{t("Saved!")}</Typography>}
         {/* </Link> */}
