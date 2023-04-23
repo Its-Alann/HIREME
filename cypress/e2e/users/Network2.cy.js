@@ -201,3 +201,27 @@ describe("Create a connection with another user", () => {
     cy.wait(1000);
   });
 });
+
+describe("Login hanni and test sending message", () => {
+  it("Logs into test account", () => {
+    cy.logout();
+    cy.visit("http://localhost:3000/login");
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
+    cy.get("#email").type("hypeboy@tok.ki");
+    cy.get("#password").type("newjeans");
+    cy.get("#email").focus();
+    cy.get(".MuiButton-contained").click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
+  });
+  it("test messaging button", () => {
+    cy.visit("http://localhost:3000/network");
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
+    cy.get(
+      ':nth-child(2) > :nth-child(1) > .css-nwqh5 > [data-cy="userProfileInNetwork"] > .MuiBox-root > .MuiCardActions-root > .MuiButton-outlined'
+    ).click();
+    cy.wait(3000);
+  });
+});
