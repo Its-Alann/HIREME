@@ -78,7 +78,7 @@ export const CreateCompany = () => {
             />
           </Box>
           <Box>
-            <Typography>{t("Company Logo")}</Typography>
+            <Typography>{t("CompanyLogo")}</Typography>
             <input type="file" accept="image/*" onChange={handleLogoChange} />
           </Box>
         </Stack>
