@@ -17,11 +17,13 @@ describe("Login to test account", () => {
 
 describe("Creates a new event", () => {
   it("Clicks on create event", () => {
-    cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
+    cy.visit("http://localhost:3000/companyPage/VtimBR90MAReVayXpEhl");
     cy.get(".css-sir63q-MuiStack-root").click();
   });
   it("Fills form", () => {
-    cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl/createEvent");
+    cy.visit(
+      "http://localhost:3000/companyPage/VtimBR90MAReVayXpEhl/createEvent"
+    );
     cy.wait(500);
     cy.get("#TextField-Name").type("Cypress Test Event");
     cy.get("#TextField-Address").type("Cypress HQ");
@@ -38,12 +40,12 @@ describe("Creates a new event", () => {
 describe("Edits an event", () => {
   it("Clicks on edit event", () => {
     cy.wait(500);
-    cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
+    cy.visit("http://localhost:3000/companyPage/VtimBR90MAReVayXpEhl");
     cy.get("a.MuiButtonBase-root").click();
   });
 
   it("Edits the event", () => {
-    cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
+    cy.visit("http://localhost:3000/companyPage/VtimBR90MAReVayXpEhl");
     cy.get("a.MuiButtonBase-root").click();
     cy.get("#TextField-Address").type(" Edit");
     cy.get("#TextField-Description").type(" Edit");
@@ -58,12 +60,12 @@ describe("Edits an event", () => {
 
 describe("Deletes an event", () => {
   it("Clicks on delete event icon", () => {
-    cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
+    cy.visit("http://localhost:3000/companyPage/VtimBR90MAReVayXpEhl");
     cy.get(".css-2vgggj-MuiStack-root > button.MuiButtonBase-root").click();
   });
 
   it("Clicks on delete event confirmation", () => {
-    cy.visit("http://localhost:3000/VtimBR90MAReVayXpEhl");
+    cy.visit("http://localhost:3000/companyPage/VtimBR90MAReVayXpEhl");
     cy.get(".css-2vgggj-MuiStack-root > button.MuiButtonBase-root").click();
     cy.get('[style="color: red;"]').click();
     cy.wait(500);
