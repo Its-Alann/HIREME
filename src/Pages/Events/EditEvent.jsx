@@ -163,7 +163,7 @@ const EditEvent = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 id="DatePicker-Date"
-                label="Event Date"
+                label={t("Event Date")}
                 value={date}
                 onChange={(newValue) => {
                   setDate(newValue.$d);

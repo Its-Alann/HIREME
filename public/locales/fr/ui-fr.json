@@ -245,7 +245,7 @@
   "ModifyCompanylogo": "Modifier logo de l'Entreprise",
 
   "Back": "Retour",
-  "Edit Event": "Modifier l'Évènement",
+  "Edit Event": "Modifier l'Évènement: ",
   "EventName": "Nom de l'Évènement",
   "Saved!": "Enregistré! ✔",
 
@@ -259,5 +259,5 @@
   "EventCreation": "Création de l'évènement",
   "EventDescription": "Description de l'évènement",
   
-  "Event Date": "Event Date"
+  "Event Date": "Date de l'évènement"
 }
