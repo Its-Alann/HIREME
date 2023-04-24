@@ -208,9 +208,12 @@ export const SavedJobs = () => {
                       <Box>
                         <Typography variant="h4">{job.jobTitle}</Typography>
                         <Box sx={{ display: "flex", flexDirection: "row" }}>
-                          <Typography>
+                          <Link
+                            to={`/companyPage/${job.companyID}`}
+                            style={{ textDecoration: "none", color: "purple" }}
+                          >
                             {companiesName[job.companyID]}
-                          </Typography>
+                          </Link>
                         </Box>
                         <Typography>{`${job.city}, ${job.country}`}</Typography>
                       </Box>

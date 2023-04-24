@@ -317,7 +317,12 @@ export const BrowseJobs = () => {
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography>{companiesName[job.companyID]}</Typography>
+                        <Link
+                          to={`/companyPage/${job.companyID}`}
+                          style={{ textDecoration: "none", color: "purple" }}
+                        >
+                          {companiesName[job.companyID]}
+                        </Link>
                         {userEmail !== null &&
                         favoriteCompanies != null &&
                         favoriteCompanies.includes(job.companyID) ? (
