@@ -12,7 +12,16 @@ import { useTranslation } from "react-i18next";
 import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 export const NetworkPossibleConnections = ({
   allUserProfiles,
@@ -110,6 +119,7 @@ export const NetworkPossibleConnections = ({
                   pageNumber ===
                   Math.ceil(nonConnectedUsersArr.length / pageSize)
                 }
+                color="primary"
               >
                 {t("Next")}
               </Button>
