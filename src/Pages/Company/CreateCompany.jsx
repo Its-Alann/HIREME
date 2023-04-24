@@ -24,12 +24,6 @@ export const CreateCompany = () => {
   });
   async function handleSubmit() {
     // Upload the logo file to Firebase Storage
-
-    if (companyInformation.logo == null) {
-      companyInformation.logo =
-        "https://firebasestorage.googleapis.com/v0/b/team-ate.appspot.com/o/company-logo%2FHIREME_whitebg_blueborder.png?alt=media&token=757a8696-8d95-41e7-837f-885bf400f450";
-    }
-
     const storageRef = ref(
       storage,
       `/company-logo/${companyInformation.logo.name}`
