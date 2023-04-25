@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { getDocs, doc, getDoc } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -14,6 +15,8 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { db } from "../../Firebase/firebase";
 
 export const JobPosting = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   // declaring  the useStates and useParams
   const pageID = useParams();
   const pageCompanyID = useParams().companyID;
@@ -57,6 +60,8 @@ export const JobPosting = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   // calling 2 methods
   useEffect(() => {
     getJobData();
@@ -68,7 +73,7 @@ export const JobPosting = () => {
   if (job === undefined)
     return (
       <h3 style={{ textAlign: "center" }}>
-        This job has been removed by the employer :/
+        {t("Thisjobhasbeenremovedbytheemployer")}
       </h3>
     );
   return (
@@ -105,7 +110,7 @@ export const JobPosting = () => {
                       >{`${job.city}, ${job.country}`}</Typography>
                       {job.deadline && (
                         <Typography sx={{ fontSize: 16 }}>
-                          Deadline:{" "}
+                          {t("Deadline")}{" "}
                           {new Date(
                             job.deadline.seconds * 1000 +
                               job.deadline.nanoseconds / 1000000
@@ -123,16 +128,12 @@ export const JobPosting = () => {
                       textTransform: "none",
                       ml: { xs: 0, sm: "auto" },
                     }}
+                    onClick={() => {
+                      navigate(`/jobApplication/${job.companyID}/${pageJobID}`);
+                    }}
                   >
-                    <Link
-                      to={`/jobApplication/${job.companyID}/${pageJobID}`}
-                      className="link"
-                      underline="none"
-                      style={{ textDecoration: "none" }}
-                    >
-                      {/* {console.log("thiws is the job:", job)}*/}
-                      Apply
-                    </Link>
+                    {/* {console.log("thiws is the job:", job)}*/}
+                    {t("Apply")}
                   </Button>
                   <StarOutlineIcon />
                 </Box>
@@ -142,15 +143,19 @@ export const JobPosting = () => {
             <Divider />
             <Stack spacing={2}>
               <Box sx={{ pt: 2 }}>
-                <Typography sx={{ fontSize: 20 }}>About the job</Typography>
+                <Typography sx={{ fontSize: 20 }}>
+                  {t("Aboutthejob")}
+                </Typography>
                 <Typography>{job.description}</Typography>
               </Box>
               <Box>
-                <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
+                <Typography sx={{ fontSize: 20 }}>
+                  {t("Requirements")}
+                </Typography>
                 <Typography>{job.requirement}</Typography>
               </Box>
               <Box>
-                <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                <Typography sx={{ fontSize: 20 }}>{t("Benefits")}</Typography>
                 <Typography>{job.benefits}</Typography>
               </Box>
             </Stack>

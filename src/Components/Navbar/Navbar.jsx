@@ -23,7 +23,10 @@ import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { Link } from "@mui/material";
+import { changeLanguage } from "i18next";
+import { useTranslation } from "react-i18next";
+import { FormControl, InputLabel, Select, Link } from "@mui/material";
+import LanguageIcon from "@mui/icons-material/Language";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, auth, storage } from "../../Firebase/firebase";
@@ -47,7 +50,7 @@ const pageNamesForRecruiter = [
   "Notifications",
 ];
 const loggedOutPages = ["Jobs", "Sign Up", "Log In"];
-const settings = ["Profile", "Account", "Dashboard"];
+// const settings = ["Profile", "Account", "Dashboard"];
 
 const Navbar = () => {
   const [pageNames, setPageNames] = React.useState([
@@ -59,6 +62,25 @@ const Navbar = () => {
   ]);
   const [userIsConnected, setUserIsConnected] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  const [language, setLanguage] = React.useState("");
+  const { t, i18n } = useTranslation();
+  const openSettings = t("OpenSettings");
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleChange = (event) => {
+    setLanguage(event);
+    changeLanguage(event);
+    // window.location.reload();
+    handleClose();
+  };
   const [imageUrl, setImageUrl] = React.useState({});
 
   //getting user information
@@ -144,13 +166,17 @@ const Navbar = () => {
       case "notifications":
         navigate("/notifications");
         break;
-      /*
+
       case "profile":
+        navigate("/editProfile/myprofile");
         break;
-      case "account":
+      case "settings":
+        navigate("/settings");
         break;
-      case "dashboard":
-        break;*/
+      // case "account":
+      //   break;
+      // case "dashboard":
+      //   break;
       case "logout":
         setUserIsConnected(false);
         signOut(auth);
@@ -249,7 +275,7 @@ const Navbar = () => {
                       key={page}
                       data-cy={`${page}-phone-test`}
                     >
-                      Jobs
+                      {t("Jobs")}
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorElUser2}
@@ -266,7 +292,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -274,7 +300,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-applied-job-test"
                         >
-                          View Applied Jobs
+                          {t("ViewAppliedJobs")}
                         </MenuItem>
                       </Menu>
                     </MenuItem>
@@ -287,7 +313,7 @@ const Navbar = () => {
                         handleCloseNavMenu();
                       }}
                     >
-                      <Typography textAlign="center">{page}</Typography>
+                      <Typography textAlign="center">{t(page)}</Typography>
                     </MenuItem>
                   )
                 )}
@@ -299,7 +325,7 @@ const Navbar = () => {
                       key={page}
                       data-cy={`${page}-logged-out-test`}
                     >
-                      Jobs
+                      {t("Jobs")}
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorElUser2}
@@ -316,7 +342,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                       </Menu>
                     </MenuItem>
@@ -329,7 +355,7 @@ const Navbar = () => {
                         handleCloseNavMenu();
                       }}
                     >
-                      <Typography textAlign="center">{page}</Typography>
+                      <Typography textAlign="center">{t(page)}</Typography>
                     </MenuItem>
                   )
                 )}
@@ -390,7 +416,7 @@ const Navbar = () => {
                       >
                         <Stack justifyContent="center" alignItems="center">
                           <WorkOutlineOutlinedIcon justifyContent="center" />
-                          JOBS
+                          {t("JOBS")}
                         </Stack>
                       </Button>
                       <Menu
@@ -410,7 +436,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-job-test"
                         >
-                          View Jobs
+                          {t("ViewJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -420,7 +446,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-saved-job-test"
                         >
-                          View Saved Jobs
+                          {t("ViewSavedJobs")}
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
@@ -430,7 +456,7 @@ const Navbar = () => {
                           }}
                           data-cy="view-applied-job-test"
                         >
-                          View Applied Jobs
+                          {t("ViewAppliedJobs")}
                         </MenuItem>
                       </Menu>
                     </>
@@ -457,21 +483,24 @@ const Navbar = () => {
                       {page === "Network" && <GroupsOutlinedIcon />}
 
                       {page === "My Jobs" && <WorkHistoryOutlinedIcon />}
-                      {page}
+                      {t(page)}
                     </Button>
                   )
                 )}
               </Box>
 
               <Box sx={{ flexGrow: 0, marginLeft: "1%" }} data-cy="userBox">
-                <Tooltip title="Open settings">
+                <Tooltip title={openSettings}>
                   <IconButton
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0 }}
                     data-cy="userMenu"
                   >
                     <Avatar
-                      style={{ border: "2px solid #2B2F90" }}
+                      style={{
+                        border: "2px solid #2B2F90",
+                        marginBottom: "8px",
+                      }}
                       alt={
                         //making sure info is defined
                         userData !== undefined &&
@@ -499,15 +528,35 @@ const Navbar = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
+                  {/* {settings.map((setting) => (
                     <MenuItem
                       key={setting}
                       data-cy={`${setting}-phone-test`}
                       onClick={() => {}}
                     >
-                      <Typography textAlign="center">{setting}</Typography>
+                      <Typography textAlign="center">{t(setting)}</Typography>
                     </MenuItem>
-                  ))}
+                  ))} */}
+                  <MenuItem
+                    onClick={() => {
+                      redirectToPage2 = "profile";
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                    data-cy="profile-test"
+                  >
+                    {t("Profile")}
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      redirectToPage2 = "settings";
+                      handleCloseUserMenu();
+                      handleCloseNavMenu();
+                    }}
+                    data-cy="setting-test"
+                  >
+                    {t("setting")}
+                  </MenuItem>
                   <MenuItem
                     onClick={() => {
                       redirectToPage2 = "logout";
@@ -516,7 +565,7 @@ const Navbar = () => {
                     }}
                     data-cy="logout-test"
                   >
-                    Logout
+                    {t("Logout")}
                   </MenuItem>
                 </Menu>
               </Box>
@@ -545,7 +594,7 @@ const Navbar = () => {
                     >
                       <Stack justifyContent="center" alignItems="center">
                         <WorkOutlineOutlinedIcon justifyContent="center" />
-                        JOBS
+                        {t("JOBS")}
                       </Stack>
                     </Button>
                     <Menu
@@ -565,7 +614,7 @@ const Navbar = () => {
                         }}
                         data-cy="view-job-test"
                       >
-                        View Jobs
+                        {t("ViewJobs")}
                       </MenuItem>
                     </Menu>
                   </>
@@ -587,12 +636,50 @@ const Navbar = () => {
                     {/* {page === "Jobs" && <WorkOutlineOutlinedIcon />} */}
                     {page === "Sign Up" && <PersonOutlineOutlinedIcon />}
                     {page === "Log In" && <LoginOutlinedIcon />}
-                    {page}
+                    {t(page)}
                   </Button>
                 )
               )}
             </Box>
           )}
+
+          <FormControl variant="outlined">
+            <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? "long-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+              sx={{
+                marginLeft: "15px",
+                marginBottom: "15px",
+                color: "#2B2F90",
+              }}
+            >
+              <LanguageIcon />
+            </IconButton>
+
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                "aria-labelledby": "long-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem value="en" onClick={() => handleChange("en")}>
+                English
+              </MenuItem>
+              <MenuItem value="es" onClick={() => handleChange("es")}>
+                Español
+              </MenuItem>
+              <MenuItem value="fr" onClick={() => handleChange("fr")}>
+                French
+              </MenuItem>
+            </Menu>
+          </FormControl>
         </Toolbar>
       </Container>
     </AppBar>

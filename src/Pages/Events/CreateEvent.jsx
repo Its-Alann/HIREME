@@ -15,9 +15,12 @@ import Button from "@mui/material/Button";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { useTranslation } from "react-i18next";
 import { auth, db } from "../../Firebase/firebase";
 
 const CreateEvents = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   const [eventInformation, setEventInformation] = React.useState({
     companyID: "",
     date: new Date(),
@@ -78,7 +81,7 @@ const CreateEvents = () => {
     <Container maxWidth="md" sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Event Creation
+          {t("EventCreation")}
         </Typography>
         {/* is this supposed to be a public comment? */}
 
@@ -98,7 +101,7 @@ const CreateEvents = () => {
           </Box> */}
 
           <Box>
-            <Typography>Company Name</Typography>
+            <Typography>{t("CompanyName")}</Typography>
             <TextField
               required
               id="TextField-CompanyName"
@@ -111,7 +114,7 @@ const CreateEvents = () => {
           </Box>
 
           <Box>
-            <Typography>Event Name</Typography>
+            <Typography>{t("EventName")}</Typography>
             <TextField
               required
               id="TextField-Name"
@@ -129,7 +132,7 @@ const CreateEvents = () => {
           </Box>
 
           <Box>
-            <Typography>Address</Typography>
+            <Typography>{t("Address")}</Typography>
             <TextField
               required
               id="TextField-Address"
@@ -147,7 +150,7 @@ const CreateEvents = () => {
           </Box>
 
           <Box>
-            <Typography>Event description</Typography>
+            <Typography>{t("EventDescription")}</Typography>
             <TextField
               required
               id="TextField-Description"
@@ -168,7 +171,7 @@ const CreateEvents = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 id="DatePicker-Date"
-                label="Event Date"
+                label={t("Event Date")}
                 value={eventInformation.date}
                 onChange={(newValue) => {
                   setEventInformation({
@@ -191,7 +194,7 @@ const CreateEvents = () => {
             sx={{ mt: 2 }}
             onClick={() => handleSubmit()}
           >
-            Save
+            {t("Save")}
           </Button>
         </Link>
       </Box>

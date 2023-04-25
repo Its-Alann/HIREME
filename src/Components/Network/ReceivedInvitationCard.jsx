@@ -18,6 +18,7 @@ import {
   arrayUnion,
   setDoc,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import { db, storage } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -50,6 +51,7 @@ export const ReceivedInvitationCard = ({
   currentUser,
 }) => {
   const [receivedInvitationUser, setReceivedInvitationUser] = useState([]);
+  const { t, i18n } = useTranslation();
   const [imageUrl, setImageUrl] = useState({});
 
   const getProfilePicture = async () => {
@@ -248,7 +250,7 @@ export const ReceivedInvitationCard = ({
                           receivedInvitationUser?.values?.firstName ?? ""
                         }`}
                       >
-                        Accept
+                        {t("Accept")}
                       </ColorButtonBlue>
                       <ColorButtonLightBlue
                         size="medium"
@@ -261,7 +263,7 @@ export const ReceivedInvitationCard = ({
                           receivedInvitationUser?.values?.firstName ?? ""
                         }`}
                       >
-                        Ignore
+                        {t("Ignore")}
                       </ColorButtonLightBlue>
                     </CardActions>
                   </Box>

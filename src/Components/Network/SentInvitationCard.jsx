@@ -11,6 +11,7 @@ import { ref, getDownloadURL } from "firebase/storage";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, arrayRemove, updateDoc } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import { db, storage } from "../../Firebase/firebase";
 
 const theme2 = createTheme({
@@ -39,6 +40,7 @@ export const SentInvitationCard = ({
   currentUser,
 }) => {
   const [sentRequestedUser, setSentRequestedUser] = useState([]);
+  const { t, i18n } = useTranslation();
   const [imageUrl, setImageUrl] = useState({});
 
   const getProfilePicture = async () => {
@@ -140,7 +142,7 @@ export const SentInvitationCard = ({
                         onClick={withdrawInvitation}
                         id="withdrawButton"
                       >
-                        Withdraw
+                        {t("Withdraw")}
                       </ColorButtonBlue>
                     </CardActions>
                   </Box>

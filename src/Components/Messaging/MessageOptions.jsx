@@ -4,9 +4,11 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FlagIcon from "@mui/icons-material/Flag";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const MessageOptions = ({ index, convoId, reportMessage, reported }) => {
   const antinos = "🖖";
+  const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -45,7 +47,7 @@ const MessageOptions = ({ index, convoId, reportMessage, reported }) => {
           className="reportMsgButton"
         >
           <FlagIcon />
-          {reported ? "Unreport" : "Report"}
+          {reported ? t("Unreport") : t("Report")}
         </MenuItem>
       </Menu>
     </>

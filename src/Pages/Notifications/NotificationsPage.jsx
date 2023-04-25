@@ -3,11 +3,15 @@ import { doc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Stack } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { app, auth } from "../../Firebase/firebase";
 import NotificationCards from "../../Components/Notifications/NotificationCards";
 
 const NotificationsPage = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // Theme for the page
   const theme = createTheme({
     palette: {
@@ -80,7 +84,7 @@ const NotificationsPage = () => {
     const cards = [];
     // If notifications is empty
     if (notifications === []) {
-      cards.push(<h4>No notifications to display :/</h4>);
+      cards.push(<h4>{t("Nonotificationstodisplay")}</h4>);
     } else {
       // Add notification cards
       for (let i = numOfNotifications - 1; i >= 0; i -= 1) {
@@ -116,10 +120,9 @@ const NotificationsPage = () => {
             maxHeight: 150,
           }}
         >
-          Manage your notifications
-          {/* <br></br> */}
+          {t("Manageyournotifications")} {/* <br></br> */}
           <NavLink id="visitSettings" to="/settings">
-            View Settings
+            {t("ViewSettings")}
           </NavLink>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
@@ -137,7 +140,7 @@ const NotificationsPage = () => {
             }}
           >
             {infoAvailable && <>{displayNotifications()}</>}
-            {!infoAvailable && <p>Loading</p>}
+            {!infoAvailable && <p>{t("Loading")}</p>}
           </Stack>
         </Grid>
       </Grid>

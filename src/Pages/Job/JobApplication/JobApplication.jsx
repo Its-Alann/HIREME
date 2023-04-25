@@ -12,6 +12,7 @@ import {
   Box,
   Stack,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -23,6 +24,9 @@ import FileUpload from "../../../Components/FileUpload/FileUpload";
 import { db } from "../../../Firebase/firebase";
 
 const JobApplication = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const navigate = useNavigate();
   // Define the MUI theme to be used in the component
   const theme = createTheme({
@@ -380,13 +384,13 @@ const JobApplication = () => {
       >
         {/* Page title */}
         <Grid item md={12} sm={12} xs={12} sx={{ mt: 4 }}>
-          <Typography variant="h3"> Your Application</Typography>
+          <Typography variant="h3">{t("YourApplication")}</Typography>
         </Grid>
 
         {/* Job title */}
         <Grid item md={12} sm={12} xs={12} sx={{ mt: 2 }}>
           <Typography variant="h6">
-            You are applying for: {`${companyName} ${jobTitle}`}
+            {t("Youareapplyingfor:")} {`${companyName} ${jobTitle}`}
           </Typography>
         </Grid>
 
@@ -399,9 +403,9 @@ const JobApplication = () => {
                 <ListItem disableGutters>
                   <ListItemText sx={{ mr: 5 }}>
                     <Box display="flex" flexDirection="column">
-                      <Typography color="#d32f2f">Resume*</Typography>
+                      <Typography color="#d32f2f"> {t("Resume*")}</Typography>
                       <Typography variant="caption" color="#d32f2f">
-                        Required - Please upload a Resume
+                        {t("Required-PleaseuploadaResume")}
                       </Typography>
                     </Box>
                   </ListItemText>
@@ -455,8 +459,8 @@ const JobApplication = () => {
               <ListItem disableGutters>
                 <ListItemText sx={{ mr: 5 }}>
                   <Box display="flex" flexDirection="column">
-                    <Typography>Resume</Typography>
-                    <Typography variant="caption">Optional</Typography>
+                    <Typography>{t("Resume")}</Typography>
+                    <Typography variant="caption">{t("Optional")}</Typography>
                   </Box>
                 </ListItemText>
                 {resume || resumeUrlfromDB ? (
@@ -511,9 +515,11 @@ const JobApplication = () => {
                 <ListItem disableGutters>
                   <ListItemText sx={{ mr: 5 }}>
                     <Box display="flex" flexDirection="column">
-                      <Typography color="#d32f2f">Cover Letter*</Typography>
+                      <Typography color="#d32f2f">
+                        {t("CoverLetter*")}
+                      </Typography>
                       <Typography variant="caption" color="#d32f2f">
-                        Required - Please upload a Cover Letter
+                        {t("Required-PleaseuploadaCoverLetter")}
                       </Typography>
                     </Box>
                   </ListItemText>
@@ -566,8 +572,8 @@ const JobApplication = () => {
               <ListItem disableGutters>
                 <ListItemText sx={{ mr: 5 }}>
                   <Box display="flex" flexDirection="column">
-                    <Typography>Cover Letter</Typography>
-                    <Typography variant="caption">Optional</Typography>
+                    <Typography>{t("CoverLetter")}</Typography>
+                    <Typography variant="caption">{t("Optional")}</Typography>
                   </Box>
                 </ListItemText>
                 {coverLetter ? (
@@ -621,9 +627,11 @@ const JobApplication = () => {
                 <ListItem disableGutters>
                   <ListItemText sx={{ mr: 5 }}>
                     <Box display="flex" flexDirection="column">
-                      <Typography color="#d32f2f">Transcript*</Typography>
+                      <Typography color="#d32f2f">
+                        {t("Transcript*")}
+                      </Typography>
                       <Typography variant="caption" color="#d32f2f">
-                        Required - Please upload a Transcript
+                        {t("Required-PleaseuploadaTranscript")}
                       </Typography>
                     </Box>
                   </ListItemText>
@@ -676,8 +684,8 @@ const JobApplication = () => {
               <ListItem disableGutters>
                 <ListItemText sx={{ mr: 5 }}>
                   <Box display="flex" flexDirection="column">
-                    <Typography>Transcript</Typography>
-                    <Typography variant="caption">Optional</Typography>
+                    <Typography>{t("Transcript")}</Typography>
+                    <Typography variant="caption">{t("Optional")}</Typography>
                   </Box>
                 </ListItemText>
                 {transcript ? (
@@ -728,21 +736,21 @@ const JobApplication = () => {
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
           <TextField
-            label="Email"
+            label={t("Email")}
             variant="standard"
             InputLabelProps={{ required: true }}
             onChange={(e) => setEmail(e.target.value)}
             error={emailPattern.test(email) === false}
             helperText={
               emailPattern.test(email) === false
-                ? "Please enter a valid email"
+                ? `${t("Pleaseenteravalidemail")}`
                 : ""
             }
           />
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
           <TextField
-            label="Phone Number"
+            label={t("PhoneNumber")}
             variant="standard"
             InputLabelProps={{ required: true }}
             inputProps={{
@@ -759,21 +767,21 @@ const JobApplication = () => {
             error={phonePattern.test(phoneNumber) === false}
             helperText={
               phonePattern.test(phoneNumber) === false
-                ? "Please enter a valid number"
+                ? `${t("Pleaseenteravalidnumber")}`
                 : ""
             }
           />
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
           <TextField
-            label="Address"
+            label={t("Address")}
             variant="standard"
             InputLabelProps={{ required: true }}
             onChange={(e) => setAddress(e.target.value)}
             error={addressPattern.test(address) === false}
             helperText={
               addressPattern.test(address) === false
-                ? "Please enter a valid address"
+                ? `${t("Pleaseenteravalidaddress")}`
                 : ""
             }
           />
@@ -793,7 +801,7 @@ const JobApplication = () => {
             data-testid="submit-button"
             onClick={onSubmit}
           >
-            Submit
+            {t("Submit")}
           </Button>
         </Grid>
       </Grid>

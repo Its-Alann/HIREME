@@ -8,9 +8,20 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { db, auth } from "../../Firebase/firebase";
 import { PossibleConnectionCard } from "../../Components/Network/PossibleConnectionCard";
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
+  },
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 export const NetworkPossibleConnections = ({
   allUserProfiles,
@@ -20,6 +31,8 @@ export const NetworkPossibleConnections = ({
   const [nonConnectedUsersArr, setNonConnectedUsersArr] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
   const [showingNonConnectedUsers, setShowingNonConnectedUsers] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -87,7 +100,7 @@ export const NetworkPossibleConnections = ({
                 ))}
               </Grid>
             ) : (
-              <Typography>No connections yet :/</Typography>
+              <Typography>{t("NoConnection")}</Typography>
             )}
           </Box>
           {nonConnectedUsersArr?.length > pageSize ? (
@@ -96,8 +109,9 @@ export const NetworkPossibleConnections = ({
                 id="Button-Previous"
                 onClick={prevPage}
                 disabled={pageNumber === 1}
+                color="primary"
               >
-                Prev
+                {t("Previous")}
               </Button>
               <Button
                 id="Button-Next"
@@ -106,8 +120,9 @@ export const NetworkPossibleConnections = ({
                   pageNumber ===
                   Math.ceil(nonConnectedUsersArr.length / pageSize)
                 }
+                color="primary"
               >
-                Next
+                {t("Next")}
               </Button>
             </Box>
           ) : null}

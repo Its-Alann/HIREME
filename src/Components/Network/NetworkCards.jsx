@@ -7,6 +7,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
+// import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+// import { Link } from "react-router-dom";
 import { ref, getDownloadURL } from "firebase/storage";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -76,6 +79,7 @@ export const NetworkCards = ({
 }) => {
   const [connectedUser, setConnectedUser] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const { t, i18n } = useTranslation();
   const [imageUrl, setImageUrl] = useState({});
   const navigate = useNavigate();
 
@@ -232,7 +236,7 @@ export const NetworkCards = ({
                         state={{ userID: connectedUserID }}
                       >
                         <ColorButtonBlue size="medium" sx={{ mx: 1 }}>
-                          View Profile
+                          {t("ViewProfile")}
                         </ColorButtonBlue>
                       </Link>
                       {/* <Link to="/messaging" style={{ textDecoration: "none" }}> */}
@@ -240,7 +244,7 @@ export const NetworkCards = ({
                         variant="outlined"
                         onClick={() => navigate("/messaging")}
                       >
-                        Message
+                        {t("Message")}
                       </ColorButtonLightBlue>
                       {/* </Link> */}
 

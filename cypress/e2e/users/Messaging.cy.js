@@ -149,6 +149,7 @@ describe("example to-do app", () => {
       cy.login(messagingTestAccountUid);
       // cy.viewport(1920, 1080);
       cy.visit("http://localhost:3000/messaging");
+      cy.wait(1000);
       cy.get('[data-cy="startNewConvo"]').click();
       cy.get('[data-cy="selectConnections"]').should("be.visible");
       cy.get('[data-cy="submitConnections"]').should("be.disabled");

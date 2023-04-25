@@ -30,6 +30,7 @@ import {
 } from "firebase/firestore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import AddCommentIcon from "@mui/icons-material/AddComment";
+import { useTranslation } from "react-i18next";
 import GroupIcon from "@mui/icons-material/Group";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { onAuthStateChanged } from "firebase/auth";
@@ -104,6 +105,10 @@ const Messaging = () => {
   const scrollToBottom = () => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
+
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
 
   // takes an object {otherAuthors, mostRecent, unRead, groupName}
   const getOtherAuthors = async (chatInfo) => {
@@ -287,7 +292,7 @@ const Messaging = () => {
       setSelectedIndex(-1);
       setMessages([]);
       setConvoId("");
-      setName("New Convo");
+      setName(t("NewConvo"));
     }
   }, [newConvo]);
 
@@ -361,7 +366,7 @@ const Messaging = () => {
                 sx={{ display: "flex", p: 1, justifyContent: "space-between" }}
               >
                 <Typography color="primary" variant="h4" noWrap>
-                  Messaging
+                  {t("Messaging")}
                 </Typography>
                 <IconButton
                   data-cy="startNewConvo"

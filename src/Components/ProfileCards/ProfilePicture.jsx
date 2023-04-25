@@ -3,10 +3,14 @@ import Avatar from "@mui/material/Avatar";
 import { Grid, IconButton } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/firebase";
 
 const ProfilePicture = ({ urlProfilePicture, visitingProfile }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const [hidden, setHidden] = useState(true);
@@ -80,7 +84,7 @@ const ProfilePicture = ({ urlProfilePicture, visitingProfile }) => {
             cursor: "pointer",
           }}
         >
-          {!visitingProfile ? "Upload Picture" : null}
+          {!visitingProfile ? `${t("UploadPicture")}` : null}
         </Avatar>
         {/* <button
           onClick={handleSubmit}

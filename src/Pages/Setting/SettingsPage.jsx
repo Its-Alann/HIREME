@@ -9,9 +9,13 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { Grid, Switch, FormControlLabel } from "@mui/material";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 import { app, auth, db } from "../../Firebase/firebase";
 
 const SettingsPage = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // Theme for the page
   const theme = createTheme({
     palette: {
@@ -203,13 +207,15 @@ const SettingsPage = () => {
           marginLeft: "50px",
           marginRight: "50px",
           marginTop: "20px",
+          width: "auto",
+          alignItems: "center",
         }}
       >
         <Grid item xs={12}>
-          <h2>Notifications you receive</h2>
+          <h2>{t("Notificationsyoureceive")}</h2>
         </Grid>
         <Grid item xs={6}>
-          Connections
+          {t("Connections")}
         </Grid>
         {infoAvailable && (
           <Grid item xs={6}>
@@ -222,14 +228,14 @@ const SettingsPage = () => {
                   defaultChecked={connectionsNotifications}
                 />
               }
-              label={connectionsNotifications ? "On" : "Off"}
+              label={connectionsNotifications ? t("On") : t("Off")}
               onChange={changeConnectionsNotification}
             />
           </Grid>
         )}
-        {!infoAvailable && <p>Loading...</p>}
+        {!infoAvailable && <p>{t("Loading")}...</p>}
         <Grid item xs={6}>
-          Job Suggestions
+          {t("JobSuggestions")}
         </Grid>
         {infoAvailable && (
           <Grid item xs={6}>
@@ -242,12 +248,12 @@ const SettingsPage = () => {
                   defaultChecked={jobNotifications}
                 />
               }
-              label={jobNotifications ? "On" : "Off"}
+              label={jobNotifications ? t("On") : t("Off")}
               onChange={changeJobNotification}
             />
           </Grid>
         )}
-        {!infoAvailable && <p>Loading...</p>}
+        {!infoAvailable && <p>{t("Loading")}...</p>}
       </Grid>
     </ThemeProvider>
   );

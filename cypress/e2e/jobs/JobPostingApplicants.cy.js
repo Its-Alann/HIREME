@@ -46,7 +46,7 @@ describe("Change the application status to viewed", () => {
     cy.get(".css-1acyv19 > .MuiButton-root").click();
     cy.get(
       ":nth-child(2) > .MuiPaper-root > .MuiButtonBase-root > .MuiCardContent-root > .MuiTypography-root"
-    ).should("have.text", "rejected");
+    ).should("have.text", "Rejected");
   });
 });
 
@@ -71,7 +71,7 @@ describe("Change the application status interview", () => {
     cy.get(".css-1acyv19 > .MuiButton-root").click();
     cy.get(
       ":nth-child(2) > .MuiPaper-root > .MuiButtonBase-root > .MuiCardContent-root > .MuiTypography-root"
-    ).should("have.text", "interview");
+    ).should("have.text", "Interview");
   });
 });
 

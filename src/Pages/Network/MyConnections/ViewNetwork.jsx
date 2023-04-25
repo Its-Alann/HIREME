@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { NetworkCards } from "../../../Components/Network/NetworkCards";
 import image2 from "../../../Assets/images/390image2.svg";
@@ -20,6 +21,7 @@ export const ViewNetwork = ({
   currentUserEmail,
 }) => {
   const [connectedUsersId, setConnectedUsersId] = useState([]);
+  const { t, i18n } = useTranslation();
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
   const [showingConnections, setShowingConnections] = useState([]);
@@ -99,7 +101,7 @@ export const ViewNetwork = ({
                   // alt="Trees"
                 />
                 <Typography variant="h5" sx={{ ml: 1 }}>
-                  No connections to show
+                  {t("NoConnection")}
                 </Typography>
               </>
             )}

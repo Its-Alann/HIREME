@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,6 +29,9 @@ const EducationCard = ({
   isLast,
   visitingProfile,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const schName = `schoolName${cardNum}`;
   const schDegree = `schoolDegree${cardNum}`;
   const schProgram = `schoolProgram${cardNum}`;
@@ -73,7 +77,7 @@ const EducationCard = ({
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Education </Typography>
+              <Typography variant="h5"> {t("Education")} </Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -88,7 +92,7 @@ const EducationCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="School name"
+                label={t("SchoolName")}
                 name="SchoolName"
                 variant="standard"
                 size="small"
@@ -110,7 +114,7 @@ const EducationCard = ({
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Start Date"
+                  label={t("StartDate")}
                   value={tempStartDate}
                   readOnly={!editButton}
                   onChange={(newValue) => {
@@ -135,7 +139,7 @@ const EducationCard = ({
             <Grid item>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="End Date"
+                  label={t("EndDate")}
                   value={tempEndDate}
                   readOnly={!editButton}
                   onChange={(newValue) => {
@@ -161,7 +165,7 @@ const EducationCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Degree"
+                label={t("Degree")}
                 name="Degree"
                 variant="standard"
                 size="small"
@@ -182,7 +186,7 @@ const EducationCard = ({
             </Grid>
             <Grid item>
               <TextField
-                label="Program"
+                label={t("Program")}
                 name="Program"
                 variant="standard"
                 size="small"
@@ -222,13 +226,13 @@ const EducationCard = ({
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
                     <DialogContentText>
-                      Are you sure you want to delete this card?
+                      {t("Areyousureyouwanttodeletethiscard?")}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
                     <Button onClick={handleClearCardInfo} name="eduPopupDel">
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </DialogActions>
                 </Dialog>

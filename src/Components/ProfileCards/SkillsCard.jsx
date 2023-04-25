@@ -8,12 +8,16 @@ import {
   Chip,
   TextField,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import PropTypes from "prop-types";
 
 // eslint-disable-next-line react/prop-types
 const SkillsCard = ({ setProfile, profile, visitingProfile }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [skillsStr, setSkillsStr] = useState("");
   const [editButton, setEditButton] = useState(false);
   const [skillArr, setSkillArr] = useState([]);
@@ -51,7 +55,7 @@ const SkillsCard = ({ setProfile, profile, visitingProfile }) => {
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Skills </Typography>
+              <Typography variant="h5"> {t("Skills")}</Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -65,7 +69,7 @@ const SkillsCard = ({ setProfile, profile, visitingProfile }) => {
           </Grid>
           <Grid container>
             <TextField
-              label="Skill"
+              label={t("Skill")}
               name="SkillInput"
               variant="standard"
               size="small"

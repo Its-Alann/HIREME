@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { ReceivedInvitationCard } from "../../../Components/Network/ReceivedInvitationCard";
 import image2 from "../../../Assets/images/390image2.svg";
@@ -19,6 +20,7 @@ export const ReceivedInvitation = ({
   currentUserEmail,
 }) => {
   const [receivedInvitations, setReceivedInvitations] = useState([]);
+  const { t, i18n } = useTranslation();
   const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
   const [showingReceivedInvites, setShowingReceivedInvites] = useState([]);
@@ -96,8 +98,9 @@ export const ReceivedInvitation = ({
                     // alt="Trees"
                   />
                   <Stack alignItems="center" sx={{ ml: 1 }}>
-                    <Typography variant="h5">You have not received</Typography>
-                    <Typography variant="h5">any invitations</Typography>
+                    <Typography variant="h5">
+                      {t("NoReceivedInvitations")}
+                    </Typography>
                   </Stack>
                 </>
               )}
@@ -109,7 +112,7 @@ export const ReceivedInvitation = ({
                   onClick={prevPage}
                   disabled={pageNumber === 1}
                 >
-                  Prev
+                  {t("Prev")}
                 </Button>
                 <Button
                   id="Button-Next"
@@ -119,7 +122,7 @@ export const ReceivedInvitation = ({
                     Math.ceil(receivedInvitationIDs.length / pageSize)
                   }
                 >
-                  Next
+                  {t("Next")}
                 </Button>
               </Box>
             ) : null}

@@ -20,6 +20,7 @@ import {
   getFirestore,
   updateDoc,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -29,6 +30,14 @@ import { auth, db, app } from "../../Firebase/firebase";
 import "./Job.css";
 
 export const BrowseJobs = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
+  // const [jobs, setJobs] = React.useState([]);
+  // const [lastJob, setLastJob] = React.useState(null);
+  // const [firstJob, setFirstJob] = React.useState(null);
+  // const [companiesName, setCompaniesName] = React.useState({});
+  // const [companiesLogo, setCompaniesLogo] = React.useState({});
   const [userEmail, setUserEmail] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [lastJob, setLastJob] = useState(null);
@@ -270,11 +279,11 @@ export const BrowseJobs = () => {
     <Container sx={{ mb: 10 }}>
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Browse Jobs
+          {t("BrowseJobs")}
         </Typography>
         <Typography>
-          This Page list all jobs, {jobsPerPage} per page. Everyone can access
-          this page.
+          {t("ThisPagelistalljobs,")} {jobsPerPage}{" "}
+          {t("perpage.Everyonecanaccessthispage.")}
         </Typography>
 
         {jobs.map((job) => {
@@ -308,7 +317,12 @@ export const BrowseJobs = () => {
                     <Box>
                       <Typography variant="h4">{job.title}</Typography>
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography>{companiesName[job.companyID]}</Typography>
+                        <Link
+                          to={`/companyPage/${job.companyID}`}
+                          style={{ textDecoration: "none", color: "purple" }}
+                        >
+                          {companiesName[job.companyID]}
+                        </Link>
                         {userEmail !== null &&
                         favoriteCompanies != null &&
                         favoriteCompanies.includes(job.companyID) ? (
@@ -341,7 +355,7 @@ export const BrowseJobs = () => {
                           }}
                           onClick={() => handleRemoveSaved(job.documentID)}
                         >
-                          Unsave
+                          {t("Unsave")}
                         </Button>
                       ) : (
                         <Button
@@ -357,7 +371,7 @@ export const BrowseJobs = () => {
                           }}
                           onClick={() => handleAddSaved(job.documentID)}
                         >
-                          Save
+                          {t("Save")}
                         </Button>
                       )}
                     </Box>
@@ -388,19 +402,19 @@ export const BrowseJobs = () => {
                           style={{ textDecoration: "none" }}
                         >
                           {/* <Link to="/job/1"> */}
-                          View job
+                          {t("Viewjob")}
                         </Link>
                       ) : (
                         <a
                           href={job.link}
                           style={{ color: "white", textDecoration: "none" }}
                         >
-                          Apply On Other Site
+                          {t("ApplyOnOtherSite")}
                         </a>
                       )}
                     </Button>
                     <Typography>
-                      Deadline:{" "}
+                      {t("Deadline")}{" "}
                       {new Date(
                         job.deadline.seconds * 1000 +
                           job.deadline.nanoseconds / 1000000
@@ -413,10 +427,10 @@ export const BrowseJobs = () => {
           );
         })}
         <Button id="Button-Previous" onClick={() => getJobs(previousJobsQuery)}>
-          Previous
+          {t("Previous")}
         </Button>
         <Button id="Button-Next" onClick={() => getJobs(nextJobsQuery)}>
-          Next
+          {t("Next")}
         </Button>
       </Box>
     </Container>

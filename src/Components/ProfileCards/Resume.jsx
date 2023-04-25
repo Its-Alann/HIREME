@@ -8,6 +8,7 @@ import {
   Alert,
   Snackbar,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { getAuth } from "firebase/auth";
 import PropTypes from "prop-types";
@@ -28,6 +29,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
  * @return Resume component
  */
 const Resume = ({ resumeUrl, visitingProfile }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   // Current resume url created from file upload
   const [url, setUrl] = useState("");
   // Variable to hide submit button
@@ -142,7 +146,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
       >
         {/* Title, upload file button and file name display */}
         <Grid item xs={12} md={12}>
-          <h4 style={{ color: "#eaeaea" }}>Upload a resume!</h4>
+          <h4 style={{ color: "#eaeaea" }}>{t("Uploadaresume!")}</h4>
           <Button
             component="label"
             style={{ backgroundColor: "#eaeaea" }}
@@ -150,7 +154,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
             variant="outlined"
             name="UploadBtn"
           >
-            Upload a file
+            {t("Uploadafile")}
             <input
               accept="application/pdf"
               type="file"
@@ -163,7 +167,9 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
             variant="primary"
             style={{ color: "white", paddingLeft: "10px" }}
           >
-            File Chosen: {resumeName === "" ? "none" : resumeName}
+            {resumeName === ""
+              ? `${t("FileChosennone")}`
+              : `${t("FileChosen")} ${resumeName}`}
           </Typography>
         </Grid>
         {/* View resume and submit button */}
@@ -178,7 +184,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
             variant="outlined"
             onClick={handleOpenResume}
           >
-            View Resume
+            {t("ViewResume")}
           </Button>
           <Button
             onClick={handleSubmit}
@@ -191,7 +197,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
               marginLeft: "12px",
             }}
           >
-            Submit
+            {t("Submit")}
           </Button>
 
           {/* Alert for resume Upload status */}
@@ -205,7 +211,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
               severity="success"
               sx={{ width: "100%" }}
             >
-              Resume Upload Sucessful!
+              {t("ResumeUploadSucessful!")}
             </Alert>
           </Snackbar>
 
@@ -234,10 +240,10 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
                       : resume
                   }
                   onLoadSuccess={onDocumentLoadSuccess}
-                  loading="Loading resume, please wait..."
+                  loading={t("Loadingresume,please wait...")}
                   onLoadError={(error) =>
                     // eslint-disable-next-line no-alert
-                    alert(`Error while loading document! ${error.message}`)
+                    alert(`${t("Errorwhileloadingdocument!")} ${error.message}`)
                   }
                 >
                   <Page pageNumber={pageNumber} />
@@ -250,7 +256,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
                   }}
                 >
                   <p>
-                    Page {pageNumber || (numPages ? 1 : "--")} of{" "}
+                    {t("Page")} {pageNumber || (numPages ? 1 : "--")} {t("of")}{" "}
                     {numPages || "--"}
                   </p>
                   <Button
@@ -261,7 +267,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
                     color="primary"
                     variant="outlined"
                   >
-                    Previous
+                    {t("Previous")}
                   </Button>
                   <Button
                     type="button"
@@ -271,7 +277,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
                     color="primary"
                     variant="outlined"
                   >
-                    Next
+                    {t("Next")}
                   </Button>
                 </div>
               </div>

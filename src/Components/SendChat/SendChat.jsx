@@ -24,12 +24,15 @@ import {
   listAll,
   deleteObject,
 } from "firebase/storage";
+import { useTranslation } from "react-i18next";
 import EmojiPicker from "emoji-picker-react";
 import FileUpload from "../FileUpload/FileUpload";
 import { app, db, storage } from "../../Firebase/firebase";
 import EmojiPickerButton from "../EmojiPicker/EmojiPickerButton";
 
 const SendChat = ({ conversationID, myUser, selectedIndex }) => {
+  const { t, i18n } = useTranslation();
+
   // const SendChat = ({ conversationID }) => {
   const [messageContent, setMessageContent] = useState("");
   const [url, setUrl] = useState();
@@ -157,7 +160,8 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
             isUploading ? (
               <Grid container>
                 <Typography variant="caption" noWrap>
-                  Uploading {file.name} ...
+                  {t("Uploading")}
+                  {file.name} ...
                 </Typography>
                 <Typography variant="caption">{uploadProgress}%</Typography>
               </Grid>
@@ -193,7 +197,7 @@ const SendChat = ({ conversationID, myUser, selectedIndex }) => {
               variant="standard"
               hiddenLabel
               id="message-input"
-              placeholder="Type Something"
+              placeholder={t("TypeSomething")}
               fullWidth
               onChange={(e) => setMessageContent(e.target.value)}
               onKeyDown={async (e) => {

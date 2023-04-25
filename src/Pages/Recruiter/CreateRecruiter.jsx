@@ -6,11 +6,15 @@ import Autocomplete from "@mui/material/Autocomplete";
 import * as React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { setDoc, collection, query, getDocs, doc } from "firebase/firestore";
 import { auth, db } from "../../Firebase/firebase";
 
 export const CreateRecruiter = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [recruiterInformation, setRecruiterInformation] = React.useState({
     firstName: "",
     lastName: "",
@@ -46,11 +50,11 @@ export const CreateRecruiter = () => {
     <Container maxWidth="md">
       <Box sx={{ pt: 5 }}>
         <Typography variant="h4" sx={{ pb: 2 }}>
-          Recruiter Account Creation
+          {t("RecruiterAccountCreation")}
         </Typography>
         <Stack spacing={2}>
           <Box>
-            <Typography>Recruiter First Name</Typography>
+            <Typography>{t("RecruiterFirstName")}</Typography>
             <TextField
               required
               id="TextField-FirstName"
@@ -68,7 +72,7 @@ export const CreateRecruiter = () => {
           </Box>
 
           <Box>
-            <Typography>Recruiter Last Name</Typography>
+            <Typography>{t("RecruiterLastName")}</Typography>
             <TextField
               required
               id="TextField-LastName"
@@ -86,7 +90,7 @@ export const CreateRecruiter = () => {
           </Box>
 
           <Box>
-            <Typography>Company</Typography>
+            <Typography>{t("Company")}</Typography>
             <Autocomplete
               options={companyList}
               id="ComboBox-CompanyList"
@@ -105,7 +109,7 @@ export const CreateRecruiter = () => {
                 })
               }
             />
-            <a href="/createCompany">Company does not exist yet?</a>
+            <a href="/createCompany">{t("Companydoesnotexistyet?")}</a>
           </Box>
         </Stack>
         <Link to="/">
@@ -116,7 +120,7 @@ export const CreateRecruiter = () => {
             sx={{ mt: 2 }}
             onClick={() => handleSubmit()}
           >
-            Save
+            {t("Save")}
           </Button>
         </Link>
       </Box>

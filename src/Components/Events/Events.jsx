@@ -4,6 +4,7 @@ import { collection, getDoc, getDocs, doc } from "firebase/firestore";
 import { CircularProgress, Typography } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import Box from "@mui/material/Box";
+import { useTranslation } from "react-i18next";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import EventIcon from "@mui/icons-material/Event";
@@ -14,6 +15,9 @@ import EventCard from "./EventCard";
 import { db, auth } from "../../Firebase/firebase";
 
 const Events = ({ companyID, companyLogo, companyName }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [events, setEvents] = useState([]);
   const [isRecruiter, setIsRecruiter] = useState(false);
 
@@ -56,7 +60,7 @@ const Events = ({ companyID, companyLogo, companyName }) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="h4">Events</Typography>
+          <Typography variant="h4">{t("Events")}</Typography>
           {isRecruiter ? (
             <Button
               variant="contained"
@@ -78,7 +82,7 @@ const Events = ({ companyID, companyLogo, companyName }) => {
                   alignSelf="center"
                   justifyContent="space-between"
                 >
-                  Create Event &nbsp;&nbsp;
+                  {t("CreateEvent")} &nbsp;&nbsp;
                   <EventIcon sx={{ fontSize: "25px" }} />
                 </Stack>
               </Link>

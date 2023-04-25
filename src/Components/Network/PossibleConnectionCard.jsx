@@ -8,19 +8,23 @@ import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import { PropTypes } from "prop-types";
-import { styled } from "@mui/material/styles";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
 import { getDoc, doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
+import { useTranslation } from "react-i18next";
 import { db, storage } from "../../Firebase/firebase";
 
-const ColorButtonBlue = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(blue[800]),
-  backgroundColor: blue[800],
-  "&:hover": {
-    backgroundColor: blue[900],
+const theme = createTheme({
+  palette: {
+    primary: { main: "#2B2F90" },
+    background: { main: "#EAEAEA" },
+    gray: { main: "#757575" },
   },
-}));
+  typography: {
+    fontFamily: ["Proxima Nova"],
+  },
+});
 
 export const PossibleConnectionCard = ({
   allUserProfiles,
@@ -28,6 +32,7 @@ export const PossibleConnectionCard = ({
   currentUser,
 }) => {
   const [possibleConnectionUser, setPossibleConnectionUser] = useState([]);
+  const { t, i18n } = useTranslation();
   const [imageUrl, setImageUrl] = useState({});
 
   const getProfilePicture = async () => {
@@ -131,7 +136,7 @@ export const PossibleConnectionCard = ({
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    <ThemeProvider theme={theme}>
       {possibleConnectionUserId ? (
         <div>
           <Box sx={{ width: 300, minWidth: 100 }}>
@@ -172,7 +177,7 @@ export const PossibleConnectionCard = ({
                     // <CardActions>
                   }
                   {/*view profile will go to the user's profile and message will be sent to the */}
-                  <ColorButtonBlue
+                  <Button
                     size="medium"
                     onClick={sendInvitation}
                     data-cy={`invitationButton${
@@ -182,9 +187,11 @@ export const PossibleConnectionCard = ({
                       possibleConnectionUser?.values?.firstName ?? ""
                     }`}
                     sx={{ mb: 1 }}
+                    color="primary"
+                    variant="contained"
                   >
-                    Send Invitation
-                  </ColorButtonBlue>
+                    {t("SendInvitation")}
+                  </Button>
                   {
                     //</CardActions>
                   }
@@ -194,7 +201,7 @@ export const PossibleConnectionCard = ({
           </Box>
         </div>
       ) : null}
-    </>
+    </ThemeProvider>
   );
 };
 

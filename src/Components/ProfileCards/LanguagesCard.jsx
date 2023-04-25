@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -29,6 +30,9 @@ const LanguagesCard = ({
   isLast,
   visitingProfile,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const language = `language${cardNum}`;
   const proficiency = `language${cardNum}proficiency`;
   const [editButton, setEditButton] = useState(false);
@@ -59,7 +63,7 @@ const LanguagesCard = ({
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Language </Typography>
+              <Typography variant="h5"> {t("Language")}</Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -74,7 +78,7 @@ const LanguagesCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Language"
+                label={t("Language")}
                 name="Language"
                 variant="standard"
                 size="small"
@@ -93,12 +97,12 @@ const LanguagesCard = ({
             <Grid item sx={{ mr: "auto" }}>
               <Box sx={{ minWidth: 300 }}>
                 <FormControl fullWidth variant="standard">
-                  <InputLabel> Proficiency</InputLabel>
+                  <InputLabel> {t("Proficiency")}</InputLabel>
                   <Select
                     id="language-dropdown"
                     name="LanguageDropdown"
                     value={profile.values[proficiency]}
-                    label="Proficiency"
+                    label={t("Proficiency")}
                     onChange={(e) =>
                       setProfile({
                         values: {
@@ -109,9 +113,9 @@ const LanguagesCard = ({
                     }
                     inputProps={{ readOnly: !editButton }}
                   >
-                    <MenuItem value="Fluent">Fluent</MenuItem>
-                    <MenuItem value="Inter">Intermediate</MenuItem>
-                    <MenuItem value="Beginner">Beginner</MenuItem>
+                    <MenuItem value="Fluent">{t("Fluent")}</MenuItem>
+                    <MenuItem value="Inter">{t("Intermediate")}</MenuItem>
+                    <MenuItem value="Beginner">{t("Beginner")}</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
@@ -129,13 +133,13 @@ const LanguagesCard = ({
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
                     <DialogContentText>
-                      Are you sure you want to delete this card?
+                      {t("Areyousureyouwanttodeletethiscard?")}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
                     <Button onClick={handleClearCardInfo} name="langPopupDel">
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </DialogActions>
                 </Dialog>

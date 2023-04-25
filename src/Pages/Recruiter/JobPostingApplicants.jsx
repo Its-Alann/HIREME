@@ -21,6 +21,7 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import * as React from "react";
 import {
   deleteDoc,
@@ -50,6 +51,9 @@ const style = {
 };
 
 export const JobPostingApplicants = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const navigate = useNavigate();
   const pageCompanyID = useParams().companyID;
   const pageJobID = useParams().jobID;
@@ -159,7 +163,7 @@ export const JobPostingApplicants = () => {
   // 1. Recruiter will select from interview (green), viewed (orange), rejected (red), and pending (grey default)
   const handleOpen = (status, fName, lName, email, docID) => {
     setSelectedApplicantStatus(status);
-    setSelectedApplicantName(fName + lName);
+    setSelectedApplicantName(`${fName} ${lName}`);
     setSelectedApplicantEmail(email);
     setSelectedApplicantDocID(docID);
     setOpen(true);
@@ -361,22 +365,25 @@ export const JobPostingApplicants = () => {
                     aria-describedby="alert-dialog-description"
                   >
                     <DialogTitle id="alert-dialog-title">
-                      Are you sure you would like to remove the job posting?
+                      {t("Areyousureyouwouldliketoremovethejobposting?")}
                     </DialogTitle>
                     <DialogContent>
                       <DialogContentText id="alert-dialog-description">
-                        This job posting will be removed completely. All data
-                        related to this post will be erased.
+                        {t(
+                          "Thisjobpostingwillberemovedcompletely.Alldatarelatedtothispostwillbeerased."
+                        )}
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                      <Button onClick={handleCloseRemoveJob}>Cancel</Button>
+                      <Button onClick={handleCloseRemoveJob}>
+                        {t("Cancel")}
+                      </Button>
                       <Button
                         sx={{ color: "red" }}
                         onClick={removeJobAndApplicants}
                         autoFocus
                       >
-                        Remove
+                        {t("Remove")}
                       </Button>
                     </DialogActions>
                   </Dialog>
@@ -399,15 +406,21 @@ export const JobPostingApplicants = () => {
                 <Divider />
                 <Stack spacing={2}>
                   <Box sx={{ pt: 2 }}>
-                    <Typography sx={{ fontSize: 20 }}>About the job</Typography>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {t("Aboutthejob")}
+                    </Typography>
                     <Typography>{job.description}</Typography>
                   </Box>
                   <Box>
-                    <Typography sx={{ fontSize: 20 }}>Requirements</Typography>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {t("Requirements")}
+                    </Typography>
                     <Typography>{job.requirement}</Typography>
                   </Box>
-                  <Box>
-                    <Typography sx={{ fontSize: 20 }}>Benefits</Typography>
+                  <Box sx={{ pb: 2 }}>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {t("Benefits")}
+                    </Typography>
                     <Typography>{job.benefits}</Typography>
                   </Box>
                 </Stack>
@@ -415,15 +428,19 @@ export const JobPostingApplicants = () => {
                 <Divider />
                 <Stack spacing={2}>
                   <Box sx={{ pt: 2 }}>
-                    <Typography sx={{ fontSize: 20 }}>Resume</Typography>
+                    <Typography sx={{ fontSize: 20 }}>{t("Resume")}</Typography>
                     <Typography>{checkedResume}</Typography>
                   </Box>
                   <Box>
-                    <Typography sx={{ fontSize: 20 }}>Cover Letter</Typography>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {t("CoverLetter")}
+                    </Typography>
                     <Typography>{checkedCoverLetter}</Typography>
                   </Box>
                   <Box>
-                    <Typography sx={{ fontSize: 20 }}>Transcript</Typography>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {t("Transcript")}
+                    </Typography>
                     <Typography>{checkedTranscript}</Typography>
                   </Box>
                   {thirdPartyLink !== "" && (
@@ -447,7 +464,7 @@ export const JobPostingApplicants = () => {
           <Card variant="outlined">
             <Box sx={{ m: 2 }}>
               <Box sx={{ pb: 2 }}>
-                <Typography variant="h4">Applicants</Typography>
+                <Typography variant="h4">{t("Applicants")}</Typography>
                 {applicants !== null && applicants.length > 0 ? (
                   applicants.map((applicant) => {
                     const hello = "hello";
@@ -501,7 +518,13 @@ export const JobPostingApplicants = () => {
                               }}
                             >
                               <Typography sx={{ textTransform: "uppercase" }}>
-                                {applicant.applicantStatus}
+                                {applicant.applicantStatus === "interview"
+                                  ? t("Interview")
+                                  : applicant.applicantStatus === "viewed"
+                                  ? t("Viewed")
+                                  : applicant.applicantStatus === "rejected"
+                                  ? t("Rejected")
+                                  : t("Pending")}
                               </Typography>
                             </CardContent>
                           </CardActionArea>
@@ -510,7 +533,7 @@ export const JobPostingApplicants = () => {
                     );
                   })
                 ) : (
-                  <Typography>No applicants :/</Typography>
+                  <Typography>{t("Noapplicants")}</Typography>
                 )}
               </Box>
             </Box>
@@ -530,25 +553,26 @@ export const JobPostingApplicants = () => {
             </Box>
 
             <Typography variant="h6" component="h2">
-              Change application status for {selectedApplicantName}
+              {t("Changeapplicationstatusfor")}
+              {selectedApplicantName}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              The current status is {selectedApplicantStatus}
+              {t("Thecurrentstatusis")} {selectedApplicantStatus}
             </Typography>
             <Stack direction="row" display="flex" alignItems="center">
               <Typography sx={{ mr: 2 }}>
-                Change application status to:
+                {t("Changeapplicationstatusto")}
               </Typography>
               <Select
                 value={changedApplicationStatus}
                 onChange={handleStatusChange}
               >
-                <MenuItem value="interview">Interview</MenuItem>
-                <MenuItem value="viewed">Viewed</MenuItem>
-                <MenuItem value="rejected">Rejected</MenuItem>
+                <MenuItem value="interview">{t("Interview")}</MenuItem>
+                <MenuItem value="viewed">{t("Viewed")}</MenuItem>
+                <MenuItem value="rejected">{t("Rejected")}</MenuItem>
               </Select>
             </Stack>
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button onClick={handleSubmit}>{t("Submit")}</Button>
           </Box>
         </Modal>
       </Grid>

@@ -6,6 +6,7 @@ import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
@@ -20,6 +21,9 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import { db, auth } from "../../Firebase/firebase";
 
 export const MyJobs = () => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const [myJobs, setMyJobs] = React.useState([]);
   const [jobs, setJobs] = React.useState([]);
   const [companiesName, setCompaniesName] = React.useState({});
@@ -148,7 +152,7 @@ export const MyJobs = () => {
           justifyContent="space-between"
         >
           <Typography variant="h4" sx={{ pb: 2 }}>
-            My Jobs
+            {t("MyJobs")}
           </Typography>
           {/* button for recruiter's view */}
           <Button
@@ -171,15 +175,14 @@ export const MyJobs = () => {
                 alignSelf="center"
                 justifyContent="space-between"
               >
-                Create Job &nbsp;&nbsp;
+                {t("CreateJob")} &nbsp;&nbsp;
                 <PostAddIcon sx={{ fontSize: "25px" }} />
               </Stack>
             </Link>
           </Button>
         </Stack>
         <Typography>
-          This Page list all jobs belong to me, {jobsPerPage} per page. Only I
-          should be able to see the page.
+          {t("ThisPagelistalljobs,")} {jobsPerPage} {t("perpage.")}
         </Typography>
         {jobs.map((job) => {
           // Anti eslint
@@ -243,11 +246,11 @@ export const MyJobs = () => {
                         style={{ textDecoration: "none" }}
                       >
                         {/* <Link to="/job/1"> */}
-                        View job
+                        {t("Viewjob")}
                       </Link>
                     </Button>
                     <Typography>
-                      Deadline:{" "}
+                      {t("Deadline")}{" "}
                       {new Date(
                         job.deadline.seconds * 1000 +
                           job.deadline.nanoseconds / 1000000
@@ -263,10 +266,10 @@ export const MyJobs = () => {
           id="Button-Previous"
           onClick={() => setCursorToPreviousPosition()}
         >
-          Previous
+          {t("Previous")}
         </Button>
         <Button id="Button-Next" onClick={() => setCursorToNextPosition()}>
-          Next
+          {t("Next")}
         </Button>
       </Box>
     </Container>

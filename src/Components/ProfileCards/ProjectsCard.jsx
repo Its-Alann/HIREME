@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -25,6 +26,9 @@ const ProjectsCard = ({
   isLast,
   visitingProfile,
 }) => {
+  // Set the strings based on the language defined by the user
+  const { t, i18n } = useTranslation();
+
   const projTitle = `proj${cardNum}title`;
   const projDesc = `proj${cardNum}description`;
   const [editButton, setEditButton] = useState(false);
@@ -55,7 +59,7 @@ const ProjectsCard = ({
         <CardContent>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5"> Project </Typography>
+              <Typography variant="h5"> {t("Project")}</Typography>
             </Grid>
             <Grid item>
               <EditIcon
@@ -70,7 +74,7 @@ const ProjectsCard = ({
           <Grid container spacing={3}>
             <Grid item>
               <TextField
-                label="Project Title"
+                label={t("ProjectTitle")}
                 name="ProjectTitle"
                 variant="standard"
                 size="small"
@@ -90,7 +94,7 @@ const ProjectsCard = ({
           <Grid container spacing={3}>
             <Grid item sx={{ mr: "auto" }}>
               <TextField
-                label="Project Description"
+                label={t("ProjectDescription")}
                 name="ProjectDescription"
                 variant="standard"
                 size="small"
@@ -121,13 +125,13 @@ const ProjectsCard = ({
                 <Dialog open={deleteAlert} onClose={handleClose}>
                   <DialogContent>
                     <DialogContentText>
-                      Are you sure you want to delete this card?
+                      {t("Areyousureyouwanttodeletethiscard?")}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
                     <Button onClick={handleClearCardInfo} name="projPopupDel">
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </DialogActions>
                 </Dialog>

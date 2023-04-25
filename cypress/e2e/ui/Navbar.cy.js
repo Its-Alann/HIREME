@@ -83,38 +83,38 @@ describe("Test the navbar component", () => {
       cy.get('[data-cy="userBox"]').within(() =>
         cy.get('[data-cy="userMenu"]').click()
       );
-      cy.get('[data-cy="Profile-phone-test"]').click();
+      cy.get('[data-cy="profile-test"]').click();
 
       cy.logout();
       cy.login();
       cy.visit("http://localhost:3000");
     });
 
-    it("open user menu on mobile resolution and select Account", () => {
+    it("open user menu on mobile resolution and select Settings", () => {
       cy.login();
       cy.viewport(390, 844);
       cy.get('[data-cy="userBox"]').within(() =>
         cy.get('[data-cy="userMenu"]').click()
       );
-      cy.get('[data-cy="Account-phone-test"]').click();
+      cy.get('[data-cy="setting-test"]').click();
 
       cy.logout();
       cy.login();
       cy.visit("http://localhost:3000");
     });
 
-    it("open user menu on mobile resolution and select Dashboard", () => {
-      cy.login();
-      cy.viewport(390, 844);
-      cy.get('[data-cy="userBox"]').within(() =>
-        cy.get('[data-cy="userMenu"]').click()
-      );
-      cy.get('[data-cy="Dashboard-phone-test"]').click();
+    // it("open user menu on mobile resolution and select Dashboard", () => {
+    //   cy.login();
+    //   cy.viewport(390, 844);
+    //   cy.get('[data-cy="userBox"]').within(() =>
+    //     cy.get('[data-cy="userMenu"]').click()
+    //   );
+    //   cy.get('[data-cy="Dashboard-phone-test"]').click();
 
-      cy.logout();
-      cy.login();
-      cy.visit("http://localhost:3000");
-    });
+    //   cy.logout();
+    //   cy.login();
+    //   cy.visit("http://localhost:3000");
+    // });
 
     it("open user menu on mobile resolution and log out", () => {
       cy.wait(1000);
@@ -235,9 +235,7 @@ describe("Test the navbar component", () => {
       cy.visit("http://localhost:3000");
       cy.wait(1000);
       cy.get('[data-cy="Jobs-test"]').click();
-      cy.get(
-        ':nth-child(6) > .MuiPaper-root > .MuiList-root > [data-cy="view-saved-job-test"]'
-      ).click();
+      cy.get('[data-cy="view-saved-job-test"]').click();
       cy.wait(1000);
       cy.url().should("include", "/savedJobs");
       cy.url().should("eq", "http://localhost:3000/savedJobs");
@@ -267,21 +265,21 @@ describe("Test the navbar component", () => {
       cy.contains("Profile").click();
     });
 
-    it("clicks on Account", () => {
-      cy.login();
-      cy.viewport(1920, 1080);
-      cy.visit("http://localhost:3000");
-      cy.get(".MuiAvatar-root").click();
-      cy.contains("Account").click();
-    });
+    // it("clicks on Account", () => {
+    //   cy.login();
+    //   cy.viewport(1920, 1080);
+    //   cy.visit("http://localhost:3000");
+    //   cy.get(".MuiAvatar-root").click();
+    //   cy.contains("Account").click();
+    // });
 
-    it("clicks on Dashboard", () => {
-      cy.login();
-      cy.viewport(1920, 1080);
-      cy.visit("http://localhost:3000");
-      cy.get(".MuiAvatar-root").click();
-      cy.contains("Dashboard").click();
-    });
+    // it("clicks on Dashboard", () => {
+    //   cy.login();
+    //   cy.viewport(1920, 1080);
+    //   cy.visit("http://localhost:3000");
+    //   cy.get(".MuiAvatar-root").click();
+    //   cy.contains("Dashboard").click();
+    // });
 
     it("clicks on logout", () => {
       cy.login();
@@ -421,29 +419,29 @@ describe("Test the navbar component", () => {
       cy.viewport(390, 844);
       cy.visit("http://localhost:3000");
       cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="Profile-phone-test"]').click();
+      cy.get('[data-cy="profile-test"]').click();
       cy.wait(500);
     });
 
-    it("clicks on Account", () => {
-      cy.wait(500);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="Account-phone-test"]').click();
-      cy.wait(500);
-    });
+    // it("clicks on Account", () => {
+    //   cy.wait(500);
+    //   cy.login();
+    //   cy.viewport(390, 844);
+    //   cy.visit("http://localhost:3000");
+    //   cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
+    //   cy.get('[data-cy="Account-phone-test"]').click();
+    //   cy.wait(500);
+    // });
 
-    it("clicks on Dashboard", () => {
-      cy.wait(1000);
-      cy.login();
-      cy.viewport(390, 844);
-      cy.visit("http://localhost:3000");
-      cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
-      cy.get('[data-cy="Dashboard-phone-test"]').click();
-      cy.wait(1000);
-    });
+    // it("clicks on Dashboard", () => {
+    //   cy.wait(1000);
+    //   cy.login();
+    //   cy.viewport(390, 844);
+    //   cy.visit("http://localhost:3000");
+    //   cy.get('[data-cy="userBox"]').within(() => cy.get("Button").click());
+    //   cy.get('[data-cy="Dashboard-phone-test"]').click();
+    //   cy.wait(1000);
+    // });
 
     it("clicks on logout", () => {
       cy.wait(1000);
