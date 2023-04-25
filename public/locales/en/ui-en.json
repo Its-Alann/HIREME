@@ -151,7 +151,7 @@
   "Delete": "Delete",
   "ContactInformation": "Contact Information",
   "PostalCode": "Postal Code",
-  "DateofBirth": "Date of birth",
+  "DateofBirth": "Date of Birth",
   "Education": "Education",
   "SchoolName": "School Name",
   "StartDate": "Start Date",
@@ -177,7 +177,7 @@
   "FileChosennone": "File Chosen: none",
   "FileChosen": "File Chosen:",
   "ViewResume": "View Resume",
-  "ResumeUploadSucessful": "Resume Upload Sucessful",
+  "ResumeUploadSucessful": "Resume Upload Sucessful!",
   "Loadingresume,please wait...": "Loading resume, please wait...",
   "Errorwhileloadingdocument!": "Error while loading document!",
   "Page": "Page",
@@ -258,7 +258,7 @@
 
   "EventCreation": "Event Creation",
   "EventDescription": "Event Description",
-  
+
   "Event Date": "Event Date",
 
   "Unsave": "Unsave",

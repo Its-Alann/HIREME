@@ -109,7 +109,6 @@ const Messaging = () => {
   // Set the strings based on the language defined by the user
   const { t, i18n } = useTranslation();
 
-
   // takes an object {otherAuthors, mostRecent, unRead, groupName}
   const getOtherAuthors = async (chatInfo) => {
     const nameList = [];

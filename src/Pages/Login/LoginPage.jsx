@@ -193,7 +193,7 @@ const LoginPage = () => {
                 color="primary"
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
-                {t("SignUp")}
+                {t("Sign Up")}
               </Button>
             </Stack>
           </Box>

@@ -211,7 +211,7 @@ const Resume = ({ resumeUrl, visitingProfile }) => {
               severity="success"
               sx={{ width: "100%" }}
             >
-              {t("ResumeUploadSucessful!")}
+              {t("ResumeUploadSucessful")}
             </Alert>
           </Snackbar>
 

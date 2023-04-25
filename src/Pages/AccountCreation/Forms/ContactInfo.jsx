@@ -90,7 +90,7 @@ const ContactInfo = ({
           <Grid container direction="row-reverse">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label={t("DateOfBirth")}
+                label={t("DateofBirth")}
                 value={values.dob}
                 onChange={(newValue) => {
                   setDob(newValue);
