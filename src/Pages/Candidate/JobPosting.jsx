@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -59,6 +59,8 @@ export const JobPosting = () => {
       console.log(error);
     }
   };
+
+  const navigate = useNavigate();
 
   // calling 2 methods
   useEffect(() => {
@@ -126,16 +128,12 @@ export const JobPosting = () => {
                       textTransform: "none",
                       ml: { xs: 0, sm: "auto" },
                     }}
+                    onClick={() => {
+                      navigate(`/jobApplication/${job.companyID}/${pageJobID}`);
+                    }}
                   >
-                    <Link
-                      to={`/jobApplication/${job.companyID}/${pageJobID}`}
-                      className="link"
-                      underline="none"
-                      style={{ textDecoration: "none" }}
-                    >
-                      {/* {console.log("thiws is the job:", job)}*/}
-                      {t("Apply")}
-                    </Link>
+                    {/* {console.log("thiws is the job:", job)}*/}
+                    {t("Apply")}
                   </Button>
                   <StarOutlineIcon />
                 </Box>
