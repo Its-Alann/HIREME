@@ -41,8 +41,9 @@ describe("Test sending an invitation to another user and receiving invitations",
   it("send invitation", () => {
     cy.visit("http://localhost:3000/network");
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get('[data-cy="PossibleConnectionsTab"]').click();
+    cy.get("#Button-Next").click();
     cy.get("#Button-Next").click();
     cy.get('[data-cy="invitationButtonNetwork Test"]').click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -96,6 +97,7 @@ describe("Test sending an invitation to another user and receiving invitations",
     cy.wait(3000);
     cy.get('[data-cy="PossibleConnectionsTab"]').click();
     cy.get("#Button-Next").click();
+    cy.get("#Button-Next").click();
     cy.get('[data-cy="invitationButtonNetwork Test"]').click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000);
@@ -132,6 +134,7 @@ describe("Create a connection with another user", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.get('[data-cy="PossibleConnectionsTab"]').click();
+    cy.get("#Button-Next").click();
     cy.get("#Button-Next").click();
     cy.get('[data-cy="invitationButtonNetwork Test"]').click();
     // eslint-disable-next-line cypress/no-unnecessary-waiting
