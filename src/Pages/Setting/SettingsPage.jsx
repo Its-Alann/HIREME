@@ -207,6 +207,8 @@ const SettingsPage = () => {
           marginLeft: "50px",
           marginRight: "50px",
           marginTop: "20px",
+          width: "auto",
+          alignItems: "center",
         }}
       >
         <Grid item xs={12}>
