@@ -109,8 +109,9 @@ export const NetworkPossibleConnections = ({
                 id="Button-Previous"
                 onClick={prevPage}
                 disabled={pageNumber === 1}
+                color="primary"
               >
-                {t("Prev")}
+                {t("Previous")}
               </Button>
               <Button
                 id="Button-Next"
