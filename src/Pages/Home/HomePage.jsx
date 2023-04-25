@@ -166,7 +166,7 @@ const HomePage = () => {
                           window.location.href = "/admin/flaggedMessages";
                         }}
                       >
-                        ${t("AdminPage")}
+                        {t("AdminPage")}
                       </Button>
                     ) : (
                       <Typography> </Typography>
